@@ -1,0 +1,326 @@
+/* EVERYTHING */
+*{
+  font-family: 'Lato';
+}
+
+.cosmos.ui-window{
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+/* SIDEBAR */
+.sidebar{
+
+  float: left;
+  width: 270px;
+	height: ~'calc(100% - 24px)';
+	-webkit-border-radius: 6px 0 0 6px;
+	-moz-border-radius: 6px 0 0 6px;
+	border-radius: 6px 0 0 6px;
+	background-color: #272c34;
+  padding-top: 24px;
+
+}
+
+.sidebar{
+
+  .icon{
+
+    float: left;
+    width: 14px;
+  	height: 11px;
+  	-webkit-border-radius: 6px/6px 6px 5px 5px;
+  	-moz-border-radius: 6px/6px 6px 5px 5px;
+  	border-radius: 6px/6px 6px 5px 5px;
+  	background-color: #bcc5ca;
+    margin-left: 20px;
+    margin-right: 15px;
+    margin-bottom: 13px;
+
+  }
+
+  .app-title{
+
+    float: left;
+    font-size: 15px;
+    font-weight: bold;
+    color: #d2dce2;
+    margin-bottom: 9px;
+    width: 191px;
+
+  }
+
+
+  .notifications{
+
+    float: right;
+    width: 16px;
+    height: 17px;
+    background-color: #d2dce2;
+    margin-right: 14px;
+    margin-bottom: 7px;
+
+  }
+
+  .category-list{
+
+    float: left;
+    width: 100%;
+    height: ~'calc(100% - 97px)';
+
+  }
+
+  .category{
+
+    float: left;
+    width: 100%;
+    margin-top: 22px;
+
+  }
+
+  .category .opener{
+
+    float: left;
+    width: 11px;
+    height: 5px;
+    background-color: #d2dce2;
+    margin-left: 6px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+
+  }
+
+  .category .category-name{
+
+    float: left;
+    width: ~'calc(100% - 21px)';
+    font-size: 15px;
+    font-weight: bold;
+    color: #d2dce2;
+    margin-left: 4px;
+
+  }
+
+  .world-list{
+
+    float: left;
+    margin-top: 11px;
+    width: 100%;
+
+  }
+
+  .closed.category .world{
+
+    display: none;
+
+  }
+
+  .world{
+
+    float: left;
+    height: 28px;
+    width: 100%;
+
+  }
+
+  .world.active{
+
+    background-color: #60b25e !important;
+
+  }
+
+  .world:hover{
+
+    background-color: #353b47;
+
+  }
+
+  .world-icon{
+
+    float: left;
+    margin-left: 20px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #d2dce2;
+    margin-top: 9px;
+
+  }
+
+  .world-name{
+
+    float: left;
+    margin-left: 6px;
+    font-size: 13px;
+    color: #d2dce2;
+    margin-top: 8px;
+
+  }
+
+  .active.world .world-name, .world:hover .world-name{
+
+    color: #fff;
+
+  }
+
+  .explore-button{
+
+    float: left;
+    width: 100%;
+	  height: 72px;
+  	-webkit-border-radius: 0 0 0 6px;
+  	-moz-border-radius: 0 0 0 6px;
+  	border-radius: 0 0 0 6px;
+  	background-color: #353b47;
+  	-webkit-box-shadow: 0 -1px rgba(0,0,0,.05), inset 0 1px rgba(255,255,255,.05);
+  	-moz-box-shadow: 0 -1px rgba(0,0,0,.05), inset 0 1px rgba(255,255,255,.05);
+  	box-shadow: 0 -1px rgba(0,0,0,.05), inset 0 1px rgba(255,255,255,.05);
+
+  }
+
+  .explore-text{
+
+    float: left;
+    font-size: 19px;
+    font-weight: bold;
+    color: #d2dce2;
+    margin-left: 111px;
+    margin-top: 29px;
+
+  }
+
+  .spaceship{
+
+    position: absolute;
+
+  }
+
+}
+
+/* BODY */
+.ui-content{
+
+  float: left;
+  width: ~'calc(100% - 270px)';
+  height: 100%;
+
+}
+
+/* BODY-HEADER */
+.cover{
+
+  float: left;
+  height: 317px;
+  width: 100%;
+  background-image: url('@static/cover.png');
+  position: relative;
+  z-index: 1;
+
+}
+
+.cover{
+
+  .shadow{
+
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.7;
+    position: absolute;
+    z-index: 2;
+
+  }
+
+  .search-button{
+
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background-color: #000;
+    opacity: 0.3;
+    margin-left: 25px;
+    margin-top: 12px;
+    z-index: 3;
+    position: absolute;
+
+  }
+
+  .app-buttons{
+
+    z-index: 3;
+    position: absolute;
+    right: 0;
+    margin-right: 20px;
+    margin-top: 24px;
+    height: 26px;
+    border-left: 1px solid #83878d;
+
+  }
+
+  .app-buttons figure{
+
+    float: right;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    margin-top: 8px;
+
+  }
+
+  .app-buttons .close-app{
+
+    margin-left: 25px;
+
+  }
+
+  .app-buttons .max-app{
+
+    margin-left: 25px;
+
+  }
+
+  .app-buttons .min-app{
+
+    margin-left: 20px;
+
+  }
+
+  .cosmos-buttons{
+
+    z-index: 3;
+    position: absolute;
+    margin-right: 20px;
+    margin-top: 24px;
+    height: 26px;
+    right: 121px;
+
+  }
+
+  .cosmos-buttons figure{
+
+    float: right;
+    width: 20px;
+    height: 17px;
+    background-color: #fff;
+    margin-top: 4px;
+
+  }
+
+  .cosmos-buttons .open-chat{
+
+    margin-left: 20px;
+
+  }
+
+  .cosmos-buttons .open-folder{
+
+    margin-left: 17px;
+
+  }
+
+
+}
+
+
+/* BODY-CONTENT */
