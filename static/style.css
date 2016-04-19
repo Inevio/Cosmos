@@ -12,7 +12,7 @@
 /* SIDEBAR */
 .sidebar{
 
-  float: left;
+  position: absolute;
   width: 270px;
 	height: ~'calc(100% - 24px)';
 	-webkit-border-radius: 6px 0 0 6px;
@@ -20,6 +20,7 @@
 	border-radius: 6px 0 0 6px;
 	background-color: #272c34;
   padding-top: 24px;
+  z-index: 8;
 
 }
 
@@ -57,9 +58,17 @@
     float: right;
     width: 16px;
     height: 17px;
-    background-color: #d2dce2;
     margin-right: 14px;
     margin-bottom: 7px;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    background-position: 285px 0;
+
+  }
+
+  .notifications:hover{
+
+    background-position: 268px 0;
 
   }
 
@@ -82,12 +91,23 @@
   .category .opener{
 
     float: left;
-    width: 11px;
+    width: 9px;
     height: 5px;
-    background-color: #d2dce2;
-    margin-left: 6px;
+    background-image: url('@static/flecha-sidebar.png');
+    background-position: 0px -2px;
+    background-size: 15px 9px;
+    margin-left: 8px;
     margin-top: 5px;
     margin-bottom: 3px;
+
+  }
+
+  .closed.category .opener{
+
+    width: 6px;
+    margin-left: 11px;
+    background-position: 6px 0px;
+    height: 9px;
 
   }
 
@@ -140,11 +160,11 @@
 
     float: left;
     margin-left: 20px;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background-color: #d2dce2;
     margin-top: 9px;
+    border: 2px solid #4698e0;
 
   }
 
@@ -185,7 +205,7 @@
     font-size: 19px;
     font-weight: bold;
     color: #d2dce2;
-    margin-left: 111px;
+    margin-left: 100px;
     margin-top: 29px;
 
   }
@@ -193,6 +213,12 @@
   .spaceship{
 
     position: absolute;
+    width: 18px;
+    height: 24px;
+    background-image: url('@static/rocket-normal.png');
+    background-size: 18px 24px;
+    left: 73px;
+    margin-top: 24px;
 
   }
 
@@ -201,48 +227,46 @@
 /* BODY */
 .ui-content{
 
-  float: left;
+  position: absolute;
+  left: 270px;
   width: ~'calc(100% - 270px)';
   height: 100%;
+  background-color: #fff;
 
 }
 
-/* BODY-HEADER */
-.cover{
-
-  float: left;
-  height: 317px;
-  width: 100%;
-  background-image: url('@static/cover.png');
-  position: relative;
-  z-index: 1;
-
-}
-
-.cover{
-
-  .shadow{
-
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    opacity: 0.7;
-    position: absolute;
-    z-index: 2;
-
-  }
+.ui-content{
 
   .search-button{
 
     width: 33px;
     height: 33px;
     border-radius: 50%;
-    background-color: #000;
-    opacity: 0.3;
+    background-color: rgba(0,0,0,0.3);
     margin-left: 25px;
     margin-top: 12px;
     z-index: 3;
     position: absolute;
+
+  }
+
+  .search-button i{
+
+    width: 16px;
+    position: absolute;
+    height: 16px;
+    z-index: 4;
+    top: 7px;
+    left: 8px;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    background-position: 0px 0;
+
+  }
+
+  .search-button:hover i{
+
+    background-position: -17px 0;
 
   }
 
@@ -263,7 +287,8 @@
     float: right;
     width: 10px;
     height: 10px;
-    background-color: #fff;
+    background-image: url('@static/sprite-close.png');
+    background-size: 43px 21px;
     margin-top: 8px;
 
   }
@@ -271,18 +296,21 @@
   .app-buttons .close-app{
 
     margin-left: 25px;
+    background-position: 10px 0;
 
   }
 
   .app-buttons .max-app{
 
     margin-left: 25px;
+    background-position: 32px 0;
 
   }
 
   .app-buttons .min-app{
 
     margin-left: 20px;
+    background-position: 43px 0;
 
   }
 
@@ -302,7 +330,8 @@
     float: right;
     width: 20px;
     height: 17px;
-    background-color: #fff;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
     margin-top: 4px;
 
   }
@@ -310,17 +339,460 @@
   .cosmos-buttons .open-chat{
 
     margin-left: 20px;
+    background-position: 163px 0;
+
+  }
+
+  .cosmos-buttons .open-chat:hover{
+
+    margin-left: 20px;
+    background-position: 142px 0;
 
   }
 
   .cosmos-buttons .open-folder{
 
     margin-left: 17px;
+    background-position: 204px 0;
+
+  }
+
+  .cosmos-buttons .open-folder:hover{
+
+    margin-left: 17px;
+    background-position: 184px 0;
+
+  }
+
+  .cosmos-buttons .new-post{
+
+    width: 23px;
+    background-position: 251px 0;
+
+  }
+
+  .cosmos-buttons .new-post:hover{
+
+    background-position: 227px 0;
+
+  }
+
+  .spot{
+
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border: 1px solid #c8c9cc;
+    background-color: transparent;
+    z-index: 3;
+    top: 294px;
+    border-radius: 50%;
+
+  }
+
+  .spot.active{
+
+    background-color: #c8c9cc;
+
+  }
+
+  .spot-cover{
+
+    margin-left: ~'calc(50% - 26px/2)';
+
+  }
+
+  .spot-desc{
+
+    margin-left: ~'calc(50% + 10px/2)';
+
+  }
+
+}
+/* COVER */
+.cover{
+
+  float: left;
+  height: 317px;
+  width: 200%;
+  position: relative;
+  z-index: 1;
+
+}
+
+.cover{
+
+  .shadow{
+
+    width: 50%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    position: absolute;
+    z-index: 2;
+
+  }
+
+  .back-image{
+
+    width: 50%;
+    height: 100%;
+    background-image: url('@static/cover.png');
+    background-size: cover;
+    position: absolute;
+    z-index: 1;
+
+  }
+
+  .cover-first{
+
+    float: left;
+    position: relative;
+    width: 50%;
+    height: 100%;
+
+  }
+
+  .world-avatar{
+
+    width: 52px;
+    height: 52px;
+    background-image: url('@static/me.jpg');
+    background-size: cover;
+    top: 80px;
+    position: absolute;
+    margin-left: ~'calc(50% - 52px/2)';
+    z-index: 3;
+    border-radius: 50%;
+
+  }
+
+  .world-title{
+
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    text-align: center;
+    top: 154px;
+    font-size: 37px;
+    color: #fff;
+
+  }
+
+  .world-users-preview{
+
+    position: absolute;
+    top: 229px;
+    z-index: 3;
+    margin-left: ~'calc(50% - 200px/2)';
+
+  }
+
+  .user-preview{
+
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-image: url('@static/me.jpg');
+    background-size: cover;
+    display: inline-block;
+    border: 3px solid #494f57;
+
+  }
+
+  .user-preview:nth-child(1){
+
+    z-index: 6;
+
+  }
+
+  .user-preview:nth-child(2){
+
+    z-index: 5;
+    left: 24px;
 
   }
 
 
+  .user-preview:nth-child(3){
+
+    z-index: 4;
+    left: 48px;
+
+  }
+
+
+  .user-preview:nth-child(4){
+
+    z-index: 3;
+    left: 72px;
+
+  }
+
+  .more-users{
+
+    position: absolute;
+    z-index: 3;
+    background-color: transparent;
+    width: 85px;
+  	height: 35px;
+  	border-radius: 18px 17px 17px 18px;
+  	border: solid 2px rgba(255,255,255,.6);
+    top: 229px;
+    margin-left: ~'calc(50% + 60px/2)';
+
+  }
+
+  .more-users-text{
+
+    width: 100%;
+    text-align: center;
+    float: left;
+    font-size: 13px;
+    color: #fff;
+    margin-top: 11px;
+
+  }
+
+  .more-info{
+
+    position: absolute;
+    z-index: 3;
+    top: 62px;
+    right: 17px;
+    width: 16px;
+    height: 16px;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    background-position: 121px 0;
+
+  }
+
+  .more-info:hover{
+
+    background-position: 104px 0;
+
+  }
+
+  .cover-second{
+
+    float: left;
+    position: relative;
+    width: 50%;
+    height: 100%;
+
+  }
+
+  .go-back{
+
+    position: absolute;
+    z-index: 4;
+    width: 15px;
+    height: 27px;
+    left: 34px;
+    top: 145px;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    background-position: 87px 0;
+
+  }
+
+  .go-back:hover{
+
+    background-position: 71px 0;
+
+  }
+
+  .world-desc{
+
+    position: absolute;
+    z-index: 3;
+    max-height: 85px;
+    font-size: 17px;
+    line-height: 30px;
+    color: #fff;
+    text-align: center;
+    width: ~'calc(100% - 180px)';
+    padding-top: 90px;
+    padding-left: 90px;
+    padding-right: 90px;
+    overflow: hidden;
+
+  }
+
+  .world-info{
+
+    position: absolute;
+    z-index: 3;
+    top: 227px;
+    width: 67px;
+    height: 44px;
+
+  }
+
+  .world-users-number{
+
+    margin-left: ~'calc(50% - 322px/2)';
+
+  }
+
+  .world-event-number{
+
+    margin-left: ~'calc(50% - 60px/2)';
+
+  }
+
+  .world-files-number{
+
+    margin-left: ~'calc(50% + 186px/2)';
+
+  }
+
+  .world-info .title{
+
+    float: left;
+    font-size: 17px;
+    color: #d2dce2;
+    width: 100%;
+    text-align: center;
+
+  }
+
+  .world-info .subtitle{
+
+    float: left;
+    font-size: 21px;
+    font-weight: bold;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    margin-top: 2px;
+
+  }
+
+  .stop-follow{
+
+    position: absolute;
+    z-index: 3;
+    top: 231px;
+    right: 23px;
+    width: 135px;
+    height: 33px;
+  	border-radius: 16px 16px 17px 17px;
+  	background-color: #e85c5c;
+
+  }
+
+  .stop-follow span{
+
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 13px;
+    margin-top: 10px;
+
+  }
+
+}
+
+/* SCROLLED */
+
+.scrolled.ui-content{
+
+  .search-button i{
+
+    background-image: url('@static/sprite-scrolled.png');
+    background-size: 81px 17px;
+    background-position:  0px 0;
+
+  }
+
+  .app-buttons figure{
+
+    background-image: url('@static/sprite-scrolled.png');
+    background-size: 81px 17px;
+
+  }
+
+  .app-buttons .close-app{
+
+    background-position: 10px 0;
+
+  }
+
+  .app-buttons .max-app{
+
+    background-position: 10px 0;
+
+  }
+
+  .app-buttons .min-app{
+
+    background-position: 10px 0;
+
+  }
+
+  .cosmos-buttons figure{
+
+    background-image: url('@static/sprite-scrolled.png');
+    background-size: 81px 17px;
+
+  }
+
+  .cosmos-buttons .open-chat{
+
+    background-position: -61px 0;
+
+  }
+
+  .cosmos-buttons .open-folder{
+
+    background-position: -41px 0;
+
+  }
+
+  .cosmos-buttons .new-post{
+
+    background-position: -17px 0;
+
+  }
+
+  .world-avatar, .world-title, .world-users-preview, .more-users, .more-info, .spot{
+
+    display: none;
+
+  }
+  
 }
 
 
-/* BODY-CONTENT */
+/* CARDS */
+
+.cards-list{
+
+  float: left;
+  width: 100%;
+
+}
+
+.card{
+
+  width: 529px;
+  height: 523px;
+  margin: 25px auto 0 auto;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  -moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+
+}
+
+.card:last-child{
+
+  margin-bottom: 25px;
+
+}
