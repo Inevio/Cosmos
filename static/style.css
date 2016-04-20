@@ -243,8 +243,8 @@
     position: fixed;
     left: 270px;
     width: ~'calc(100% - 270px)';
-    height: 57px;
-    z-index: 999;
+    height: 317px;
+    z-index: 10;
     background-color: transparent;
 
   }
@@ -391,7 +391,7 @@
 
   .spot{
 
-    position: absolute;
+    position: fixed;
     width: 7px;
     height: 7px;
     border: 1px solid #c8c9cc;
@@ -429,51 +429,6 @@
 
   }
 
-}
-/* COVER */
-.cover{
-
-  float: left;
-  height: 317px;
-  width: 200%;
-  position: relative;
-  z-index: 1;
-  background-color: #fff;
-
-}
-
-.cover{
-
-  .shadow{
-
-    width: 50%;
-    height: 100%;
-    background-color: rgba(31,37,47,0.7);
-    position: absolute;
-    z-index: 2;
-
-  }
-
-  .back-image{
-
-    width: 50%;
-    height: 100%;
-    background-image: url('@static/cover.png');
-    background-size: cover;
-    position: absolute;
-    z-index: 1;
-
-  }
-
-  .cover-first{
-
-    float: left;
-    position: relative;
-    width: 50%;
-    height: 100%;
-
-  }
-
   .world-avatar{
 
     width: 52px;
@@ -481,31 +436,33 @@
     background-image: url('@static/me.jpg');
     background-size: cover;
     top: 80px;
-    position: absolute;
-    margin-left: ~'calc(50% - 52px/2)';
-    z-index: 3;
+    position: fixed;
+    margin-left: ~'calc(50% - 325px/2)';
+    z-index: 11;
     border-radius: 50%;
 
   }
 
   .world-title{
 
-    position: absolute;
-    z-index: 3;
-    width: 100%;
-    text-align: center;
+    position: fixed;
+    z-index: 11;
+    width: ~'calc(100% - 270px)';
+    text-align: left;
     top: 154px;
     font-size: 37px;
     color: #fff;
+    left: 270px;
+    margin-left: ~'calc(50% - 413px/2)';
 
   }
 
   .world-users-preview{
 
-    position: absolute;
+    position: fixed;
     top: 229px;
     z-index: 3;
-    margin-left: ~'calc(50% - 200px/2)';
+    margin-left: ~'calc(50% - 225px/2)';
 
   }
 
@@ -553,7 +510,7 @@
 
   .more-users{
 
-    position: absolute;
+    position: fixed;
     z-index: 3;
     background-color: transparent;
     width: 85px;
@@ -573,6 +530,51 @@
     font-size: 13px;
     color: #fff;
     margin-top: 11px;
+
+  }
+
+}
+/* COVER */
+.cover{
+
+  float: left;
+  height: 317px;
+  width: 200%;
+  position: relative;
+  z-index: 1;
+  background-color: #fff;
+
+}
+
+.cover{
+
+  .shadow{
+
+    width: 50%;
+    height: 100%;
+    background-color: rgba(31,37,47,0.7);
+    position: absolute;
+    z-index: 2;
+
+  }
+
+  .back-image{
+
+    width: 50%;
+    height: 100%;
+    background-image: url('@static/cover.png');
+    background-size: cover;
+    position: absolute;
+    z-index: 1;
+
+  }
+
+  .cover-first{
+
+    float: left;
+    position: relative;
+    width: 50%;
+    height: 100%;
 
   }
 

@@ -1,5 +1,6 @@
 // --- VARS ---
-var transformed = false;
+var efectOne = false;
+var efectTwo = false;
 var app         = $( this );
 var cover       = $( '.cover' );
 var spotDesc    = $( '.spot-desc' );
@@ -44,37 +45,95 @@ uiContent.on( 'scroll' , function(){
   var obj = $( this );
   transformCover( obj.scrollTop() );
 
-  if ( !transformed && obj.scrollTop() >= 260 ) {
+  console.log(obj.scrollTop());
+  if ( !efectTwo && obj.scrollTop() > 10) {
 
-    transformed = true;
+    efectTwo = true;
     uiContent.addClass( 'scrolled' );
+
+    // LA BOLITA
+    $( '.world-avatar' ).stop().clearQueue().transition({
+
+      'top' : '12px',
+      'width': '33px',
+      'height' : '33px',
+      'margin-left' : 'calc(50% - 825px/2)'
+
+    }, 1500);
+
+    // EL TITULO
+    $( '.world-title' ).stop().clearQueue().transition({
+
+      'top' : '22px',
+      'font-size': '15px',
+      'color' : '#545f65',
+      'margin-left'  : 'calc(50% - 713px/2)'
+
+    }, 1500);
+
+    // LA BARRA
     $( '.top-bar' ).stop().clearQueue().transition({
 
       'background-color' : '#fff',
-      'box-shadow': '0 1px rgba(0,0,0,.05)'
+      'box-shadow': '0 1px rgba(0,0,0,.05)',
+      'height'  : '57px'
 
-    }, 350);
+    }, 1500);
+
+    // LA BOLITA DEL SEARCH
     $( '.search-button' ).stop().clearQueue().transition({
 
         'background-color' : '#f7f8fa'
 
-    }, 350);
+    }, 1500);
+
+
+    uiContent.animate({'scrollTop' : 260 },1500);
+
+
 
   }else if( obj.scrollTop() < 260 ){
 
-    transformed = false;
+    efectTwo = false;
     uiContent.removeClass( 'scrolled' );
+
+    // LA BOLITA
+    $( '.world-avatar' ).stop().clearQueue().transition({
+
+      'top' : '80px',
+      'width': '52px',
+      'height' : '52px',
+      'margin-left' : 'calc(50% - 325px/2)'
+
+    }, 1500);
+
+    // EL TITULO
+    $( '.world-title' ).stop().clearQueue().transition({
+
+      'top' : '154px',
+      'font-size': '37px',
+      'color' : '#fff',
+      'margin-left'  : 'calc(50% - 413px/2)'
+
+    }, 1500);
+
+    // LA BARRA
     $( '.top-bar' ).stop().clearQueue().transition({
 
       'background-color' : 'transparent',
       'box-shadow': 'none'
 
-    }, 350);
+    }, 1500);
+
+    // LA BOLITA DEL SEARCH
     $( '.search-button' ).stop().clearQueue().transition({
 
         'background-color' : 'rgba(0, 0, 0, 0.3)'
 
-    }, 350);
+    }, 1500);
+
+    uiContent.animate({'scrollTop' : 0 },1500);
+
 
   }
 
@@ -169,7 +228,7 @@ var moveToCover = function(){
 
 var transformCover = function( scroll ){
 
-  $('.world-title, .world-users-preview, .more-users, .more-info').css( 'opacity' , 1 - scroll / 100);
+  $('.world-users-preview, .more-users, .more-info, .spot').css( 'opacity' , 1 - scroll / 100);
 
   $('.back-image, .shadow').css( 'opacity' , 1 - scroll / 300);
 
@@ -178,43 +237,7 @@ var transformCover = function( scroll ){
   cover.find( '.back-image' ).css( 'transform' ,
   'translate3d(0px, -' + ( scroll/15 )  + 'px, 0px) scale(' + scale + ', ' + scale + ')' );
 
-  // toDo hacer que se mueva hacia arriba
-  $( '.world-avatar' ).css();
-
 }
 
-var transformScrolled = function(){
-
-  uiContent.scrollTop(0);
-  uiContent.removeClass( 'scrolled' );
-  $( '.fixed' ).removeClass( 'fixed' );
-  cover.stop().clearQueue().transition({
-
-    'height' : '317px',
-    'box-shadow': 'none',
-    'background-color' : 'transparent'
-
-  }, 200);
-
-  $( '.back-image, .shadow' ).stop().clearQueue().transition({
-
-    'opacity' : '1'
-
-  }, 200);
-
-  $( '.search-button' ).stop().clearQueue().transition({
-
-    'background-color' : 'rgba(0, 0, 0, 0.3)'
-
-  }, 200);
-
-}
-
-var strechCover = function( scrolled ){
-
-  cover.css( 'height' , (parseInt(cover.css( 'height' )) - scrolled) + 'px' );
-
-
-}
 // INIT Chat
 initCosmos();
