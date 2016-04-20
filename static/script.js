@@ -46,6 +46,11 @@ uiContent.on( 'scroll' , function(){
     transformed = true;
     transformCover();
 
+  }else if( $(this).scrollTop() == 0 ){
+
+    transformed = false;
+    transformScrolled();
+
   }
 
 });
@@ -139,40 +144,64 @@ var moveToCover = function(){
 
 var transformCover = function(){
 
-  uiContent.scrollTop(0);
+  //uiContent.scrollTop(0);
   uiContent.addClass( 'scrolled' );
   cover.stop().clearQueue().transition({
 
     'height' : '57px',
     'box-shadow': '0 1px rgba(0,0,0,.05)',
-    'background-color' : '#fff'
+    'background-color' : '#fff',
 
-  }, 1500);
+  }, 200, function(){
 
-  $( '.back-image' ).stop().clearQueue().transition({
+    console.log('lo hago estrecho');
+    cover.addClass( 'fixed' );
+    $( '.search-button' ).addClass( 'fixed' );
+    $( '.app-buttons' ).addClass( 'fixed' );
+    $( '.cosmos-buttons' ).addClass( 'fixed' );
 
-    'opacity' : '0'
 
-  }, 1500);
+  });
 
-  $( '.shadow' ).stop().clearQueue().transition({
-
-    'opacity' : '0'
-
-  }, 1500);
-
-  $( '.shadow' ).stop().clearQueue().transition({
+  $( '.back-image, .shadow' ).stop().clearQueue().transition({
 
     'opacity' : '0'
 
-  }, 1500);
+  }, 200);
 
   $( '.search-button' ).stop().clearQueue().transition({
 
     'background-color' : '#f7f8fa'
 
-  }, 1500);
+  }, 200);
 
+
+}
+
+var transformScrolled = function(){
+
+  uiContent.scrollTop(0);
+  uiContent.removeClass( 'scrolled' );
+  $( '.fixed' ).removeClass( 'fixed' );
+  cover.stop().clearQueue().transition({
+
+    'height' : '317px',
+    'box-shadow': 'none',
+    'background-color' : 'transparent',
+
+  }, 200);
+
+  $( '.back-image, .shadow' ).stop().clearQueue().transition({
+
+    'opacity' : '1'
+
+  }, 200);
+
+  $( '.search-button' ).stop().clearQueue().transition({
+
+    'background-color' : 'rgba(0, 0, 0, 0.3)'
+
+  }, 200);
 
 }
 // INIT Chat

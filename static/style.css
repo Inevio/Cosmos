@@ -700,11 +700,30 @@
 
 .scrolled.ui-content{
 
+  .cover.fixed{
+
+    position: fixed;
+    width: 72%;
+
+  }
+
+  .search-button.fixed{
+
+    position: fixed;
+
+  }
+
   .search-button i{
 
     background-image: url('@static/sprite-scrolled.png');
     background-size: 81px 17px;
     background-position:  0px 0;
+
+  }
+
+  .app-buttons.fixed{
+
+    position: fixed;
 
   }
 
@@ -733,6 +752,12 @@
 
   }
 
+  .cosmos-buttons.fixed{
+
+    position: fixed;
+
+  }
+
   .cosmos-buttons figure{
 
     background-image: url('@static/sprite-scrolled.png');
@@ -758,12 +783,12 @@
 
   }
 
-  .world-avatar, .world-title, .world-users-preview, .more-users, .more-info, .spot{
+  .world-avatar, .world-title, .world-users-preview, .more-users, .more-info, .spot, .cover-second{
 
     display: none;
 
   }
-  
+
 }
 
 
