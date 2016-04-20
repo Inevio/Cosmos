@@ -1,6 +1,6 @@
 // --- VARS ---
-var efectOne = false;
-var efectTwo = false;
+var onTransition = false;
+var state       = 1;
 var app         = $( this );
 var cover       = $( '.cover' );
 var spotDesc    = $( '.spot-desc' );
@@ -43,12 +43,13 @@ goBack.on( 'click' , function(){
 uiContent.on( 'scroll' , function(){
 
   var obj = $( this );
-  transformCover( obj.scrollTop() );
+  //transformCover( obj.scrollTop() );
 
-  console.log(obj.scrollTop());
-  if ( !efectTwo && obj.scrollTop() > 10) {
 
-    efectTwo = true;
+  if ( state == 1 && !onTransition && obj.scrollTop() > 10) {
+
+    console.log(obj.scrollTop());
+    onTransition = true;
     uiContent.addClass( 'scrolled' );
 
     // LA BOLITA
@@ -88,14 +89,18 @@ uiContent.on( 'scroll' , function(){
     }, 1500);
 
 
-    uiContent.animate({'scrollTop' : 260 },1500);
+    uiContent.animate({'scrollTop' : 260 },1500,function(){
+      onTransition = false;
+      state = 0;
+    });
 
 
 
-  }else if( obj.scrollTop() < 260 ){
+  }else if( state == 0 && !onTransition && obj.scrollTop() < 260 ){
 
-    efectTwo = false;
     uiContent.removeClass( 'scrolled' );
+    console.log(obj.scrollTop());
+    onTransition = true;
 
     // LA BOLITA
     $( '.world-avatar' ).stop().clearQueue().transition({
@@ -132,7 +137,10 @@ uiContent.on( 'scroll' , function(){
 
     }, 1500);
 
-    uiContent.animate({'scrollTop' : 0 },1500);
+    uiContent.animate({'scrollTop' : 0 },1500,function(){
+      onTransition = false;
+      state = 1;
+    });
 
 
   }
