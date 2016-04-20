@@ -41,15 +41,40 @@ goBack.on( 'click' , function(){
 
 uiContent.on( 'scroll' , function(){
 
-  if ( !transformed ) {
+  var obj = $( this );
+  transformCover( obj.scrollTop() );
+
+  if ( !transformed && obj.scrollTop() >= 260 ) {
 
     transformed = true;
-    transformCover();
+    uiContent.addClass( 'scrolled' );
+    $( '.top-bar' ).stop().clearQueue().transition({
 
-  }else if( $(this).scrollTop() == 0 ){
+      'background-color' : '#fff',
+      'box-shadow': '0 1px rgba(0,0,0,.05)'
+
+    }, 350);
+    $( '.search-button' ).stop().clearQueue().transition({
+
+        'background-color' : '#f7f8fa'
+
+    }, 350);
+
+  }else if( obj.scrollTop() < 260 ){
 
     transformed = false;
-    transformScrolled();
+    uiContent.removeClass( 'scrolled' );
+    $( '.top-bar' ).stop().clearQueue().transition({
+
+      'background-color' : 'transparent',
+      'box-shadow': 'none'
+
+    }, 350);
+    $( '.search-button' ).stop().clearQueue().transition({
+
+        'background-color' : 'rgba(0, 0, 0, 0.3)'
+
+    }, 350);
 
   }
 
@@ -142,39 +167,19 @@ var moveToCover = function(){
 
 }
 
-var transformCover = function(){
+var transformCover = function( scroll ){
 
-  //uiContent.scrollTop(0);
-  uiContent.addClass( 'scrolled' );
-  cover.stop().clearQueue().transition({
+  $('.world-title, .world-users-preview, .more-users, .more-info').css( 'opacity' , 1 - scroll / 100);
 
-    'height' : '57px',
-    'box-shadow': '0 1px rgba(0,0,0,.05)',
-    'background-color' : '#fff',
+  $('.back-image, .shadow').css( 'opacity' , 1 - scroll / 300);
 
-  }, 200, function(){
+  var scale = 1 + scroll/3000;
 
-    console.log('lo hago estrecho');
-    cover.addClass( 'fixed' );
-    $( '.search-button' ).addClass( 'fixed' );
-    $( '.app-buttons' ).addClass( 'fixed' );
-    $( '.cosmos-buttons' ).addClass( 'fixed' );
+  cover.find( '.back-image' ).css( 'transform' ,
+  'translate3d(0px, -' + ( scroll/15 )  + 'px, 0px) scale(' + scale + ', ' + scale + ')' );
 
-
-  });
-
-  $( '.back-image, .shadow' ).stop().clearQueue().transition({
-
-    'opacity' : '0'
-
-  }, 200);
-
-  $( '.search-button' ).stop().clearQueue().transition({
-
-    'background-color' : '#f7f8fa'
-
-  }, 200);
-
+  // toDo hacer que se mueva hacia arriba
+  $( '.world-avatar' ).css();
 
 }
 
@@ -187,7 +192,7 @@ var transformScrolled = function(){
 
     'height' : '317px',
     'box-shadow': 'none',
-    'background-color' : 'transparent',
+    'background-color' : 'transparent'
 
   }, 200);
 
@@ -202,6 +207,13 @@ var transformScrolled = function(){
     'background-color' : 'rgba(0, 0, 0, 0.3)'
 
   }, 200);
+
+}
+
+var strechCover = function( scrolled ){
+
+  cover.css( 'height' , (parseInt(cover.css( 'height' )) - scrolled) + 'px' );
+
 
 }
 // INIT Chat

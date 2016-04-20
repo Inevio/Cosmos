@@ -237,6 +237,18 @@
 
 .ui-content{
 
+  .top-bar{
+
+    background-color: transparent;
+    position: fixed;
+    left: 270px;
+    width: ~'calc(100% - 270px)';
+    height: 57px;
+    z-index: 999;
+    background-color: transparent;
+
+  }
+
   .search-button{
 
     width: 33px;
@@ -246,7 +258,7 @@
     margin-left: 25px;
     margin-top: 12px;
     z-index: 3;
-    position: absolute;
+    position: fixed;
 
   }
 
@@ -273,10 +285,10 @@
   .app-buttons{
 
     z-index: 3;
-    position: absolute;
+    position: fixed;
     right: 0;
     margin-right: 20px;
-    margin-top: 24px;
+    margin-top: 20px;
     height: 26px;
     border-left: 1px solid #83878d;
 
@@ -317,9 +329,9 @@
   .cosmos-buttons{
 
     z-index: 3;
-    position: absolute;
+    position: fixed;
     margin-right: 20px;
-    margin-top: 24px;
+    margin-top: 20px;
     height: 26px;
     right: 121px;
 
@@ -408,6 +420,15 @@
 
   }
 
+  .pre-cover{
+
+    position: fixed;
+    width: ~'calc(100% - 270px)';
+    left: 270px;
+    overflow: hidden;
+
+  }
+
 }
 /* COVER */
 .cover{
@@ -417,6 +438,7 @@
   width: 200%;
   position: relative;
   z-index: 1;
+  background-color: #fff;
 
 }
 
@@ -426,7 +448,7 @@
 
     width: 50%;
     height: 100%;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(31,37,47,0.7);
     position: absolute;
     z-index: 2;
 
@@ -556,7 +578,7 @@
 
   .more-info{
 
-    position: absolute;
+    position: fixed;
     z-index: 3;
     top: 62px;
     right: 17px;
@@ -700,19 +722,6 @@
 
 .scrolled.ui-content{
 
-  .cover.fixed{
-
-    position: fixed;
-    width: 72%;
-
-  }
-
-  .search-button.fixed{
-
-    position: fixed;
-
-  }
-
   .search-button i{
 
     background-image: url('@static/sprite-scrolled.png');
@@ -721,34 +730,29 @@
 
   }
 
-  .app-buttons.fixed{
-
-    position: fixed;
-
-  }
 
   .app-buttons figure{
 
-    background-image: url('@static/sprite-scrolled.png');
-    background-size: 81px 17px;
+    background-image: url('@static/sprite-close.png');
+    background-size: 43px 21px;
 
   }
 
   .app-buttons .close-app{
 
-    background-position: 10px 0;
+    background-position: 10px 10px;
 
   }
 
   .app-buttons .max-app{
 
-    background-position: 10px 0;
+    background-position: -11px 10px;
 
   }
 
   .app-buttons .min-app{
 
-    background-position: 10px 0;
+    background-position: 0px 10px;
 
   }
 
@@ -783,14 +787,7 @@
 
   }
 
-  .world-avatar, .world-title, .world-users-preview, .more-users, .more-info, .spot, .cover-second{
-
-    display: none;
-
-  }
-
 }
-
 
 /* CARDS */
 
@@ -798,6 +795,9 @@
 
   float: left;
   width: 100%;
+  position: relative;
+  background: #f9f9fb;
+  top: 317px;
 
 }
 
