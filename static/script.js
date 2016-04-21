@@ -40,27 +40,61 @@ goBack.on( 'click' , function(){
 });
 
 
-uiContent.on( 'scroll' , function(){
+$( '.cards-list' ).on( 'scroll' , function(){
 
   var obj = $( this );
   //transformCover( obj.scrollTop() );
-
 
   if ( state == 1 && !onTransition && obj.scrollTop() > 10) {
 
     console.log(obj.scrollTop());
     onTransition = true;
-    uiContent.addClass( 'scrolled' );
+    $( '.ui-window' ).addClass( 'scrolled' );
 
-    // LA BOLITA
-    $( '.world-avatar' ).stop().clearQueue().transition({
+    // AVATAR
+    $( '.world-avatar' ).transition({
 
-      'top' : '12px',
+      'width': '50px',
+      'height' : '50px',
+      'left'  : '583.3px',
+      'top' : '80.4px'
+
+    }, 166, 'in').transition({
+
+      'width': '46px',
+      'height' : '46px',
+      'left'  : '508.8px',
+      'top' : '74.3px'
+
+    }, 166, 'linear').transition({
+
+      'width': '42px',
+      'height' : '42px',
+      'left'  : '427.3px',
+      'top' : '54.3px'
+
+    }, 166, 'linear').transition({
+
+      'width': '40px',
+      'height' : '40px',
+      'left'  : '373.4px',
+      'top' : '30.5px'
+
+    }, 166, 'linear').transition({
+
+      'width': '34px',
+      'height' : '34px',
+      'left'  : '349.8px',
+      'top' : '16.9px'
+
+    }, 166, 'linear').transition({
+
       'width': '33px',
       'height' : '33px',
-      'margin-left' : 'calc(50% - 825px/2)'
+      'left'  : '343px',
+      'top' : '12px'
 
-    }, 1500);
+    }, 200, 'out');
 
     // EL TITULO
     $( '.world-title' ).stop().clearQueue().transition({
@@ -68,16 +102,6 @@ uiContent.on( 'scroll' , function(){
       'top' : '22px',
       'font-size': '15px',
       'color' : '#545f65',
-      'margin-left'  : 'calc(50% - 713px/2)'
-
-    }, 1500);
-
-    // LA BARRA
-    $( '.top-bar' ).stop().clearQueue().transition({
-
-      'background-color' : '#fff',
-      'box-shadow': '0 1px rgba(0,0,0,.05)',
-      'height'  : '57px'
 
     }, 1500);
 
@@ -88,29 +112,82 @@ uiContent.on( 'scroll' , function(){
 
     }, 1500);
 
+    // LA COVER
+    $( '.cover' ).stop().clearQueue().transition({
+
+        'opacity' : '0'
+
+    }, 1500);
+
+    // LAS BOLITAS, BOTON Y BOLITAS PEQUEÑAS
+    $( '.world-users-preview, .more-users, .spot' ).stop().clearQueue().transition({
+
+        'opacity' : '0'
+
+    }, 1500);
 
     uiContent.animate({'scrollTop' : 260 },1500,function(){
+
       onTransition = false;
       state = 0;
+
+      $( '.top-bar' ).css( 'opacity' , '1' );
+
     });
 
 
 
   }else if( state == 0 && !onTransition && obj.scrollTop() < 260 ){
 
-    uiContent.removeClass( 'scrolled' );
+    $( '.ui-window' ).removeClass( 'scrolled' );
     console.log(obj.scrollTop());
     onTransition = true;
+    $( '.top-bar' ).css( 'opacity' , '0' );
 
-    // LA BOLITA
-    $( '.world-avatar' ).stop().clearQueue().transition({
+    // AVATAR
+    $( '.world-avatar' ).transition({
 
-      'top' : '80px',
+      'width': '34px',
+      'height' : '34px',
+      'left'  : '349.8px',
+      'top' : '16.9px'
+
+    }, 166, 'in').transition({
+
+      'width': '40px',
+      'height' : '40px',
+      'left'  : '373.4px',
+      'top' : '30.5px'
+
+    }, 166, 'linear').transition({
+
+      'width': '42px',
+      'height' : '42px',
+      'left'  : '427.3px',
+      'top' : '54.3px'
+
+    }, 166, 'linear').transition({
+
+      'width': '46px',
+      'height' : '46px',
+      'left'  : '508.8px',
+      'top' : '74.3px'
+
+    }, 166, 'linear').transition({
+
+      'width': '50px',
+      'height' : '50px',
+      'left'  : '583.3px',
+      'top' : '80.4px'
+
+    }, 166, 'linear').transition({
+
       'width': '52px',
       'height' : '52px',
-      'margin-left' : 'calc(50% - 325px/2)'
+      'left'  : '609px',
+      'top' : '80px'
 
-    }, 1500);
+    }, 200, 'out');
 
     // EL TITULO
     $( '.world-title' ).stop().clearQueue().transition({
@@ -118,15 +195,6 @@ uiContent.on( 'scroll' , function(){
       'top' : '154px',
       'font-size': '37px',
       'color' : '#fff',
-      'margin-left'  : 'calc(50% - 413px/2)'
-
-    }, 1500);
-
-    // LA BARRA
-    $( '.top-bar' ).stop().clearQueue().transition({
-
-      'background-color' : 'transparent',
-      'box-shadow': 'none'
 
     }, 1500);
 
@@ -134,6 +202,20 @@ uiContent.on( 'scroll' , function(){
     $( '.search-button' ).stop().clearQueue().transition({
 
         'background-color' : 'rgba(0, 0, 0, 0.3)'
+
+    }, 1500);
+
+    // LA COVER
+    $( '.cover' ).stop().clearQueue().transition({
+
+        'opacity' : '1'
+
+    }, 1500);
+
+    // LAS BOLITAS, BOTON Y BOLITAS PEQUEÑAS
+    $( '.world-users-preview, .more-users, .spot' ).stop().clearQueue().transition({
+
+        'opacity' : '1'
 
     }, 1500);
 
