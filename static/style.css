@@ -199,14 +199,20 @@
 
   }
 
+  .explore-button:hover{
+
+    background-color: #3f4550;
+
+  }
+
   .explore-text{
 
     float: left;
     font-size: 19px;
     font-weight: bold;
     color: #d2dce2;
-    margin-left: 100px;
-    margin-top: 29px;
+    margin-left: 110px;
+    margin-top: 27px;
 
   }
 
@@ -222,6 +228,32 @@
 
   }
 
+  .spaceship-gif{
+
+    position: absolute;
+    background-image: url('@static/nave.gif');
+    background-size: 51px 48px;
+    width: 51px;
+    height: 48px;
+    left: 57px;
+    margin-top: 5px;
+    opacity: 0;
+
+  }
+
+  .explore-button:hover .spaceship-gif{
+
+    animation: spaceship-fire 0.5s forwards;
+    animation-timing-function: ease-in-out;
+
+
+  }
+
+}
+
+@keyframes spaceship-fire{
+    0%{ opacity: 0; }
+    100%{ opacity: 1; }
 }
 
 /* BODY */
@@ -615,12 +647,29 @@
 
   }
 
-  .world-users-preview{
+  .world-title-small{
+
+    font-size: 15px;
+    display: none;
+
+  }
+
+  .users-preview-container{
 
     position: absolute;
-    top: 229px;
     z-index: 3;
-    margin-left: ~'calc(50% - 225px/2)';
+    top: 229px;
+    text-align: center;
+    width: 100%;
+
+  }
+
+  .world-users-preview{
+
+    width: 211px;
+    height: 40px;
+    position: relative;
+    margin: 0 auto;
 
   }
 
@@ -640,6 +689,7 @@
   .user-preview:nth-child(1){
 
     z-index: 6;
+    left: 0;
 
   }
 
@@ -675,8 +725,7 @@
   	height: 35px;
   	border-radius: 18px 17px 17px 18px;
   	border: solid 2px rgba(255,255,255,.6);
-    top: 229px;
-    margin-left: ~'calc(50% + 60px/2)';
+    left: 121px;
 
   }
 
