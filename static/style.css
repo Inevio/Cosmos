@@ -9,6 +9,25 @@
   height: 100%;
 }
 
+.ui-input input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  padding-top: 2px;
+  color: #fff;
+}
+.ui-input input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  padding-top: 2px;
+  opacity:  1;
+  color: #fff;
+}
+.ui-input input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  padding-top: 2px;
+  opacity:  1;
+  color: #fff;
+}
+.ui-input input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  padding-top: 2px;
+  color: #fff;
+}
+
 /* SIDEBAR */
 .sidebar{
 
@@ -275,6 +294,178 @@
     width: ~'calc(100% - 270px)';
     left: 270px;
     overflow: hidden;
+    border-radius: 0 6px 0 0;
+
+  }
+
+  .app-buttons{
+
+    z-index: 3;
+    position: absolute;;
+    right: 0;
+    margin-right: 20px;
+    margin-top: 20px;
+    height: 26px;
+    border-left: 1px solid #83878d;
+
+  }
+
+  .app-buttons figure{
+
+    float: right;
+    width: 10px;
+    height: 10px;
+    background-image: url('@static/sprite-close.png');
+    background-size: 43px 21px;
+    margin-top: 8px;
+
+  }
+
+  .app-buttons .close-app{
+
+    margin-left: 25px;
+    background-position: 10px 0;
+
+  }
+
+  .app-buttons .max-app{
+
+    margin-left: 25px;
+    background-position: 32px 0;
+
+  }
+
+  .app-buttons .min-app{
+
+    margin-left: 20px;
+    background-position: 43px 0;
+
+  }
+
+  .cosmos-buttons{
+
+    z-index: 3;
+    position: absolute;
+    margin-right: 20px;
+    margin-top: 20px;
+    height: 26px;
+    right: 121px;
+
+  }
+
+  .cosmos-buttons figure{
+
+    float: right;
+    width: 20px;
+    height: 17px;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    margin-top: 4px;
+
+  }
+
+  .cosmos-buttons .open-chat{
+
+    margin-left: 20px;
+    background-position: 163px 0;
+
+  }
+
+  .cosmos-buttons .open-chat:hover{
+
+    margin-left: 20px;
+    background-position: 142px 0;
+
+  }
+
+  .cosmos-buttons .open-folder{
+
+    margin-left: 17px;
+    background-position: 204px 0;
+
+  }
+
+  .cosmos-buttons .open-folder:hover{
+
+    margin-left: 17px;
+    background-position: 184px 0;
+
+  }
+
+  .cosmos-buttons .new-post{
+
+    width: 23px;
+    background-position: 251px 0;
+
+  }
+
+  .cosmos-buttons .new-post:hover{
+
+    background-position: 227px 0;
+
+  }
+
+  .search-button{
+
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.3);
+    margin-top: 12px;
+    z-index: 3;
+    position: absolute;
+    left: 25px;
+
+  }
+
+  .search-button i{
+
+    width: 16px;
+    position: absolute;
+    height: 16px;
+    z-index: 4;
+    top: 7px;
+    left: 8px;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    background-position: 0px 0;
+
+  }
+
+  .search-button:hover i{
+
+    background-position: -17px 0;
+
+  }
+
+  .spot{
+
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border: 1px solid #c8c9cc;
+    background-color: transparent;
+    z-index: 3;
+    top: 294px;
+    border-radius: 50%;
+
+  }
+
+  .spot.active{
+
+    background-color: #c8c9cc;
+
+  }
+
+  .spot-cover{
+
+    margin-left: ~'calc(50% - 26px/2)';
+
+  }
+
+  .spot-desc{
+
+    margin-left: ~'calc(50% + 10px/2)';
 
   }
 
@@ -336,7 +527,7 @@
   .go-back{
 
     position: absolute;
-    z-index: 3;
+    z-index: 4;
     width: 15px;
     height: 27px;
     left: 34px;
@@ -441,178 +632,6 @@
     color: #fff;
     font-size: 13px;
     margin-top: 10px;
-
-  }
-
-  .search-button{
-
-    width: 33px;
-    height: 33px;
-    border-radius: 50%;
-    background-color: rgba(0,0,0,0.3);
-    margin-left: 25px;
-    margin-top: 12px;
-    z-index: 3;
-    position: relative;;
-    float: left;
-
-  }
-
-  .search-button i{
-
-    width: 16px;
-    position: absolute;
-    height: 16px;
-    z-index: 4;
-    top: 7px;
-    left: 8px;
-    background-image: url('@static/sprite.png');
-    background-size: 319px 27px;
-    background-position: 0px 0;
-
-  }
-
-  .search-button:hover i{
-
-    background-position: -17px 0;
-
-  }
-
-  .app-buttons{
-
-    z-index: 3;
-    position: relative;
-    float: right;
-    margin-right: 20px;
-    margin-top: 20px;
-    height: 26px;
-    border-left: 1px solid #83878d;
-
-  }
-
-  .app-buttons figure{
-
-    float: right;
-    width: 10px;
-    height: 10px;
-    background-image: url('@static/sprite-close.png');
-    background-size: 43px 21px;
-    margin-top: 8px;
-
-  }
-
-  .app-buttons .close-app{
-
-    margin-left: 25px;
-    background-position: 10px 0;
-
-  }
-
-  .app-buttons .max-app{
-
-    margin-left: 25px;
-    background-position: 32px 0;
-
-  }
-
-  .app-buttons .min-app{
-
-    margin-left: 20px;
-    background-position: 43px 0;
-
-  }
-
-  .cosmos-buttons{
-
-    z-index: 3;
-    position: relative;
-    margin-right: 20px;
-    margin-top: 20px;
-    height: 26px;
-    float: right;
-
-  }
-
-  .cosmos-buttons figure{
-
-    float: right;
-    width: 20px;
-    height: 17px;
-    background-image: url('@static/sprite.png');
-    background-size: 319px 27px;
-    margin-top: 4px;
-
-  }
-
-  .cosmos-buttons .open-chat{
-
-    margin-left: 20px;
-    background-position: 163px 0;
-
-  }
-
-  .cosmos-buttons .open-chat:hover{
-
-    margin-left: 20px;
-    background-position: 142px 0;
-
-  }
-
-  .cosmos-buttons .open-folder{
-
-    margin-left: 17px;
-    background-position: 204px 0;
-
-  }
-
-  .cosmos-buttons .open-folder:hover{
-
-    margin-left: 17px;
-    background-position: 184px 0;
-
-  }
-
-  .cosmos-buttons .new-post{
-
-    width: 23px;
-    background-position: 251px 0;
-
-  }
-
-  .cosmos-buttons .new-post:hover{
-
-    background-position: 227px 0;
-
-  }
-
-  .spot{
-
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    border: 1px solid #c8c9cc;
-    background-color: transparent;
-    z-index: 3;
-    top: 294px;
-    border-radius: 50%;
-
-  }
-
-  .spot.active{
-
-    background-color: #c8c9cc;
-
-  }
-
-  .spot-cover{
-
-    margin-left: ~'calc(50% - 26px/2)';
-
-  }
-
-  .spot-desc{
-
-    margin-left: ~'calc(50% + 10px/2)';
 
   }
 
@@ -865,5 +884,389 @@
 .card:last-child{
 
   margin-bottom: 25px;
+
+}
+
+.card{
+
+  .top-card{
+
+    float: left;
+    height: 67px;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e9ea;
+
+  }
+
+  .card-user-avatar{
+
+    float: left;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-image: url('@static/me.jpg');
+    background-size: cover;
+    margin-left: 18px;
+    margin-top: 13px;
+
+  }
+
+  .card-user-name{
+
+    float: left;
+    color: #545f65;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 18px;
+    margin-left: 10px;
+
+  }
+
+}
+
+/* EXPLORE CONTAINER */
+
+.explore-section{
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  background-color: #334b5c;
+	background-image: -webkit-linear-gradient(bottom, #08416b 11%, #09314f);
+	background-image: -moz-linear-gradient(bottom, #08416b 11%, #09314f);
+	background-image: -o-linear-gradient(bottom, #08416b 11%, #09314f);
+	background-image: -ms-linear-gradient(bottom, #08416b 11%, #09314f);
+	background-image: linear-gradient(to top, #08416b 11%, #09314f);
+  opacity: 0;
+  display: none;
+
+}
+
+.explore-section{
+
+  .stars{
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    background-image: url('@static/stars.png');
+    transform: translateY(20px);
+    opacity: 0;
+    background-size: 1536px 710px;
+    background-position: -145px -79px;
+
+  }
+
+  .planet{
+
+    position: absolute;
+    z-index: 4;
+    background-image: url('@static/planet.png');
+    opacity: 0;
+    background-size: 516px 462px;
+    width: 516px;
+    height: 462px;
+    right: -181px;
+    bottom: -195px;
+    transform: translate( 40px , 40px );
+
+  }
+
+  .explore-container{
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+
+  }
+
+  .new-world-button{
+
+    float: left;
+    margin-left: 42px;
+    margin-top: 30px;
+    opacity: 0;
+    transform: translateY(10px);
+
+  }
+
+  .new-world-button figure{
+
+    float: left;
+    background-image: url('@static/sprite.png');
+    background-size: 319px 27px;
+    width: 27px;
+    height: 20px;
+    margin-right: 10px;
+    background-position: 55px 0;
+
+  }
+
+  .new-world-button:hover figure{
+
+    background-position: 27px 0;
+
+  }
+
+  .new-world-button span{
+
+    float: left;
+    color: #fff;
+    font-size: 17px;
+
+  }
+
+  .new-world-button:hover span::after {
+
+    width: 100%;
+
+  }
+
+  .new-world-button span::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 1px;
+    background: #fff;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+  }
+
+  .search-title{
+
+    position: absolute;
+    top: 124px;
+    font-size: 33px;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(20px);
+
+  }
+
+  .search-bar{
+
+    width: 474px;
+  	height: 50px;
+  	-webkit-border-radius: 25px;
+  	-moz-border-radius: 25px;
+  	border-radius: 25px;
+  	background-color: rgba(0,0,0,0.3);
+    position: relative;
+    top: 206px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(20px);
+
+  }
+
+  .search-bar figure{
+
+    float: left;
+    background-image: url('@static/lupa.png');
+    background-size: 20px 20px;
+    width: 20px;
+    height: 20px;
+    margin-left: 20px;
+    margin-top: 15px;
+
+  }
+
+  .search-bar input{
+
+    float: left;
+    background-color: transparent;
+    width: 390px;
+    margin-top: 15px;
+    margin-left: 20px;
+    color: #fff;
+    font-size: 19px;
+
+  }
+
+  .close-explore{
+
+    float: right;
+    width: 42px;
+    opacity: 0;
+    transform: translateY(10px);
+
+  }
+
+  .close-explore figure{
+
+    float: left;
+    width: 14px;
+    height: 14px;
+    background-image: url('@static/esc-sprite.png');
+    background-size: 29px 14px;
+    margin-top: 20px;
+    margin-right: 28px;
+    background-position: 0 0;
+
+  }
+
+  .close-explore:hover figure{
+
+    background-position: 14px 0;
+
+  }
+
+  .close-explore span{
+
+    float: left;
+    width: 30px;
+    color: #fff;
+    font-size: 13px;
+    margin-left: -2px;
+
+  }
+
+  .tend-text{
+
+    position: absolute;
+    top: 298px;
+    font-size: 21px;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(20px);
+
+  }
+
+  .world-card{
+
+    float: left;
+    width: 204px;
+  	height: 239px;
+  	-webkit-border-radius: 6px;
+  	-moz-border-radius: 6px;
+  	border-radius: 6px;
+  	background-color: #fff;
+  	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  	box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    margin-right: 22px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+
+  }
+
+  .world-card:last-child{
+
+    margin-right: 0;
+
+  }
+
+  .tend-list{
+
+    float: left;
+    width: ~'calc( 100% - 116px )';
+    padding: 0 58px;
+    top: 300px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+  }
+
+  .world-card .world-background{
+
+    width: 100%;
+    height: 115px;
+    background-image: url( '@static/cover.png' );
+    background-size: cover;
+    border-radius: 6px 6px 0 0;
+
+  }
+
+  .world-card .world-background{
+
+    position: absolute;
+    width: 100%;
+    height: 115px;
+    background-image: url( '@static/cover.png' );
+    background-size: cover;
+    border-radius: 6px 6px 0 0;
+
+  }
+
+  .world-card .world-avatar-min{
+
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    background-image: url('@static/me.jpg');
+    background-size: cover;
+    margin: 0 auto;
+    top: 85px;
+
+  }
+
+  .world-title-min{
+
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+    color: #545f65;
+    margin-top: 137px;
+    top: 0;
+    position: absolute;
+
+  }
+
+  .world-followers{
+
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 168px;
+    font-size: 13px;
+    color: #889399;
+    top: 0;
+    position: absolute;
+
+  }
+
+  .follow-button{
+
+    width: 127px;
+  	height: 32px;
+  	-webkit-border-radius: 16px;
+  	-moz-border-radius: 16px;
+  	border-radius: 16px;
+  	background-color: #60b25e;
+    position: relative;
+    margin: 0 auto;
+    top: 150px;
+
+  }
+
+  .follow-button span{
+
+    float: left;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 13px;
+
+  }
 
 }

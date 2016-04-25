@@ -1,13 +1,16 @@
 // --- VARS ---
-var onTransition = false;
-var state       = 1;
-var app         = $( this );
-var cover       = $( '.cover' );
-var spotDesc    = $( '.spot-desc' );
-var spotCover   = $( '.spot-cover' );
-var goBack      = $( '.go-back' );
-var moreInfo    = $( '.more-info' );
-var uiContent   = $( '.ui-content' );
+var onTransition  = false;
+var state         = 1;
+var app           = $( this );
+var cover         = $( '.cover' );
+var spotDesc      = $( '.spot-desc' );
+var spotCover     = $( '.spot-cover' );
+var goBack        = $( '.go-back' );
+var moreInfo      = $( '.more-info' );
+var uiContent     = $( '.ui-content' );
+var cardList      = $( '.cards-list' );
+var exploreButton = $( '.explore-button' );
+var closeExplore  = $( '.close-explore' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -39,7 +42,7 @@ goBack.on( 'click' , function(){
 
 });
 
-$( '.cover' ).on( 'mousewheel' , function( e , d , x , y ){
+cover.on( 'mousewheel' , function( e , d , x , y ){
 
   if ( state == 1 && !onTransition && y < 0) {
 
@@ -55,7 +58,7 @@ $( '.cover' ).on( 'mousewheel' , function( e , d , x , y ){
 
 });
 
-$( '.cards-list' ).on( 'scroll' , function(){
+cardList.on( 'scroll' , function(){
 
   var obj = $( this );
 
@@ -68,6 +71,18 @@ $( '.cards-list' ).on( 'scroll' , function(){
     decompressCover();
 
   }
+
+});
+
+exploreButton.on( 'click' , function(){
+
+  exploreAnimationIn();
+
+});
+
+closeExplore.on( 'click' , function(){
+
+  exploreAnimationOut();
 
 });
 
@@ -307,6 +322,14 @@ var compressCover = function(){
 
   });
 
+  // SEARCH
+  $( '.search-button' ).stop().clearQueue().transition({
+
+    'background-color'       : '#f7f8fa'
+
+  }, 1000);
+
+
 }
 
 var decompressCover = function(){
@@ -447,6 +470,185 @@ var decompressCover = function(){
     'opacity' : 1
 
   }, 500);
+
+  // SEARCH
+  $( '.search-button' ).stop().clearQueue().transition({
+
+    'background-color'       : 'rgba(0, 0, 0, 0.3)'
+
+  }, 1000);
+
+}
+
+var exploreAnimationIn = function(){
+
+  var exploreSection = $( '.explore-section' );
+
+  exploreSection.css( 'display' , 'block');
+
+  // Fade in blue background
+  exploreSection.stop().clearQueue().transition({
+
+    'opacity' : 1
+
+  }, 1000);
+
+  // Stars appears and goes up
+  $( '.stars' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Explore title appears and goes up
+  exploreSection.find( '.search-title' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Search bar appears and goes up
+  exploreSection.find( '.search-bar' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // New world button appears and goes up
+  exploreSection.find( '.new-world-button' ).stop().clearQueue().transition({
+
+    delay       : 1000,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 500);
+
+  // Close explore button appears and goes up
+  exploreSection.find( '.close-explore' ).stop().clearQueue().transition({
+
+    delay       : 1000,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 500);
+
+  // New world button appears and goes up
+  $( '.planet' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translate(0px,0px)'
+
+  }, 500);
+
+  // Tend text appears and goes up
+  $( '.tend-text' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // First world cover appers and goes up
+  $( '.world-card:nth-child(1)' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Second world cover appers and goes up
+  $( '.world-card:nth-child(2)' ).stop().clearQueue().transition({
+
+    delay       : 750,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Third world cover appers and goes up
+  $( '.world-card:nth-child(3)' ).stop().clearQueue().transition({
+
+    delay       : 1000,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Third world cover appers and goes up
+  $( '.world-card:nth-child(4)' ).stop().clearQueue().transition({
+
+    delay       : 1250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+}
+
+var exploreAnimationOut = function(){
+
+  var exploreSection = $( '.explore-section' );
+
+  // Fade out blue background
+  exploreSection.stop().clearQueue().transition({
+
+    'opacity' : 0
+
+  }, 1000, function(){
+
+    exploreSection.css( 'display' , 'none' );
+
+    $( '.stars' ).css({
+      'transform' : 'translateY(20px)',
+      'opacity'   : 0
+    });
+
+    exploreSection.find( '.search-title' ).css({
+      'transform' : 'translateY(20px)',
+      'opacity'   : 0
+    });
+
+    exploreSection.find( '.search-bar' ).css({
+      'transform' : 'translateY(20px)',
+      'opacity'   : 0
+    });
+
+    exploreSection.find( '.new-world-button' ).css({
+      'transform' : 'translateY(10px)',
+      'opacity'   : 0
+    });
+
+    exploreSection.find( '.close-explore' ).css({
+      'transform' : 'translateY(10px)',
+      'opacity'   : 0
+    });
+
+    $( '.planet' ).css({
+      'transform' : 'translate( 40px , 40px )',
+      'opacity'   : 0
+    });
+
+    $( '.tend-text' ).css({
+      'transform' : 'translateY( 20px )',
+      'opacity'   : 0
+    });
+
+    $( '.world-card' ).css({
+      'transform' : 'translateY( 20px )',
+      'opacity'   : 0
+    });
+
+
+  });
 
 }
 
