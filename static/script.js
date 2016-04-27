@@ -1,4 +1,5 @@
 // --- VARS ---
+var showingUsers    = false;
 var onTransition    = false;
 var state           = 1;
 var app             = $( this );
@@ -12,6 +13,9 @@ var cardList        = $( '.cards-list' );
 var exploreButton   = $( '.explore-button' );
 var closeExplore    = $( '.close-explore' );
 var moreUsersButton = $( '.more-users' );
+var arrowUp         = $( '.arrow-up' );
+var newWorldButton  = $( '.new-world-button, .new-world-button-mini' );
+var closeNewWorld   = $( '.close-new-world' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -45,6 +49,10 @@ goBack.on( 'click' , function(){
 
 cover.on( 'mousewheel' , function( e , d , x , y ){
 
+  if ( showingUsers ) {
+    return;
+  }
+
   if ( state == 1 && !onTransition && y < 0) {
 
     compressCover();
@@ -60,6 +68,10 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 });
 
 cardList.on( 'scroll' , function(){
+
+  if ( showingUsers ) {
+    return;
+  }
 
   var obj = $( this );
 
@@ -93,6 +105,23 @@ moreUsersButton.on( 'click', function(){
 
 });
 
+arrowUp.on( 'click', function(){
+
+  usersGoesDown();
+
+});
+
+newWorldButton.on( 'click' , function(){
+
+  newWorldAnimationIn();
+
+});
+
+closeNewWorld.on( 'click' , function(){
+
+  newWorldAnimationOut();
+
+});
 // END UI EVENTS
 
 // APP EVENTS
@@ -187,11 +216,23 @@ var compressCover = function(){
   $( '.ui-window' ).addClass( 'scrolled' );
 
   var avatar = $( '.world-avatar' );
-  var avatarLeft = parseInt( avatar.css( 'margin-left' ) );
-  var distance =  avatarLeft - 73;
+  var avatarLeftM = parseInt( avatar.css( 'margin-left' ) );
+  var avatarLeft = (parseInt($('.cover-first').css( 'width' )) - parseInt(avatar.css( 'width' )))/2;
+
+  if(avatarLeftM){
+
+    avatar.css( 'margin-left' , avatarLeftM );
+
+  }else{
+
+    avatar.css( 'margin-left' , avatarLeft );
+
+
+  }
+
+  var distance =  ( avatarLeft || avatarLeftM ) - 73;
   var interval = distance/6;
 
-  avatar.css( 'margin-left' , avatarLeft );
 
   // Avatar goes up (animation)
   $( '.world-avatar' ).transition({
@@ -233,10 +274,22 @@ var compressCover = function(){
   }, 120, 'out');
 
   var title = $( '.world-title' );
-  var titleLeft = parseInt($( '.world-title' ).css( 'margin-left' ));
-  var distance = titleLeft - 116;
 
-  title.css( 'margin-left' , titleLeft );
+  var titleLeftM = parseInt($( '.world-title' ).css( 'margin-left' ));
+  var titleLeft = (parseInt($('.cover-first').css( 'width' )) - parseInt(title.css( 'width' )))/2;
+
+  if(titleLeftM){
+
+    title.css( 'margin-left' , titleLeftM );
+
+  }else{
+
+    title.css( 'margin-left' , titleLeft );
+
+  }
+
+  var distance = ( titleLeft || titleLeftM ) - 116;
+
 
   // Title goes up (animation)
   $( '.world-title' ).transition({
@@ -555,11 +608,155 @@ var exploreAnimationOut = function(){
 
 var usersGoesUp = function(){
 
+  showingUsers = true;
+
   $( '.world-avatar, .world-title, .users-preview-container, .spot' ).stop().clearQueue().transition({
 
     'transform' : 'translateY(-310px)'
 
   }, 1000);
+
+  $( '.users-circles-container' ).stop().clearQueue().transition({
+
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  $( '.more-info' ).stop().clearQueue().transition({
+
+    'opacity' : '0'
+
+  }, 1000);
+
+}
+
+var usersGoesDown = function(){
+
+  showingUsers = false;
+
+  $( '.world-avatar, .world-title, .users-preview-container, .spot' ).stop().clearQueue().transition({
+
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  $( '.users-circles-container' ).stop().clearQueue().transition({
+
+    'transform' : 'translateY(350px)'
+
+  }, 1000);
+
+  $( '.more-info' ).stop().clearQueue().transition({
+
+    'opacity' : '1'
+
+  }, 1000);
+
+
+}
+
+var newWorldAnimationIn = function(){
+
+  var newWorldContainer = $( '.new-world-container' );
+
+  newWorldContainer.css( 'display' , 'block');
+
+  // Fade in White background (animation)
+  newWorldContainer.stop().clearQueue().transition({
+
+    'opacity' : 1
+
+  }, 1000);
+
+  // Fade in and goes up title (animation)
+  $( '.new-world-title' ).stop().clearQueue().transition({
+
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up name (animation)
+  $( '.new-world-name' ).stop().clearQueue().transition({
+
+    delay       : 250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up avatar (animation)
+  $( '.new-world-avatar' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up desc (animation)
+  $( '.new-world-desc' ).stop().clearQueue().transition({
+
+    delay       : 750,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  $( '.new-world-privacy' ).stop().clearQueue().transition({
+
+    delay       : 1000,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up button (animation)
+  $( '.create-world-button' ).stop().clearQueue().transition({
+
+    delay       : 1250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  $( '.close-new-world' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+}
+
+var newWorldAnimationOut = function(){
+
+  var newWorldContainer = $( '.new-world-container' );
+
+  // Fade out White background
+  newWorldContainer.stop().clearQueue().transition({
+
+    'opacity' : 0
+
+  }, 1000, function(){
+
+    newWorldContainer.css( 'display' , 'none' );
+
+    $( '.new-world-title, .new-world-name, .new-world-avatar, .new-world-desc, .new-world-privacy, .create-world-button' ).css({
+      'transform' : 'translateY(20px)',
+      'opacity'   : 0
+    });
+
+    $( '.close-new-world' ).css({
+      'transform' : 'translateY(10px)',
+      'opacity'   : 0
+    });
+
+
+  });
 
 }
 
