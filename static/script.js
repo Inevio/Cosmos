@@ -16,6 +16,9 @@ var moreUsersButton = $( '.more-users' );
 var arrowUp         = $( '.arrow-up' );
 var newWorldButton  = $( '.new-world-button, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
+var notifications   = $( '.notifications' );
+var newPostButton   = $( '.new-post' );
+var closeNewCard    = $( '.close-new-card' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -122,6 +125,39 @@ closeNewWorld.on( 'click' , function(){
   newWorldAnimationOut();
 
 });
+
+notifications.on( 'click' , function(){
+
+  $( '.notifications-container' ).toggleClass( 'popup' );
+  $( '.notifications-container *' ).toggleClass( 'popup' );
+
+
+});
+
+app.on( 'click' , function( e ){
+
+  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
+
+    $( '.popup' ).removeClass( 'popup' );
+
+  }
+
+});
+
+newPostButton.on( 'click' , function(){
+
+  $( '.new-card-container' ).toggleClass( 'popup' );
+  $( '.new-card-container *' ).toggleClass( 'popup' );
+
+});
+
+closeNewCard.on( 'click' , function(){
+
+  $( '.new-card-container' ).toggleClass( 'popup' );
+  $( '.new-card-container *' ).toggleClass( 'popup' );
+
+});
+
 // END UI EVENTS
 
 // APP EVENTS
