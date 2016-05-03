@@ -19,6 +19,7 @@ var closeNewWorld   = $( '.close-new-world' );
 var notifications   = $( '.notifications' );
 var newPostButton   = $( '.new-post' );
 var closeNewCard    = $( '.close-new-card' );
+var worldCategory   = $( '.category .opener, .category .category-name' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -134,16 +135,6 @@ notifications.on( 'click' , function(){
 
 });
 
-app.on( 'click' , function( e ){
-
-  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
-
-    $( '.popup' ).removeClass( 'popup' );
-
-  }
-
-});
-
 newPostButton.on( 'click' , function(){
 
   $( '.new-card-container' ).toggleClass( 'popup' );
@@ -155,6 +146,24 @@ closeNewCard.on( 'click' , function(){
 
   $( '.new-card-container' ).toggleClass( 'popup' );
   $( '.new-card-container *' ).toggleClass( 'popup' );
+
+});
+
+worldCategory.on( 'click' , function(){
+
+  $(this).parent().toggleClass('closed');
+
+});
+
+app
+
+.on( 'click' , function( e ){
+
+  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
+
+    $( '.popup' ).removeClass( 'popup' );
+
+  }
 
 });
 
@@ -482,6 +491,13 @@ var decompressCover = function(){
     onTransition = false;
 
     avatar.css({
+
+      'transform' : 'translate(0,0)',
+      'margin'    : '0 auto'
+
+    })
+
+    $( '.world-title' ).css({
 
       'transform' : 'translate(0,0)',
       'margin'    : '0 auto'
