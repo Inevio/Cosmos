@@ -151,7 +151,25 @@ closeNewCard.on( 'click' , function(){
 
 worldCategory.on( 'click' , function(){
 
-  $(this).parent().toggleClass('closed');
+  var category = $(this).parent();
+  category.toggleClass('closed');
+  if ( category.hasClass( 'closed' ) ) {
+    category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) );
+    category.find( '.world-list' ).transition({
+
+      'height'         : '0px'
+
+    }, 200);
+  }else{
+    var height = category.find( '.world' ).length * 28;
+    category.find( '.world-list' ).transition({
+
+      'height'         : height
+
+    }, 200);
+
+
+  }
 
 });
 
@@ -278,45 +296,14 @@ var compressCover = function(){
   var distance =  ( avatarLeft || avatarLeftM ) - 73;
   var interval = distance/6;
 
-
   // Avatar goes up (animation)
   $( '.world-avatar' ).transition({
 
-    'width'         : '50px',
-    'height'        : '50px',
-    'transform'     : 'translate( ' + ( - interval ) + 'px , -4px )'
-
-  }, 120, 'in').transition({
-
-    'width'         : '46px',
-    'height'        : '46px',
-    'transform'     : 'translate( ' + ( - interval*2 ) + 'px , -5.7px )'
-
-  }, 120, 'linear').transition({
-
-    'width'         : '42px',
-    'height'        : '42px',
-    'transform'     : 'translate( ' + ( - interval*3 ) + 'px , -25.7px )'
-
-  }, 120, 'linear').transition({
-
-    'width'         : '40px',
-    'height'        : '40px',
-    'transform'     : 'translate( ' + ( - interval*4 ) + 'px , -49.5px )'
-
-  }, 120, 'linear').transition({
-
-    'width'         : '34px',
-    'height'        : '34px',
-    'transform'     : 'translate( ' + ( - interval*5 ) + 'px , -63.1px )'
-
-  }, 120, 'linear').transition({
-
     'width'         : '33px',
     'height'        : '33px',
-    'transform'     : 'translate( ' + ( - interval*6 ) + 'px , -68px )'
+    'transform'     : 'translate( ' + ( - interval*6 ) + 'px , -72px )'
 
-  }, 120, 'out');
+  }, 1000);
 
   var title = $( '.world-title' );
 
@@ -339,7 +326,7 @@ var compressCover = function(){
   // Title goes up (animation)
   $( '.world-title' ).transition({
 
-    'transform'     : 'translate( ' + ( - distance ) + 'px , -116px )',
+    'transform'     : 'translate( ' + ( - distance ) + 'px , -107px )',
     'font-size'     : '15px',
     'color'         : '#545f65'
 
@@ -385,7 +372,7 @@ var compressCover = function(){
       'top'       : 85,
       'opacity'   : 0
 
-  }, 300, 'linear').transition({
+  }, 300, 'in').transition({
 
       'top'     : -45
 
@@ -401,7 +388,7 @@ var compressCover = function(){
     'top'       : 150,
     'opacity'   : 0
 
-  }, 300, 'linear').transition({
+  }, 300, 'in').transition({
 
     'top'     : -45
 
@@ -435,41 +422,11 @@ var decompressCover = function(){
   // Avatar goes down (animation)
   $( '.world-avatar' ).transition({
 
-    'width'         : '34px',
-    'height'        : '34px',
-    'transform'     : 'translate( ' + ( - interval*5 ) + 'px , -63.1px )'
-
-  }, 120, 'in').transition({
-
-    'width'         : '40px',
-    'height'        : '40px',
-    'transform'     : 'translate( ' + ( - interval*4 ) + 'px , -49.5px )'
-
-  }, 120, 'linear').transition({
-
-    'width'         : '42px',
-    'height'        : '42px',
-    'transform'     : 'translate( ' + ( - interval*3 ) + 'px , -25.7px )'
-
-  }, 120, 'linear').transition({
-
-    'width'         : '46px',
-    'height'        : '46px',
-    'transform'     : 'translate( ' + ( - interval*2 ) + 'px , -5.7px )'
-
-  }, 120, 'linear').transition({
-
-    'width'         : '50px',
-    'height'        : '50px',
-    'transform'     : 'translate( ' + ( - interval ) + 'px , -4px )'
-
-  }, 120, 'linear').transition({
-
     'width'         : '52px',
     'height'        : '52px',
     'transform'     : 'translate( 0px , 0px )'
 
-  }, 150, 'out');
+  }, 1000, 'out');
 
   // Title goes down (animation)
   $( '.world-title' ).transition({
@@ -533,20 +490,20 @@ var decompressCover = function(){
   console.log($( '.users-preview-container' ).css('top'));
   $( '.users-preview-container' ).stop().clearQueue().transition({
 
-    delay : 350,
+    delay : 230,
     'top' : 229,
     'opacity' : 1
 
-  }, 500);
+  }, 620, 'out');
 
   // Slider spots goes down (animation)
   $( '.spot' ).stop().clearQueue().transition({
 
-    delay     : 350,
+    delay     : 230,
     'top'     : 294,
     'opacity' : 1
 
-  }, 500);
+  }, 620, 'out');
 
   // Search background changes (animation)
   $( '.search-button' ).stop().clearQueue().transition({
