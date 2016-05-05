@@ -1,4 +1,5 @@
 // --- VARS ---
+var animationEffect = 'cubic-bezier(.4,0,.2,1)';
 var showingUsers    = false;
 var onTransition    = false;
 var state           = 1;
@@ -20,6 +21,8 @@ var notifications   = $( '.notifications' );
 var newPostButton   = $( '.new-post' );
 var closeNewCard    = $( '.close-new-card' );
 var worldCategory   = $( '.category .opener, .category .category-name' );
+var searchBar       = $( '.search-button' );
+var searchBarFigure = $( '.search-button i' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -173,6 +176,21 @@ worldCategory.on( 'click' , function(){
 
 });
 
+searchBar.on( 'click' , function(){
+
+  $( this ).addClass( 'popup' );
+  $( this ).find( 'input' ).focus();
+  $( this ).find( 'input' ).val('');
+
+
+});
+
+searchBarFigure.on( 'click' , function(){
+
+  $( this ).parent().addClass( 'popup' );
+
+});
+
 app
 
 .on( 'click' , function( e ){
@@ -202,25 +220,11 @@ var initCosmos = function(){
 
 var moveToDesc = function(){
 
-  $( '.search-button' ).stop().clearQueue().transition({
-
-    'opacity' : '0'
-
-  }, 200);
-
   $( '.cover-first' ).stop().clearQueue().transition({
 
     'margin-left' : '-50%'
 
-  }, 800, function(){
-
-    $( '.search-button' ).stop().clearQueue().transition({
-
-      'opacity' : '1'
-
-    }, 200);
-
-  });
+  }, 800);
 
   $( '.spot-cover' ).stop().clearQueue().transition({
 
@@ -238,25 +242,11 @@ var moveToDesc = function(){
 
 var moveToCover = function(){
 
-  $( '.search-button' ).stop().clearQueue().transition({
-
-    'opacity' : '0'
-
-  }, 200);
-
   $( '.cover-first' ).stop().clearQueue().transition({
 
     'margin-left' : '0'
 
-  }, 800, function(){
-
-    $( '.search-button' ).stop().clearQueue().transition({
-
-      'opacity' : '1'
-
-    }, 200);
-
-  });
+  }, 800);
 
   $( '.spot-desc' ).stop().clearQueue().transition({
 
@@ -303,7 +293,7 @@ var compressCover = function(){
     'height'        : '33px',
     'transform'     : 'translate( ' + ( - interval*6 ) + 'px , -72px )'
 
-  }, 1000);
+  }, 1000, animationEffect);
 
   var title = $( '.world-title' );
 
@@ -330,14 +320,15 @@ var compressCover = function(){
     'font-size'     : '15px',
     'color'         : '#545f65'
 
-  }, 1000);
+  }, 1000, animationEffect);
 
   // Cover compress (animation)
   $( '.cover' ).stop().clearQueue().transition({
 
-      'height'       : 57
+      'height'       : 57,
+      'background-color'  : '#fff'
 
-  }, 1000, function(){
+  }, 1000, animationEffect , function(){
 
     state = 0;
     onTransition = false;
@@ -349,14 +340,14 @@ var compressCover = function(){
 
     'box-shadow'  : '1px 1px rgba(0,0,0,.05)'
 
-  }, 500);
+  }, 500 , animationEffect);
 
   // Shadow and image dissappear (animation)
   $( '.shadow, .back-image' ).stop().clearQueue().transition({
 
       'opacity' : '0'
 
-  }, 1000);
+  }, 1000, animationEffect);
 
   // Card list gets bigger (animation)
   $( '.cards-list' ).stop().clearQueue().transition({
@@ -364,7 +355,7 @@ var compressCover = function(){
       'height' : 'calc(100% - 58px)',
       'top'    : 58
 
-  }, 1000);
+  }, 1000, animationEffect);
 
   // User preview circles goes up (animation)
   $( '.users-preview-container' ).stop().clearQueue().transition({
@@ -372,7 +363,7 @@ var compressCover = function(){
       'top'       : 85,
       'opacity'   : 0
 
-  }, 300, 'in').transition({
+  }, 370, 'in').transition({
 
       'top'     : -45
 
@@ -388,7 +379,7 @@ var compressCover = function(){
     'top'       : 150,
     'opacity'   : 0
 
-  }, 300, 'in').transition({
+  }, 370, 'in').transition({
 
     'top'     : -45
 
@@ -403,7 +394,7 @@ var compressCover = function(){
 
     'background-color'       : '#f7f8fa'
 
-  }, 1000);
+  }, 1000, animationEffect);
 
 
 }
@@ -426,7 +417,7 @@ var decompressCover = function(){
     'height'        : '52px',
     'transform'     : 'translate( 0px , 0px )'
 
-  }, 1000, 'out');
+  }, 1000, animationEffect);
 
   // Title goes down (animation)
   $( '.world-title' ).transition({
@@ -435,14 +426,15 @@ var decompressCover = function(){
     'font-size'     : '37px',
     'color'         : '#fff'
 
-  }, 1000);
+  }, 1000, animationEffect);
 
   // Cover decompress (animation)
   $( '.cover' ).stop().clearQueue().transition({
 
-      'height'      : 317
+      'height'      : 317,
+      'background-color'  : 'transparent'
 
-  }, 1000, function(){
+  }, 1000, animationEffect , function(){
 
     state = 1;
     onTransition = false;
@@ -469,14 +461,14 @@ var decompressCover = function(){
 
     'box-shadow'        : 'none'
 
-  }, 1000);;
+  }, 1000, animationEffect );
 
   // Shadow and image appear (animation)
   $( '.shadow, .back-image' ).stop().clearQueue().transition({
 
       'opacity' : '1'
 
-  }, 1000);;
+  }, 1000 , animationEffect );
 
   // Card list gets smaller (animation)
   $( '.cards-list' ).stop().clearQueue().transition({
@@ -484,33 +476,33 @@ var decompressCover = function(){
       'height' : 'calc(100% - 317px)',
       'top'    : 317
 
-  }, 1000);
+  }, 1000, animationEffect );
 
   // User preview circles goes down (animation)
   console.log($( '.users-preview-container' ).css('top'));
   $( '.users-preview-container' ).stop().clearQueue().transition({
 
-    delay : 230,
+    delay : 320,
     'top' : 229,
     'opacity' : 1
 
-  }, 620, 'out');
+  }, 535, 'cubic-bezier(0,0,.5,1)' );
 
   // Slider spots goes down (animation)
   $( '.spot' ).stop().clearQueue().transition({
 
-    delay     : 230,
+    delay     : 320,
     'top'     : 294,
     'opacity' : 1
 
-  }, 620, 'out');
+  }, 535, 'cubic-bezier(0,0,.5,1)');
 
   // Search background changes (animation)
   $( '.search-button' ).stop().clearQueue().transition({
 
     'background-color'       : 'rgba(0, 0, 0, 0.3)'
 
-  }, 1000);
+  }, 1000, animationEffect );
 
 }
 
