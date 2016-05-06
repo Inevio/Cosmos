@@ -23,6 +23,7 @@ var closeNewCard    = $( '.close-new-card' );
 var worldCategory   = $( '.category .opener, .category .category-name' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
+var commentsButtons = $( '.comments-text' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -188,6 +189,45 @@ searchBar.on( 'click' , function(){
 searchBarFigure.on( 'click' , function(){
 
   $( this ).parent().addClass( 'popup' );
+
+});
+
+commentsButtons.on( 'click' , function(){
+
+  var card = $(this).parent().parent();
+  var height = parseInt(card.find('.comments-list').css('height')) + 50;
+  var commentsSection = card.find( '.comments-section' );
+
+  if (commentsSection.hasClass('opened')) {
+
+    commentsSection.css('height', height);
+    commentsSection.transition({
+
+      'height'         : 0
+
+    }, 200, function(){
+
+      commentsSection.removeClass('opened');
+
+    });
+
+  }else{
+
+    commentsSection.transition({
+
+      'height'         : height
+
+    }, 200, function(){
+
+      commentsSection.addClass('opened');
+      commentsSection.css('height', 'auto');
+
+    });
+
+
+  }
+
+
 
 });
 
