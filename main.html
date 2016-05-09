@@ -1,3 +1,4 @@
+<script src="https://static.inevio.com/app/360/masonery.min.js"></script>
 <section class="ui-window cosmos">
 
   <section class="sidebar wz-dragger">
@@ -79,15 +80,15 @@
     <figure class="search-button popup-launcher"><i class="popup-launcher"></i><input class="popup-launcher"></figure>
 
     <section class="app-buttons">
-      <figure class="close-app ui-close"></figure>
-      <figure class="max-app ui-maximize"></figure>
-      <figure class="min-app ui-minimize"></figure>
+      <figure class="close-app ui-close"><i></i></figure>
+      <figure class="max-app ui-maximize"><i></i></figure>
+      <figure class="min-app ui-minimize"><i></i></figure>
     </section>
 
     <section class="cosmos-buttons">
-      <figure class="open-chat"></figure>
-      <figure class="open-folder"></figure>
-      <figure class="new-post popup-launcher"></figure>
+      <figure class="open-chat"><i></i></figure>
+      <figure class="open-folder"><i></i></figure>
+      <figure class="new-post popup-launcher"><i></i></figure>
     </section>
 
     <figure class="spot-cover active spot"></figure>
@@ -209,6 +210,7 @@
   </section>
 
   <section class="cards-list wz-scroll">
+    <section class="cards-grid">
 
     <!-- DOCUMENT WITH PREVIEW -->
     <section class="card doc-card">
@@ -323,7 +325,7 @@
         </section>
         <section class="comments-footer">
           <figure class="attachments"><i></i></figure>
-          <input>
+          <input placeholder="Escribe tu comentario aquí...">
           <section class="send-button">
             <span>Enviar</span>
           </section>
@@ -343,6 +345,9 @@
       <section class="card-content">
         <span class="title ellipsis">Nuevo video de Casey!</span>
         <span class="desc">https://www.youtube.com/watch?v=CyIN3fIiMpU</span>
+        <figure class="youtube-icon"></figure>
+        <span class="activate-preview">Vista previa</span><i class="triangle-down"></i>
+        <figure class="separator"></figure>
         <iframe class="video-preview" src="https://www.youtube.com/embed/CyIN3fIiMpU?autoplay=0&html5=1"></iframe>
       </section>
       <section class="card-footer">
@@ -350,7 +355,7 @@
         <span class="comments-text">2 comentarios</span>
       </section>
     </section>
-
+  </section>
   </section>
 
   </section>
@@ -375,9 +380,9 @@
 
     <span class="search-title">Explorar</span>
 
-    <section class="search-bar">
-      <figure></figure>
-      <input placeholder="Buscar">
+    <section class="search-bar popup-launcher">
+      <figure class="popup-launcher"></figure>
+      <input class="popup-launcher" placeholder="Buscar">
     </section>
 
     <span class="tend-text">Tendencias</span>
@@ -435,7 +440,9 @@
   </section>
   <section class="new-world-title">
     <figure></figure>
-    <span>Creación de mundo</span>
+    <span class="title">Creación de mundo</span>
+    <span class="step-a">Paso 1 de 2</span>
+    <span class="step-b">Paso 2 de 2</span>
   </section>
   <section class="new-world-name">
     <span>Nombre del mundo</span>
@@ -476,8 +483,8 @@
       </section>
     </section>
   </section>
-  <section class="create-world-button">
-    <span>Crear mundo</span>
+  <section class="create-world-button step-a">
+    <span>Siguiente</span>
   </section>
 </section>
 <section class="new-card-container">
