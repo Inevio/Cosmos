@@ -26,6 +26,8 @@ var searchBarFigure = $( '.search-button i' );
 var commentsButtons = $( '.comments-text' );
 var youtubePreviewButton = $( '.you-card .activate-preview, .you-card .triangle-down' );
 var searchExplore   = $( '.explore-container .search-bar' );
+var cardOptionsBut  = $( '.card-options' );
+var worldOptionsHelp = $( '.privacy-options .option i' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -77,7 +79,7 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 
 });
 
-cardList.on( 'scroll' , function(){
+cardList.on( 'mousewheel' , function( e , d , x , y ){
 
   if ( showingUsers ) {
     return;
@@ -85,11 +87,22 @@ cardList.on( 'scroll' , function(){
 
   var obj = $( this );
 
-  if ( state == 1 && !onTransition && obj.scrollTop() > 5) {
+  console.log( state , onTransition , y );
 
+  if( onTransition ){
+
+    e.preventDefault();
+    e.stopPropagation();
+
+  }
+
+  if ( state == 1 && !onTransition && y < 0) {
+
+    e.preventDefault();
+    e.stopPropagation();
     compressCover();
 
-  }else if( state == 0 && !onTransition && obj.scrollTop() < 5 ){
+  }else if( state == 0 && !onTransition && obj.scrollTop() < 5 && y > 0 ){
 
     decompressCover();
 
@@ -245,6 +258,42 @@ searchExplore.on( 'click' , function(){
 
 });
 
+cardOptionsBut.on( 'click' , function(){
+
+  $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
+  $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
+
+});
+
+worldOptionsHelp.on( 'mouseenter' , function(){
+
+  var popup = $( this ).parent().find( '.info-section' );
+
+  popup.show();
+  popup.transition({
+
+    'opacity'         : 1
+
+  }, 200, animationEffect);
+
+});
+
+worldOptionsHelp.on( 'mouseleave' , function(){
+
+  var popup = $( this ).parent().find( '.info-section' );
+
+  popup.transition({
+
+    'opacity'         : 0
+
+  }, 200, animationEffect, function(){
+
+    popup.hide();
+
+  });
+
+});
+
 app
 
 .on( 'click' , function( e ){
@@ -265,30 +314,60 @@ app
 
 .on( 'ui-view-resize', function(){
 
-  $('.cards-grid').masonry({
+  $('.cards-grid').isotope({
     itemSelector: '.card',
-    columnWidth: 2,
-    isFitWidth: true
+    masonry: {
+      columnWidth: 551,
+      fitWidth: true
+    }
+  });
+
+  $('.tend-list').isotope({
+    itemSelector: '.world-card',
+    masonry: {
+      columnWidth: 226,
+      fitWidth: true
+    }
   });
 
 })
 
 .on( 'ui-view-maximize', function(){
 
-  $('.cards-grid').masonry({
+  $('.cards-grid').isotope({
     itemSelector: '.card',
-    columnWidth: 2,
-    isFitWidth: true
+    masonry: {
+      columnWidth: 551,
+      fitWidth: true
+    }
+  });
+
+  $('.tend-list').isotope({
+    itemSelector: '.world-card',
+    masonry: {
+      columnWidth: 226,
+      fitWidth: true
+    }
   });
 
 })
 
 .on( 'ui-view-unmaximize', function(){
 
-  $('.cards-grid').masonry({
+  $('.cards-grid').isotope({
     itemSelector: '.card',
-    columnWidth: 2,
-    isFitWidth: true
+    masonry: {
+      columnWidth: 551,
+      fitWidth: true
+    }
+  });
+
+  $('.tend-list').isotope({
+    itemSelector: '.world-card',
+    masonry: {
+      columnWidth: 226,
+      fitWidth: true
+    }
   });
 
 })
@@ -843,7 +922,7 @@ var newWorldAnimationB = function(){
 
     $( this ).css( {
 
-      'top'       : '800px',
+      'top'       : '819px',
       'transform' : 'translateY(20px)',
       'right'     : '0',
       'left'      : 'calc(50% - 472px/2 + 150px)'
@@ -922,9 +1001,9 @@ var newWorldAnimationOut = function(){
 
     $( '.create-world-button' ).css( {
 
-      'top'       : '413px',
+      'top'       : '383px',
       'transform' : 'translateY(20px)',
-      'left'      : 'calc((50% - 236px) + 297px)'
+      'left'      : 'calc((50% - 236px) + 298px)'
 
     } ).find( 'span' ).text( 'Siguiente' );
 
