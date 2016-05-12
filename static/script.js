@@ -1,8 +1,10 @@
 // --- VARS ---
-var animationEffect = 'cubic-bezier(.4,0,.2,1)';
+var animationEffect  = 'cubic-bezier(.4,0,.2,1)';
+var animationEffect2 = 'cubic-bezier(.18,.48,.2,1)';
 var showingUsers    = false;
 var onTransition    = false;
 var state           = 1;
+var titleLength     = 0;
 var app             = $( this );
 var cover           = $( '.cover' );
 var spotDesc        = $( '.spot-desc' );
@@ -322,14 +324,6 @@ app
     }
   });
 
-  $('.tend-list').isotope({
-    itemSelector: '.world-card',
-    masonry: {
-      columnWidth: 226,
-      fitWidth: true
-    }
-  });
-
 })
 
 .on( 'ui-view-maximize', function(){
@@ -338,14 +332,6 @@ app
     itemSelector: '.card',
     masonry: {
       columnWidth: 551,
-      fitWidth: true
-    }
-  });
-
-  $('.tend-list').isotope({
-    itemSelector: '.world-card',
-    masonry: {
-      columnWidth: 226,
       fitWidth: true
     }
   });
@@ -362,15 +348,29 @@ app
     }
   });
 
-  $('.tend-list').isotope({
-    itemSelector: '.world-card',
-    masonry: {
-      columnWidth: 226,
-      fitWidth: true
-    }
+})
+
+.on( 'mouseenter' , '.user-circle' , function(){
+
+  var position = $(this).position();
+
+  $( '.users-circles-container .user-hover' ).css({
+    'top'     : ( 89 + position.top ),
+    'left'    : ( position.left - 29 ),
+    'opacity' : 0.9
   });
 
 })
+
+.on( 'mouseleave' , '.user-circle' , function(){
+
+  console.log($(this).offset());
+
+  $( '.users-circles-container .user-hover' ).css({
+    'opacity' : 0
+  });
+
+});
 // END UI EVENTS
 
 // APP EVENTS
@@ -459,14 +459,16 @@ var compressCover = function(){
 
     'width'         : '33px',
     'height'        : '33px',
-    'transform'     : 'translate( ' + ( - interval*6 ) + 'px , -72px )'
+    'transform'     : 'translateY( -72px )',
+    'margin-left'   : 73
 
   }, 1000, animationEffect);
 
   var title = $( '.world-title' );
 
   var titleLeftM = parseInt($( '.world-title' ).css( 'margin-left' ));
-  var titleLeft = (parseInt($('.cover-first').css( 'width' )) - parseInt(title.css( 'width' )))/2;
+  titleLength = parseInt(title.css( 'width' ));
+  var titleLeft = (parseInt($('.cover-first').css( 'width' )) - titleLength)/2;
 
   if(titleLeftM){
 
@@ -484,7 +486,8 @@ var compressCover = function(){
   // Title goes up (animation)
   $( '.world-title' ).transition({
 
-    'transform'     : 'translate( ' + ( - distance ) + 'px , -107px )',
+    'transform'     : 'translateY( -107px )',
+    'margin-left'   : 116,
     'font-size'     : '15px',
     'color'         : '#545f65'
 
@@ -590,16 +593,22 @@ var decompressCover = function(){
 
     'width'         : '52px',
     'height'        : '52px',
-    'transform'     : 'translate( 0px , 0px )'
+    'transform'     : 'translateY( 0px )',
+    'margin-left'   : avatarLeft
 
   }, 1000, animationEffect);
+
+  var title = $( '.world-title' );
+  var titleLeft = (parseInt($('.cover-first').css( 'width' )) - titleLength)/2;
+  console.log(parseInt($('.cover-first').css( 'width' )), parseInt(title.css( 'width' )), titleLeft);
 
   // Title goes down (animation)
   $( '.world-title' ).transition({
 
-    'transform'     : 'translate( 0px , 0px )',
+    'transform'     : 'translateY( 0px )',
     'font-size'     : '37px',
-    'color'         : '#fff'
+    'color'         : '#fff',
+    'margin-left'   : titleLeft
 
   }, 1000, animationEffect);
 
@@ -699,61 +708,50 @@ var exploreAnimationIn = function(){
 
     'opacity' : 1
 
-  }, 1000);
-
-  // Stars appears and goes up
-  $( '.stars, .search-title, .search-bar, .tend-text, .world-card:nth-child(1)' ).stop().clearQueue().transition({
-
-    delay       : 500,
-    'opacity'   : 1,
-    'transform' : 'translateY(0px)'
-
-  }, 1000);
-
-  // New world button appears and goes up
-  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
-
-    delay       : 1000,
-    'opacity'   : 1,
-    'transform' : 'translateY(0px)'
-
-  }, 500);
+  }, 300, animationEffect);
 
   // New world button appears and goes up
   $( '.planet' ).stop().clearQueue().transition({
 
-    delay       : 500,
+    delay       : 440,
     'opacity'   : 1,
     'transform' : 'translate(0px,0px)'
 
-  }, 500);
+  }, 1300, 'out');
 
-  // Second world cover appers and goes up
-  $( '.world-card:nth-child(2)' ).stop().clearQueue().transition({
+  // Stars appears and goes up
+  $( '.stars, .search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
 
-    delay       : 750,
+    delay       : 550,
     'opacity'   : 1,
     'transform' : 'translateY(0px)'
 
-  }, 1000);
+  }, 500, animationEffect);
 
-  // Third world cover appers and goes up
-  $( '.world-card:nth-child(3)' ).stop().clearQueue().transition({
+  // New world button appears and goes up
+  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
 
-    delay       : 1000,
+    delay       : 800,
     'opacity'   : 1,
     'transform' : 'translateY(0px)'
 
-  }, 1000);
+  }, 450, animationEffect);
 
-  // Third world cover appers and goes up
-  $( '.world-card:nth-child(4)' ).stop().clearQueue().transition({
+  // World cards appears and goes up
+  var cards = $( '.tend-list .world-card' );
+  $.each( cards , function( i , card ){
 
-    delay       : 1250,
-    'opacity'   : 1,
-    'transform' : 'translateY(0px)'
+    var d = i * 150;
 
-  }, 1000);
+    $( card ).transition({
+
+      delay       : (550 + d),
+      'opacity'   : 1,
+      'transform' : 'translateY(0px)'
+
+    }, 1000);
+
+  });
 
 }
 
@@ -766,14 +764,9 @@ var exploreAnimationOut = function(){
 
     'opacity' : 0
 
-  }, 1000, function(){
+  }, 300, function(){
 
     exploreSection.css( 'display' , 'none' );
-
-    $( '.stars, .search-title, .search-bar, .close-explore, .tend-text, .world-card' ).css({
-      'transform' : 'translateY(20px)',
-      'opacity'   : 0
-    });
 
     $( '.new-world-button, .close-explore' ).css({
       'transform' : 'translateY(10px)',
@@ -781,11 +774,35 @@ var exploreAnimationOut = function(){
     });
 
     $( '.planet' ).css({
-      'transform' : 'translate( 40px , 40px )',
+      'transform' : 'translate( 120px , 100px )',
       'opacity'   : 0
     });
 
   });
+
+  // Stars goes down
+  $( '.stars, .search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateY(20px)'
+
+  }, 300);
+
+  // New world button goes down
+  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateY(10px)'
+
+  }, 300);
+
+  // World cards button goes down
+  $( '.world-card' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateY(40px)'
+
+  }, 300);
 
 }
 
@@ -831,7 +848,7 @@ var usersGoesDown = function(){
 
   $( '.more-info' ).stop().clearQueue().transition({
 
-    'opacity' : '1'
+    'opacity' : '0.7'
 
   }, 1000);
 
