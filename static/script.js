@@ -25,11 +25,13 @@ var closeNewCard    = $( '.close-new-card' );
 var worldCategory   = $( '.category .opener, .category .category-name' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
-var commentsButtons = $( '.comments-text' );
+var commentsButtons = $( '.comments-opener' );
 var youtubePreviewButton = $( '.you-card .activate-preview, .you-card .triangle-down' );
 var searchExplore   = $( '.explore-container .search-bar' );
 var cardOptionsBut  = $( '.card-options' );
 var worldOptionsHelp = $( '.privacy-options .option i' );
+var attachCommentBut = $( '.comments-footer .attachments, .comments-footer .attachments i, .comments-footer .attachments div' );
+var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -163,6 +165,14 @@ newPostButton.on( 'click' , function(){
 
 });
 
+attachNewPostBut.on( 'click' , function(){
+
+  $( this ).parent().find( '.attach-select' ).show();
+  $( this ).parent().find( '.attach-select' ).addClass( 'popup2' );
+  $( this ).parent().find( '.attach-select *' ).addClass( 'popup2' );
+
+});
+
 closeNewCard.on( 'click' , function(){
 
   $( '.new-card-container' ).toggleClass( 'popup' );
@@ -218,6 +228,7 @@ commentsButtons.on( 'click' , function(){
   if (commentsSection.hasClass('opened')) {
 
     commentsSection.css('height', height);
+    card.removeClass( 'comments-open' );
     commentsSection.transition({
 
       'height'         : 0
@@ -230,6 +241,7 @@ commentsButtons.on( 'click' , function(){
 
   }else{
 
+    card.addClass( 'comments-open' );
     commentsSection.transition({
 
       'height'         : height
@@ -296,6 +308,14 @@ worldOptionsHelp.on( 'mouseleave' , function(){
 
 });
 
+attachCommentBut.on( 'click' , function(){
+
+  $( this ).parent().find( '.attach-select' ).show();
+  $( this ).parent().find( '.attach-select' ).addClass( 'popup' );
+  $( this ).parent().find( '.attach-select *' ).addClass( 'popup' );
+
+});
+
 app
 
 .on( 'click' , function( e ){
@@ -303,6 +323,14 @@ app
   if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
 
     $( '.popup' ).removeClass( 'popup' );
+    $( this ).parent().find( '.comments-footer .attach-select' ).hide();
+
+  }
+
+  if ( ! $( e.target ).hasClass( 'popup2' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
+
+    $( '.popup' ).removeClass( 'popup2' );
+    $( this ).parent().find( '.new-card-section .attach-select' ).hide();
 
   }
 

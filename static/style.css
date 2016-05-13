@@ -204,6 +204,7 @@
     height: 28px;
     width: 100%;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -228,6 +229,7 @@
     border-radius: 50%;
     margin-top: 8px;
     border: 2px solid #4698e0;
+    cursor: pointer;
 
   }
 
@@ -240,6 +242,7 @@
     margin-top: 8px;
     letter-spacing: 0.02em;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -813,23 +816,9 @@
 
   }
 
-  .stop-follow{
-
-    position: absolute;
-    z-index: 3;
-    top: 231px;
-    right: 23px;
-    width: 115px;
-    height: 33px;
-    border-radius: 16px 16px 17px 17px;
-    background-color: #e85c5c;
-    transition: all 0.2s ease;
-
-  }
-
   .stop-follow:hover{
 
-    background-color: #e85c5c;
+    background-color: #e25353;
 
   }
 
@@ -1077,12 +1066,15 @@
     margin: 0 auto;
     position: relative;
     top: 50px;
+    background-position: 82px 0;
+    opacity: 0.7;
+    transition: all 0.2s ease;
 
   }
 
   .arrow-up:hover{
 
-    background-position: 82px 0;
+    opacity: 1;
 
   }
 
@@ -1359,6 +1351,19 @@
 
 }
 
+.comments-open.card .card-footer{
+
+  border-radius: 0px;
+  border-bottom: 1px solid #e5e9ea;
+
+}
+
+.comments-open.card .card-footer .comments-opener{
+
+  opacity: 1;
+
+}
+
 .card{
 
   .top-card{
@@ -1543,28 +1548,47 @@
 
     float: left;
     width: 100%;
-    height: 44px;
+    height: 43px;
     border-radius: 0 0 4px 4px;
     background-color: #fbfbfc;
+    border-bottom: 1px solid #fbfbfc;
+
+  }
+
+  .card-footer .comments-opener{
+
+    float: left;
+    width: 150px;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+
+  }
+
+  .card-footer .comments-opener:hover{
+
+    opacity: 1;
 
   }
 
   .comments-icon{
 
     float: left;
-    background-image: url('@static/comments.png');
+    background-image: url('@static/comment.png');
     width: 17px;
     height: 17px;
     background-size: 17px 17px;
     margin-left: 20px;
     margin-top: 14px;
+    cursor: pointer;
 
   }
 
   .comments-text{
 
     float: left;
-    color: #889399;
+    color: #545f65;
     font-size: 13px;
     margin-top: 16px;
     margin-left: 10px;
@@ -1959,7 +1983,8 @@
 
     float: left;
     border-bottom: 1px solid #e5e9ea;
-    padding: 13px 10px;
+    padding: 14px 10px;
+    padding-bottom: 10px;
     transition: all 0.3s ease;
     width: ~'calc(100% - 20px)';
 
@@ -1985,6 +2010,7 @@
     border-radius: 50%;
     background-image: url('@static/me.jpg');
     background-size: cover;
+    margin-left: 3px;
 
   }
 
@@ -1996,6 +2022,7 @@
     font-weight: bold;
     color: #545f65;
     width: 338px;
+    margin-top: 2px;
 
   }
 
@@ -2007,6 +2034,7 @@
     color: #545f65;
     opacity: 0;
     transition: all 0.3s ease;
+    cursor: pointer;
 
   }
 
@@ -2032,17 +2060,24 @@
     font-size: 13px;
     color: #889399;
     line-height: 20px;
-    width: 460px;
-    margin-top: 2px;
+    width: 440px;
+    margin-top: 3px;
 
   }
 
   .replay-list{
 
     float: left;
-    margin-left: 32px;
+    margin-left: 30px;
     width: ~'calc(100% - 32px)';
-    padding-top: 10px;
+    padding-top: 8px;
+    display: none;
+
+  }
+
+  .replied .replay-list{
+
+    display: inline-block;
 
   }
 
@@ -2060,14 +2095,16 @@
     height: 7px;
     background-image: url('@static/replay.png');
     background-size: 11px 7px;
-    margin-right: 5px;
-    margin-top: 15px;
+    margin-right: 3px;
+    margin-top: 13px;
+    margin-left: 2px;
 
   }
 
   .replay .name{
 
     width: 380px;
+    margin-top: 2px;
 
   }
 
@@ -2085,28 +2122,123 @@
     border-top: 1px solid #e5e9ea;
     width: 100%;
     border-radius: 0 0 6px 6px;
+    position: relative;
 
   }
 
   .comments-footer .attachments{
 
     float: left;
-    width: 16px;
+    width: 33px;
     height: 18px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 13px;
     margin-top: 16px;
     border-right: 1px solid #e3e7e8;
+    cursor: pointer;
+
+  }
+
+  .comments-footer .attachments div{
+
+    float: left;
+    margin-top: -8px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+  }
+
+  .comments-footer .attachments:hover div{
+
+    background-color: rgba(0,0,0,0.05);
 
   }
 
   .comments-footer .attachments i {
 
     float: left;
+    margin-top: 8px;
+    margin-left: 8px;
     width: 16px;
     height: 18px;
     background-image: url('@static/attach.png');
     background-size: 16px 18px;
+    cursor: pointer;
+
+  }
+
+  .attach-select{
+
+    position: absolute;
+    left: 43px;
+    top: -27px;
+    width: 157px;
+    height: 67px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    border: solid 1px rgba(0,0,0,.15);
+    z-index: 4;
+    opacity: 0;
+    transition: all 0.2s ease;
+    display: none;
+
+  }
+
+  .attach-select.popup{
+
+    opacity: 1;
+
+  }
+
+  .attach-select article{
+
+    float: left;
+    width: 100%;
+    height: 50%;
+    cursor: pointer;
+
+  }
+
+  .attach-select .inevio span{
+
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+
+  }
+
+  .attach-select .pc span{
+
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+
+  }
+
+  .attach-select article span{
+
+    float: left;
+    padding-left: 20px;
+    width: ~'calc(100% - 20px)';
+    line-height: 100%;
+    font-size: 13px;
+    color: #545f65;
+    height: 33.5px;
+    line-height: 33.5px;
+    transition: all 0.2s ease;
+
+  }
+
+
+  .attach-select article:hover span{
+
+    background-color: #f7f8fa;
 
   }
 
@@ -2130,7 +2262,21 @@
   	height: 33px;
   	border-radius: 17px 17px 16px 16px;
   	background-color: #60b25e;
-    margin-top: 6px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+  }
+
+  .comments-footer .send-button:hover {
+
+    background-color: #4ea34b;
+
+  }
+
+  .comments-footer .send-button:hover {
+
+    background-color: #3d903b;
 
   }
 
@@ -2142,6 +2288,7 @@
     margin-top: 9px;
     color: #fff;
     font-size: 15px;
+    cursor: pointer;
 
   }
 
@@ -2762,6 +2909,7 @@
     background-color: #fff;
     margin-left: 27px;
     margin-top: 44px;
+    cursor: pointer;
 
   }
 
@@ -2776,6 +2924,7 @@
     margin-top: 32px;
     opacity: 0.7;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -2795,6 +2944,7 @@
     margin-top: 136px;
     margin-right: 15px;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -2818,6 +2968,7 @@
     color: #fff;
     font-size: 15px;
     margin-top: 9px;
+    cursor: pointer;
 
   }
 
@@ -2910,6 +3061,7 @@
     position: relative;
     transition: all 0.2s ease;
     opacity: 0.7;
+    cursor: pointer;
 
   }
 
@@ -2948,6 +3100,7 @@
     margin: 0 auto;
     position: relative;
     top: 23px;
+    cursor: pointer;
 
   }
 
@@ -2986,6 +3139,7 @@
     float: left;
     margin-top: 36px;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -3078,6 +3232,7 @@
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -3103,6 +3258,7 @@
     font-size: 19px;
     color: #fff;
     margin-top: 14px;
+    cursor: pointer;
 
   }
 
@@ -3120,6 +3276,7 @@
     margin-top: 10px;
     background-color: transparent;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -3141,6 +3298,7 @@
     margin-top: 4px;
     opacity: 0.7;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -3159,6 +3317,7 @@
     margin-left: 5px;
     opacity: 0.7;
     transition: all 0.2s ease;
+    cursor: pointer;
 
   }
 
@@ -3420,24 +3579,167 @@
   .close-new-card{
 
     position: absolute;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: 10px;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .close-new-card:hover{
+
+    background-color: #e9edf2;
+
+  }
+
+  .close-new-card figure{
+
+    float: left;
     width: 14px;
     height: 14px;
-    background-image: url('@static/closeBig.png');
-    background-size: 14px 14px;
-    top: 26px;
-    right: 25px;
+    background-image: url('@static/close-create.png');
+    background-size: 29px 14px;
+    margin-left: 7px;
+    background-position: 14px 0;
+    margin-top: 4px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .close-new-world:card figure{
+
+    opacity: 1;
+
+  }
+
+  .close-new-card span{
+
+    color: #889399;
+    float: left;
+    width: 30px;
+    font-size: 13px;
+    margin-left: 5px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .close-new-card:hover span{
+
+    opacity: 1;
 
   }
 
   .attachments{
 
     position: absolute;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    cursor: pointer;
+    left: 15px;
+    bottom: 7px;
+    transition: all 0.2s ease;
+
+  }
+
+  .attachments:hover{
+
+    background-color: rgba(0,0,0,0.05);
+
+  }
+
+  .attachments i{
+
+    float: left;
     width: 16px;
     height: 18px;
     background-image: url('@static/attach.png');
     background-size: 16px 18px;
-    left: 24px;
-    bottom: 15px;
+    margin-left: 9px;
+    margin-top: 8px;
+    cursor: pointer;
+
+  }
+
+  .attach-select{
+
+    position: absolute;
+    left: 48px;
+    bottom: -28px;
+    width: 157px;
+    height: 67px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    border: solid 1px rgba(0,0,0,.15);
+    z-index: 4;
+    opacity: 0;
+    transition: all 0.2s ease;
+    display: none;
+
+  }
+
+  .attach-select.popup2{
+
+    opacity: 1;
+
+  }
+
+  .attach-select article{
+
+    float: left;
+    width: 100%;
+    height: 50%;
+    cursor: pointer;
+
+  }
+
+  .attach-select .inevio span{
+
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+
+  }
+
+  .attach-select .pc span{
+
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+
+  }
+
+  .attach-select article span{
+
+    float: left;
+    padding-left: 20px;
+    width: ~'calc(100% - 20px)';
+    line-height: 100%;
+    font-size: 13px;
+    color: #545f65;
+    height: 33.5px;
+    line-height: 33.5px;
+    transition: all 0.2s ease;
+
+  }
+
+
+  .attach-select article:hover span{
+
+    background-color: #f7f8fa;
 
   }
 
@@ -3452,6 +3754,19 @@
   	background-color: #889399;
     right: 114px;
     bottom: 10px;
+    cursor: pointer;
+
+  }
+
+  .cancel-new-card:hover{
+
+    background-color: #7a848a;
+
+  }
+
+  .cancel-new-card:active{
+
+    background-color: #6a7379;
 
   }
 
@@ -3463,6 +3778,7 @@
     color: #fff;
     font-size: 15px;
     margin-top: 8px;
+    cursor: pointer;
 
   }
 
@@ -3477,6 +3793,19 @@
     background-color: #60b25e;
     right: 15px;
     bottom: 10px;
+    cursor: pointer;
+
+  }
+
+  .post-new-card:hover{
+
+    background-color: #4ea34b;
+
+  }
+
+  .post-new-card:active{
+
+    background-color: #3d903b;
 
   }
 
@@ -3488,6 +3817,7 @@
     color: #fff;
     font-size: 15px;
     margin-top: 8px;
+    cursor: pointer;
 
   }
 
