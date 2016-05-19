@@ -400,6 +400,8 @@ app
 
   var position = $(this).position();
 
+  $( '.users-circles-container .user-hover span' ).text( $( this ).data( 'user' ).name );
+
   $( '.users-circles-container .user-hover' ).css({
     'top'     : ( 89 + position.top ),
     'left'    : ( position.left - 29 ),

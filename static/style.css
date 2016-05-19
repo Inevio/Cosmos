@@ -898,7 +898,7 @@
 
   }
 
-  .user-preview:first-child{
+  .user-preview.invite-user{
 
     background-image: url('@static/bola-invitar.png');
     background-size: 37px 37px;
@@ -910,7 +910,7 @@
 
   }
 
-  .user-preview:first-child:hover{
+  .user-preview.invite-user:hover{
 
     -webkit-box-shadow: 0 4px 8px rgba(0,0,0,.4);
     -moz-box-shadow: 0 4px 8px rgba(0,0,0,.4);
@@ -918,7 +918,7 @@
 
   }
 
-  .user-preview:first-child:active{
+  .user-preview.invite-user:active{
 
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -926,7 +926,7 @@
 
   }
 
-  .user-preview:first-child:active:after{
+  .user-preview.invite-user:active:after{
 
     content: "";
     position: absolute;
@@ -2701,15 +2701,33 @@
 
   }
 
+  .followed .follow-button{
+
+    background-color: #f7f8fa;
+
+  }
+
   .follow-button:hover{
 
     background-color: #4ea34b;
 
   }
 
+  .followed .follow-button:hover{
+
+    background-color: #f7f8fa;
+
+  }
+
   .follow-button:active{
 
     background-color: #3d903b;
+
+  }
+
+  .followed .follow-button:active{
+
+    background-color: #f7f8fa;
 
   }
 
@@ -2721,6 +2739,13 @@
     text-align: center;
     color: #fff;
     font-size: 13px;
+
+  }
+
+  .followed .follow-button span{
+
+    color: #545f65;
+    font-weight: bold;
 
   }
 
@@ -3818,6 +3843,290 @@
     font-size: 15px;
     margin-top: 8px;
     cursor: pointer;
+
+  }
+
+}
+
+/* INVITE NEW USER */
+.invite-user-container{
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  background-color: rgba(0,0,0,0.3);
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+
+}
+
+.invite-user-container.popup{
+
+  visibility:  visible;
+  opacity: 1;
+
+}
+
+.invite-user-section{
+
+  position: absolute;
+  top: 132px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 419px;
+  height: 375px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #fff;
+	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	box-shadow: 0 1px 4px rgba(0,0,0,.2);
+
+}
+
+.invite-user-section{
+
+  .invite-user-title{
+
+    float: left;
+    font-size: 17px;
+    color: #889399;
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 504px;
+
+  }
+
+  .invite-user-title i{
+
+    color: #545f65;
+    font-weight: bold;
+    margin-right: 4px;
+
+  }
+
+  .invite-user-title figure{
+
+    color: #60b25e;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 4px;
+
+  }
+
+  .cancel-invite-user{
+
+    position: absolute;
+    width: 89px;
+  	height: 33px;
+  	-webkit-border-radius: 16px 16px 17px 17px;
+  	-moz-border-radius: 16px 16px 17px 17px;
+  	border-radius: 16px 16px 17px 17px;
+  	background-color: #889399;
+    right: 114px;
+    bottom: 10px;
+    cursor: pointer;
+
+  }
+
+  .cancel-invite-user:hover{
+
+    background-color: #7a848a;
+
+  }
+
+  .cancel-invite-user:active{
+
+    background-color: #6a7379;
+
+  }
+
+  .cancel-invite-user span{
+
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    margin-top: 8px;
+    cursor: pointer;
+
+  }
+
+  .invite-user{
+
+    position: absolute;
+    width: 89px;
+    height: 33px;
+    -webkit-border-radius: 16px 16px 17px 17px;
+    -moz-border-radius: 16px 16px 17px 17px;
+    border-radius: 16px 16px 17px 17px;
+    background-color: #60b25e;
+    right: 15px;
+    bottom: 10px;
+    cursor: pointer;
+
+  }
+
+  .invite-user:hover{
+
+    background-color: #4ea34b;
+
+  }
+
+  .invite-user:active{
+
+    background-color: #3d903b;
+
+  }
+
+  .invite-user span{
+
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    margin-top: 8px;
+    cursor: pointer;
+
+  }
+  .close-invite-user{
+
+    position: absolute;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: 10px;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .close-invite-user:hover{
+
+    background-color: #e9edf2;
+
+  }
+
+  .close-invite-user figure{
+
+    float: left;
+    width: 14px;
+    height: 14px;
+    background-image: url('@static/close-create.png');
+    background-size: 29px 14px;
+    margin-left: 7px;
+    background-position: 14px 0;
+    margin-top: 4px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .close-invite-user:card figure{
+
+    opacity: 1;
+
+  }
+
+  .close-invite-user span{
+
+    color: #889399;
+    float: left;
+    width: 30px;
+    font-size: 13px;
+    margin-left: 5px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .close-invite-user:hover span{
+
+    opacity: 1;
+
+  }
+
+  .ui-input-search{
+
+    float: left;
+    border: solid 2px #c0c6ca;
+    border-radius: 40px;
+    margin-top: 19px;
+    margin-left: 20px;
+    width: 375px;
+    transition: all 0.2s ease;
+
+  }
+
+  .active.ui-input-search{
+
+    border-color: #60b25e;
+
+  }
+
+  .friend-list{
+
+    float: left;
+    width: 100%;
+    height: ~'calc(100% - 167px)';
+    padding-top: 10px;
+
+  }
+
+  .friend{
+
+    float: left;
+    margin-left: 77px;
+    margin-right: 20px;
+    height: 64px;
+    width: ~'calc(100% - 97px)';
+    border-bottom: 1px solid #e2e6e8;
+    position: relative;
+
+  }
+
+  .friend .avatar{
+
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-image: url( '@static/me.jpg' );
+    background-size: cover;
+    left: -57px;
+    bottom: 8px;
+
+  }
+
+  .friend span{
+
+    position: absolute;
+    font-size: 15px;
+    font-weight: bold;
+    color: #545f65;
+    left: 1px;
+    bottom: 22px;
+
+  }
+
+  .friend .ui-checkbox{
+
+    position: absolute;
+    bottom: 24px;
+    right: 10px;
+    border-radius: 50%;
 
   }
 
