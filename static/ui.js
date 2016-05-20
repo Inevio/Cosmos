@@ -255,8 +255,6 @@ commentsButtons.on( 'click' , function(){
 
   }
 
-
-
 });
 
 youtubePreviewButton.on( 'click' , function(){
