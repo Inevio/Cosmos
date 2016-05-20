@@ -10,6 +10,8 @@
     "followers"     : "seguidores",
     "invitePeople"  : "Invitar gente",
     "to"            : "a",
-    "search"        : "Buscar..."
+    "search"        : "Buscar...",
+    "updatedFile"   : "ha actualizado un arhivo",
+    "postCreated"   : "ha creado un nuevo post"
 
 }

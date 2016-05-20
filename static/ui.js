@@ -92,8 +92,6 @@ cardList.on( 'mousewheel' , function( e , d , x , y ){
 
   var obj = $( this );
 
-  console.log( state , onTransition , y );
-
   if( onTransition ){
 
     e.preventDefault();
