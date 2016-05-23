@@ -12,6 +12,9 @@
     "to"            : "a",
     "search"        : "Buscar...",
     "updatedFile"   : "ha actualizado un arhivo",
-    "postCreated"   : "ha creado un nuevo post"
+    "postCreated"   : "ha creado un nuevo post",
+    "comments"      : "comentarios",
+    "comfirmDeletePost" : "¿Esta seguro que quiere eliminar el post?",
+    "deletePost"    : "Borrar post"
 
 }

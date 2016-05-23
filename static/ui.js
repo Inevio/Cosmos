@@ -25,10 +25,7 @@ var closeNewCard    = $( '.close-new-card' );
 var worldCategory   = $( '.category .opener, .category .category-name' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
-var commentsButtons = $( '.comments-opener' );
-var youtubePreviewButton = $( '.you-card .activate-preview, .you-card .triangle-down' );
 var searchExplore   = $( '.explore-container .search-bar' );
-var cardOptionsBut  = $( '.card-options' );
 var worldOptionsHelp = $( '.privacy-options .option i' );
 var attachCommentBut = $( '.comments-footer .attachments, .comments-footer .attachments i, .comments-footer .attachments div' );
 var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
@@ -218,61 +215,9 @@ searchBarFigure.on( 'click' , function(){
 
 });
 
-commentsButtons.on( 'click' , function(){
-
-  var card = $(this).parent().parent();
-  var height = parseInt(card.find('.comments-list').css('height')) + 50;
-  var commentsSection = card.find( '.comments-section' );
-
-  if (commentsSection.hasClass('opened')) {
-
-    commentsSection.css('height', height);
-    card.removeClass( 'comments-open' );
-    commentsSection.transition({
-
-      'height'         : 0
-
-    }, 200, function(){
-
-      commentsSection.removeClass('opened');
-
-    });
-
-  }else{
-
-    card.addClass( 'comments-open' );
-    commentsSection.transition({
-
-      'height'         : height
-
-    }, 200, function(){
-
-      commentsSection.addClass('opened');
-      commentsSection.css('height', 'auto');
-
-    });
-
-
-  }
-
-});
-
-youtubePreviewButton.on( 'click' , function(){
-
-  $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' );
-
-});
-
 searchExplore.on( 'click' , function(){
 
   $(this).addClass('popup');
-
-});
-
-cardOptionsBut.on( 'click' , function(){
-
-  $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
-  $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
 
 });
 
@@ -414,7 +359,60 @@ app
     'opacity' : 0
   });
 
+})
+
+.on( 'click' , '.comments-opener' , function(){
+
+  var card = $(this).parent().parent();
+  var height = parseInt(card.find('.comments-list').css('height')) + 50;
+  var commentsSection = card.find( '.comments-section' );
+
+  if (commentsSection.hasClass('opened')) {
+
+    commentsSection.css('height', height);
+    card.removeClass( 'comments-open' );
+    commentsSection.transition({
+
+      'height'         : 0
+
+    }, 200, function(){
+
+      commentsSection.removeClass('opened');
+
+    });
+
+  }else{
+
+    card.addClass( 'comments-open' );
+    commentsSection.transition({
+
+      'height'         : height
+
+    }, 200, function(){
+
+      commentsSection.addClass('opened');
+      commentsSection.css('height', 'auto');
+
+    });
+
+
+  }
+
+})
+
+.on( 'click' , '.card-options' , function(){
+
+  $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
+  $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
+
+})
+
+.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
+
+  $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' );
+
 });
+
 // END UI EVENTS
 
 // APP EVENTS

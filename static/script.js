@@ -15,6 +15,7 @@ var friendSearchBox       = $( '.invite-user-container .ui-input-search input' )
 var cancelNewCard         = $( '.cancel-new-card' );
 var postNewCardButton     = $( '.post-new-card' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
+var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -64,13 +65,18 @@ postNewCardButton.on( 'click' , function(){
 
 });
 
-api.cosmos.on( 'worldCreated' , function(){
-  console.log( arguments )
+api.cosmos.on( 'worldCreated' , function( world ){
+
+  appendWorld( world );
+  $( '.new-world-name input' ).val('');
+  $( '.new-world-container' ).data( 'world' , world );
+  $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+
 });
 
-app.
+app
 
-on( 'click' , '.create-world-button.step-a' , function(){
+.on( 'click' , '.create-world-button.step-a' , function(){
 
   createWorldAsync();
 
@@ -100,6 +106,13 @@ on( 'click' , '.create-world-button.step-a' , function(){
   $( '.invite-user-container *' ).toggleClass( 'popup' );
   getFriendsAsync();
 
+})
+
+.on( 'click' , '.card-options-section .delete' , function(){
+
+  var card = $(this).parent().parent().parent();
+  removeCardAsync( card );
+
 });
 
 //Functions
@@ -117,6 +130,7 @@ var initTexts = function(){
   $( '.category .private' ).text( lang.privates );
   $( '.explore-text' ).text( lang.explore );
   $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
+  $( '.card-options-section .delete span' ).text( lang.deletePost );
 
 }
 
@@ -217,9 +231,9 @@ var createWorldAsync = function(){
 
   wz.cosmos.create( worldName , null, false , null , function( e , o ){
 
-    appendWorld( o );
-    $( '.new-world-name input' ).val('');
-    $( '.new-world-container' ).data( 'world' , o );
+    if ( e ) {
+      console.log( e );
+    }
 
   });
 
@@ -465,15 +479,21 @@ var inviteUsers = function(){
 var postNewCardAsync = function(){
 
   var text = $( '.new-card-textarea' ).val();
-  worldSelected.addPost( { content: text } , function(){
+  var cardType = 0;
 
+  if ( text.indexOf( 'youtube' ) ) {
+    cardType = 8;
+  }
 
+  worldSelected.addPost( { content: text , type: cardType} , function(){
 
   });
 
 }
 
 var getWorldPostsAsync = function( world ){
+
+  $( '.cardDom' ).remove();
 
   world.getPosts( {from:0 , to:1000} , function( e , posts ){
 
@@ -486,6 +506,11 @@ var getWorldPostsAsync = function( world ){
           case 1:
 
             appendGenericCard( post , user , lang.postCreated );
+            break;
+
+          case 8:
+
+            appendYoutubeCard( post , user , lang.postCreated );
             break;
 
         }
@@ -501,7 +526,7 @@ var getWorldPostsAsync = function( world ){
 var appendGenericCard = function( post , user , reason ){
 
   var card = genericCardPrototype.clone();
-  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id );
+  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
 
   if( post.fsnode == 0 ){
 
@@ -515,7 +540,73 @@ var appendGenericCard = function( post , user , reason ){
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
   card.find( '.desc' ).text( post.content );
 
-  $( '.cards-grid' ).append( card );
+  setReplies( card , post );
+  appendCard( card , post );
+
+}
+
+var appendYoutubeCard = function( post , user , reason ){
+
+  var card = youtubeCardPrototype.clone();
+  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
+
+  var youtubeCode = post.content.match(/v=([A-z0-9-_]+)/)[1];
+
+  card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1' );
+  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+  card.find( '.card-user-name' ).text( user.fullName );
+  card.find( '.shared-text' ).text( reason );
+  card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
+  card.find( '.desc' ).text( post.content );
+
+  setReplies( card , post );
+  appendCard( card , post );
+
+}
+
+var setReplies = function( card , post ){
+
+  post.getReplies( {from:0 , to:1000} , function( e , replies ){
+
+    card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
+
+  });
+
+}
+
+var appendCard = function( card , post ){
+
+  var cardsAppended = $( '.cardDom' );
+
+  if ( !cardsAppended.length ) {
+
+    $( '.cards-grid' ).append( card );
+
+  }else{
+
+    var inserted = false;
+    $.each( cardsAppended , function( index , cardAppended ){
+
+      var time = $( cardAppended ).data( 'time' );
+      if (!inserted && post.created > time ) {
+
+        $( cardAppended ).before( card );
+        inserted = true;
+
+      }
+      if ( !inserted && index+1 == cardsAppended.length ) {
+
+        $( cardAppended ).after( card );
+        inserted = true;
+
+      }
+
+    });
+
+  }
+
+  card.data( 'time' , post.created );
+  card.data( 'post' , post );
 
 }
 
@@ -582,6 +673,25 @@ var getStringHour = function( date ){
 
 
   return hh + ':' + mm;
+
+}
+
+var removeCardAsync = function( card ){
+
+  confirm( lang.comfirmDeletePost , function(o){
+    if(o){
+
+      var post = card.data( 'post' );
+      card.remove();
+
+      worldSelected.removePost( post.id , function( e , o ){
+
+        console.log( e , o );
+
+      });
+
+    }
+  });
 
 }
 
