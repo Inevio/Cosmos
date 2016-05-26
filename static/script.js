@@ -1,6 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
+var myWorlds              = [];
 var app                   = $( this );
 var myContactID           = api.system.user().id;
 var worldPrototype        = $( '.sidebar .world.wz-prototype' );
@@ -16,6 +17,8 @@ var cancelNewCard         = $( '.cancel-new-card' );
 var postNewCardButton     = $( '.post-new-card' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
+var exploreButton         = $( '.explore-button' );
+var unFollowButton        = $( '.stop-follow' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -65,12 +68,25 @@ postNewCardButton.on( 'click' , function(){
 
 });
 
+exploreButton.on( 'click' , function(){
+
+  getPublicWorldsAsync();
+
+});
+
+unFollowButton.on( 'click' , function(){
+
+  unFollowWorld();
+
+});
+
 api.cosmos.on( 'worldCreated' , function( world ){
 
   appendWorld( world );
   $( '.new-world-name input' ).val('');
   $( '.new-world-container' ).data( 'world' , world );
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+  myWorlds.push( world.id );
 
 });
 
@@ -113,6 +129,12 @@ app
   var card = $(this).parent().parent().parent();
   removeCardAsync( card );
 
+})
+
+.on( 'click' , '.attach-select.popup2 .inevio' , function(){
+
+  attachFromInevio();
+
 });
 
 //Functions
@@ -120,7 +142,6 @@ var initCosmos = function(){
 
   initTexts();
   getMyWorldsAsync();
-  getPublicWorldsAsync();
 
 }
 
@@ -143,6 +164,7 @@ var getMyWorldsAsync = function(){
     $.each( o , function( i , world ){
 
       appendWorld( world );
+      myWorlds.push( world.id );
 
     });
 
@@ -158,11 +180,7 @@ var getPublicWorldsAsync = function(){
 
     $.each( o , function( i , world ){
 
-      world.getUsers(function( e , users ){
-
-        appendWorldCard( world , users );
-
-      });
+      appendWorldCard( world );
 
     });
 
@@ -191,24 +209,13 @@ var appendWorld = function( worldApi ){
 
 }
 
-var appendWorldCard = function( worldApi , users ){
+var appendWorldCard = function( worldApi ){
 
   var world = worldCardPrototype.clone();
   world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id );
   world.find( '.world-title-min' ).text( worldApi.name );
 
-  var found = false;
-  $.each( users , function( i , user ){
-
-    if ( user.userId == myContactID ) {
-
-      found = true;
-
-    }
-
-  });
-
-  if ( found ) {
+  if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
 
     world.addClass( 'followed' ).removeClass( 'unfollowed' );
     world.find( '.follow-button span' ).text( 'Siguiendo' );
@@ -479,13 +486,15 @@ var inviteUsers = function(){
 var postNewCardAsync = function(){
 
   var text = $( '.new-card-textarea' ).val();
-  var cardType = 0;
+  var cardType = 1;
 
-  if ( text.indexOf( 'youtube' ) ) {
+  if ( text.indexOf( 'www.youtube' ) != -1 ) {
     cardType = 8;
   }
 
-  worldSelected.addPost( { content: text , type: cardType} , function(){
+  worldSelected.addPost( { content: text , type: cardType} , function( e , o ){
+
+    $( '.new-card-textarea' ).val('');
 
   });
 
@@ -691,6 +700,24 @@ var removeCardAsync = function( card ){
       });
 
     }
+  });
+
+}
+
+var attachFromInevio = function(){
+
+  wz.fs.selectPath('root', '', function(e,o){
+    console.log('ATTACH',e,o);
+  });
+
+}
+
+var unFollowWorld = function(){
+
+  worldSelected.removeUser( myContactID , function( e , o ){
+
+    console.log('he salido',e,o);
+
   });
 
 }
