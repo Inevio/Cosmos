@@ -135,6 +135,12 @@ app
 
   attachFromInevio();
 
+})
+
+.on( 'click' , '.comments-footer .send-button' , function(){
+
+  addReplayAsync( $( this ).parent().parent().parent() );
+
 });
 
 //Functions
@@ -349,21 +355,21 @@ var appendUserCircle = function( i , user ){
   switch (i) {
     case 0:
 
-      $( '.user-preview.a' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
-      $( '.user-preview.a .user-hover span' ).text( user.name );
-      break;
+    $( '.user-preview.a' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+    $( '.user-preview.a .user-hover span' ).text( user.name );
+    break;
 
     case 1:
 
-      $( '.user-preview.b' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
-      $( '.user-preview.b .user-hover span' ).text( user.name );
-      break;
+    $( '.user-preview.b' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+    $( '.user-preview.b .user-hover span' ).text( user.name );
+    break;
 
     case 2:
 
-      $( '.user-preview.c' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
-      $( '.user-preview.c .user-hover span' ).text( user.name );
-      break;
+    $( '.user-preview.c' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+    $( '.user-preview.c .user-hover span' ).text( user.name );
+    break;
 
   }
 
@@ -514,13 +520,13 @@ var getWorldPostsAsync = function( world ){
 
           case 1:
 
-            appendGenericCard( post , user , lang.postCreated );
-            break;
+          appendGenericCard( post , user , lang.postCreated );
+          break;
 
           case 8:
 
-            appendYoutubeCard( post , user , lang.postCreated );
-            break;
+          appendYoutubeCard( post , user , lang.postCreated );
+          break;
 
         }
 
@@ -549,7 +555,7 @@ var appendGenericCard = function( post , user , reason ){
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
   card.find( '.desc' ).text( post.content );
 
-  setReplies( card , post );
+  setRepliesAsync( card , post );
   appendCard( card , post );
 
 }
@@ -568,12 +574,12 @@ var appendYoutubeCard = function( post , user , reason ){
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
   card.find( '.desc' ).text( post.content );
 
-  setReplies( card , post );
+  setRepliesAsync( card , post );
   appendCard( card , post );
 
 }
 
-var setReplies = function( card , post ){
+var setRepliesAsync = function( card , post ){
 
   post.getReplies( {from:0 , to:1000} , function( e , replies ){
 
@@ -706,8 +712,10 @@ var removeCardAsync = function( card ){
 
 var attachFromInevio = function(){
 
-  wz.fs.selectPath('root', '', function(e,o){
+  wz.fs.selectFile('', '', function(e,o){
+
     console.log('ATTACH',e,o);
+
   });
 
 }
@@ -719,6 +727,13 @@ var unFollowWorld = function(){
     console.log('he salido',e,o);
 
   });
+
+}
+
+var addReplayAsync = function( card ){
+
+  var post = card.data( 'post' );
+  console.log( post );
 
 }
 

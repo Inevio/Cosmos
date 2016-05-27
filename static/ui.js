@@ -361,6 +361,19 @@ app
 
 })
 
+.on( 'click' , '.card-options' , function(){
+
+  $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
+  $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
+
+})
+
+.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
+
+  $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' );
+
+})
+
 .on( 'click' , '.comments-opener' , function(){
 
   var card = $(this).parent().parent();
@@ -397,19 +410,6 @@ app
 
 
   }
-
-})
-
-.on( 'click' , '.card-options' , function(){
-
-  $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
-  $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
-
-})
-
-.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
-
-  $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' );
 
 });
 
