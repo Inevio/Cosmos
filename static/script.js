@@ -19,6 +19,7 @@ var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var exploreButton         = $( '.explore-button' );
 var unFollowButton        = $( '.stop-follow' );
+var commentPrototype      = $( '.comment.wz-prototype' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -584,6 +585,31 @@ var setRepliesAsync = function( card , post ){
   post.getReplies( {from:0 , to:1000} , function( e , replies ){
 
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
+    card.find( '.comments-text' ).data( 'num' , replies.length );
+
+    $.each( replies , function( i , reply ){
+
+      appendReply( card , reply );
+
+    });
+
+  });
+
+}
+
+var appendReply = function( card , reply ){
+
+  var comment = commentPrototype.clone();
+  comment.removeClass( 'wz-prototype' ).addClass( 'commentDom' );
+
+  wz.user( reply.author , function( e , user ){
+
+    comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+    comment.find( '.name' ).text( user.fullName );
+    comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
+    comment.find( '.comment-text' ).text( reply.content );
+
+    card.find( '.comments-list' ).append( comment );
 
   });
 
@@ -734,6 +760,11 @@ var addReplayAsync = function( card ){
 
   var post = card.data( 'post' );
   console.log( post );
+  post.reply( { content: card.find( '.comments-footer input' ).val() , author: myContactID , worldId: post.worldId } , function(e,o){
+
+    console.log(e , o);
+
+  });
 
 }
 
