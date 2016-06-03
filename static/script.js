@@ -586,6 +586,7 @@ var setRepliesAsync = function( card , post ){
 
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
     card.find( '.comments-text' ).data( 'num' , replies.length );
+    $( '.commentDom' ).remove();
 
     $.each( replies , function( i , reply ){
 
@@ -599,8 +600,8 @@ var setRepliesAsync = function( card , post ){
 
 var appendReply = function( card , reply ){
 
-  var comment = commentPrototype.clone();
-  comment.removeClass( 'wz-prototype' ).addClass( 'commentDom' );
+  var comment = commentPrototype.eq(0).clone();
+  comment.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + reply.id );
 
   wz.user( reply.author , function( e , user ){
 
