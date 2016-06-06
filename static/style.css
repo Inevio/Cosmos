@@ -667,10 +667,15 @@
 
 }
 
+.cover.shadowed .shadow{
+  display: block;
+}
+
 .cover{
 
   .shadow{
 
+    display: none;
     width: 50%;
     height: 100%;
     background-color: rgba(31,37,47,0.7);
@@ -844,7 +849,7 @@
 
     width: 52px;
     height: 52px;
-    background-image: url('@static/me.jpg');
+    background-image: url('@static/moon2.png');
     background-size: cover;
     top: 84px;
     position: relative;
@@ -1321,9 +1326,14 @@
 }
 
 .cards-grid{
-
+  /*
   margin: 0 auto;
   width: 554px;
+  */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 
 }
 
@@ -1341,6 +1351,7 @@
   -moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
   box-shadow: 0 1px 4px rgba(0,0,0,.2);
   transition: all 0.2s ease;
+  display: inline-table;
 
 }
 

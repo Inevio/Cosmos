@@ -1,6 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
+var animationEffect  = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
 var myContactID           = api.system.user().id;
@@ -20,6 +21,7 @@ var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var exploreButton         = $( '.explore-button' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
+var openChatButton        = $( '.open-chat' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -71,6 +73,7 @@ postNewCardButton.on( 'click' , function(){
 
 exploreButton.on( 'click' , function(){
 
+  $( '.world-card-dom' ).remove();
   getPublicWorldsAsync();
 
 });
@@ -88,6 +91,16 @@ api.cosmos.on( 'worldCreated' , function( world ){
   $( '.new-world-container' ).data( 'world' , world );
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
   myWorlds.push( world.id );
+
+});
+
+openChatButton.on( 'click' , function(){
+
+  wz.app.openApp( 14 , [ 'open-chat' , world , function( o ){
+
+    console.log(o);
+
+  }] );
 
 });
 
@@ -191,6 +204,8 @@ var getPublicWorldsAsync = function(){
 
     });
 
+    exploreAnimationIn();
+
   });
 
 };
@@ -219,7 +234,7 @@ var appendWorld = function( worldApi ){
 var appendWorldCard = function( worldApi ){
 
   var world = worldCardPrototype.clone();
-  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id );
+  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' );
   world.find( '.world-title-min' ).text( worldApi.name );
 
   if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
@@ -248,6 +263,8 @@ var createWorldAsync = function(){
     if ( e ) {
       console.log( e );
     }
+
+    createChat( o );
 
   });
 
@@ -619,6 +636,7 @@ var appendReply = function( card , reply ){
 var appendCard = function( card , post ){
 
   var cardsAppended = $( '.cardDom' );
+  card.find( '.title' ).text( 'Titulo de prueba' );
 
   if ( !cardsAppended.length ) {
 
@@ -766,6 +784,74 @@ var addReplayAsync = function( card ){
     console.log(e , o);
 
   });
+
+}
+
+var exploreAnimationIn = function(){
+
+  var exploreSection = $( '.explore-section' );
+
+  exploreSection.css( 'display' , 'block');
+
+  // Fade in blue background
+  exploreSection.stop().clearQueue().transition({
+
+    'opacity' : 1
+
+  }, 300, animationEffect);
+
+  // New world button appears and goes up
+  $( '.planet' ).stop().clearQueue().transition({
+
+    delay       : 440,
+    'opacity'   : 1,
+    'transform' : 'translate(0px,0px)'
+
+  }, 1300, 'out');
+
+  // Stars appears and goes up
+  $( '.stars, .search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
+
+    delay       : 550,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 500, animationEffect);
+
+  // New world button appears and goes up
+  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
+
+    delay       : 800,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 450, animationEffect);
+
+  // World cards appears and goes up
+  var cards = $( '.tend-list .world-card' );
+  $.each( cards , function( i , card ){
+
+    var d = i * 150;
+
+    $( card ).transition({
+
+      delay       : (550 + d),
+      'opacity'   : 1,
+      'transform' : 'translateY(0px)'
+
+    }, 1000);
+
+  });
+
+}
+
+var createChat = function( world ){
+
+  wz.app.openApp( 'new-chat' , 14 , [ world , function( o ){
+
+    console.log(o);
+
+  }] );
 
 }
 

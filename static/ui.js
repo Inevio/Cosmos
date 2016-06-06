@@ -110,12 +110,6 @@ cardList.on( 'mousewheel' , function( e , d , x , y ){
 
 });
 
-exploreButton.on( 'click' , function(){
-
-  exploreAnimationIn();
-
-});
-
 closeExplore.on( 'click' , function(){
 
   exploreAnimationOut();
@@ -300,7 +294,7 @@ app
   newWorldAnimationOut();
 
 })
-
+/*
 .on( 'ui-view-resize', function(){
 
   $('.cards-grid').isotope({
@@ -336,7 +330,7 @@ app
   });
 
 })
-
+*/
 .on( 'mouseenter' , '.user-circle' , function(){
 
   var position = $(this).position();
@@ -736,64 +730,6 @@ var decompressCover = function(){
     'border-color'       : '#83878d'
 
   }, 1000, animationEffect);
-
-}
-
-var exploreAnimationIn = function(){
-
-  var exploreSection = $( '.explore-section' );
-
-  exploreSection.css( 'display' , 'block');
-
-  // Fade in blue background
-  exploreSection.stop().clearQueue().transition({
-
-    'opacity' : 1
-
-  }, 300, animationEffect);
-
-  // New world button appears and goes up
-  $( '.planet' ).stop().clearQueue().transition({
-
-    delay       : 440,
-    'opacity'   : 1,
-    'transform' : 'translate(0px,0px)'
-
-  }, 1300, 'out');
-
-  // Stars appears and goes up
-  $( '.stars, .search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
-
-    delay       : 550,
-    'opacity'   : 1,
-    'transform' : 'translateY(0px)'
-
-  }, 500, animationEffect);
-
-  // New world button appears and goes up
-  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
-
-    delay       : 800,
-    'opacity'   : 1,
-    'transform' : 'translateY(0px)'
-
-  }, 450, animationEffect);
-
-  // World cards appears and goes up
-  var cards = $( '.tend-list .world-card' );
-  $.each( cards , function( i , card ){
-
-    var d = i * 150;
-
-    $( card ).transition({
-
-      delay       : (550 + d),
-      'opacity'   : 1,
-      'transform' : 'translateY(0px)'
-
-    }, 1000);
-
-  });
 
 }
 
