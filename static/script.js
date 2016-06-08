@@ -96,7 +96,7 @@ api.cosmos.on( 'worldCreated' , function( world ){
 
 openChatButton.on( 'click' , function(){
 
-  wz.app.openApp( 14 , [ 'open-chat' , world , function( o ){
+  wz.app.openApp( 14 , [ 'open-chat' , worldSelected , function( o ){
 
     console.log(o);
 
@@ -770,6 +770,14 @@ var unFollowWorld = function(){
   worldSelected.removeUser( myContactID , function( e , o ){
 
     console.log('he salido',e,o);
+    $( '.world.active' ).remove();
+
+    wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){
+
+      console.log(o);
+      worldSelected = null;
+
+    }] );
 
   });
 
@@ -847,7 +855,7 @@ var exploreAnimationIn = function(){
 
 var createChat = function( world ){
 
-  wz.app.openApp( 'new-chat' , 14 , [ world , function( o ){
+  wz.app.openApp( 14 , [ 'new-chat' , world , function( o ){
 
     console.log(o);
 
