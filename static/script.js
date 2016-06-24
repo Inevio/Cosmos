@@ -264,7 +264,7 @@ var createWorldAsync = function(){
       console.log( e );
     }
 
-    createChat( o );
+    //createChat( o );
 
   });
 
@@ -526,9 +526,9 @@ var postNewCardAsync = function(){
 
 var getWorldPostsAsync = function( world ){
 
-  $( '.cardDom' ).remove();
-
   world.getPosts( {from:0 , to:1000} , function( e , posts ){
+
+    $( '.cardDom' ).remove();
 
     $.each( posts , function( i , post ){
 
