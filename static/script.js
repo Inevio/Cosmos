@@ -22,6 +22,7 @@ var exploreButton         = $( '.explore-button' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
 var openChatButton        = $( '.open-chat' );
+var worldDescription      = $( '.world-desc' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -279,6 +280,12 @@ var editWorldAsync = function(){
     return;
   }
 
+  worldApi.setDescription( $( '.new-world-desc textarea' ).val() , function( e , o ){
+
+    console.log(e,o);
+
+  });
+
   worldApi.setPrivate( isPrivate , function( e , o ){
 
     $( '.world-' + worldApi.id ).remove();
@@ -300,6 +307,7 @@ var selectWorld = function( world ){
   var worldApi = world.data( 'world' );
   worldSelected = worldApi;
   worldTitle.text( worldApi.name );
+  worldDescription.text( worldApi.description );
 
   getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi );
@@ -511,12 +519,13 @@ var postNewCardAsync = function(){
 
   var text = $( '.new-card-textarea' ).val();
   var cardType = 1;
+  var tit = $( '.new-card-input' ).val();
 
   if ( text.indexOf( 'www.youtube' ) != -1 ) {
     cardType = 8;
   }
 
-  worldSelected.addPost( { content: text , type: cardType} , function( e , o ){
+  worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
 
     $( '.new-card-textarea' ).val('');
 
