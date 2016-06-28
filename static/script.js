@@ -581,6 +581,7 @@ var appendGenericCard = function( post , user , reason ){
   card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
   card.find( '.desc' ).text( post.content );
+  card.find( '.title' ).text( post.title );
 
   setRepliesAsync( card , post );
   appendCard( card , post );
@@ -645,7 +646,6 @@ var appendReply = function( card , reply ){
 var appendCard = function( card , post ){
 
   var cardsAppended = $( '.cardDom' );
-  card.find( '.title' ).text( 'Titulo de prueba' );
 
   if ( !cardsAppended.length ) {
 
