@@ -23,6 +23,7 @@ var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
 var openChatButton        = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
+var searchPostInput       = $( '.pre-cover .search-button input' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -102,6 +103,39 @@ openChatButton.on( 'click' , function(){
     console.log(o);
 
   }] );
+
+});
+
+searchPostInput.on( 'input' , function(){
+
+  if ( $( this ).val() === '' ) {
+    $( '.card' ).show();
+    return;
+  }
+
+  $( '.card' ).hide();
+
+  worldSelected.searchPost( $( this ).val() , {from:0 , to:1000} , function( e , posts ){
+
+    $.each( posts , function( i , post ){
+
+      var post;
+
+      if ( post.isReply ) {
+
+        post = $( '.post-' + post.parent );
+
+      }else{
+
+        post = $( '.post-' + post.id );
+
+      }
+
+      post.show();
+
+    });
+
+  });
 
 });
 
@@ -796,7 +830,7 @@ var addReplayAsync = function( card ){
 
   var post = card.data( 'post' );
   console.log( post );
-  post.reply( { content: card.find( '.comments-footer input' ).val() , author: myContactID , worldId: post.worldId } , function(e,o){
+  post.reply( { content: card.find( '.comments-footer input' ).val() , author: myContactID , worldId: post.worldId , title: card.find( '.card-content .title' ).text() } , function(e,o){
 
     console.log(e , o);
 
