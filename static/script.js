@@ -299,7 +299,7 @@ var createWorldAsync = function(){
       console.log( e );
     }
 
-    //createChat( o );
+    createChat( o );
 
   });
 
@@ -478,11 +478,18 @@ var startsWithFriends = function( wordToCompare ){
 var followWorldAsync = function( worldCard ){
 
   var world = worldCard.parent().data( 'world' );
+
   world.addUser( myContactID , function( e , o ){
 
     appendWorld( world );
 
   });
+
+  wz.app.openApp( 14 , [ 'join-chat' , world , function( o ){
+
+    console.log(o);
+
+  }] );
 
 }
 
