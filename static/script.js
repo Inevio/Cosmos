@@ -438,10 +438,25 @@ var appendUserCircle = function( i , user ){
 var filterWorldCards = function( filter ){
 
   var worldCards = $( '.world-card' );
-  worldCards.show();
-  var worldCardsToShow = worldCards.filter( startsWithWorldCards( filter ) );
-  var worldCardsToHide = worldCards.not( worldCardsToShow );
-  worldCardsToHide.hide();
+
+  if ( filter === '' ) {
+
+    worldCards.show();
+
+  }
+
+  wz.cosmos.list( filter , null , {from:0 , to:1000} , function( e , worlds ){
+
+    worldCards.hide();
+
+    $.each( worlds , function( i , world ){
+
+      $( '.world-card-' + world.id ).show();
+
+    });
+
+
+  });
 
 }
 
