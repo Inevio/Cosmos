@@ -117,6 +117,8 @@ searchPostInput.on( 'input' , function(){
 
   worldSelected.searchPost( $( this ).val() , {from:0 , to:1000} , function( e , posts ){
 
+    console.log( posts );
+
     $.each( posts , function( i , post ){
 
       var post;
@@ -442,6 +444,7 @@ var filterWorldCards = function( filter ){
   if ( filter === '' ) {
 
     worldCards.show();
+    return;
 
   }
 
@@ -675,6 +678,12 @@ var setRepliesAsync = function( card , post ){
 
       appendReply( card , reply );
 
+      reply.getReplies( {from:0 , to:1000} , function( e , responses ){
+
+        console.log( e , responses );
+
+      });
+
     });
 
   });
@@ -694,6 +703,8 @@ var appendReply = function( card , reply ){
     comment.find( '.comment-text' ).text( reply.content );
 
     card.find( '.comments-list' ).append( comment );
+
+    comment.data( 'reply' , reply );
 
   });
 
