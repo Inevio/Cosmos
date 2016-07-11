@@ -192,6 +192,12 @@ app
 
   addReplayAsync( $( this ).parent().parent().parent() );
 
+})
+
+.on( 'click' , '.replay-button' , function(){
+
+  prepareReplayComment( $( this ).parent() );
+
 });
 
 //Functions
@@ -680,7 +686,11 @@ var setRepliesAsync = function( card , post ){
 
       reply.getReplies( {from:0 , to:1000} , function( e , responses ){
 
-        console.log( e , responses );
+        $.each( responses , function( i , response ){
+
+          appendReplyComment( card , reply , response );
+
+        });
 
       });
 
@@ -705,6 +715,7 @@ var appendReply = function( card , reply ){
     card.find( '.comments-list' ).append( comment );
 
     comment.data( 'reply' , reply );
+    comment.data( 'name' , user.name );
 
   });
 
@@ -862,10 +873,19 @@ var unFollowWorld = function(){
 var addReplayAsync = function( card ){
 
   var post = card.data( 'post' );
-  console.log( post );
-  post.reply( { content: card.find( '.comments-footer input' ).val() , author: myContactID , worldId: post.worldId , title: card.find( '.card-content .title' ).text() } , function(e,o){
+  var msg = card.find( '.comments-footer input' ).val();
+  var input = card.find( '.comments-footer input' );
 
-    console.log(e , o);
+  if ( msg[0] === '@' ) {
+
+    console.log('es un doble reply!');
+    post = input.data( 'reply' );
+
+  }
+
+  post.reply( { content: input.val() , author: myContactID , worldId: post.worldId , title: card.find( '.card-content .title' ).text() } , function(e,o){
+
+    input.val('');
 
   });
 
@@ -936,6 +956,41 @@ var createChat = function( world ){
     console.log(o);
 
   }] );
+
+}
+
+var prepareReplayComment = function( comment ){
+
+  var post = comment.data( 'reply' );
+  var name = comment.data( 'name' );
+  var input = comment.parent().parent().find( '.comments-footer input' );
+
+  input.val( '@' + name + ' ');
+  input.focus();
+  input.data( 'reply' , post );
+
+}
+
+var appendReplyComment = function( card , reply , response ){
+
+  var comment = card.find( '.comment-' + reply.id );
+
+  comment.find( '.replay-list' ).show();
+  var reply = comment.find( '.replay.wz-prototype' ).clone();
+  reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id );
+
+  wz.user( response.author , function( e , user ){
+
+    reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+    reply.find( '.name' ).text( user.fullName );
+    reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
+    reply.find( '.replay-text' ).text( response.content.substr(response.content.indexOf(" ") + 1) );
+
+    comment.find( '.replay-list' ).append( reply );
+
+    reply.data( 'reply' , response );
+
+  });
 
 }
 
