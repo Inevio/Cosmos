@@ -64,5 +64,6 @@
     "postCreated"   : "created a file",
     "comments"      : "comments",
     "comfirmDeletePost" : "Do you really want to delete this post?",
-    "deletePost"    : "Delete post"
+    "deletePost"    : "Delete post",
+    "following"     : "following"
 }

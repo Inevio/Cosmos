@@ -120,7 +120,7 @@ api.cosmos.on( 'postAdded' , function( post ){
       }
 
     });
-        
+
   }
 
 });
@@ -318,7 +318,7 @@ var appendWorldCard = function( worldApi ){
   if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
 
     world.addClass( 'followed' ).removeClass( 'unfollowed' );
-    world.find( '.follow-button span' ).text( 'Siguiendo' );
+    world.find( '.follow-button span' ).text( lang.following );
 
   }
 
@@ -541,6 +541,9 @@ var followWorldAsync = function( worldCard ){
   world.addUser( myContactID , function( e , o ){
 
     appendWorld( world );
+    myWorlds.push( world.id );
+    worldCard.find( 'span' ).text( lang.following );
+    worldCard.parent().addClass( 'followed' );
 
   });
 
@@ -893,6 +896,10 @@ var unFollowWorld = function(){
 
     console.log('he salido',e,o);
     $( '.world.active' ).remove();
+    var index = myWorlds.indexOf( worldSelected.id );
+    if (index > -1) {
+      myWorlds.splice(index, 1);
+    }
 
     wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){
 
