@@ -24,6 +24,7 @@ var commentPrototype      = $( '.comment.wz-prototype' );
 var openChatButton        = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input' );
+var newPostButton         = $( '.new-post' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -96,13 +97,41 @@ api.cosmos.on( 'worldCreated' , function( world ){
 
 });
 
+api.cosmos.on( 'postAdded' , function( post ){
+
+  console.log( post );
+
+  if ( worldSelected.id === post.worldId ) {
+
+    wz.user( post.author , function( e , user ){
+
+      switch (post.type) {
+
+        case 1:
+
+        appendGenericCard( post , user , lang.postCreated );
+        break;
+
+        case 8:
+
+        appendYoutubeCard( post , user , lang.postCreated );
+        break;
+
+      }
+
+    });
+        
+  }
+
+});
+
 openChatButton.on( 'click' , function(){
 
   wz.app.openApp( 14 , [ 'open-chat' , worldSelected , function( o ){
 
     console.log(o);
 
-  }] );
+  }] , 'hidden' );
 
 });
 
@@ -138,6 +167,12 @@ searchPostInput.on( 'input' , function(){
     });
 
   });
+
+});
+
+newPostButton.on( 'click' , function(){
+
+  $( '.new-card-title figure' ).text( worldSelected.name );
 
 });
 
@@ -513,7 +548,7 @@ var followWorldAsync = function( worldCard ){
 
     console.log(o);
 
-  }] );
+  }] , 'hidden' );
 
 }
 
@@ -864,7 +899,7 @@ var unFollowWorld = function(){
       console.log(o);
       worldSelected = null;
 
-    }] );
+    }] , 'hidden' );
 
   });
 
@@ -955,7 +990,7 @@ var createChat = function( world ){
 
     console.log(o);
 
-  }] );
+  }] , 'hidden' );
 
 }
 

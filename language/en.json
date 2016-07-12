@@ -47,5 +47,22 @@
     "you" : "You",
     "writing" : "writing...",
     "dark" : "Dark",
-    "white" : "White"
+    "white" : "White",
+
+
+    "publics"       : "Publics",
+    "privates"      : "Privates",
+    "explore"       : "Explore",
+    "inviteUser"    : "Invite user",
+    "more"          : "more",
+    "seeAll"        : "see all",
+    "followers"     : "followers",
+    "invitePeople"  : "Invite people",
+    "to"            : "to",
+    "search"        : "Search...",
+    "updatedFile"   : "updated a file",
+    "postCreated"   : "created a file",
+    "comments"      : "comments",
+    "comfirmDeletePost" : "Do you really want to delete this post?",
+    "deletePost"    : "Delete post"
 }
