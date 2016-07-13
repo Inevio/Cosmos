@@ -64,8 +64,16 @@
     "postCreated"   : "ha creado un nuevo post",
     "comments"      : "comentarios",
     "comfirmDeletePost" : "¿Esta seguro que quiere eliminar el post?",
-    "deletePost"    : "Borrar post"
-    "following"     : "siguiendo"
-
+    "deletePost"    : "Borrar post",
+    "following"     : "siguiendo",
+    "writeComment"  : "Escribe tu comentario aquí...",
+    "editWorld"     : "Editar mundo",
+    "unfollowWorld" : "Dejar de seguir",
+    "users"         : "Usuarios",
+    "posts"         : "Posts",
+    "files"         : "Ficheros",
+    "worldCreation" : "Creación de mundo",
+    "worldEdit"     : "Edición de mundo",
+    "accept"        : "Aceptar"
 
 }

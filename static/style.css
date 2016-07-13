@@ -1,4 +1,8 @@
 /* EVERYTHING */
+.hide{
+  display: none !important;
+}
+
 *{
   font-family: 'Lato';
   letter-spacing: 0.02em;
@@ -830,6 +834,24 @@
   .stop-follow:active{
 
     background-color: #d84f4f;
+
+  }
+
+  .stop-follow.editable{
+
+    background-color: #60b25e;
+
+  }
+
+  .stop-follow.editable:hover{
+
+    background-color: #4ea34b;
+
+  }
+
+  .stop-follow.editable:active{
+
+    background-color: #3d903b;
 
   }
 
@@ -3283,9 +3305,49 @@
 
   }
 
-
-
   .create-world-button span{
+
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-size: 19px;
+    color: #fff;
+    margin-top: 14px;
+    cursor: pointer;
+
+  }
+
+  .delete-world-button{
+
+    position: absolute;
+    left: ~'calc((50% - 135px) + 142px)';
+    top: 383px;
+    width: 174px;
+    height: 47px;
+    border-radius: 23px 23px 24px 24px;
+    background-color: #e85c5c;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+  }
+
+  .delete-world-button:hover{
+
+    background-color: #e25353;
+
+  }
+
+  .delete-world-button:active{
+
+    background-color: #d84f4f;
+
+  }
+
+  .delete-world-button span{
 
     float: left;
     width: 100%;

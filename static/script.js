@@ -1,7 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
-var animationEffect  = 'cubic-bezier(.4,0,.2,1)';
+var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
 var myContactID           = api.system.user().id;
@@ -83,7 +83,11 @@ exploreButton.on( 'click' , function(){
 
 unFollowButton.on( 'click' , function(){
 
-  unFollowWorld();
+  if ( ! $( this ).hasClass( 'editable' ) ) {
+
+    unFollowWorld();
+
+  }
 
 });
 
@@ -124,6 +128,23 @@ api.cosmos.on( 'postAdded' , function( post ){
   }
 
 });
+
+
+api.cosmos.on( 'iconSetted', function(){console.log('iconSetted');})
+api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
+api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
+api.cosmos.on( 'postContentSetted', function(){console.log('postContentSetted');})
+api.cosmos.on( 'postFSNodeSetted', function(){console.log('postFSNodeSetted');})
+api.cosmos.on( 'postRemoved', function(){console.log('postRemoved');})
+api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
+api.cosmos.on( 'postTitleSetted', function(){console.log('postTitleSetted');})
+api.cosmos.on( 'tagAdded', function(){console.log('tagAdded');})
+api.cosmos.on( 'userAdded', function(){console.log('userAdded');})
+api.cosmos.on( 'userBanned', function(){console.log('userBanned');})
+api.cosmos.on( 'userRemoved', function(){console.log('userRemoved');})
+api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
+api.cosmos.on( 'worldPrivatized', function(){console.log('worldPrivatized');})
+api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
 
 openChatButton.on( 'click' , function(){
 
@@ -181,6 +202,12 @@ app
 .on( 'click' , '.create-world-button.step-a' , function(){
 
   createWorldAsync();
+
+})
+
+.on( 'click' , '.delete-world-button' , function(){
+
+  unFollowWorld();
 
 })
 
@@ -250,6 +277,13 @@ var initTexts = function(){
   $( '.explore-text' ).text( lang.explore );
   $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
   $( '.card-options-section .delete span' ).text( lang.deletePost );
+  $( '.send-button span' ).text( lang.send );
+  $( '.comments-footer input' ).attr(  'placeholder' , lang.writeComment );
+  $( '.world-users-number .title' ).text( lang.users );
+  $( '.world-event-number .title' ).text( lang.posts );
+  $( '.world-files-number .title' ).text( lang.files );
+  $( '.new-world-title .title' ).text( lang.worldCreation );
+  $( '.delete-world-button span' ).text( lang.unfollowWorld );
 
 }
 
@@ -399,9 +433,11 @@ var getWorldUsersAsync = function( worldApi ){
 
     $( '.user-preview.invite-user' ).removeClass( 'invite-user' );
     $( '.user-preview' ).show();
+
     if (o.length < 3) {
       $( '.user-preview' ).slice( 0 , ( 3 - o.length ) ).hide();
     }
+
     $( '.followers-number' ).text( o.length + ' ' + lang.followers );
 
     if ( worldSelected.isPrivate ) {
@@ -432,12 +468,21 @@ var getWorldUsersAsync = function( worldApi ){
 
     }
 
+    $( '.world-users-number .subtitle' ).text( o.length );
 
     $.each( o , function( i , user ){
 
-      wz.user( user.userId , function( e , user ){
+      wz.user( user.userId , function( e , usr ){
 
-        appendUserCircle( i , user );
+
+        $( '.stop-follow' ).removeClass( 'editable' );
+        $( '.stop-follow span' ).text( lang.unfollowWorld );
+        if ( user.isAdmin && user.userId === myContactID ) {
+          $( '.stop-follow' ).addClass( 'editable' );
+          $( '.stop-follow span' ).text( lang.editWorld );
+        }
+
+        appendUserCircle( i , usr );
 
       })
 
@@ -641,6 +686,8 @@ var getWorldPostsAsync = function( world ){
   world.getPosts( {from:0 , to:1000} , function( e , posts ){
 
     $( '.cardDom' ).remove();
+
+    $( '.world-event-number .subtitle' ).text( posts.length );
 
     $.each( posts , function( i , post ){
 

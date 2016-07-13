@@ -30,6 +30,7 @@ var worldOptionsHelp = $( '.privacy-options .option i' );
 var attachCommentBut = $( '.comments-footer .attachments, .comments-footer .attachments i, .comments-footer .attachments div' );
 var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
 var privacyOption    = $( '.privacy-options .option' );
+var unFollowButton   = $( '.stop-follow' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -259,6 +260,23 @@ privacyOption.on( 'click' , function(){
 
 });
 
+unFollowButton.on( 'click' , function(){
+
+  if ( $( this ).hasClass( 'editable' ) ) {
+
+    $( '.new-world-container' ).addClass( 'editing' );
+    $( '.delete-world-button' ).removeClass( 'hide' );
+
+    newWorldAnimationA();
+    newWorldAnimationB();
+
+    $( '.new-world-title .title' ).text( lang.worldEdit );
+    $( '.new-world-title .step-b' ).addClass( 'hide' );
+
+  }
+
+});
+
 app
 
 .on( 'click' , function( e ){
@@ -289,7 +307,7 @@ app
 
 })
 
-.on( 'click' , '.create-world-button.step-b' , function(){
+.on( 'click' , '.create-world-button.step-b , .delete-world-button' , function(){
 
   newWorldAnimationOut();
 
@@ -873,7 +891,7 @@ var newWorldAnimationA = function(){
   }, 1000);
 
   // Fade in and goes up button (animation)
-  $( '.create-world-button' ).stop().clearQueue().transition({
+  $( '.create-world-button, .delete-world-button' ).stop().clearQueue().transition({
 
     delay       : 500,
     'opacity'   : 1,
@@ -909,20 +927,38 @@ var newWorldAnimationB = function(){
   }, 1000, animationEffect);
 
   // Fade in and goes up button (animation)
-  $( '.create-world-button' ).stop().clearQueue().transition({
+  $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
 
     'opacity'   : 0
 
   }, 1000, animationEffect, function(){
 
-    $( this ).css( {
+    if ( $( '.new-world-container' ).hasClass( 'editing' ) ) {
 
-      'top'       : '819px',
-      'transform' : 'translateY(20px)',
-      'right'     : '0',
-      'left'      : 'calc(50% - 472px/2 + 150px)'
+      $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept );
+      $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' );
 
-    } ).find( 'span' ).text( 'Aceptar' );
+      $( this ).css( {
+
+        'top'       : '819px',
+        'transform' : 'translateY(20px)',
+        'right'     : '0',
+
+      });
+
+    }else{
+
+      $( this ).css( {
+
+        'top'       : '819px',
+        'transform' : 'translateY(20px)',
+        'right'     : '0',
+        'left'      : 'calc(50% - 472px/2 + 150px)'
+
+      } ).find( 'span' ).text( lang.accept );
+
+
+    }
 
   });
 
@@ -954,7 +990,7 @@ var newWorldAnimationB = function(){
   }, 1000);
 
   // Fade in and goes up privacy (animation)
-  $( '.create-world-button' ).transition({
+  $( '.create-world-button, .delete-world-button' ).transition({
 
     delay       : 2000,
     'opacity'   : 1,
@@ -983,8 +1019,12 @@ var newWorldAnimationOut = function(){
     $( '.new-world-title' ).removeClass( 'second' );
     $( '.create-world-button' ).removeClass( 'step-b' );
     $( '.create-world-button' ).addClass( 'step-a' );
+    $( '.new-world-title .step-b' ).removeClass( 'hide' );
+    $( '.new-world-title .title' ).text( lang.worldCreation );
+    $( '.delete-world-button' ).addClass( 'hide' );
 
-    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy' ).css({
+
+    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button' ).css({
       'transform' : 'translateY(20px)',
       'opacity'   : 0
     });

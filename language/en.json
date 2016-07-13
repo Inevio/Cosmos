@@ -65,5 +65,15 @@
     "comments"      : "comments",
     "comfirmDeletePost" : "Do you really want to delete this post?",
     "deletePost"    : "Delete post",
-    "following"     : "following"
+    "following"     : "following",
+    "writeComment"  : "Write your comment here...",
+    "editWorld"     : "Edit world",
+    "unfollowWorld" : "Unfollow world",
+    "users"         : "Users",
+    "posts"         : "Posts",
+    "files"         : "Files",
+    "worldCreation" : "World creation",
+    "worldEdit"     : "World edit",
+    "accept"        : "Accept"
+
 }
