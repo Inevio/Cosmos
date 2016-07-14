@@ -87,6 +87,10 @@ unFollowButton.on( 'click' , function(){
 
     unFollowWorld();
 
+  }else{
+
+    $( '.new-world-container' ).data( 'world' , worldSelected );
+
   }
 
 });
@@ -208,12 +212,14 @@ app
 .on( 'click' , '.delete-world-button' , function(){
 
   unFollowWorld();
+  $( '.new-world-container' ).removeClass( 'editing' );
 
 })
 
 .on( 'click' , '.create-world-button.step-b' , function(){
 
   editWorldAsync();
+  $( '.new-world-container' ).removeClass( 'editing' );
 
 })
 
@@ -386,24 +392,35 @@ var editWorldAsync = function(){
 
   var worldApi = $( '.new-world-container' ).data( 'world' );
   var isPrivate = $( '.private-option' ).hasClass( 'active' );
+  var editing = $( '.new-world-container' ).hasClass( 'editing' );
+  var name = worldApi.name;
+
+  if ( editing ) {
+    name = $( '.new-world-name input' ).val();
+  }
 
   if (!worldApi) {
     return;
   }
 
-  worldApi.setDescription( $( '.new-world-desc textarea' ).val() , function( e , o ){
-
-    console.log(e,o);
-
-  });
-
   worldApi.setPrivate( isPrivate , function( e , o ){
 
-    $( '.world-' + worldApi.id ).remove();
-    worldApi.isPrivate = isPrivate;
-    appendWorld( worldApi );
-    $( '.privacy-options .option' ).removeClass( 'active' );
-    $( '.private-option' ).addClass( 'active' );
+    worldApi.setDescription( $( '.new-world-desc textarea' ).val() , function( e , o ){
+
+      worldApi.setName( name , function( e , o ){
+
+        worldApi.isPrivate = isPrivate;
+        worldApi.description = $( '.new-world-desc textarea' ).val();
+        worldApi.name = name;
+        $( '.world-' + worldApi.id ).remove();
+        appendWorld( worldApi );
+        $( '.world-' + worldApi.id ).click();
+        $( '.privacy-options .option' ).removeClass( 'active' );
+        $( '.private-option' ).addClass( 'active' );
+
+      });
+
+    });
 
   });
 
@@ -417,6 +434,7 @@ var selectWorld = function( world ){
 
   var worldApi = world.data( 'world' );
   worldSelected = worldApi;
+  app.data( 'worldSelected' , worldSelected )
   worldTitle.text( worldApi.name );
   worldDescription.text( worldApi.description );
 
