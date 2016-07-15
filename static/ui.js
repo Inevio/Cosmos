@@ -275,6 +275,7 @@ unFollowButton.on( 'click' , function(){
     var world = app.data( 'worldSelected' );
 
     $( '.new-world-desc textarea' ).val( world.description );
+    $( '.new-world-name input' ).val( world.name );
     $( '.privacy-options .option' ).removeClass( 'active' );
     if ( world.isPrivate ) {
       $( '.privacy-options .hidden' ).addClass( 'active' );

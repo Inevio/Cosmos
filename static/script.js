@@ -109,7 +109,33 @@ api.cosmos.on( 'postAdded' , function( post ){
 
   console.log( post );
 
-  if ( worldSelected.id === post.worldId ) {
+  if ( worldSelected.id != post.worldId ) {
+    return;
+  }
+
+  if ( post.isReply ) {
+
+    var parent = $( '.comment-' + post.parent );
+    var grandparent = $( '.post-' + post.parent );
+
+    if ( parent.length > 0 ) {
+
+      var parentPost = parent.data( 'reply' );
+      grandparent = $( '.post-' + parentPost.parent );
+
+      appendReplyComment( grandparent , parentPost , post );
+
+    }else{
+
+      var ncomments = grandparent.find( '.comments-text' ).data( 'num' ) + 1;
+      grandparent.find( '.comments-text' ).text( ncomments + ' ' + lang.comments );
+      grandparent.find( '.comments-text' ).data( 'num' , ncomments );
+
+      appendReply( grandparent , post );
+
+    }
+
+  }else{
 
     wz.user( post.author , function( e , user ){
 
@@ -266,6 +292,16 @@ app
 
   prepareReplayComment( $( this ).parent() );
 
+})
+
+.on( 'keyup' , '.comments-footer input' , function( e ){
+
+  if (e.keyCode == 13) {
+
+    addReplayAsync( $( this ).parent().parent().parent() );
+
+  }
+
 });
 
 //Functions
@@ -335,15 +371,25 @@ var appendWorld = function( worldApi ){
   world.find( '.world-name' ).text( worldApi.name );
   world.find( '.world-icon' ).css( 'border-color' , colors[ worldApi.id % colors.length ] );
 
+  var category;
+
   if ( worldApi.isPrivate ) {
 
-    $( '.private-list' ).append( world );
+    category = $( '.private-list' );
 
   }else{
 
-    $( '.public-list' ).append( world );
+    category = $( '.public-list' );
 
   }
+
+  category.append( world );
+  var height = category.find( '.world' ).length * 28;
+  category.transition({
+
+    'height'         : height
+
+  }, 200);
 
   world.data( 'world' , worldApi );
 
@@ -693,6 +739,7 @@ var postNewCardAsync = function(){
 
   worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
 
+    $( '.new-card-input' ).val('');
     $( '.new-card-textarea' ).val('');
 
   });
