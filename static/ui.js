@@ -320,6 +320,16 @@ app
 
 })
 
+.on( 'keyup' , '.new-world-name input' , function( e ){
+
+  if (e.keyCode == 13 && $( '.new-world-name input' ).val() ) {
+
+    $( this ).parent().parent().find( '.create-world-button' ).click();
+
+  }
+
+})
+
 .on( 'click' , '.create-world-button.step-b , .delete-world-button' , function(){
 
   newWorldAnimationOut();

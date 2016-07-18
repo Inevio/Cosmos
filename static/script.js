@@ -385,11 +385,11 @@ var appendWorld = function( worldApi ){
 
   category.append( world );
   var height = category.find( '.world' ).length * 28;
-  category.transition({
+  category.css({
 
     'height'         : height
 
-  }, 200);
+  });
 
   world.data( 'world' , worldApi );
 
@@ -729,9 +729,9 @@ var inviteUsers = function(){
 
 var postNewCardAsync = function(){
 
-  var text = $( '.new-card-textarea' ).val();
+  var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
   var cardType = 1;
-  var tit = $( '.new-card-input' ).val();
+  var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
 
   if ( text.indexOf( 'www.youtube' ) != -1 ) {
     cardType = 8;
@@ -791,12 +791,32 @@ var appendGenericCard = function( post , user , reason ){
 
   }
 
+  if ( post.title === 'none' ) {
+
+    card.find( '.title' ).hide();
+
+  }else{
+
+    card.find( '.title' ).text( post.title );
+
+  }
+
+  if ( post.content === 'none' ) {
+
+    card.find( '.desc' ).hide();
+
+  }else{
+
+    card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+
+  }
+
+
+
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
   card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
-  card.find( '.desc' ).text( post.content );
-  card.find( '.title' ).text( post.title );
 
   setRepliesAsync( card , post );
   appendCard( card , post );
@@ -810,12 +830,13 @@ var appendYoutubeCard = function( post , user , reason ){
 
   var youtubeCode = post.content.match(/v=([A-z0-9-_]+)/)[1];
 
-  card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1' );
+  card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
   card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
-  card.find( '.desc' ).text( post.content );
+  card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+  card.find( '.title' ).text( post.title );
 
   setRepliesAsync( card , post );
   appendCard( card , post );
@@ -828,7 +849,6 @@ var setRepliesAsync = function( card , post ){
 
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
     card.find( '.comments-text' ).data( 'num' , replies.length );
-    $( '.commentDom' ).remove();
 
     $.each( replies , function( i , reply ){
 
@@ -860,7 +880,7 @@ var appendReply = function( card , reply ){
     comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     comment.find( '.name' ).text( user.fullName );
     comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
-    comment.find( '.comment-text' ).text( reply.content );
+    comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />") );
 
     card.find( '.comments-list' ).append( comment );
 
@@ -1138,7 +1158,7 @@ var appendReplyComment = function( card , reply , response ){
     reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     reply.find( '.name' ).text( user.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-    reply.find( '.replay-text' ).text( response.content.substr(response.content.indexOf(" ") + 1) );
+    reply.find( '.replay-text' ).html( response.content.substr(response.content.indexOf(" ") + 1).replace(/\n/g, "<br />") );
 
     comment.find( '.replay-list' ).append( reply );
 
