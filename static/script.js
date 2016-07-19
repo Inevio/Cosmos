@@ -159,6 +159,23 @@ api.cosmos.on( 'postAdded' , function( post ){
 
 });
 
+app.on( 'ui-view-resize' , function(){
+
+  var name = worldTitle.data( 'name' );
+  var winWidth = parseInt(app.css( 'width' ));
+  var textWidth = Math.floor( winWidth * 0.032 );
+
+  if ( name.length > textWidth ) {
+
+    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+
+  }else{
+
+    worldTitle.text( name );
+
+  }
+
+});
 
 api.cosmos.on( 'iconSetted', function(){console.log('iconSetted');})
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
@@ -178,11 +195,14 @@ api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
 
 openChatButton.on( 'click' , function(){
 
+  alert('not supported yet');
+  /*
   wz.app.openApp( 14 , [ 'open-chat' , worldSelected , function( o ){
 
     console.log(o);
 
   }] , 'hidden' );
+  */
 
 });
 
@@ -428,7 +448,7 @@ var createWorldAsync = function(){
       console.log( e );
     }
 
-    createChat( o );
+    //createChat( o );
 
   });
 
@@ -481,9 +501,27 @@ var selectWorld = function( world ){
   var worldApi = world.data( 'world' );
   worldSelected = worldApi;
   app.data( 'worldSelected' , worldSelected )
-  worldTitle.text( worldApi.name );
+
+
+  var name = worldApi.name;
+  var winWidth = parseInt(app.css( 'width' ));
+  var textWidth = Math.floor( winWidth * 0.032 );
+
+  if ( name.length > textWidth ) {
+
+    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+
+  }else{
+
+    worldTitle.text( name );
+
+  }
+
+  worldTitle.data( 'name' , name );
+
   worldDescription.text( worldApi.description );
 
+  console.log('asd');
   getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi );
 
@@ -533,18 +571,17 @@ var getWorldUsersAsync = function( worldApi ){
     }
 
     $( '.world-users-number .subtitle' ).text( o.length );
+    $( '.stop-follow' ).removeClass( 'editable' );
+    $( '.stop-follow span' ).text( lang.unfollowWorld );
 
     $.each( o , function( i , user ){
 
+      if ( user.isAdmin && user.userId === myContactID ) {
+        $( '.stop-follow' ).addClass( 'editable' );
+        $( '.stop-follow span' ).text( lang.editWorld );
+      }
+
       wz.user( user.userId , function( e , usr ){
-
-
-        $( '.stop-follow' ).removeClass( 'editable' );
-        $( '.stop-follow span' ).text( lang.unfollowWorld );
-        if ( user.isAdmin && user.userId === myContactID ) {
-          $( '.stop-follow' ).addClass( 'editable' );
-          $( '.stop-follow span' ).text( lang.editWorld );
-        }
 
         appendUserCircle( i , usr );
 
@@ -647,6 +684,10 @@ var followWorldAsync = function( worldCard ){
 
   var world = worldCard.parent().data( 'world' );
 
+  if ( myWorlds.indexOf( world.id ) != -1 ) {
+    return;
+  }
+
   world.addUser( myContactID , function( e , o ){
 
     appendWorld( world );
@@ -656,11 +697,13 @@ var followWorldAsync = function( worldCard ){
 
   });
 
+  /*
   wz.app.openApp( 14 , [ 'join-chat' , world , function( o ){
 
     console.log(o);
 
   }] , 'hidden' );
+  */
 
 }
 
@@ -668,6 +711,7 @@ var getFriendsAsync = function(){
 
   $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure>' + worldSelected.name + '</figure>' );
 
+  $( '.friendDom' ).remove();
   api.user.friendList( false, function( error, friends ){
 
     $.each( friends , function( i , user ){
@@ -683,7 +727,7 @@ var getFriendsAsync = function(){
 var appendFriend = function( user ){
 
   var friend = friendPrototype.clone();
-  friend.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id );
+  friend.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'friendDom' );
 
   friend.find( 'span' ).text( user.fullName );
   friend.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
@@ -1033,12 +1077,14 @@ var unFollowWorld = function(){
       myWorlds.splice(index, 1);
     }
 
+    /*
     wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){
 
       console.log(o);
       worldSelected = null;
 
     }] , 'hidden' );
+    */
 
   });
 

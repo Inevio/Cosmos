@@ -1107,7 +1107,7 @@ var newWorldAnimationOut = function(){
 
     'opacity' : 0
 
-  }, 1000, function(){
+  }, 200, function(){
 
     newWorldContainer.css( 'display' , 'none' );
     $( '.new-world-avatar' ).hide();
