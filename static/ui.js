@@ -927,6 +927,22 @@ var newWorldAnimationA = function(){
 
 var newWorldAnimationB = function(){
 
+  var editing = $( '.new-world-container' ).hasClass( 'editing' );
+
+  if ( editing ) {
+
+    newWorldAnimationBEditing();
+
+  }else{
+
+    newWorldAnimationBNormal();
+
+  }
+
+}
+
+var newWorldAnimationBNormal = function(){
+
   $( '.new-world-avatar' ).show();
   $( '.new-world-desc' ).show();
   $( '.new-world-privacy' ).show();
@@ -937,7 +953,6 @@ var newWorldAnimationB = function(){
   $( '.new-world-desc textarea' ).val('');
 
 
-  var editing = $( '.new-world-container' ).hasClass( 'editing' );
 
   // Fade in and goes up title (animation)
   $( '.new-world-title' ).stop().clearQueue().transition({
@@ -947,25 +962,12 @@ var newWorldAnimationB = function(){
   }, 1000, animationEffect);
 
   // Fade in and goes up name (animation)
-  if ( editing ) {
+  $( '.new-world-name' ).stop().clearQueue().transition({
 
-    $( '.new-world-name' ).stop().clearQueue().transition({
+    'opacity'   : 0,
+    'transform' : 'translateX(-200px)'
 
-      'opacity'   : 1,
-      'transform' : 'translateY(-58px)'
-
-    }, 1000, animationEffect);
-
-  }else{
-
-    $( '.new-world-name' ).stop().clearQueue().transition({
-
-      'opacity'   : 0,
-      'transform' : 'translateX(-200px)'
-
-    }, 1000, animationEffect);
-
-  }
+  }, 1000, animationEffect);
 
 
   // Fade in and goes up button (animation)
@@ -975,126 +977,139 @@ var newWorldAnimationB = function(){
 
   }, 1000, animationEffect, function(){
 
-    if ( editing ) {
+    $( this ).css( {
 
-      $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept );
-      $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' );
+      'top'       : '819px',
+      'transform' : 'translateY(20px)',
+      'right'     : '0',
+      'left'      : 'calc(50% - 472px/2 + 150px)'
 
-      $( this ).css( {
-
-        'top'       : '819px',
-        'transform' : 'translateY(20px)',
-        'right'     : '0',
-
-      });
-
-    }else{
-
-      $( this ).css( {
-
-        'top'       : '819px',
-        'transform' : 'translateY(20px)',
-        'right'     : '0',
-        'left'      : 'calc(50% - 472px/2 + 150px)'
-
-      } ).find( 'span' ).text( lang.accept );
-
-
-    }
+    } ).find( 'span' ).text( lang.accept );
 
   });
 
   // Fade in and goes up avatar (animation)
-  if ( editing ) {
+  $( '.new-world-avatar' ).stop().clearQueue().transition({
 
-    $( '.new-world-avatar' ).stop().clearQueue().transition({
+    delay       : 1250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
 
-      delay       : 1250,
-      'opacity'   : 1,
-      'transform' : 'translateY(120px)'
-
-    }, 1000);
-
-  }else{
-
-    $( '.new-world-avatar' ).stop().clearQueue().transition({
-
-      delay       : 1250,
-      'opacity'   : 1,
-      'transform' : 'translateY(0px)'
-
-    }, 1000);
-
-  }
+  }, 1000);
 
   // Fade in and goes up desc (animation)
-  if ( editing ) {
+  $( '.new-world-desc' ).stop().clearQueue().transition({
 
-    $( '.new-world-desc' ).stop().clearQueue().transition({
+    delay       : 1500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
 
-      delay       : 1500,
-      'opacity'   : 1,
-      'transform' : 'translateY(120px)'
-
-    }, 1000);
-
-  }else{
-
-    $( '.new-world-desc' ).stop().clearQueue().transition({
-
-      delay       : 1500,
-      'opacity'   : 1,
-      'transform' : 'translateY(0px)'
-
-    }, 1000);
-
-  }
+  }, 1000);
 
   // Fade in and goes up privacy (animation)
-  if ( editing ) {
+  $( '.new-world-privacy' ).stop().clearQueue().transition({
 
-    $( '.new-world-privacy' ).stop().clearQueue().transition({
+    delay       : 1750,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
 
-      delay       : 1750,
-      'opacity'   : 1,
-      'transform' : 'translateY(120px)'
-
-    }, 1000);
-
-  }else{
-
-    $( '.new-world-privacy' ).stop().clearQueue().transition({
-
-      delay       : 1750,
-      'opacity'   : 1,
-      'transform' : 'translateY(0px)'
-
-    }, 1000);
-
-  }
+  }, 1000);
 
   // Fade in and goes up privacy (animation)
-  if( editing ){
+  $( '.create-world-button, .delete-world-button' ).transition({
 
-    $( '.create-world-button, .delete-world-button' ).transition({
+    delay       : 2000,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
 
-      delay       : 2000,
-      'opacity'   : 1,
-      'transform' : 'translateY(120px)'
+  }, 1000);
 
-    }, 1000);
+}
 
-  }else{
+var newWorldAnimationBEditing = function(){
 
-    $( '.create-world-button, .delete-world-button' ).transition({
+  $( '.new-world-avatar' ).show();
+  $( '.new-world-desc' ).show();
+  $( '.new-world-privacy' ).show();
+  $( '.new-world-title' ).addClass( 'second' );
+  $( '.create-world-button' ).addClass( 'step-b' );
+  $( '.create-world-button' ).removeClass( 'step-a' );
 
-      delay       : 2000,
-      'opacity'   : 1,
-      'transform' : 'translateY(0px)'
+  // Fade in and goes up title (animation)
+  $( '.new-world-title' ).stop().clearQueue().transition({
 
-    }, 1000);
+    'transform' : 'translateY(-67px)'
 
-  }
+  }, 1000, animationEffect);
+
+  // Fade in and goes up name (animation)
+  $( '.new-world-name' ).stop().clearQueue().transition({
+
+    'opacity'   : 1,
+    'transform' : 'translateY(-58px)'
+
+  }, 1000, animationEffect);
+
+  // Fade in and goes up button (animation)
+  $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
+
+    'opacity'   : 0
+
+  }, 1000, animationEffect, function(){
+
+    $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept );
+    $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' );
+
+    $( this ).css( {
+
+      'top'       : '819px',
+      'transform' : 'translateY(20px)',
+      'right'     : '0',
+
+    });
+
+  });
+
+  // Fade in and goes up avatar (animation)
+  $( '.new-world-avatar' ).css( 'transform' , 'translateY(158px)' );
+  $( '.new-world-avatar' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(120px)'
+
+  }, 1000);
+
+  // Fade in and goes up desc (animation)
+  $( '.new-world-desc' ).css( 'transform' , 'translateY(158px)' );
+  $( '.new-world-desc' ).stop().clearQueue().transition({
+
+    delay       : 750,
+    'opacity'   : 1,
+    'transform' : 'translateY(120px)'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  $( '.new-world-privacy' ).css( 'transform' , 'translateY(158px)' );
+  $( '.new-world-privacy' ).stop().clearQueue().transition({
+
+    delay       : 1000,
+    'opacity'   : 1,
+    'transform' : 'translateY(120px)'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  $( '.create-world-button, .delete-world-button' ).css( 'transform' , 'translateY(158px)' );
+  $( '.create-world-button, .delete-world-button' ).transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(120px)'
+
+  }, 1000);
+
 
 }
 

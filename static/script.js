@@ -536,39 +536,54 @@ var getWorldUsersAsync = function( worldApi ){
     $( '.user-preview.invite-user' ).removeClass( 'invite-user' );
     $( '.user-preview' ).show();
 
-    if (o.length < 3) {
-      $( '.user-preview' ).slice( 0 , ( 3 - o.length ) ).hide();
-    }
-
     $( '.followers-number' ).text( o.length + ' ' + lang.followers );
 
     if ( worldSelected.isPrivate ) {
 
-      if (o.length < 3) {
+      var inviteIndex = -1;
 
-        $( '.user-preview' ).eq( ( 3 - o.length  ) ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.inevio.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
+      for (var i = o.length + 1; i < 4 ; i++) {
+
+        $( '.user-preview' ).eq( 3 - i ).hide();
+
+      }
+
+      if (o.length > 3) {
+
+        $( '.user-preview.d' ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.inevio.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
+
+        $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
+        inviteIndex = 3;
 
       }else{
 
-        $( '.user-preview.d' ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.inevio.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
+        $( '.user-preview' ).eq( 3 - o.length ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.inevio.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
+
+        $( '.more-users-text' ).text( lang.seeAll );
+        inviteIndex = o.length;
 
       }
 
     }else{
 
-      $( '.user-preview' ).eq( ( 3 - o.length  ) ).hide();
+      for (var i = o.length ; i < 4 ; i++) {
+
+        $( '.user-preview' ).eq( 3 - i ).hide();
+
+      }
+
+      if ( o.length > 4 ) {
+
+        $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
+
+      }else{
+
+        $( '.more-users-text' ).text( lang.seeAll );
+
+      }
 
     }
 
-    if ( o.length <= 3 ) {
-
-      $( '.more-users-text' ).text( lang.seeAll );
-
-    }else{
-
-      $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
-
-    }
 
     $( '.world-users-number .subtitle' ).text( o.length );
     $( '.stop-follow' ).removeClass( 'editable' );
@@ -583,7 +598,7 @@ var getWorldUsersAsync = function( worldApi ){
 
       wz.user( user.userId , function( e , usr ){
 
-        appendUserCircle( i , usr );
+        appendUserCircle( i , usr , inviteIndex );
 
       })
 
@@ -593,13 +608,17 @@ var getWorldUsersAsync = function( worldApi ){
 
 }
 
-var appendUserCircle = function( i , user ){
+var appendUserCircle = function( i , user , inviteIndex ){
 
   var userCircle = userCirclePrototype.clone();
   userCircle.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'clean' );
   userCircle.css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
   userCircle.data( 'user' , user );
   $( '.user-circles-section' ).append( userCircle );
+
+  if( i == inviteIndex ){
+    return;
+  }
 
   switch (i) {
     case 0:
@@ -618,6 +637,12 @@ var appendUserCircle = function( i , user ){
 
     $( '.user-preview.c' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     $( '.user-preview.c .user-hover span' ).text( user.name );
+    break;
+
+    case 3:
+
+    $( '.user-preview.d' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+    $( '.user-preview.d .user-hover span' ).text( user.name );
     break;
 
   }
