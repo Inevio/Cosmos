@@ -74,6 +74,12 @@
     "files"         : "Files",
     "worldCreation" : "World creation",
     "worldEdit"     : "World edit",
-    "accept"        : "Accept"
+    "accept"        : "Accept",
+    "worldCreated"  : "World created",
+    "postCreated"   : "Post created",
+    "hasCreated"   : "has created a",
+    "world"         : "world",
+    "post"          : "post",
+    "selectWorld"   : "Select a world"
 
 }

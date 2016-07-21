@@ -342,6 +342,29 @@
 }
 
 /* BODY */
+.select-world{
+
+  position: absolute;
+  left: 270px;
+  width: ~'calc(100% - 270px)';
+  height: 100%;
+  background-color: #fff;
+  z-index: 5;
+
+}
+
+.select-world span{
+
+  color: #889399;
+  font-size: 27px;
+  font-weight: bold;
+  margin: 0 auto;
+  display: table;
+  top: 50%;
+  position: relative;
+
+}
+
 .ui-content{
 
   position: absolute;

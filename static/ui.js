@@ -31,6 +31,7 @@ var attachCommentBut = $( '.comments-footer .attachments, .comments-footer .atta
 var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
 var privacyOption    = $( '.privacy-options .option' );
 var unFollowButton   = $( '.stop-follow' );
+var selectWorld      = $( '.select-world' );
 
 // --- EVENTS ---
 // SERVER EVENTS

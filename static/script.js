@@ -1,6 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
+var me;
 var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
@@ -103,11 +104,27 @@ api.cosmos.on( 'worldCreated' , function( world ){
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
   myWorlds.push( world.id );
 
+  if ( world.author === myContactID ) {
+    return;
+  }
+
 });
 
 api.cosmos.on( 'postAdded' , function( post ){
 
-  console.log( post );
+  if ( post.author === myContactID ) {
+    return;
+  }
+
+  wz.user( post.author , function( e , user ){
+
+    api.banner()
+      .setTitle( lang.postCreated )
+      .setText( user.name + ' ' + lang.hasCreated + ' ' + lang.post  )
+      .setIcon( user.avatar.tiny )
+      .render();
+
+  });
 
   if ( worldSelected.id != post.worldId ) {
     return;
@@ -159,6 +176,39 @@ api.cosmos.on( 'postAdded' , function( post ){
 
 });
 
+api.cosmos.on( 'postRemoved', function( postId , world ){
+
+  if ( worldSelected.id === world.id ) {
+
+    $( '.post-' + postId ).remove();
+
+  }
+
+});
+
+api.cosmos.on( 'userAdded', function( userId , world ){
+
+  console.log( userId , world );
+
+  if ( userId === myContactID ) {
+
+    appendWorld( world );
+
+  }
+
+});
+
+api.cosmos.on( 'userRemoved', function( userId , world ){
+
+  if ( userId != myContactID  && world.id === worldSelected.id ) {
+
+    $( '.user-circle' ).remove();
+    getWorldUsersAsync( world );
+
+  }
+
+});
+
 app.on( 'ui-view-resize' , function(){
 
   var name = worldTitle.data( 'name' );
@@ -182,13 +232,10 @@ api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
 api.cosmos.on( 'postContentSetted', function(){console.log('postContentSetted');})
 api.cosmos.on( 'postFSNodeSetted', function(){console.log('postFSNodeSetted');})
-api.cosmos.on( 'postRemoved', function(){console.log('postRemoved');})
 api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
 api.cosmos.on( 'postTitleSetted', function(){console.log('postTitleSetted');})
 api.cosmos.on( 'tagAdded', function(){console.log('tagAdded');})
-api.cosmos.on( 'userAdded', function(){console.log('userAdded');})
 api.cosmos.on( 'userBanned', function(){console.log('userBanned');})
-api.cosmos.on( 'userRemoved', function(){console.log('userRemoved');})
 api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
 api.cosmos.on( 'worldPrivatized', function(){console.log('worldPrivatized');})
 api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
@@ -244,6 +291,7 @@ searchPostInput.on( 'input' , function(){
 newPostButton.on( 'click' , function(){
 
   $( '.new-card-title figure' ).text( worldSelected.name );
+  $( '.new-card-avatar' ).css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
 
 });
 
@@ -330,6 +378,12 @@ var initCosmos = function(){
   initTexts();
   getMyWorldsAsync();
 
+  wz.user( myContactID , function( e , user ){
+
+    me = user;
+
+  });
+
 }
 
 var initTexts = function(){
@@ -346,6 +400,7 @@ var initTexts = function(){
   $( '.world-files-number .title' ).text( lang.files );
   $( '.new-world-title .title' ).text( lang.worldCreation );
   $( '.delete-world-button span' ).text( lang.unfollowWorld );
+  $( '.select-world span' ).text( lang.selectWorld );
 
 }
 
@@ -524,6 +579,7 @@ var selectWorld = function( world ){
   console.log('asd');
   getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi );
+  $( '.select-world' ).hide();
 
 }
 
@@ -1068,8 +1124,6 @@ var removeCardAsync = function( card ){
     if(o){
 
       var post = card.data( 'post' );
-      card.remove();
-
       worldSelected.removePost( post.id , function( e , o ){
 
         console.log( e , o );
@@ -1101,6 +1155,8 @@ var unFollowWorld = function(){
     if (index > -1) {
       myWorlds.splice(index, 1);
     }
+
+    $( '.select-world' ).show();
 
     /*
     wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){

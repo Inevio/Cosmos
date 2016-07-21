@@ -74,6 +74,12 @@
     "files"         : "Ficheros",
     "worldCreation" : "Creación de mundo",
     "worldEdit"     : "Edición de mundo",
-    "accept"        : "Aceptar"
+    "accept"        : "Aceptar",
+    "worldCreated"  : "Mundo creado",
+    "postCreated"   : "Post creado",
+    "hasCreated"   : "ha creado un",
+    "world"         : "mundo",
+    "post"          : "post",
+    "selectWorld"   : "Selecciona un mundo"
 
 }
