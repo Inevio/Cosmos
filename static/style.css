@@ -353,6 +353,13 @@
 
 }
 
+.select-world .close-app{
+
+  float: right;
+  margin: 25px;
+
+}
+
 .select-world span{
 
   color: #889399;
@@ -1378,6 +1385,43 @@
 
 }
 
+.no-posts{
+
+  float: left;
+  width: 100%;
+  position: absolute;;
+  background: #f9f9fb;
+  top: 317px;
+  height: ~'calc(100% - 317px)';
+  z-index: 3;
+  opacity: 0;
+  transition: all 0.2s ease;
+
+}
+
+.no-posts figure{
+
+  width: 205px;
+  height: 134px;
+  background-size: 205px 134px;
+  background-image: url( '@static/icono-no-posts.png' );
+  margin: 0 auto;
+  margin-top: 66px;
+
+}
+
+.no-posts span{
+
+  color: #889399;
+  font-size: 27px;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 45px;
+  position: absolute;
+
+}
+
 .cards-grid{
   /*
   margin: 0 auto;
@@ -2365,7 +2409,7 @@
   border-radius: 6px;
   width: 100%;
   height: 100%;
-  z-index: 3;
+  z-index: 5;
   background-color: #334b5c;
 	background-image: -webkit-linear-gradient(bottom, #08416b 11%, #09314f);
 	background-image: -moz-linear-gradient(bottom, #08416b 11%, #09314f);
@@ -2821,7 +2865,7 @@
   position: absolute;
   border-radius: 6px;
   height: 100%;
-  z-index: 3;
+  z-index: 5;
   background-color: #f9f9fb;
   opacity: 0;
   display: none;

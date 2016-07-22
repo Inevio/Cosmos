@@ -70,16 +70,19 @@
     "editWorld"     : "Editar mundo",
     "unfollowWorld" : "Dejar de seguir",
     "users"         : "Usuarios",
-    "posts"         : "Posts",
+    "posts"         : "Eventos",
     "files"         : "Ficheros",
     "worldCreation" : "Creación de mundo",
     "worldEdit"     : "Edición de mundo",
     "accept"        : "Aceptar",
     "worldCreated"  : "Mundo creado",
-    "postCreated"   : "Post creado",
+    "postCreated"   : "Evento creado",
     "hasCreated"   : "ha creado un",
     "world"         : "mundo",
-    "post"          : "post",
-    "selectWorld"   : "Selecciona un mundo"
+    "post"          : "evento",
+    "comment"       : "comentario",
+    "selectWorld"   : "Selecciona un mundo",
+    "hasComment"    : "ha comentado un",
+    "noPosts"       : "No hay eventos que mostrar"
 
 }

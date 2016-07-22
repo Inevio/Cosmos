@@ -447,6 +447,13 @@ app
 
   }
 
+})
+
+.on( 'click' , '.world' , function(){
+
+  usersGoesDown();
+  moveToCover();
+
 });
 
 // END UI EVENTS

@@ -80,6 +80,9 @@
     "hasCreated"   : "has created a",
     "world"         : "world",
     "post"          : "post",
-    "selectWorld"   : "Select a world"
+    "comment"       : "comment",
+    "selectWorld"   : "Select a world",
+    "hasComment"    : "has commented a",
+    "noPosts"       : "No posts to show"
 
 }
