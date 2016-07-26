@@ -219,6 +219,14 @@ api.cosmos.on( 'postRemoved', function( postId , world ){
 
     $( '.post-' + postId ).remove();
 
+    if ( $( '.cardDom' ).length === 0 ) {
+
+      $( '.no-posts' ).css( 'opacity' , '1' );
+      $( '.no-posts' ).show();
+      app.addClass( 'no-post' );
+
+    }
+
   }
 
 });
@@ -438,7 +446,9 @@ var initTexts = function(){
   $( '.delete-world-button span' ).text( lang.unfollowWorld );
   $( '.select-world span' ).text( lang.selectWorld );
   $( '.no-posts span' ).text( lang.noPosts );
-
+  $( '.no-worlds .title' ).text( lang.welcome );
+  $( '.no-worlds .subtitle' ).text( lang.intro );
+  
 }
 
 var getMyWorldsAsync = function(){
@@ -914,9 +924,11 @@ var getWorldPostsAsync = function( world ){
     if ( posts.length > 0 ) {
       $( '.no-posts' ).css( 'opacity' , '0' );
       $( '.no-posts' ).hide();
+      app.removeClass( 'no-post' );
     }else{
       $( '.no-posts' ).css( 'opacity' , '1' );
       $( '.no-posts' ).show();
+      app.addClass( 'no-post' );
     }
 
     $( '.world-event-number .subtitle' ).text( posts.length );
@@ -1060,6 +1072,7 @@ var appendCard = function( card , post ){
 
   $( '.no-posts' ).css( 'opacity' , '0' );
   $( '.no-posts' ).hide();
+  app.removeClass( 'no-post' );
 
   var cardsAppended = $( '.cardDom' );
 
@@ -1227,7 +1240,10 @@ var addReplayAsync = function( card ){
 
   }
 
-  post.reply( { content: input.val() , author: myContactID , worldId: post.worldId , title: card.find( '.card-content .title' ).text() } , function(e,o){
+  var str = card.find( '.card-content .title' ).text();
+  if( str === '' ) str = input.val();
+
+  post.reply( { content: input.val() , author: myContactID , worldId: post.worldId , title: str } , function(e,o){
 
     input.val('');
 

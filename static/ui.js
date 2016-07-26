@@ -451,8 +451,14 @@ app
 
 .on( 'click' , '.world' , function(){
 
-  usersGoesDown();
-  moveToCover();
+  if ( app.hasClass( 'user-animation' ) ) {
+    usersGoesDown();
+  }else if( app.hasClass( 'desc-animation' ) ){
+    moveToCover();
+  }else if( app.hasClass( 'cover-animation' ) ){
+    decompressCover( true );
+  }
+
 
 });
 
@@ -491,6 +497,9 @@ var moveToDesc = function(){
 
   }, 800);
 
+  app.addClass( 'desc-animation' );
+
+
 }
 
 var moveToCover = function(){
@@ -513,10 +522,16 @@ var moveToCover = function(){
 
   }, 800);
 
+  app.removeClass( 'desc-animation' );
+
 }
 
 // Compress de cover to show better the cards
 var compressCover = function(){
+
+  if ( app.hasClass( 'no-post' ) ) {
+    return;
+  }
 
   onTransition = true;
   $( '.ui-window' ).addClass( 'scrolled' );
@@ -659,11 +674,93 @@ var compressCover = function(){
 
   }, 1000, animationEffect);
 
+  app.addClass( 'cover-animation' );
 
 }
 
 // Decompress de cover to show better the cards
-var decompressCover = function(){
+var decompressCover = function( instant ){
+
+  if ( instant ) {
+
+    $( '.world-avatar' ).css({
+
+      'width'         : '52px',
+      'height'        : '52px',
+      'transform'     : 'translate(0,0)',
+      'margin'        : '0 auto'
+
+    });
+
+    $( '.world-title' ).css({
+
+      'font-size'     : '37px',
+      'color'         : '#fff',
+      'transform'     : 'translate(0,0)',
+      'margin'        : '0 auto'
+
+    });
+
+    $( '.cover' ).css({
+
+        'height'      : 317,
+        'background-color'  : 'transparent'
+
+    });
+
+    $( '.pre-cover' ).css({
+
+      'box-shadow'        : 'none'
+
+    });
+
+    $( '.shadow, .back-image' ).css({
+
+        'opacity' : '1'
+
+    });
+
+    $( '.cards-list' ).css({
+
+        'height' : 'calc(100% - 317px)',
+        'top'    : 317
+
+    });
+
+    $( '.users-preview-container' ).css({
+
+      delay : 320,
+      'top' : 229,
+      'opacity' : 1
+
+    });
+
+    $( '.spot' ).css({
+
+      delay     : 320,
+      'top'     : 294,
+      'opacity' : 1
+
+    });
+
+    $( '.search-button' ).css({
+
+      'background-color'       : 'rgba(0, 0, 0, 0.3)'
+
+    });
+
+    $( '.app-buttons' ).css({
+
+      'border-color'       : '#83878d'
+
+    });
+
+    app.removeClass( 'cover-animation' );
+    state = 1;
+    onTransition = false;
+    return;
+
+  }
 
   onTransition = true;
   $( '.ui-window' ).removeClass( 'scrolled' );
@@ -748,7 +845,6 @@ var decompressCover = function(){
   }, 1000, animationEffect );
 
   // User preview circles goes down (animation)
-  console.log($( '.users-preview-container' ).css('top'));
   $( '.users-preview-container' ).stop().clearQueue().transition({
 
     delay : 320,
@@ -779,6 +875,9 @@ var decompressCover = function(){
     'border-color'       : '#83878d'
 
   }, 1000, animationEffect);
+
+  app.removeClass( 'cover-animation' );
+
 
 }
 
@@ -855,6 +954,8 @@ var usersGoesUp = function(){
 
   }, 1000);
 
+  app.addClass( 'user-animation' );
+
 }
 
 var usersGoesDown = function(){
@@ -879,6 +980,7 @@ var usersGoesDown = function(){
 
   }, 1000);
 
+  app.removeClass( 'user-animation' );
 
 }
 
@@ -1066,7 +1168,7 @@ var newWorldAnimationBEditing = function(){
   }, 1000, animationEffect, function(){
 
     $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept );
-    $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' );
+    $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' ).find( 'span' ).text( lang.unfollowWorld );
 
     $( this ).css( {
 

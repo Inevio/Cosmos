@@ -83,6 +83,8 @@
     "comment"       : "comment",
     "selectWorld"   : "Select a world",
     "hasComment"    : "has commented a",
-    "noPosts"       : "No posts to show"
+    "noPosts"       : "No posts to show",
+    "welcome"       : "Welcome to Cosmos",
+    "intro"         : "You don’t follow any world, to get started just click the explore button and search for something"
 
 }

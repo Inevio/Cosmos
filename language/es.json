@@ -83,6 +83,8 @@
     "comment"       : "comentario",
     "selectWorld"   : "Selecciona un mundo",
     "hasComment"    : "ha comentado un",
-    "noPosts"       : "No hay eventos que mostrar"
+    "noPosts"       : "No hay eventos que mostrar",
+    "welcome"       : "Bienvenido a Cosmos",
+    "intro"         : "No estás en ningun mundo, para empezar simplemente clika el botón de explorar y busca algo"
 
 }
