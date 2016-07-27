@@ -13,11 +13,11 @@ var goBack          = $( '.go-back' );
 var moreInfo        = $( '.more-info' );
 var uiContent       = $( '.ui-content' );
 var cardList        = $( '.cards-list' );
-var exploreButton   = $( '.explore-button' );
+var exploreButton   = $( '.explore-button, .explore-button-no-worlds' );
 var closeExplore    = $( '.close-explore' );
 var moreUsersButton = $( '.more-users' );
 var arrowUp         = $( '.arrow-up' );
-var newWorldButton  = $( '.new-world-button, .new-world-button-mini' );
+var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
 var notifications   = $( '.notifications' );
 var newPostButton   = $( '.new-post' );
@@ -32,6 +32,7 @@ var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .at
 var privacyOption    = $( '.privacy-options .option' );
 var unFollowButton   = $( '.stop-follow' );
 var selectWorld      = $( '.select-world' );
+var noWorlds         = $( '.no-worlds' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -131,6 +132,16 @@ arrowUp.on( 'click', function(){
 });
 
 newWorldButton.on( 'click' , function(){
+
+  noWorlds.transition({
+
+    'opacity'         : 0
+
+  }, 200, animationEffect , function(){
+
+    noWorlds.hide();
+
+  });
 
   newWorldAnimationA();
 
@@ -904,6 +915,17 @@ var exploreAnimationOut = function(){
       'opacity'   : 0
     });
 
+    if ( $( '.worldDom' ).length === 0 ) {
+
+      noWorlds.show();
+      noWorlds.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }
+
   });
 
   // Stars goes down
@@ -1264,6 +1286,16 @@ var newWorldAnimationOut = function(){
 
     } ).find( 'span' ).text( 'Crear mundo' );
 
+    if ( $( '.worldDom' ).length === 0 ) {
+
+      noWorlds.show();
+      noWorlds.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }
 
   });
 

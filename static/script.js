@@ -19,7 +19,7 @@ var cancelNewCard         = $( '.cancel-new-card' );
 var postNewCardButton     = $( '.post-new-card' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
-var exploreButton         = $( '.explore-button' );
+var exploreButton         = $( '.explore-button, .explore-button-no-worlds' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
 var openChatButton        = $( '.open-chat' );
@@ -27,6 +27,7 @@ var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input' );
 var newPostButton         = $( '.new-post' );
 var closeExplore          = $( '.close-explore' );
+var noWorlds              = $( '.no-worlds' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -77,6 +78,16 @@ postNewCardButton.on( 'click' , function(){
 });
 
 exploreButton.on( 'click' , function(){
+
+  noWorlds.transition({
+
+    'opacity'         : 0
+
+  }, 200, animationEffect , function(){
+
+    noWorlds.hide();
+
+  });
 
   $( '.world-card-dom' ).remove();
   getPublicWorldsAsync();
@@ -448,7 +459,8 @@ var initTexts = function(){
   $( '.no-posts span' ).text( lang.noPosts );
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
-  
+  $( '.explore-button-no-worlds span' ).text( lang.explore );
+
 }
 
 var getMyWorldsAsync = function(){
@@ -457,12 +469,25 @@ var getMyWorldsAsync = function(){
 
     console.log( 'mis worlds:' , o );
 
-    $.each( o , function( i , world ){
+    if ( o.length === 0 ) {
 
-      appendWorld( world );
-      myWorlds.push( world.id );
+      noWorlds.show();
+      noWorlds.transition({
 
-    });
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }else{
+
+      $.each( o , function( i , world ){
+
+        appendWorld( world );
+        myWorlds.push( world.id );
+
+      });
+
+    }
 
   });
 
@@ -489,7 +514,7 @@ var getPublicWorldsAsync = function(){
 var appendWorld = function( worldApi ){
 
   var world = worldPrototype.clone();
-  world.removeClass( 'wz-prototype' ).addClass( 'world-' + worldApi.id );
+  world.removeClass( 'wz-prototype' ).addClass( 'world-' + worldApi.id ).addClass( 'worldDom' );
   world.find( '.world-name' ).text( worldApi.name );
   world.find( '.world-icon' ).css( 'border-color' , colors[ worldApi.id % colors.length ] );
 
