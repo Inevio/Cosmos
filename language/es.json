@@ -85,6 +85,31 @@
     "hasComment"    : "ha comentado un",
     "noPosts"       : "No hay eventos que mostrar",
     "welcome"       : "Bienvenido a Cosmos",
-    "intro"         : "No estás en ningun mundo, para empezar simplemente clika el botón de explorar y busca algo"
+    "intro"         : "No estás en ningun mundo, para empezar simplemente clika el botón de explorar y busca algo",
+    "createWorld"   : "Crear nuevo mundo",
+    "reply"         : "Responder",
+    "preview"       : "Vista previa",
+    "tend"          : "Tendencias",
+    "follow"        : "Seguir",
+    "stepa"         : "Paso 1 de 2",
+    "stepb"         : "Paso 2 de 2 - (Opcional) Añade alguna informacion adicional del mundo",
+    "worldName"     : "Nombre del mundo",
+    "avatarBack"    : "Avatar y fondo",
+    "changeBack"    : "Cambiar fondo",
+    "worldDesc"     : "Descripción (opcional)",
+    "privacy"       : "Privacidad",
+    "publicWorld"   : "Mundo público",
+    "privateWorld"  : "Mundo privado",
+    "publicDesc"    : "Este mundo podrá ser encontrado mediante 'explorar', todos podrán buscarlo y unirse.",
+    "privateDesc"   : "Este mundo no podrá ser encontrado mediante 'explorar', solo se podrá acceder a el mediante una invitación.",
+    "public"        : "Público",
+    "private"       : "Privado",
+    "newPost"       : "Nuevo post",
+    "for"           : "para",
+    "uploadInevio"  : "Subir desde Inevio",
+    "uploadPC"      : "Subir desde el PC",
+    "postit"        : "Postear",
+    "createWorldShort"  : "Crear mundo"
+
 
 }

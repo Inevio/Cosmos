@@ -55,7 +55,7 @@
 
                     "css"    : [ "style.css" ],
                     "script" : [ "ui.js" , "script.js" ],
-                    "start"  : []
+                    "start"  : [ "start.js" ]
 
                 }
 

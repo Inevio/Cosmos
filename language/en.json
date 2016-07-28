@@ -85,6 +85,31 @@
     "hasComment"    : "has commented a",
     "noPosts"       : "No posts to show",
     "welcome"       : "Welcome to Cosmos",
-    "intro"         : "You don’t follow any world, to get started just click the explore button and search for something"
+    "intro"         : "You don’t follow any world, to get started just click the explore button and search for something",
+    "createWorld"   : "Create new world",
+    "reply"         : "Reply",
+    "preview"       : "Preview",
+    "tend"          : "Tends",
+    "follow"        : "Follow",
+    "stepa"         : "Step 1 of 2",
+    "stepb"         : "Step 2 of 2 - (Optional) Add some detail info about the world",
+    "worldName"     : "World name",
+    "avatarBack"    : "Avatar & background",
+    "changeBack"    : "Change background",
+    "worldDesc"     : "Description (optional)",
+    "privacy"       : "Privacy",
+    "publicWorld"   : "Public world",
+    "privateWorld"  : "Private world",
+    "publicDesc"    : "This world can be found by exploring, everyone can look and join",
+    "privateDesc"   : "This world can not be found by exploring, only you can access it by invitation",
+    "public"        : "Public",
+    "private"       : "Private",
+    "newPost"       : "New post",
+    "for"           : "for",
+    "uploadInevio"  : "Upload from Inevio",
+    "uploadPC"      : "Upload from PC",
+    "postit"        : "Post",
+    "createWorldShort"  : "Create world"
+
 
 }

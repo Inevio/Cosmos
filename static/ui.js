@@ -133,16 +133,6 @@ arrowUp.on( 'click', function(){
 
 newWorldButton.on( 'click' , function(){
 
-  noWorlds.transition({
-
-    'opacity'         : 0
-
-  }, 200, animationEffect , function(){
-
-    noWorlds.hide();
-
-  });
-
   newWorldAnimationA();
 
 });
@@ -924,6 +914,18 @@ var exploreAnimationOut = function(){
 
       }, 200, animationEffect );
 
+    }else{
+
+      noWorlds.transition({
+
+        'opacity'         : 0
+
+      }, 200, animationEffect , function(){
+
+        noWorlds.hide();
+
+      });
+
     }
 
   });
@@ -1294,6 +1296,18 @@ var newWorldAnimationOut = function(){
         'opacity'         : 1
 
       }, 200, animationEffect );
+
+    }else{
+
+      noWorlds.transition({
+
+        'opacity'         : 0
+
+      }, 200, animationEffect , function(){
+
+        noWorlds.hide();
+
+      });
 
     }
 

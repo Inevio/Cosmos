@@ -79,16 +79,6 @@ postNewCardButton.on( 'click' , function(){
 
 exploreButton.on( 'click' , function(){
 
-  noWorlds.transition({
-
-    'opacity'         : 0
-
-  }, 200, animationEffect , function(){
-
-    noWorlds.hide();
-
-  });
-
   $( '.world-card-dom' ).remove();
   getPublicWorldsAsync();
 
@@ -425,6 +415,19 @@ app
 
   }
 
+})
+
+.on( 'click' , '.world-card-dom' , function(){
+
+  var world = $( this ).data( 'world' );
+  var worldSelectable = $( '.world-' + world.id );
+  if ( worldSelectable.length > 0 ) {
+
+    $( '.close-explore' ).click();
+    worldSelectable.click();
+
+  }
+
 });
 
 //Functions
@@ -445,7 +448,7 @@ var initTexts = function(){
 
   $( '.category .public' ).text( lang.publics );
   $( '.category .private' ).text( lang.privates );
-  $( '.explore-text' ).text( lang.explore );
+  $( '.explore-text, .search-title' ).text( lang.explore );
   $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
   $( '.card-options-section .delete span' ).text( lang.deletePost );
   $( '.send-button span' ).text( lang.send );
@@ -460,36 +463,47 @@ var initTexts = function(){
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
   $( '.explore-button-no-worlds span' ).text( lang.explore );
+  $( '.new-world-button-no-worlds span, .new-world-button span' ).text( lang.createWorld );
+  $( '.tend-text' ).text( lang.tend );
+  $( '.follow-button span' ).text( lang.follow );
+  $( '.new-world-title .step-a' ).text( lang.stepa );
+  $( '.new-world-title .step-b' ).text( lang.stepb );
+  $( '.new-world-name span' ).text( lang.worldName );
+  $( '.new-world-avatar > span' ).text( lang.avatarBack );
+  $( '.change-background-button span' ).text( lang.changeBack );
+  $( '.new-world-desc span' ).text( lang.worldDesc );
+  $( '.new-world-privacy > span' ).text( lang.privacy );
+  $( '.option.public .title' ).text( lang.publicWorld );
+  $( '.option.public .desc' ).text( lang.publicDesc );
+  $( '.option.hidden .title' ).text( lang.privateWorld );
+  $( '.option.hidden .desc' ).text( lang.privateDesc );
+  $( '.option.public > span' ).text( lang.public );
+  $( '.option.hidden > span' ).text( lang.private );
+  $( '.create-world-button.step-a span' ).text( lang.createWorldShort );
+  $( 'new-card-title' ).html( '<i>' + lang.newPost + '</i>' + lang.for + '<figure></figure>' );
+  $( '.attach-select .inevio span' ).text( lang.uploadInevio );
+  $( '.attach-select .pc span' ).text( lang.uploadPC );
+  $( '.cancel-new-card span' ).text( lang.cancel );
+  $( '.post-new-card span' ).text( lang.postit );
+  $( '.cancel-invite-user span' ).text( lang.cancel );
+  $( '.invite-user span' ).text( lang.inviteUser );
 
 }
 
 var getMyWorldsAsync = function(){
 
-  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
+  var myWorlds = app.data( 'myWorlds' );
 
-    console.log( 'mis worlds:' , o );
+  if ( myWorlds ) {
 
-    if ( o.length === 0 ) {
+    $.each( myWorlds , function( i , world ){
 
-      noWorlds.show();
-      noWorlds.transition({
+      appendWorld( world );
+      myWorlds.push( world.id );
 
-        'opacity'         : 1
+    });
 
-      }, 200, animationEffect );
-
-    }else{
-
-      $.each( o , function( i , world ){
-
-        appendWorld( world );
-        myWorlds.push( world.id );
-
-      });
-
-    }
-
-  });
+  }
 
 };
 
@@ -1039,6 +1053,7 @@ var appendYoutubeCard = function( post , user , reason ){
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
   card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
   card.find( '.title' ).text( post.title );
+  card.find( '.activate-preview' ).text( lang.preview );
 
   setRepliesAsync( card , post );
   appendCard( card , post );
@@ -1076,6 +1091,7 @@ var appendReply = function( card , reply ){
 
   var comment = commentPrototype.eq(0).clone();
   comment.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + reply.id );
+  comment.find( '.replay-button' ).text( lang.reply );
 
   wz.user( reply.author , function( e , user ){
 
@@ -1097,6 +1113,8 @@ var appendCard = function( card , post ){
 
   $( '.no-posts' ).css( 'opacity' , '0' );
   $( '.no-posts' ).hide();
+  card.find( '.delete span' ).text( lang.deletePost );
+
   app.removeClass( 'no-post' );
 
   var cardsAppended = $( '.cardDom' );
@@ -1230,14 +1248,25 @@ var unFollowWorld = function(){
 
   worldSelected.removeUser( myContactID , function( e , o ){
 
-    console.log('he salido',e,o);
     $( '.world.active' ).remove();
+
     var index = myWorlds.indexOf( worldSelected.id );
     if (index > -1) {
       myWorlds.splice(index, 1);
     }
 
     $( '.select-world' ).show();
+
+    if( $( '.worldDom' ).length === 0 ){
+
+      noWorlds.show();
+      noWorlds.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }
 
     /*
     wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){
