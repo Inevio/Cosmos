@@ -494,6 +494,8 @@ var getMyWorldsAsync = function(){
 
   var myWorlds = app.data( 'myWorlds' );
 
+  console.log( 'mis mundos' , myWorlds );
+
   if ( myWorlds ) {
 
     $.each( myWorlds , function( i , world ){
@@ -610,24 +612,20 @@ var editWorldAsync = function(){
     return;
   }
 
-  worldApi.setPrivate( isPrivate , function( e , o ){
+  worldApi.isPrivate = isPrivate;
+  worldApi.description = $( '.new-world-desc textarea' ).val();
+  worldApi.name = name;
 
-    worldApi.setDescription( $( '.new-world-desc textarea' ).val() , function( e , o ){
+  worldApi.set( worldApi , function( e , o ){
 
-      worldApi.setName( name , function( e , o ){
-
-        worldApi.isPrivate = isPrivate;
-        worldApi.description = $( '.new-world-desc textarea' ).val();
-        worldApi.name = name;
-        $( '.world-' + worldApi.id ).remove();
-        appendWorld( worldApi );
-        $( '.world-' + worldApi.id ).click();
-        $( '.privacy-options .option' ).removeClass( 'active' );
-        $( '.private-option' ).addClass( 'active' );
-
-      });
-
-    });
+    if(e){
+      console.log( e );
+    }
+    $( '.world-' + worldApi.id ).remove();
+    appendWorld( worldApi );
+    $( '.world-' + worldApi.id ).click();
+    $( '.privacy-options .option' ).removeClass( 'active' );
+    $( '.private-option' ).addClass( 'active' );
 
   });
 
