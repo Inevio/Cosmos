@@ -1288,6 +1288,8 @@ var newWorldAnimationOut = function(){
 
     } ).find( 'span' ).text( 'Crear mundo' );
 
+    exploreAnimationOut();
+
     if ( $( '.worldDom' ).length === 0 ) {
 
       noWorlds.show();

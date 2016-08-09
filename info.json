@@ -73,6 +73,13 @@
             "read" : true
 
         },
+        "fs"      : {
+
+            "create" : true,
+            "modify" : true,
+            "read"   : true
+
+        },
         "service": true
 
     }

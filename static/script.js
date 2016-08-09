@@ -28,6 +28,7 @@ var searchPostInput       = $( '.pre-cover .search-button input' );
 var newPostButton         = $( '.new-post' );
 var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
+var openFolder            = $( '.open-folder i' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -340,6 +341,16 @@ newPostButton.on( 'click' , function(){
 
 });
 
+openFolder.on( 'click' , function(){
+
+  wz.fs( worldSelected.volume , function( e , o ){
+
+    o.open();
+
+  });
+
+});
+
 app
 
 .on( 'click' , '.create-world-button.step-a' , function(){
@@ -492,13 +503,13 @@ var initTexts = function(){
 
 var getMyWorldsAsync = function(){
 
-  var myWorlds = app.data( 'myWorlds' );
+  var myWorldsApi = app.data( 'myWorlds' );
 
-  console.log( 'mis mundos' , myWorlds );
+  console.log( 'mis mundos' , myWorldsApi );
 
-  if ( myWorlds ) {
+  if ( myWorldsApi ) {
 
-    $.each( myWorlds , function( i , world ){
+    $.each( myWorldsApi , function( i , world ){
 
       appendWorld( world );
       myWorlds.push( world.id );
