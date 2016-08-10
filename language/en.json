@@ -50,10 +50,11 @@
     "white" : "White",
 
 
-    "publics"       : "Publics",
-    "privates"      : "Privates",
+    "publics"       : "Public worlds",
+    "privates"      : "Private worlds",
     "explore"       : "Explore",
     "inviteUser"    : "Invite user",
+    "invite"        : "Invite",
     "more"          : "more",
     "seeAll"        : "see all",
     "followers"     : "followers",

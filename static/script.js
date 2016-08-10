@@ -497,7 +497,7 @@ var initTexts = function(){
   $( '.cancel-new-card span' ).text( lang.cancel );
   $( '.post-new-card span' ).text( lang.postit );
   $( '.cancel-invite-user span' ).text( lang.cancel );
-  $( '.invite-user span' ).text( lang.inviteUser );
+  $( '.invite-user span' ).text( lang.invite );
 
 }
 

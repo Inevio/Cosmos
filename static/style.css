@@ -1793,6 +1793,7 @@ to {background-position: -200% 0;}
     height: ~'calc(100% - 111px)';
     position: relative;
     padding: 15px 0;
+    max-width: 529px;
 
   }
 
@@ -3011,15 +3012,23 @@ to {background-position: -200% 0;}
 
 /* NEW WORLD CONTAINER */
 
-.new-world-container{
+.new-world-container-wrap{
 
   position: absolute;
-  border-radius: 6px;
+  width: 100%;
   height: 100%;
   z-index: 7;
   background-color: #f9f9fb;
   opacity: 0;
   display: none;
+  border-radius: 6px;
+
+}
+
+.new-world-container{
+
+  position: absolute;
+  border-radius: 6px;
   padding-left: ~'calc(50% - 472px/2)';
   padding-right: ~'calc(50% - 472px/2)';
 

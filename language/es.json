@@ -50,10 +50,11 @@
     "white" : "Claro",
 
 
-    "publics"       : "Públicos",
-    "privates"      : "Privados",
+    "publics"       : "Mundos públicos",
+    "privates"      : "Mundos privados",
     "explore"       : "Explorar",
     "inviteUser"    : "Invitar usuario",
+    "invite"        : "Invitar",
     "more"          : "más",
     "seeAll"        : "ver todos",
     "followers"     : "seguidores",

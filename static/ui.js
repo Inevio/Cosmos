@@ -1010,7 +1010,7 @@ var usersGoesDown = function(){
 
 var newWorldAnimationA = function(){
 
-  var newWorldContainer = $( '.new-world-container' );
+  var newWorldContainer = $( '.new-world-container-wrap' );
 
   newWorldContainer.css( 'display' , 'block');
 
@@ -1062,6 +1062,8 @@ var newWorldAnimationA = function(){
 var newWorldAnimationB = function(){
 
   var editing = $( '.new-world-container' ).hasClass( 'editing' );
+
+  $( '.new-world-container' ).css( 'height' , '933px' );
 
   if ( editing ) {
 
@@ -1249,7 +1251,9 @@ var newWorldAnimationBEditing = function(){
 
 var newWorldAnimationOut = function(){
 
-  var newWorldContainer = $( '.new-world-container' );
+  var newWorldContainer = $( '.new-world-container-wrap' );
+
+  $( '.new-world-container' ).css( 'height' , '100%' );
 
   // Fade out White background
   newWorldContainer.stop().clearQueue().transition({
