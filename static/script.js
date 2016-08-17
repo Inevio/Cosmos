@@ -1325,7 +1325,19 @@ var exploreAnimationIn = function(){
 
     'opacity' : 1
 
-  }, 300, animationEffect);
+  }, 300, animationEffect , function(){
+
+    noWorlds.transition({
+
+      'opacity'         : 0
+
+    }, 200, animationEffect , function(){
+
+      noWorlds.hide();
+
+    });
+
+  });
 
   // New world button appears and goes up
   $( '.planet' ).stop().clearQueue().transition({

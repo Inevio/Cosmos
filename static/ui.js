@@ -884,6 +884,28 @@ var decompressCover = function( instant ){
 
 var exploreAnimationOut = function(){
 
+  if ( $( '.worldDom' ).length === 0 ) {
+
+    noWorlds.show();
+    noWorlds.transition({
+
+      'opacity'         : 1
+
+    }, 200, animationEffect );
+
+  }else{
+
+    noWorlds.transition({
+
+      'opacity'         : 0
+
+    }, 200, animationEffect , function(){
+
+      noWorlds.hide();
+
+    });
+  }
+
   var exploreSection = $( '.explore-section' );
 
   // Fade out blue background
@@ -904,29 +926,6 @@ var exploreAnimationOut = function(){
       'transform' : 'translate( 120px , 100px )',
       'opacity'   : 0
     });
-
-    if ( $( '.worldDom' ).length === 0 ) {
-
-      noWorlds.show();
-      noWorlds.transition({
-
-        'opacity'         : 1
-
-      }, 200, animationEffect );
-
-    }else{
-
-      noWorlds.transition({
-
-        'opacity'         : 0
-
-      }, 200, animationEffect , function(){
-
-        noWorlds.hide();
-
-      });
-
-    }
 
   });
 
