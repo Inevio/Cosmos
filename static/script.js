@@ -614,6 +614,7 @@ var editWorldAsync = function(){
   var isPrivate = $( '.private-option' ).hasClass( 'active' );
   var editing = $( '.new-world-container' ).hasClass( 'editing' );
   var name = worldApi.name;
+  $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , worldApi.id );
 
   if ( editing ) {
     name = $( '.new-world-name input' ).val();

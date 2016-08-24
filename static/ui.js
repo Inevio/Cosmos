@@ -278,6 +278,7 @@ unFollowButton.on( 'click' , function(){
 
     $( '.new-world-desc textarea' ).val( world.description );
     $( '.new-world-name input' ).val( world.name );
+    $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
     $( '.privacy-options .option' ).removeClass( 'active' );
     if ( world.isPrivate ) {
       $( '.privacy-options .hidden' ).addClass( 'active' );

@@ -343,8 +343,6 @@ to {background-position: -200% 0;}
     margin-top: 10px;
     width: 100%;
     overflow: hidden;
-    -webkit-transition: all 2s;
-    transition: all 2s;
 
   }
 
@@ -353,7 +351,6 @@ to {background-position: -200% 0;}
     float: left;
     height: 28px;
     width: 100%;
-    transition: all 0.2s ease;
     cursor: pointer;
 
   }
