@@ -53,7 +53,7 @@
 
                     },
 
-                    "css"    : [ "style.css" ],
+                    "css"    : [ "style.css" , "spinkit.css" ],
                     "script" : [ "ui.js" , "script.js" ],
                     "start"  : [ "start.js" ]
 
@@ -80,7 +80,13 @@
             "read"   : true
 
         },
-        "service": true
+        "service": true,
+        "upload" : {
+
+            "avatar"    : true,
+            "wallpaper" : true
+
+        }
 
     }
 

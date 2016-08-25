@@ -273,7 +273,6 @@ app.on( 'ui-view-resize' , function(){
 
 });
 
-api.cosmos.on( 'iconSetted', function(){console.log('iconSetted');})
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
 api.cosmos.on( 'postContentSetted', function(){console.log('postContentSetted');})
@@ -348,6 +347,19 @@ openFolder.on( 'click' , function(){
     o.open();
 
   });
+
+});
+
+api.upload.on( 'avatarProgress', function( percent ){
+
+  $( '.loading-animation-container' ).show();
+
+});
+
+api.cosmos.on( 'worldIconSetted', function( o ){
+
+  $( '.loading-animation-container' ).hide();
+  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + ')' );
 
 });
 
@@ -439,7 +451,8 @@ app
 
   }
 
-});
+})
+
 
 //Functions
 var initCosmos = function(){
@@ -667,6 +680,8 @@ var selectWorld = function( world ){
     worldTitle.text( name );
 
   }
+
+  $( '.world-avatar' ).css( 'background-image' , 'url(' + worldApi.icons.normal + ')' );
 
   worldTitle.data( 'name' , name );
 
