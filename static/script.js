@@ -359,7 +359,7 @@ api.upload.on( 'avatarProgress', function( percent ){
 api.cosmos.on( 'worldIconSetted', function( o ){
 
   $( '.loading-animation-container' ).hide();
-  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + ')' );
+  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + '?' + Date.now() + ')' );
 
 });
 
@@ -452,7 +452,6 @@ app
   }
 
 })
-
 
 //Functions
 var initCosmos = function(){
@@ -587,6 +586,7 @@ var appendWorldCard = function( worldApi ){
   var world = worldCardPrototype.clone();
   world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' );
   world.find( '.world-title-min' ).text( worldApi.name );
+  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?' + Date.now() + ')' );;
 
   if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
 
