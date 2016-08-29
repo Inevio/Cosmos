@@ -1013,6 +1013,8 @@ var newWorldAnimationA = function(){
 
   var newWorldContainer = $( '.new-world-container-wrap' );
 
+  $( '.new-world-name input' ).val( '' );
+
   newWorldContainer.css( 'display' , 'block');
 
   // Fade in White background (animation)
@@ -1089,7 +1091,7 @@ var newWorldAnimationBNormal = function(){
 
   $( '.new-world-desc textarea' ).val('');
 
-
+  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'none' );
 
   // Fade in and goes up title (animation)
   $( '.new-world-title' ).stop().clearQueue().transition({

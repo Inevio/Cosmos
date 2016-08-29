@@ -134,13 +134,13 @@ api.cosmos.on( 'postAdded' , function( post ){
         wz.user( post.author , function( e , user ){
 
           api.banner()
-            .setTitle( user.name + ' ' + lang.hasComment + ' ' + lang.comment )
-            .setText( post.content )
-            .setIcon( user.avatar.tiny )
-            .on( 'click' , function(){
-              $( '.world-' + post.worldId ).click();
-            })
-            .render();
+          .setTitle( user.name + ' ' + lang.hasComment + ' ' + lang.comment )
+          .setText( post.content )
+          .setIcon( user.avatar.tiny )
+          .on( 'click' , function(){
+            $( '.world-' + post.worldId ).click();
+          })
+          .render();
 
         });
 
@@ -161,13 +161,13 @@ api.cosmos.on( 'postAdded' , function( post ){
         wz.user( post.author , function( e , user ){
 
           api.banner()
-            .setTitle( user.name + ' ' + lang.hasComment + ' ' + lang.post )
-            .setText( post.content )
-            .setIcon( user.avatar.tiny )
-            .on( 'click' , function(){
-              $( '.world-' + post.worldId ).click();
-            })
-            .render();
+          .setTitle( user.name + ' ' + lang.hasComment + ' ' + lang.post )
+          .setText( post.content )
+          .setIcon( user.avatar.tiny )
+          .on( 'click' , function(){
+            $( '.world-' + post.worldId ).click();
+          })
+          .render();
 
         });
 
@@ -182,13 +182,13 @@ api.cosmos.on( 'postAdded' , function( post ){
       if ( post.author != myContactID ) {
 
         api.banner()
-          .setTitle( user.name + ' ' + lang.hasCreated + ' ' + lang.post )
-          .setText( post.title )
-          .setIcon( user.avatar.tiny )
-          .on( 'click' , function(){
-            $( '.world-' + post.worldId ).click();
-          })
-          .render();
+        .setTitle( user.name + ' ' + lang.hasCreated + ' ' + lang.post )
+        .setText( post.title )
+        .setIcon( user.avatar.tiny )
+        .on( 'click' , function(){
+          $( '.world-' + post.worldId ).click();
+        })
+        .render();
 
       }
 
@@ -242,6 +242,12 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
   }
 
+  if( world.id === worldSelected.id ){
+
+    selectWorld( $( '.worldDom.active' ) );
+
+  }
+
 });
 
 api.cosmos.on( 'userRemoved', function( userId , world ){
@@ -291,10 +297,10 @@ openChatButton.on( 'click' , function(){
   /*
   wz.app.openApp( 14 , [ 'open-chat' , worldSelected , function( o ){
 
-    console.log(o);
+  console.log(o);
 
-  }] , 'hidden' );
-  */
+}] , 'hidden' );
+*/
 
 });
 
@@ -337,6 +343,8 @@ newPostButton.on( 'click' , function(){
 
   $( '.new-card-title figure' ).text( worldSelected.name );
   $( '.new-card-avatar' ).css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
+  $( '.new-card-section .attachments' ).data( 'numAttachs' , 0 );
+  $( '.new-card-section .attachments' ).removeClass( 'with-attach' );
 
 });
 
@@ -889,10 +897,10 @@ var followWorldAsync = function( worldCard ){
   /*
   wz.app.openApp( 14 , [ 'join-chat' , world , function( o ){
 
-    console.log(o);
+  console.log(o);
 
-  }] , 'hidden' );
-  */
+}] , 'hidden' );
+*/
 
 }
 
@@ -965,17 +973,50 @@ var postNewCardAsync = function(){
   var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
   var cardType = 1;
   var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
+  var attach = $( '.new-card-section .attachments' ).data( 'attachs' );
 
-  if ( text.indexOf( 'www.youtube' ) != -1 ) {
-    cardType = 8;
-  }
-
-  worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
+  var addPost = worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
 
     $( '.new-card-input' ).val('');
     $( '.new-card-textarea' ).val('');
 
   });
+
+
+  if ( attach ) {
+
+    api.fs( attachs , function( e , o ){
+
+      var fileType = o.mime;
+
+      if( checkContains( fileType , 'image' ) ){
+
+        cardType = 4;
+
+      }else if( checkContains( fileType , 'pdf' ) ){
+
+        cardType = 3;
+
+      }
+
+    });
+
+    addPost();
+
+  }
+
+  if ( text.indexOf( 'www.youtube' ) != -1 ) {
+
+    cardType = 8;
+    addPost();
+
+  }
+
+}
+
+var checkContains = function( base , contains ){
+
+  return base.indexOf( contains ) != -1;
 
 }
 
@@ -1261,11 +1302,36 @@ var removeCardAsync = function( card ){
 
 var attachFromInevio = function(){
 
-  wz.fs.selectFile('', '', function(e,o){
+  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' } , function( e , s ){
 
-    console.log('ATTACH',e,o);
+    $( '.popup' ).removeClass( 'popup2' );
+    $( this ).parent().find( '.new-card-section .attach-select' ).hide();
 
-  });
+    if (e) {
+      console.log( e );
+    }
+
+    var numAttachs = $( '.new-card-section .attachments' ).data( 'numAttachs' );
+    if ( !numAttachs ) {
+      numAttachs = 0;
+    }
+
+    if ( s.constructor === Array ) {
+      numAttachs += s.length;
+    }else{
+      numAttachs++;
+    }
+
+    console.log( numAttachs );
+    $( '.new-card-section .attachments' ).data( 'numAttachs' , numAttachs );
+    $( '.new-card-section .attachments' ).data( 'attachs' , s );
+
+    if ( numAttachs > 0) {
+      $( '.new-card-section .attachments' ).addClass( 'with-attach' );
+      $( '.new-card-section .attachments figure i' ).text( numAttachs );
+    }
+
+  })
 
 }
 
@@ -1273,7 +1339,15 @@ var unFollowWorld = function(){
 
   worldSelected.removeUser( myContactID , function( e , o ){
 
+    var worldList = $( '.world.active' ).parent();
+
+    $( '.world.active' ).parent().transition({
+
+      'height'         : worldList.height() - 28
+
+    }, 200);
     $( '.world.active' ).remove();
+
 
     var index = myWorlds.indexOf( worldSelected.id );
     if (index > -1) {
@@ -1296,13 +1370,13 @@ var unFollowWorld = function(){
     /*
     wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){
 
-      console.log(o);
-      worldSelected = null;
+    console.log(o);
+    worldSelected = null;
 
-    }] , 'hidden' );
-    */
+  }] , 'hidden' );
+  */
 
-  });
+});
 
 }
 

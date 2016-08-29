@@ -1848,7 +1848,7 @@ to {background-position: -200% 0;}
 
 }
 
-.img-card{
+.img-card.five{
 
   .image-a{
 
@@ -3975,13 +3975,20 @@ to {background-position: -200% 0;}
 
   }
 
+  .attachments.with-attach{
+
+    border: 2px solid #60b25e;
+    background-color: rgba(0,0,0,0.05);
+
+  }
+
   .attachments:hover{
 
     background-color: rgba(0,0,0,0.05);
 
   }
 
-  .attachments i{
+  .attachments > i{
 
     float: left;
     width: 16px;
@@ -3991,6 +3998,37 @@ to {background-position: -200% 0;}
     margin-left: 9px;
     margin-top: 8px;
     cursor: pointer;
+
+  }
+
+  .attachments figure{
+
+    display: none;
+    position: absolute;
+    background-color: #e63c42;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    top: -6px;
+    left: 21px;
+
+  }
+
+  .attachments.with-attach figure{
+
+    display: block;
+
+  }
+
+  .attachments figure > i{
+
+    color: #fff;
+    width: 100%;
+    font-size: 11px;
+    float: left;
+    text-align: center;
+    margin-top: 3px;
+    font-weight: bold;
 
   }
 
