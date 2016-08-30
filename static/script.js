@@ -197,6 +197,11 @@ api.cosmos.on( 'postAdded' , function( post ){
 
           case 1:
 
+          appendNoFileCard( post , user , lang.postCreated );
+          break;
+
+          case 6:
+
           appendGenericCard( post , user , lang.postCreated );
           break;
 
@@ -973,19 +978,29 @@ var postNewCardAsync = function(){
   var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
   var cardType = 1;
   var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
+
   var attach = $( '.new-card-section .attachments' ).data( 'attachs' );
 
-  var addPost = worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
+  var addPost = function( node ){
+    worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
 
-    $( '.new-card-input' ).val('');
-    $( '.new-card-textarea' ).val('');
+      if ( node ) {
+        o[0].setFSNode( parseInt( node ) , function( e , o ){
 
-  });
+          console.log( e , o );
 
+        });
+      }
+
+      $( '.new-card-input' ).val('');
+      $( '.new-card-textarea' ).val('');
+
+    });
+  }
 
   if ( attach ) {
 
-    api.fs( attachs , function( e , o ){
+    api.fs( attach , function( e , o ){
 
       var fileType = o.mime;
 
@@ -997,18 +1012,24 @@ var postNewCardAsync = function(){
 
         cardType = 3;
 
+      }else if( checkContains( fileType , 'mpeg' ) ){
+
+        cardType = 6;
+
       }
 
     });
 
-    addPost();
+    addPost( attach );
 
-  }
-
-  if ( text.indexOf( 'www.youtube' ) != -1 ) {
+  }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
 
     cardType = 8;
-    addPost();
+    addPost( 0 );
+
+  }else{
+
+    addPost( 0 );
 
   }
 
@@ -1046,6 +1067,11 @@ var getWorldPostsAsync = function( world ){
 
           case 1:
 
+          appendNoFileCard( post , user , lang.postCreated );
+          break;
+
+          case 6:
+
           appendGenericCard( post , user , lang.postCreated );
           break;
 
@@ -1064,16 +1090,12 @@ var getWorldPostsAsync = function( world ){
 
 }
 
-var appendGenericCard = function( post , user , reason ){
+var appendNoFileCard = function( post , user , reason ){
 
   var card = genericCardPrototype.clone();
   card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
 
-  if( post.fsnode == 0 ){
-
-    card.find( '.doc-preview' ).hide();
-
-  }
+  card.find( '.doc-preview' ).hide();
 
   if ( post.title === 'none' ) {
 
@@ -1102,6 +1124,47 @@ var appendGenericCard = function( post , user , reason ){
 
   setRepliesAsync( card , post );
   appendCard( card , post );
+
+}
+
+var appendGenericCard = function( post , user , reason ){
+
+  var card = genericCardPrototype.clone();
+  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
+
+  wz.fs( post.fsnode , function( e , fsNode ){
+
+    console.log( fsNode , 'imagen!');
+
+    if ( post.title === 'none' ) {
+
+      card.find( '.title' ).hide();
+
+    }else{
+
+      card.find( '.title' ).text( post.title );
+
+    }
+
+    if ( post.content === 'none' ) {
+
+      card.find( '.desc' ).hide();
+
+    }else{
+
+      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+
+    }
+
+    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+    card.find( '.card-user-name' ).text( user.fullName );
+    card.find( '.shared-text' ).text( reason );
+    card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
+
+    setRepliesAsync( card , post );
+    appendCard( card , post );
+
+  });
 
 }
 
@@ -1322,7 +1385,7 @@ var attachFromInevio = function(){
       numAttachs++;
     }
 
-    console.log( numAttachs );
+    console.log( numAttachs, s );
     $( '.new-card-section .attachments' ).data( 'numAttachs' , numAttachs );
     $( '.new-card-section .attachments' ).data( 'attachs' , s );
 
