@@ -17,6 +17,7 @@ var friendPrototype       = $( '.friend.wz-prototype' );
 var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
 var cancelNewCard         = $( '.cancel-new-card' );
 var postNewCardButton     = $( '.post-new-card' );
+var documentCardPrototype = $( '.doc-card.wz-prototype' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var exploreButton         = $( '.explore-button, .explore-button-no-worlds' );
@@ -198,6 +199,16 @@ api.cosmos.on( 'postAdded' , function( post ){
           case 1:
 
           appendNoFileCard( post , user , lang.postCreated );
+          break;
+
+          case 3:
+
+          appendDocumentCard( post , user , lang.postCreated );
+          break;
+
+          case 4:
+
+          appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 6:
@@ -466,6 +477,11 @@ app
 
 })
 
+.on( 'click' , '.doc-preview' , function(){
+
+  $( this ).data( 'fsNode' ).open();
+
+});
 //Functions
 var initCosmos = function(){
 
@@ -981,21 +997,28 @@ var postNewCardAsync = function(){
 
   var attach = $( '.new-card-section .attachments' ).data( 'attachs' );
 
-  var addPost = function( node ){
-    worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
+  var addPost = function( node , type ){
 
-      if ( node ) {
-        o[0].setFSNode( parseInt( node ) , function( e , o ){
+    if ( type === 1 || type === 7 || type === 8 ) {
 
-          console.log( e , o );
+      worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
 
-        });
-      }
+        $( '.new-card-input' ).val('');
+        $( '.new-card-textarea' ).val('');
 
-      $( '.new-card-input' ).val('');
-      $( '.new-card-textarea' ).val('');
+      });
 
-    });
+    }else{
+
+      worldSelected.addPost( { content: text , type: cardType, title: tit, fsnode: node } , function( e , o ){
+
+        $( '.new-card-input' ).val('');
+        $( '.new-card-textarea' ).val('');
+
+      });
+
+    }
+
   }
 
   if ( attach ) {
@@ -1018,18 +1041,18 @@ var postNewCardAsync = function(){
 
       }
 
-    });
+      addPost( attach , cardType );
 
-    addPost( attach );
+    });
 
   }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
 
     cardType = 8;
-    addPost( 0 );
+    addPost( 0 , cardType );
 
   }else{
 
-    addPost( 0 );
+    addPost( 0 , cardType );
 
   }
 
@@ -1068,6 +1091,16 @@ var getWorldPostsAsync = function( world ){
           case 1:
 
           appendNoFileCard( post , user , lang.postCreated );
+          break;
+
+          case 3:
+
+          appendDocumentCard( post , user , lang.postCreated );
+          break;
+
+          case 4:
+
+          appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 6:
@@ -1135,6 +1168,57 @@ var appendGenericCard = function( post , user , reason ){
   wz.fs( post.fsnode , function( e , fsNode ){
 
     console.log( fsNode , 'imagen!');
+
+    card.find( '.doc-icon' ).css( 'background-image' , 'url( '+ fsNode.thumbnails.normal +' )' );
+    card.find( '.doc-title' ).text( fsNode.name );
+    card.find( '.doc-info' ).text( fsNode.mime );
+    card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
+
+    if ( post.title === 'none' ) {
+
+      card.find( '.title' ).hide();
+
+    }else{
+
+      card.find( '.title' ).text( post.title );
+
+    }
+
+    if ( post.content === 'none' ) {
+
+      card.find( '.desc' ).hide();
+
+    }else{
+
+      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+
+    }
+
+    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+    card.find( '.card-user-name' ).text( user.fullName );
+    card.find( '.shared-text' ).text( reason );
+    card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
+
+    setRepliesAsync( card , post );
+    appendCard( card , post );
+
+  });
+
+}
+
+var appendDocumentCard = function( post , user , reason ){
+
+  var card = documentCardPrototype.clone();
+  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
+
+  wz.fs( post.fsnode , function( e , fsNode ){
+
+    console.log( fsNode , 'imagen!');
+
+    card.find( '.doc-preview' ).css( 'background-image' , 'url( '+ fsNode.thumbnails['512'] +' )' );
+    card.find( '.preview-title' ).text( fsNode.name );
+    card.find( '.preview-info' ).text( fsNode.mime );
+    card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
 
     if ( post.title === 'none' ) {
 
