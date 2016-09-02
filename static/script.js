@@ -208,7 +208,7 @@ api.cosmos.on( 'postAdded' , function( post ){
 
           case 4:
 
-          appendGenericCard( post , user , lang.postCreated );
+          appendDocumentCard( post , user , lang.postCreated );
           break;
 
           case 6:
@@ -920,8 +920,8 @@ var followWorldAsync = function( worldCard ){
 
   console.log(o);
 
-}] , 'hidden' );
-*/
+  }] , 'hidden' );
+  */
 
 }
 
@@ -1100,7 +1100,7 @@ var getWorldPostsAsync = function( world ){
 
           case 4:
 
-          appendGenericCard( post , user , lang.postCreated );
+          appendDocumentCard( post , user , lang.postCreated );
           break;
 
           case 6:
@@ -1523,7 +1523,7 @@ var unFollowWorld = function(){
   }] , 'hidden' );
   */
 
-});
+  });
 
 }
 
