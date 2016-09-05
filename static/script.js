@@ -481,12 +481,20 @@ app
 
   $( this ).data( 'fsNode' ).open();
 
+})
+
+.on( 'click' , '.pc.wz-uploader-start' , function(){
+
+  $( this ).data( 'destiny', worldSelected.volume );;
+
 });
 //Functions
 var initCosmos = function(){
 
   initTexts();
   getMyWorldsAsync();
+  starsCanvas( 'stars-canvas' );
+  starsCanvas( 'stars-canvas2' );
 
   wz.user( myContactID , function( e , user ){
 
@@ -539,6 +547,73 @@ var initTexts = function(){
   $( '.post-new-card span' ).text( lang.postit );
   $( '.cancel-invite-user span' ).text( lang.cancel );
   $( '.invite-user span' ).text( lang.invite );
+
+}
+
+var starsCanvas = function( stars ){
+
+  var canvas = $('.' + stars );
+  var ctx = canvas[0].getContext('2d');
+  var initial = Date.now();
+
+  var layer1 = new Image();
+  var layer2 = new Image();
+  var layer3 = new Image();
+  var speed1 = 2 / 75;
+  var speed2 = 2 / 125;
+  var speed3 = 2 / 175;
+  var padding1 = 0;
+  var padding2 = 0;
+  var padding3 = 0;
+
+  layer1.src = 'https://staticbeta.inevio.com/app/360/starlayer1.png';
+  layer2.src = 'https://staticbeta.inevio.com/app/360/starlayer2.png';
+  layer3.src = 'https://staticbeta.inevio.com/app/360/starlayer3.png';
+
+  var draw = function(){
+
+    var current = initial - Date.now();
+
+    ctx.clearRect( 0, 0, canvas.width(), canvas.height() );
+
+    // LAYER 1
+    ctx.drawImage( layer1, 0, current * speed1 + padding1 );
+
+    if( current * speed1 + padding1 < canvas.height - layer1.height ){
+      ctx.drawImage( layer1, 0, current * speed1 + padding1 + layer1.height );
+    }
+
+    if( current * speed1 + padding1 < -layer1.height ){
+      padding1 += layer1.height;
+    }
+
+    // LAYER 2
+    ctx.drawImage( layer2, 0, current * speed2 + padding2 );
+
+    if( current * speed2 + padding2 < canvas.height - layer2.height ){
+      ctx.drawImage( layer2, 0, current * speed2 + padding2 + layer2.height );
+    }
+
+    if( current * speed2 + padding2 < -layer2.height ){
+      padding2 += layer2.height;
+    }
+
+    // LAYER 3
+    ctx.drawImage( layer3, 0, current * speed3 + padding3 );
+
+    if( current * speed3 + padding3 < canvas.height - layer3.height ){
+      ctx.drawImage( layer3, 0, current * speed3 + padding3 + layer3.height );
+    }
+
+    if( current * speed3 + padding3 < -layer3.height ){
+      padding3 += layer3.height;
+    }
+
+    requestAnimationFrame( draw );
+
+  }
+
+  draw();
 
 }
 
