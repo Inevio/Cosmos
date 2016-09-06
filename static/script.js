@@ -82,6 +82,7 @@ postNewCardButton.on( 'click' , function(){
 exploreButton.on( 'click' , function(){
 
   $( '.world-card-dom' ).remove();
+  cleanFilterWorldCards();
   getPublicWorldsAsync();
 
 });
@@ -1738,6 +1739,13 @@ var appendReplyComment = function( card , reply , response ){
     reply.data( 'reply' , response );
 
   });
+
+}
+
+var cleanFilterWorldCards = function(){
+
+  searchWorldCard.val( '' );
+  filterWorldCards( '' );
 
 }
 
