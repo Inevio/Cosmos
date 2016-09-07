@@ -766,6 +766,7 @@ var selectWorld = function( world ){
   $( '.clean' ).remove();
   $( '.category-list .world' ).removeClass( 'active' );
   world.addClass( 'active' );
+  $( '.scrolled' ).removeClass( 'scrolled' );
 
   var worldApi = world.data( 'world' );
   worldSelected = worldApi;
@@ -1514,7 +1515,9 @@ var removeCardAsync = function( card ){
       var post = card.data( 'post' );
       worldSelected.removePost( post.id , function( e , o ){
 
-        console.log( e , o );
+        if (e) {
+          alert( lang.notAllowedDeletePost );
+        }
 
       });
 

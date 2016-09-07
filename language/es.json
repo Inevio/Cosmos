@@ -110,7 +110,8 @@
     "uploadInevio"  : "Subir desde Inevio",
     "uploadPC"      : "Subir desde el PC",
     "postit"        : "Postear",
-    "createWorldShort"  : "Crear mundo"
+    "createWorldShort"  : "Crear mundo",
+    "notAllowedDeletePost"    : "No tienes los permisos para borrar este post"
 
 
 }

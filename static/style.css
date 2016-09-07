@@ -1531,7 +1531,7 @@ to {background-position: -200% 0;}
 
   float: left;
   width: 100%;
-  position: absolute;;
+  position: relative;
   background: #f9f9fb;
   top: 317px;
   height: ~'calc(100% - 317px)';
@@ -1541,27 +1541,67 @@ to {background-position: -200% 0;}
 
 }
 
-.no-posts figure{
+.no-posts .left-side{
+
+  width: 50%;
+  float: left;
+  height: 171px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right: 1px solid #889399;
+
+}
+
+.no-posts .right-side{
+
+  left: ~'calc(50% + 1px)';
+  width: ~'calc(50% - 1px)';
+  height: 100%;
+  position: absolute;
+
+}
+
+.no-posts .left-side figure{
 
   width: 205px;
   height: 134px;
   background-size: 205px 134px;
   background-image: url( '@static/icono-no-posts.png' );
   margin: 0 auto;
-  margin-top: 66px;
 
 }
 
-.no-posts span{
+.no-posts .left-side span{
 
-  color: #889399;
-  font-size: 27px;
+  color: #889391;
+  font-size: 21px;
   width: 100%;
   text-align: center;
-  font-weight: bold;
-  margin-top: 45px;
+  margin-top: 40px;
   position: absolute;
 
+}
+
+.no-posts .no-post-new-post-button{
+
+  width: 222px;
+	height: 46px;
+	-webkit-border-radius: 23px;
+	-moz-border-radius: 23px;
+	border-radius: 23px;
+	background-color: #ccd3d5;
+	border: solid 1px #ccd3d5;
+	background-image: -webkit-linear-gradient(bottom, #fafafa, #fff);
+	background-image: -moz-linear-gradient(bottom, #fafafa, #fff);
+	background-image: -o-linear-gradient(bottom, #fafafa, #fff);
+	background-image: -ms-linear-gradient(bottom, #fafafa, #fff);
+	background-image: linear-gradient(to top, #fafafa, #fff);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  
 }
 
 .cards-grid{
