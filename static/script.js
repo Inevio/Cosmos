@@ -26,7 +26,7 @@ var commentPrototype      = $( '.comment.wz-prototype' );
 var openChatButton        = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input' );
-var newPostButton         = $( '.new-post' );
+var newPostButton         = $( '.new-post, .no-post-new-post-button' );
 var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
 var openFolder            = $( '.open-folder i' );
@@ -520,7 +520,8 @@ var initTexts = function(){
   $( '.new-world-title .title' ).text( lang.worldCreation );
   $( '.delete-world-button span' ).text( lang.unfollowWorld );
   $( '.select-world span' ).text( lang.selectWorld );
-  $( '.no-posts span' ).text( lang.noPosts );
+  $( '.no-posts .left-side span' ).text( lang.noPosts );
+  $( '.no-posts .right-side span' ).text( lang.createNewPost );
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
   $( '.explore-button-no-worlds span' ).text( lang.explore );

@@ -111,6 +111,7 @@
     "uploadPC"      : "Upload from PC",
     "postit"        : "Post",
     "createWorldShort"  : "Create world",
-    "notAllowedDeletePost"    : "You are not allowed to delete this post"
+    "notAllowedDeletePost"    : "You are not allowed to delete this post",
+    "createNewPost" : "Create new post"
 
 }

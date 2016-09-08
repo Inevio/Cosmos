@@ -1549,7 +1549,7 @@ to {background-position: -200% 0;}
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  border-right: 1px solid #889399;
+  border-right: 1px solid #d7dadd;
 
 }
 
@@ -1601,7 +1601,49 @@ to {background-position: -200% 0;}
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
-  
+
+}
+
+.no-posts .no-post-new-post-button:hover{
+
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px rgba(0,0,0,.05);
+  -moz-box-shadow: 0 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px rgba(0,0,0,.05);
+  background-image: none;
+
+}
+
+.no-posts .no-post-new-post-button:active{
+
+  background-image: -webkit-linear-gradient(top, #dfe3e6, #ecf0f3);
+  background-image: -moz-linear-gradient(top, #dfe3e6, #ecf0f3);
+  background-image: -o-linear-gradient(top, #dfe3e6, #ecf0f3);
+  background-image: -ms-linear-gradient(top, #dfe3e6, #ecf0f3);
+  background-image: linear-gradient(to bottom, #dfe3e6, #ecf0f3);
+
+}
+
+.no-post-new-post-button i{
+
+  width: 23px;
+  height: 17px;
+  background-size: 23px 17px;
+  float: left;
+  background-image: url( '@static/nuevo-post-vacio.png' );
+  margin-left: 18px;
+  margin-top: 15px;
+
+}
+
+.no-post-new-post-button span{
+
+  color: #545f65;
+  font-size: 19px;
+  margin-top: 13px;
+  float: left;
+  margin-left: 8px;
+
 }
 
 .cards-grid{
