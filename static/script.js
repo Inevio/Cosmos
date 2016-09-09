@@ -305,7 +305,10 @@ api.cosmos.on( 'postTitleSetted', function(){console.log('postTitleSetted');})
 api.cosmos.on( 'tagAdded', function(){console.log('tagAdded');})
 api.cosmos.on( 'userBanned', function(){console.log('userBanned');})
 api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
-api.cosmos.on( 'worldPrivatized', function(){console.log('worldPrivatized');})
+api.cosmos.on( 'worldPrivateSetted', function(){console.log('worldPrivatized');})
+api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
+
+
 api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
 
 openChatButton.on( 'click' , function(){
@@ -484,11 +487,13 @@ app
 
 })
 
-.on( 'click' , '.pc.wz-uploader-start' , function(){
+.on( 'upload-prepared' , function( e , uploader ){
 
-  $( this ).data( 'destiny', worldSelected.volume );;
+  console.log(e, uploader);
 
 });
+
+
 //Functions
 var initCosmos = function(){
 
