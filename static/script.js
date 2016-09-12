@@ -54,7 +54,6 @@ aceptInviteUser.on( 'click' , function(){
   $( '.invite-user-container' ).toggleClass( 'popup' );
   $( '.invite-user-container *' ).toggleClass( 'popup' );
   $( '.friend .ui-checkbox' ).removeClass( 'active' );
-  $( '.world.active' ).click();
 
 });
 
@@ -866,8 +865,13 @@ var getWorldUsersAsync = function( worldApi ){
     $( '.world-users-number .subtitle' ).text( o.length );
     $( '.stop-follow' ).removeClass( 'editable' );
     $( '.stop-follow span' ).text( lang.unfollowWorld );
+    $( '.user-circle.clean' ).remove();
+
+    console.log('world users:', o)
 
     $.each( o , function( i , user ){
+
+      console.log('user', user);
 
       if ( user.isAdmin && user.userId === myContactID ) {
         $( '.stop-follow' ).addClass( 'editable' );
@@ -877,6 +881,7 @@ var getWorldUsersAsync = function( worldApi ){
       wz.user( user.userId , function( e , usr ){
 
         appendUserCircle( i , usr , inviteIndex );
+        console.log('apending', usr);
 
       })
 
@@ -1058,19 +1063,58 @@ var inviteUsers = function(){
 
   var users = $( '.friend .ui-checkbox.active' ).parent();
 
-  $.each( users , function( i , usr ){
+  asyncEach( $.makeArray( users ) , function( usr , checkEnd ){
 
     var user = $( usr ).data( 'user' );
 
     worldSelected.addUser( user.id , function( e , o ){
 
-      console.log(e,o);
+      checkEnd();
 
     });
+
+  } , function(){
+
+    getWorldUsersAsync( worldSelected );
 
   });
 
 }
+
+var asyncEach = function( list, step, callback ){
+
+  var position = 0;
+  var closed   = false;
+  var checkEnd = function( error ){
+
+    if( closed ){
+      return;
+    }
+
+    position++;
+
+    if( position === list.length || error ){
+
+      closed = true;
+
+      callback( error );
+
+      // Nullify
+      list = step = callback = position = checkEnd = closed = null;
+
+    }
+
+  };
+
+  if( !list.length ){
+    return callback();
+  }
+
+  list.forEach( function( item ){
+    step( item, checkEnd );
+  });
+
+};
 
 var postNewCardAsync = function(){
 
@@ -1229,9 +1273,17 @@ var appendNoFileCard = function( post , user , reason ){
 
   }else{
 
-    card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+    card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
 
   }
+
+  card.find( '.desc' ).find('a').each( function(){
+
+    if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+      $(this).attr( 'href', 'http://' + $(this).attr('href') );
+    }
+
+  });
 
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
@@ -1273,9 +1325,17 @@ var appendGenericCard = function( post , user , reason ){
 
     }else{
 
-      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
 
     }
+
+    card.find( '.desc' ).find('a').each( function(){
+
+      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+        $(this).attr( 'href', 'http://' + $(this).attr('href') );
+      }
+
+    });
 
     card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
     card.find( '.card-user-name' ).text( user.fullName );
@@ -1319,9 +1379,17 @@ var appendDocumentCard = function( post , user , reason ){
 
     }else{
 
-      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
 
     }
+
+    card.find( '.desc' ).find('a').each( function(){
+
+      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+        $(this).attr( 'href', 'http://' + $(this).attr('href') );
+      }
+
+    });
 
     card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
     card.find( '.card-user-name' ).text( user.fullName );
@@ -1347,9 +1415,17 @@ var appendYoutubeCard = function( post , user , reason ){
   card.find( '.card-user-name' ).text( user.fullName );
   card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
-  card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />") );
+  card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
   card.find( '.title' ).text( post.title );
   card.find( '.activate-preview' ).text( lang.preview );
+
+  card.find( '.desc' ).find('a').each( function(){
+
+    if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+      $(this).attr( 'href', 'http://' + $(this).attr('href') );
+    }
+
+  });
 
   setRepliesAsync( card , post );
   appendCard( card , post );
@@ -1394,7 +1470,15 @@ var appendReply = function( card , reply ){
     comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     comment.find( '.name' ).text( user.fullName );
     comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
-    comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />") );
+    comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+
+    comment.find( '.comment-text' ).find('a').each( function(){
+
+      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+        $(this).attr( 'href', 'http://' + $(this).attr('href') );
+      }
+
+    });
 
     card.find( '.comments-list' ).append( comment );
 
@@ -1741,7 +1825,15 @@ var appendReplyComment = function( card , reply , response ){
     reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     reply.find( '.name' ).text( user.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-    reply.find( '.replay-text' ).html( response.content.substr(response.content.indexOf(" ") + 1).replace(/\n/g, "<br />") );
+    reply.find( '.replay-text' ).html( response.content.substr(response.content.indexOf(" ") + 1).replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+
+    reply.find( '.replay-text' ).find('a').each( function(){
+
+      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+        $(this).attr( 'href', 'http://' + $(this).attr('href') );
+      }
+
+    });
 
     comment.find( '.replay-list' ).append( reply );
 

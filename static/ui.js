@@ -140,6 +140,7 @@ newWorldButton.on( 'click' , function(){
 closeNewWorld.on( 'click' , function(){
 
   newWorldAnimationOut();
+  $( '.new-world-container' ).removeClass( 'editing' );
 
 });
 
@@ -1173,6 +1174,8 @@ var newWorldAnimationBEditing = function(){
   $( '.new-world-title' ).addClass( 'second' );
   $( '.create-world-button' ).addClass( 'step-b' );
   $( '.create-world-button' ).removeClass( 'step-a' );
+
+  $('.new-world-container-wrap').scrollTop(0);
 
   // Fade in and goes up title (animation)
   $( '.new-world-title' ).stop().clearQueue().transition({
