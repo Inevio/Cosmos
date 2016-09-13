@@ -500,6 +500,7 @@ var initCosmos = function(){
   getMyWorldsAsync();
   starsCanvas( 'stars-canvas' );
   starsCanvas( 'stars-canvas2' );
+  api.app.createView( null , 'popup' );
 
   wz.user( myContactID , function( e , user ){
 

@@ -57,6 +57,34 @@
                     "script" : [ "ui.js" , "script.js" ],
                     "start"  : [ "start.js" ]
 
+                },
+
+                "popup" : {
+
+                  "template" : "popup.html",
+
+                  "maxizable" : false,
+                  "resizable" : false,
+
+                  "width"  : {
+
+                      "default" : 569,
+                      "min"     : 569,
+                      "max"     : 0
+
+                  },
+
+                  "height" : {
+
+                      "default" : 372,
+                      "min"     : 372,
+                      "max"     : 0
+
+                  },
+
+                  "css"    : [ "popup.css" ],
+                  "script" : [ "popup.js" ]
+
                 }
 
             }
