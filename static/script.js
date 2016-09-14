@@ -260,7 +260,7 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
   if( world.id === worldSelected.id ){
 
-    selectWorld( $( '.worldDom.active' ) );
+    getWorldUsersAsync( worldSelected );
 
   }
 
@@ -271,7 +271,7 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
   if ( userId != myContactID  && world.id === worldSelected.id ) {
 
     $( '.user-circle' ).remove();
-    getWorldUsersAsync( world );
+    getWorldUsersAsync( worldSelected );
 
   }
 
@@ -489,6 +489,19 @@ app
 .on( 'upload-prepared' , function( e , uploader ){
 
   console.log(e, uploader);
+
+})
+
+.on( 'click' , '.friend-list .friend' , function(){
+
+  $(this).find( '.ui-checkbox' ).toggleClass( 'active' );
+
+})
+
+.on( 'click' , '.ui-checkbox' , function( e ){
+
+  e.stopPropagation();
+  $(this).toggleClass( 'active' );
 
 });
 
@@ -868,11 +881,7 @@ var getWorldUsersAsync = function( worldApi ){
     $( '.stop-follow span' ).text( lang.unfollowWorld );
     $( '.user-circle.clean' ).remove();
 
-    console.log('world users:', o)
-
     $.each( o , function( i , user ){
-
-      console.log('user', user);
 
       if ( user.isAdmin && user.userId === myContactID ) {
         $( '.stop-follow' ).addClass( 'editable' );
@@ -882,7 +891,6 @@ var getWorldUsersAsync = function( worldApi ){
       wz.user( user.userId , function( e , usr ){
 
         appendUserCircle( i , usr , inviteIndex );
-        console.log('apending', usr);
 
       })
 
@@ -898,7 +906,10 @@ var appendUserCircle = function( i , user , inviteIndex ){
   userCircle.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'clean' );
   userCircle.css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
   userCircle.data( 'user' , user );
-  $( '.user-circles-section' ).append( userCircle );
+
+  if ( $( '.user-circle.user-' + user.id ).length === 0 ) {
+    $( '.user-circles-section' ).append( userCircle );
+  }
 
   if( i == inviteIndex ){
     return;
@@ -1076,7 +1087,6 @@ var inviteUsers = function(){
 
   } , function(){
 
-    getWorldUsersAsync( worldSelected );
 
   });
 
