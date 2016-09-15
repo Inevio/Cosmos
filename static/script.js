@@ -2,6 +2,7 @@
 var worldSelected;
 var worldSelectedUsrs;
 var me;
+var uploaderFunction;
 var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
@@ -116,6 +117,8 @@ api.cosmos.on( 'worldCreated' , function( world ){
 
 api.cosmos.on( 'postAdded' , function( post ){
 
+  console.log( 'ME HA LLEGADO UN POST!' , post );
+
   if ( post.isReply ) {
 
     var parent = $( '.comment-' + post.parent );
@@ -199,6 +202,11 @@ api.cosmos.on( 'postAdded' , function( post ){
           case 1:
 
           appendNoFileCard( post , user , lang.postCreated );
+          break;
+
+          case 2:
+
+          appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 3:
@@ -307,6 +315,22 @@ api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
 api.cosmos.on( 'worldPrivateSetted', function(){console.log('worldPrivatized');})
 api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
+api.cosmos.on( 'worldNameSetted' , function( world ){
+  /*
+  $( '.world-' + world.id ).find( '.world-name' ).text( world.name );
+  if( world.id === worldSelected.id ){
+
+    $( '.cover-first .world-title' ).text( world.name );
+
+  }
+  */
+});
+
+api.cosmos.on( 'worldPrivateSetted' , function( world ){
+
+  console.log('asdasdasdasdasd',world);
+
+});
 
 api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
 
@@ -318,8 +342,8 @@ openChatButton.on( 'click' , function(){
 
   console.log(o);
 
-}] , 'hidden' );
-*/
+  }] , 'hidden' );
+  */
 
 });
 
@@ -388,7 +412,7 @@ api.cosmos.on( 'worldIconSetted', function( o ){
   $( '.loading-animation-container' ).hide();
   $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + '?' + Date.now() + ')' );
 
-});
+})
 
 app
 
@@ -488,7 +512,14 @@ app
 
 .on( 'upload-prepared' , function( e , uploader ){
 
-  console.log(e, uploader);
+  uploaderFunction = uploader;
+
+  $( '.popup' ).removeClass( 'popup2' );
+  $( this ).parent().find( '.new-card-section .attach-select' ).hide();
+
+  $( '.new-card-section .attachments' ).data( 'attachs' , 'fromPc' );
+
+  $( '.new-card-section .attachments' ).addClass( 'with-attach' );
 
 })
 
@@ -509,11 +540,14 @@ app
 //Functions
 var initCosmos = function(){
 
+  app.css({'border-radius'    : '6px',
+  'background-color' : 'transparent'
+  });
+
   initTexts();
   getMyWorldsAsync();
   starsCanvas( 'stars-canvas' );
   starsCanvas( 'stars-canvas2' );
-  api.app.createView( null , 'popup' );
 
   wz.user( myContactID , function( e , user ){
 
@@ -770,9 +804,11 @@ var editWorldAsync = function(){
     if(e){
       console.log( e );
     }
+    /* COMENTAR LUEGO */
     $( '.world-' + worldApi.id ).remove();
     appendWorld( worldApi );
     $( '.world-' + worldApi.id ).click();
+    /**/
     $( '.privacy-options .option' ).removeClass( 'active' );
     $( '.private-option' ).addClass( 'active' );
 
@@ -1159,29 +1195,47 @@ var postNewCardAsync = function(){
 
   }
 
+  var checkTypePost = function( fsnode ){
+
+    var fileType = fsnode.mime;
+
+    if( checkContains( fileType , 'image' ) ){
+
+      cardType = 4;
+
+    }else if( checkContains( fileType , 'pdf' ) ){
+
+      cardType = 3;
+
+    }else if( checkContains( fileType , 'mpeg' ) ){
+
+      cardType = 6;
+
+    }
+
+    addPost( attach , cardType );
+
+  }
+
   if ( attach ) {
 
-    api.fs( attach , function( e , o ){
+    if ( attach === 'fromPc' ) {
 
-      var fileType = o.mime;
+      uploaderFunction( worldSelected.volume , function( e , fsNode ){
 
-      if( checkContains( fileType , 'image' ) ){
+        checkTypePost( fsNode[0] );
 
-        cardType = 4;
+      });
 
-      }else if( checkContains( fileType , 'pdf' ) ){
+    }else{
 
-        cardType = 3;
+      api.fs( attach , function( e , fsNode ){
 
-      }else if( checkContains( fileType , 'mpeg' ) ){
+        checkTypePost( fsNode );
 
-        cardType = 6;
+      });
 
-      }
-
-      addPost( attach , cardType );
-
-    });
+    }
 
   }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
 
@@ -1636,6 +1690,7 @@ var attachFromInevio = function(){
 
     if (e) {
       console.log( e );
+      return;
     }
 
     var numAttachs = $( '.new-card-section .attachments' ).data( 'numAttachs' );
