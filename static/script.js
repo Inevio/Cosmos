@@ -219,6 +219,11 @@ api.cosmos.on( 'postAdded' , function( post ){
           appendDocumentCard( post , user , lang.postCreated );
           break;
 
+          case 5:
+
+          appendGenericCard( post , user , lang.postCreated );
+          break;
+
           case 6:
 
           appendGenericCard( post , user , lang.postCreated );
@@ -315,15 +320,12 @@ api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
 api.cosmos.on( 'worldPrivateSetted', function(){console.log('worldPrivatized');})
 api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
-api.cosmos.on( 'worldNameSetted' , function( world ){
-  /*
-  $( '.world-' + world.id ).find( '.world-name' ).text( world.name );
-  if( world.id === worldSelected.id ){
+api.cosmos.on( 'worldNameSetted' , function( worldApi ){
 
-    $( '.cover-first .world-title' ).text( world.name );
+  $( '.world-' + worldApi.id ).remove();
+  appendWorld( worldApi );
+  $( '.world-' + worldApi.id ).click();
 
-  }
-  */
 });
 
 api.cosmos.on( 'worldPrivateSetted' , function( world ){
@@ -804,11 +806,11 @@ var editWorldAsync = function(){
     if(e){
       console.log( e );
     }
-    /* COMENTAR LUEGO */
+    /* COMENTAR LUEGO
     $( '.world-' + worldApi.id ).remove();
     appendWorld( worldApi );
     $( '.world-' + worldApi.id ).click();
-    /**/
+    */
     $( '.privacy-options .option' ).removeClass( 'active' );
     $( '.private-option' ).addClass( 'active' );
 
@@ -1184,7 +1186,7 @@ var postNewCardAsync = function(){
 
     }else{
 
-      worldSelected.addPost( { content: text , type: cardType, title: tit, fsnode: node } , function( e , o ){
+      worldSelected.addPost( { content: text , type: cardType, title: tit, fsnode: node.id } , function( e , o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
@@ -1197,23 +1199,37 @@ var postNewCardAsync = function(){
 
   var checkTypePost = function( fsnode ){
 
-    var fileType = fsnode.mime;
+    var fileType = 1;
 
-    if( checkContains( fileType , 'image' ) ){
+    if ( fsnode.mime ) {
 
-      cardType = 4;
+      fileType = fsnode.mime;
 
-    }else if( checkContains( fileType , 'pdf' ) ){
+      if( checkContains( fileType , 'image' ) ){
 
-      cardType = 3;
+        cardType = 4;
 
-    }else if( checkContains( fileType , 'mpeg' ) ){
+      }else if( checkContains( fileType , 'pdf' ) ){
 
-      cardType = 6;
+        cardType = 3;
+
+      }else if( checkContains( fileType , 'mpeg' ) ){
+
+        cardType = 6;
+
+      }else if( checkContains( fileType , 'text' ) ){
+
+        cardType = 2;
+
+      }else if( checkContains( fileType , 'text' ) ){
+
+        cardType = 5;
+
+      }
 
     }
 
-    addPost( attach , cardType );
+    addPost( fsnode , cardType );
 
   }
 
@@ -1229,7 +1245,7 @@ var postNewCardAsync = function(){
 
     }else{
 
-      api.fs( attach , function( e , fsNode ){
+      api.fs( attach[0] , function( e , fsNode ){
 
         checkTypePost( fsNode );
 
@@ -1285,6 +1301,11 @@ var getWorldPostsAsync = function( world ){
           appendNoFileCard( post , user , lang.postCreated );
           break;
 
+          case 2:
+
+          appendGenericCard( post , user , lang.postCreated );
+          break;
+
           case 3:
 
           appendDocumentCard( post , user , lang.postCreated );
@@ -1293,6 +1314,11 @@ var getWorldPostsAsync = function( world ){
           case 4:
 
           appendDocumentCard( post , user , lang.postCreated );
+          break;
+
+          case 5:
+
+          appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 6:
@@ -1369,7 +1395,7 @@ var appendGenericCard = function( post , user , reason ){
 
     console.log( fsNode , 'imagen!');
 
-    card.find( '.doc-icon' ).css( 'background-image' , 'url( '+ fsNode.thumbnails.normal +' )' );
+    card.find( '.doc-icon' ).css( 'background-image' , 'url( '+ fsNode.icons.normal +' )' );
     card.find( '.doc-title' ).text( fsNode.name );
     card.find( '.doc-info' ).text( fsNode.mime );
     card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
