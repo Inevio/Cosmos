@@ -324,7 +324,12 @@ api.cosmos.on( 'worldNameSetted' , function( worldApi ){
 
   $( '.world-' + worldApi.id ).remove();
   appendWorld( worldApi );
-  $( '.world-' + worldApi.id ).click();
+
+  if (  worldApi.id === worldSelected.id ) {
+
+    $( '.world-' + worldApi.id ).click();
+
+  }
 
 });
 
@@ -406,6 +411,12 @@ openFolder.on( 'click' , function(){
 api.upload.on( 'avatarProgress', function( percent ){
 
   $( '.loading-animation-container' ).show();
+
+});
+
+api.upload.on( 'fsNodeEnd', function( percent ){
+
+  console.log('he terminado', arguments);
 
 });
 
@@ -1239,6 +1250,7 @@ var postNewCardAsync = function(){
 
       uploaderFunction( worldSelected.volume , function( e , fsNode ){
 
+        console.log('acabo de ejecutar la funcion de subida', fsNode);
         checkTypePost( fsNode[0] );
 
       });
