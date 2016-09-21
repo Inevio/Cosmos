@@ -202,8 +202,6 @@ searchBar.on( 'click' , function(){
 
   $( this ).addClass( 'popup' );
   $( this ).find( 'input' ).focus();
-  $( this ).find( 'input' ).val('');
-
 
 });
 

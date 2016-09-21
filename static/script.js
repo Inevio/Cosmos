@@ -3,6 +3,8 @@ var worldSelected;
 var worldSelectedUsrs;
 var me;
 var uploaderFunction;
+var auxFunction;
+var fsnodeId;
 var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
@@ -414,9 +416,13 @@ api.upload.on( 'avatarProgress', function( percent ){
 
 });
 
-api.upload.on( 'fsNodeEnd', function( percent ){
+api.upload.on( 'fsnodeEnd', function( fsnode ){
 
-  console.log('he terminado', arguments);
+  if ( fsnode.id === fsnodeId ) {
+
+    auxFunction( fsnode );
+
+  }
 
 });
 
@@ -1250,8 +1256,8 @@ var postNewCardAsync = function(){
 
       uploaderFunction( worldSelected.volume , function( e , fsNode ){
 
-        console.log('acabo de ejecutar la funcion de subida', fsNode);
-        checkTypePost( fsNode[0] );
+        auxFunction = checkTypePost;
+        fsnodeId = fsNode[0].id;
 
       });
 
