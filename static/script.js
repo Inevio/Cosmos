@@ -36,6 +36,51 @@ var openFolder            = $( '.open-folder i' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
+var types = {
+  "application/pdf"   : 3,
+  "application/zip"    : 2,
+  "application/x-rar"  : 2,
+  "application/x-gzip" : 2,
+  "text/x-c"               : 3,
+  "text/x-c++"             : 3,
+  "text/x-php"             : 3,
+  "text/x-python"          : 3,
+  "application/json"       : 3,
+  "application/javascript" : 3,
+  "application/inevio-texts"                                                    : 3,
+  "application/msword"                                                          : 3,
+  "application/vnd.oasis.opendocument.text"                                     : 3,
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 3,
+  "application/inevio-grids"                                          : 3,
+  "application/vnd.ms-excel"                                          : 3,
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 3,
+  "application/vnd.ms-powerpoint"                                             : 3,
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 3,
+  "audio/mp4"          : 6,
+  "audio/mpeg"         : 6,
+  "audio/flac"         : 6,
+  "audio/x-vorbis+ogg" : 6,
+  "audio/x-wav"        : 6,
+  "image/gif"  : 4,
+  "image/jpeg" : 4,
+  "image/png"  : 4,
+  "image/tiff" : 4,
+  "image/vnd.adobe.photoshop" : 2,
+  "text/html"    : 2,
+  "text/plain"   : 2,
+  "text/rtf"     : 2,
+  "video/3gpp"         : 5,
+  "video/mp4"          : 5,
+  "video/quicktime"    : 5,
+  "video/webm"         : 5,
+  "video/x-flv"        : 5,
+  "video/x-matroska"   : 5,
+  "video/x-ms-asf"     : 5,
+  "video/x-ms-wmv"     : 5,
+  "video/x-msvideo"    : 5,
+  "video/x-theora+ogg" : 5
+}
+
 //Events
 searchWorldCard.on( 'input' , function(){
 
@@ -327,7 +372,7 @@ api.cosmos.on( 'worldNameSetted' , function( worldApi ){
   $( '.world-' + worldApi.id ).remove();
   appendWorld( worldApi );
 
-  if (  worldApi.id === worldSelected.id ) {
+  if ( worldSelected && worldApi.id === worldSelected.id ) {
 
     $( '.world-' + worldApi.id ).click();
 
@@ -1185,7 +1230,6 @@ var asyncEach = function( list, step, callback ){
 var postNewCardAsync = function(){
 
   var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
-  var cardType = 1;
   var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
 
   var attach = $( '.new-card-section .attachments' ).data( 'attachs' );
@@ -1194,7 +1238,7 @@ var postNewCardAsync = function(){
 
     if ( type === 1 || type === 7 || type === 8 ) {
 
-      worldSelected.addPost( { content: text , type: cardType, title: tit } , function( e , o ){
+      worldSelected.addPost( { content: text , type: type, title: tit } , function( e , o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
@@ -1203,10 +1247,11 @@ var postNewCardAsync = function(){
 
     }else{
 
-      worldSelected.addPost( { content: text , type: cardType, title: tit, fsnode: node.id } , function( e , o ){
+      worldSelected.addPost( { content: text , type: type, title: tit, fsnode: node.id } , function( e , o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
+        $( '.new-card-section .attachments' ).data( 'attachs' , '');
 
       });
 
@@ -1220,33 +1265,12 @@ var postNewCardAsync = function(){
 
     if ( fsnode.mime ) {
 
-      fileType = fsnode.mime;
-
-      if( checkContains( fileType , 'image' ) ){
-
-        cardType = 4;
-
-      }else if( checkContains( fileType , 'pdf' ) ){
-
-        cardType = 3;
-
-      }else if( checkContains( fileType , 'mpeg' ) ){
-
-        cardType = 6;
-
-      }else if( checkContains( fileType , 'text' ) ){
-
-        cardType = 2;
-
-      }else if( checkContains( fileType , 'text' ) ){
-
-        cardType = 5;
-
-      }
+      fileType = guessType( fsnode.mime );
 
     }
 
-    addPost( fsnode , cardType );
+
+    addPost( fsnode , fileType );
 
   }
 
@@ -1273,12 +1297,11 @@ var postNewCardAsync = function(){
 
   }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
 
-    cardType = 8;
-    addPost( 0 , cardType );
+    addPost( 0 , 8 );
 
   }else{
 
-    addPost( 0 , cardType );
+    addPost( 0 , 1 );
 
   }
 
@@ -1413,7 +1436,7 @@ var appendGenericCard = function( post , user , reason ){
 
     console.log( fsNode , 'imagen!');
 
-    card.find( '.doc-icon' ).css( 'background-image' , 'url( '+ fsNode.icons.normal +' )' );
+    card.find( '.doc-icon' ).css( 'background-image' , 'url( ' + fsNode.icons['64'] + ' )' );
     card.find( '.doc-title' ).text( fsNode.name );
     card.find( '.doc-info' ).text( fsNode.mime );
     card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
@@ -1957,6 +1980,17 @@ var cleanFilterWorldCards = function(){
 
   searchWorldCard.val( '' );
   filterWorldCards( '' );
+
+}
+
+var guessType = function( mime ){
+
+  var type = 1
+  var i = 0
+  var keys = Object.keys( types )
+  for(; i < keys.length && -1 === mime.indexOf( keys[ i ] ); i++ );
+  if( i < keys.length ) type = types[ keys[ i ] ]
+  return type
 
 }
 

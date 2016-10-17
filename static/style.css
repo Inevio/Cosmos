@@ -2148,11 +2148,12 @@ to {background-position: -200% 0;}
   .card-content .doc-icon{
 
     float: left;
-    width: 64px;
+    width: 50px;
     height: 64px;
     border-radius: 4px;
     background-image: url('@static/iconPreview.png');
     background-size: cover;
+
 
   }
 
