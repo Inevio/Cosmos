@@ -93,6 +93,8 @@ closeInviteUser.on( 'click' , function(){
   $( '.invite-user-container' ).toggleClass( 'popup' );
   $( '.invite-user-container *' ).toggleClass( 'popup' );
   $( '.friend .ui-checkbox' ).removeClass( 'active' );
+  friendSearchBox.val('');
+  filterFriends('');
 
 });
 
@@ -369,7 +371,15 @@ api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
 api.cosmos.on( 'worldNameSetted' , function( worldApi ){
 
+  var category = $( '.world-' + worldApi.id ).parent();
   $( '.world-' + worldApi.id ).remove();
+  var height = category.find( '.world' ).length * 28;
+  category.css({
+
+    'height'         : height
+
+  });
+
   appendWorld( worldApi );
 
   if ( worldSelected && worldApi.id === worldSelected.id ) {
