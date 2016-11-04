@@ -1087,6 +1087,8 @@ var newWorldAnimationBNormal = function(){
   $( '.new-world-title' ).addClass( 'second' );
   $( '.create-world-button' ).addClass( 'step-b' );
   $( '.create-world-button' ).removeClass( 'step-a' );
+  $( '.option.private-option' ).removeClass( 'active' );
+  $( '.option.public' ).addClass( 'active' );
 
   $( '.new-world-desc textarea' ).val('');
 
@@ -1123,6 +1125,7 @@ var newWorldAnimationBNormal = function(){
       'left'      : 'calc(50% - 472px/2 + 150px)'
 
     } ).find( 'span' ).text( lang.accept );
+
 
   });
 
