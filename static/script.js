@@ -5,6 +5,8 @@ var me;
 var uploaderFunction;
 var auxFunction;
 var fsnodeId;
+var searchWorldQuery      = 0;
+var searchPostQuery       = 0;
 var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
@@ -84,7 +86,9 @@ var types = {
 //Events
 searchWorldCard.on( 'input' , function(){
 
-  filterWorldCards( $( this ).val() );
+  searchWorldQuery = searchWorldQuery + 1;
+  var searchWorldQueryCopy = searchWorldQuery;
+  filterWorldCards( $( this ).val() , searchWorldQueryCopy );
 
 });
 
@@ -413,6 +417,9 @@ openChatButton.on( 'click' , function(){
 
 searchPostInput.on( 'input' , function(){
 
+  searchPostQuery = searchPostQuery + 1;
+  var searchPostQueryCopy = searchPostQuery;
+
   if ( $( this ).val() === '' ) {
     $( '.card' ).show();
     return;
@@ -421,6 +428,11 @@ searchPostInput.on( 'input' , function(){
   $( '.card' ).hide();
 
   worldSelected.searchPost( $( this ).val() , {from:0 , to:1000} , function( e , posts ){
+
+    // Query desfasada
+    if ( searchPostQuery != searchPostQueryCopy ) {
+      return;
+    }
 
     console.log( posts );
 
@@ -1054,7 +1066,7 @@ var appendUserCircle = function( i , user , inviteIndex ){
 
 }
 
-var filterWorldCards = function( filter ){
+var filterWorldCards = function( filter , searchWorldQueryCopy ){
 
   var worldCards = $( '.world-card' );
 
@@ -1066,6 +1078,11 @@ var filterWorldCards = function( filter ){
   }
 
   wz.cosmos.list( filter , null , {from:0 , to:1000} , function( e , worlds ){
+
+    // Query desfasada
+    if ( searchWorldQuery != searchWorldQueryCopy ) {
+      return;
+    }
 
     worldCards.hide();
 
