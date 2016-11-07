@@ -761,8 +761,6 @@ var getMyWorldsAsync = function(){
 
   var myWorldsApi = app.data( 'myWorlds' );
 
-  console.log( 'mis mundos' , myWorldsApi );
-
   if ( myWorldsApi ) {
 
     $.each( myWorldsApi , function( i , world ){
@@ -813,7 +811,7 @@ var appendWorld = function( worldApi ){
 
   }
 
-  category.append( world );
+  appendWorldInOrder( category , world , worldApi );
   var height = category.find( '.world' ).length * 28;
   category.css({
 
@@ -823,6 +821,35 @@ var appendWorld = function( worldApi ){
 
   world.data( 'world' , worldApi );
 
+}
+
+var appendWorldInOrder = function( category , world , worldApi ){
+
+  var worlds = [];
+  var worldsAppended = category.find( '.world' );
+
+  if ( worldsAppended.length === 0 ) {
+    category.append( world );
+  }else{
+
+    var appended = false;
+    for (var i = 0; i < worldsAppended.length; i++) {
+      worlds.push( $(worldsAppended[i]).data( 'world' ));
+    }
+
+    worlds.forEach(function( worldAppended ){
+
+      if ( sortByName( worldApi , worldAppended ) < 0 && !appended ) {
+        $( '.world-' + worldAppended.id ).before( world );
+        appended = true;
+      }
+
+    });
+
+    if (!appended) {
+      category.append( world );
+    }
+  }
 }
 
 var appendWorldCard = function( worldApi ){
@@ -2018,6 +2045,36 @@ var guessType = function( mime ){
   for(; i < keys.length && -1 === mime.indexOf( keys[ i ] ); i++ );
   if( i < keys.length ) type = types[ keys[ i ] ]
   return type
+
+}
+
+var sortByName = function( nameA , nameB ){
+
+  nameA = nameA.name;
+  nameB = nameB.name;
+
+  var a1, b1, i= 0, n, L,
+
+  rx=/(\.\d+)|(\d+(\.\d+)?)|([^\d.]+)|(\.\D+)|(\.$)/g;
+
+  if( nameA === nameB ) return 0;
+
+  nameA = nameA.toLowerCase().match(rx);
+  nameB = nameB.toLowerCase().match(rx);
+
+  L= nameA.length;
+
+  while(i<L){
+      if(!nameB[i]) return 1;
+      a1= nameA[i],
+      b1= nameB[i++];
+      if(a1!== b1){
+          n= a1-b1;
+          if(!isNaN(n)) return n;
+          return a1>b1? 1:-1;
+      }
+  }
+  return nameB[i]? -1:0;
 
 }
 
