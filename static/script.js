@@ -34,6 +34,7 @@ var searchPostInput       = $( '.pre-cover .search-button input' );
 var newPostButton         = $( '.new-post, .no-post-new-post-button' );
 var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
+var starsCanvasContainer           = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder i' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
@@ -633,7 +634,6 @@ var initCosmos = function(){
   initTexts();
   getMyWorldsAsync();
   starsCanvas( 'stars-canvas' );
-  starsCanvas( 'stars-canvas2' );
 
   wz.user( myContactID , function( e , user ){
 
@@ -1862,6 +1862,7 @@ var unFollowWorld = function(){
     if( $( '.worldDom' ).length === 0 ){
 
       noWorlds.show();
+      starsCanvasContainer.removeClass( 'no-visible' );
       noWorlds.transition({
 
         'opacity'         : 1
@@ -1912,6 +1913,7 @@ var exploreAnimationIn = function(){
   var exploreSection = $( '.explore-section' );
 
   exploreSection.css( 'display' , 'block');
+  starsCanvasContainer.removeClass( 'no-visible' );
 
   // Fade in blue background
   exploreSection.stop().clearQueue().transition({

@@ -33,6 +33,7 @@ var privacyOption    = $( '.privacy-options .option' );
 var unFollowButton   = $( '.stop-follow' );
 var selectWorld      = $( '.select-world' );
 var noWorlds         = $( '.no-worlds' );
+var starsCanvasContainer  = $( '.stars-canvas' );
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -903,6 +904,7 @@ var exploreAnimationOut = function(){
     }, 200, animationEffect , function(){
 
       noWorlds.hide();
+      starsCanvasContainer.addClass( 'no-visible' );
 
     });
   }

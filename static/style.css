@@ -13,9 +13,6 @@
   width: 100%;
   height: 100%;
   z-index: 6;
-
-	background-image: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-
   opacity: 0;
   display: none;
 }
@@ -2638,9 +2635,6 @@ to {background-position: -200% 0;}
   height: 100%;
   z-index: 7;
 
-  background-image: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-
-
   /*
   background-color: #334b5c;
 	background-image: -webkit-linear-gradient(bottom, #08416b 11%, #09314f);
@@ -4606,12 +4600,20 @@ to {background-position: -200% 0;}
     100%{ background-position: 0 -2000px ; }
 }
 
-.stars-canvas, .stars-canvas2{
+.stars-canvas{
 
   left: 0;
   position: absolute;
   width: 100%;
   height: 100%;
+  z-index: 6;
+  background-image: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+
+}
+
+.stars-canvas.no-visible{
+
+  display: none;
 
 }
 
