@@ -39,7 +39,7 @@ var openFolder            = $( '.open-folder i' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
-var types = {
+var TYPES = {
   "application/pdf"   : 3,
   "application/zip"    : 2,
   "application/x-rar"  : 2,
@@ -2024,14 +2024,7 @@ var cleanFilterWorldCards = function(){
 }
 
 var guessType = function( mime ){
-
-  var type = 1
-  var i = 0
-  var keys = Object.keys( types )
-  for(; i < keys.length && -1 === mime.indexOf( keys[ i ] ); i++ );
-  if( i < keys.length ) type = types[ keys[ i ] ]
-  return type
-
+  return TYPES[ mime ] || 1
 }
 
 var sortByName = function( nameA , nameB ){
