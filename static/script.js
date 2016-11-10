@@ -298,24 +298,6 @@ api.cosmos.on( 'postAdded' , function( post ){
 
 });
 
-api.cosmos.on( 'postRemoved', function( postId , world ){
-
-  if ( worldSelected.id === world.id ) {
-
-    $( '.post-' + postId ).remove();
-
-    if ( $( '.cardDom' ).length === 0 ) {
-
-      $( '.no-posts' ).css( 'opacity' , '1' );
-      $( '.no-posts' ).show();
-      app.addClass( 'no-post' );
-
-    }
-
-  }
-
-});
-
 api.cosmos.on( 'userAdded', function( userId , world ){
 
   if ( userId === myContactID ) {
@@ -1476,6 +1458,7 @@ var appendNoFileCard = function( post , user , reason ){
   card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
+
   setRepliesAsync( card , post );
   appendCard( card , post );
 
@@ -1548,6 +1531,7 @@ var appendDocumentCard = function( post , user , reason ){
     card.find( '.preview-title' ).text( fsNode.name );
     card.find( '.preview-info' ).text( fsNode.mime );
     card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
+    card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons['16'] +' )' );;
 
     if ( post.title === 'none' ) {
 

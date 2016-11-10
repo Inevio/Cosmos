@@ -37,7 +37,25 @@ var starsCanvasContainer  = $( '.stars-canvas' );
 
 // --- EVENTS ---
 // SERVER EVENTS
+api.cosmos.on( 'postRemoved', function( postId , world ){
 
+  var worldSelected = $( '.world.active' ).data( 'world' );
+  if ( worldSelected.id === world.id ) {
+
+    $( '.post-' + postId ).remove();
+
+    if ( $( '.cardDom' ).length === 0 ) {
+
+      $( '.no-posts' ).css( 'opacity' , '1' );
+      $( '.no-posts' ).show();
+      app.addClass( 'no-post' );
+      decompressCover();
+
+    }
+
+  }
+
+});
 // END SERVER EVENTS
 
 // UI EVENTS
@@ -444,6 +462,7 @@ app
 
       commentsSection.addClass('opened');
       commentsSection.css('height', 'auto');
+      commentsSection.find( 'input' ).focus();
 
     });
 
