@@ -12,15 +12,15 @@ var TYPES = {
   "text/x-python"          : 3,
   "application/json"       : 3,
   "application/javascript" : 3,
-  "application/inevio-texts"                                                    : 3,
-  "application/msword"                                                          : 3,
-  "application/vnd.oasis.opendocument.text"                                     : 3,
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 3,
-  "application/inevio-grids"                                          : 3,
-  "application/vnd.ms-excel"                                          : 3,
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 3,
-  "application/vnd.ms-powerpoint"                                             : 3,
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 3,
+  "application/inevio-texts"                                                    : 2,
+  "application/msword"                                                          : 2,
+  "application/vnd.oasis.opendocument.text"                                     : 2,
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 2,
+  "application/inevio-grids"                                          : 2,
+  "application/vnd.ms-excel"                                          : 2,
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 2,
+  "application/vnd.ms-powerpoint"                                             : 2,
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 2,
   "audio/mp4"          : 6,
   "audio/mpeg"         : 6,
   "audio/flac"         : 6,
@@ -46,6 +46,7 @@ var TYPES = {
   "video/x-theora+ogg" : 5
 
 }
+
 
 $('.file-info i').text( params.fsnode.name )
 $('.cosmos-info i').text( params.world.name )
