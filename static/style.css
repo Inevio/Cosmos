@@ -2152,7 +2152,7 @@ to {background-position: -200% 0;}
   .card-content .doc-icon{
 
     float: left;
-    width: 50px;
+    width: 64px;
     height: 64px;
     border-radius: 4px;
     background-image: url('@static/iconPreview.png');
@@ -2160,6 +2160,7 @@ to {background-position: -200% 0;}
 
 
   }
+
 
   .card-content .doc-title{
 
@@ -2180,6 +2181,7 @@ to {background-position: -200% 0;}
     color: #889399;
     margin-left: 20px;
     margin-top: 8px;
+    max-width: 386px;
 
   }
 
