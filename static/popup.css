@@ -9,6 +9,11 @@
 @inevio-gray-hover: #7a848a;
 @inevio-gray-active: #6a7379;
 
+.wz-view{
+  border-radius: 6px;
+  background-color: #fff;
+}
+
 *{
 
   font-family: 'Lato';
