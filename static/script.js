@@ -5,6 +5,7 @@ var me;
 var uploaderFunction;
 var auxFunction;
 var fsnodeId;
+var loadingPost           = false;
 var searchWorldQuery      = 0;
 var searchPostQuery       = 0;
 var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
@@ -36,6 +37,7 @@ var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
 var starsCanvasContainer           = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder i' );
+var cardsList             = $( '.cards-list' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
@@ -84,8 +86,24 @@ var TYPES = {
   "video/x-theora+ogg" : 5
 }
 
-
 //Events
+cardsList.on( 'scroll' , function(){
+
+  var scrollDiv = $( this );
+  var scrollFinish = $( '.cards-grid' )[0].scrollHeight - scrollDiv.height();
+  console.log( scrollFinish ,  scrollDiv.scrollTop() );
+
+  if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
+
+    var lastCard = scrollDiv.data( 'lastCard' );
+    getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } );
+    loadingPost = true;
+    console.log( 'cargado mas' , lastCard );
+
+  }
+
+});
+
 searchWorldCard.on( 'input' , function(){
 
   searchWorldQuery = searchWorldQuery + 1;
@@ -93,7 +111,6 @@ searchWorldCard.on( 'input' , function(){
   filterWorldCards( $( this ).val() , searchWorldQueryCopy );
 
 });
-
 
 closeInviteUser.on( 'click' , function(){
 
@@ -607,7 +624,6 @@ app
 
 });
 
-
 //Functions
 var initCosmos = function(){
 
@@ -946,10 +962,11 @@ var selectWorld = function( world ){
   worldDescription.text( worldApi.description );
 
   getWorldUsersAsync( worldApi );
-  getWorldPostsAsync( worldApi );
+  getWorldPostsAsync( worldApi , { init: 0 , final: 6 } );
   $( '.select-world' ).hide();
 
 }
+
 
 var getWorldUsersAsync = function( worldApi ){
 
@@ -1351,11 +1368,13 @@ var checkContains = function( base , contains ){
 
 }
 
-var getWorldPostsAsync = function( world ){
+var getWorldPostsAsync = function( world , interval ){
 
-  world.getPosts( {from:0 , to:1000} , function( e , posts ){
+  world.getPosts( {from: interval.init , to: interval.final } , function( e , posts ){
 
-    $( '.cardDom' ).remove();
+    if ( interval.init === 0 ) {
+      $( '.cardDom' ).remove();
+    }
 
     if ( posts.length > 0 ) {
       $( '.no-posts' ).css( 'opacity' , '0' );
@@ -1368,6 +1387,7 @@ var getWorldPostsAsync = function( world ){
     }
 
     $( '.world-event-number .subtitle' ).text( posts.length );
+    $( '.cards-list' ).data( 'lastCard' , interval.final );
 
     $.each( posts , function( i , post ){
 
@@ -1415,6 +1435,8 @@ var getWorldPostsAsync = function( world ){
       });
 
     });
+
+    loadingPost = false;
 
   });
 
@@ -1700,6 +1722,7 @@ var appendCard = function( card , post ){
 
   card.data( 'time' , post.created );
   card.data( 'post' , post );
+
 
 }
 
