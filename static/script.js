@@ -182,8 +182,8 @@ api.cosmos.on( 'worldCreated' , function( world ){
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
   myWorlds.push( world.id );
 
-  if ( world.author === myContactID ) {
-    return;
+  if ( world.owner === myContactID ) {
+    selectWorld( $( '.world-' + world.id ) );
   }
 
 });
@@ -967,7 +967,6 @@ var selectWorld = function( world ){
 
 }
 
-
 var getWorldUsersAsync = function( worldApi ){
 
   worldApi.getUsers(function( e , o ){
@@ -1373,17 +1372,19 @@ var getWorldPostsAsync = function( world , interval ){
   world.getPosts( {from: interval.init , to: interval.final } , function( e , posts ){
 
     if ( interval.init === 0 ) {
-      $( '.cardDom' ).remove();
-    }
 
-    if ( posts.length > 0 ) {
-      $( '.no-posts' ).css( 'opacity' , '0' );
-      $( '.no-posts' ).hide();
-      app.removeClass( 'no-post' );
-    }else{
-      $( '.no-posts' ).css( 'opacity' , '1' );
-      $( '.no-posts' ).show();
-      app.addClass( 'no-post' );
+      $( '.cardDom' ).remove();
+
+      if ( posts.length > 0 ) {
+        $( '.no-posts' ).css( 'opacity' , '0' );
+        $( '.no-posts' ).hide();
+        app.removeClass( 'no-post' );
+      }else{
+        $( '.no-posts' ).css( 'opacity' , '1' );
+        $( '.no-posts' ).show();
+        app.addClass( 'no-post' );
+      }
+
     }
 
     $( '.world-event-number .subtitle' ).text( posts.length );
@@ -1553,7 +1554,7 @@ var appendDocumentCard = function( post , user , reason ){
 
     card.find( '.doc-preview' ).css( 'background-image' , 'url( '+ fsNode.thumbnails['512'] +' )' );
     card.find( '.preview-title' ).text( fsNode.name );
-    card.find( '.preview-info' ).text( fsNode.mime );
+    card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
     card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
     card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons['16'] +' )' );;
 
@@ -1684,6 +1685,11 @@ var appendReply = function( card , reply ){
 }
 
 var appendCard = function( card , post ){
+
+  var worldActive = $( '.world.active' ).data( 'world' );
+  if ( post.worldId != worldActive.id ) {
+    return;
+  }
 
   $( '.no-posts' ).css( 'opacity' , '0' );
   $( '.no-posts' ).hide();
