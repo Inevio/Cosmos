@@ -1795,6 +1795,7 @@ to {background-position: -200% 0;}
   .card-options-section{
 
     position: absolute;
+    display: none;
     right: 10px;
     top: 52px;
     width: 157px;
@@ -1832,6 +1833,10 @@ to {background-position: -200% 0;}
     border-radius: 6px 6px 0 0;
     cursor: pointer;
 
+  }
+
+  .card-options-section .delete{
+    display: none;
   }
 
   .card-options-section .delete span{
@@ -1925,6 +1930,16 @@ to {background-position: -200% 0;}
 
   }
 
+}
+
+.removeable.card .card-options-section.popup{
+
+  display: inline-block;
+
+}
+
+.removeable .card-options-section .delete{
+  display: inline-block;
 }
 
 .img-card.five{

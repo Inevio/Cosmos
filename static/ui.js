@@ -420,8 +420,18 @@ app
 
 .on( 'click' , '.card-options' , function(){
 
+  var post = $( this ).closest( '.card' ).data( 'post' );
+
+  $( this ).closest( '.card' ).removeClass( 'removeable' );
+
+  if ( post.author === api.system.user().id ) {
+    $( this ).closest( '.card' ).addClass( 'removeable' );
+  }
+
   $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
   $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
+
+
 
 })
 
