@@ -29,9 +29,19 @@ to {background-position: -200% 0;}
 
 .no-worlds .close-app{
 
-  margin: 25px;
+  padding: 15px;
+  margin: 10px;
   right: 0;
   position: absolute;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.2s ease;
+
+}
+
+.no-worlds .close-app:hover{
+
+  background-color: #e9edf2;
 
 }
 
@@ -4632,6 +4642,7 @@ to {background-position: -200% 0;}
   height: 100%;
   z-index: 6;
   background-image: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  opacity: 0;
 
 }
 
