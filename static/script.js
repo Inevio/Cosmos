@@ -1878,6 +1878,12 @@ var unFollowWorld = function(){
 
       noWorlds.show();
       starsCanvasContainer.removeClass( 'no-visible' );
+      starsCanvasContainer.stop().clearQueue().transition({
+
+        'opacity' : 1
+
+
+      }, 300);
       noWorlds.transition({
 
         'opacity'         : 1
@@ -1929,6 +1935,12 @@ var exploreAnimationIn = function(){
 
   exploreSection.css( 'display' , 'block');
   starsCanvasContainer.removeClass( 'no-visible' );
+  starsCanvasContainer.stop().clearQueue().transition({
+
+    'opacity' : 1
+
+
+  }, 300);
 
   // Fade in blue background
   exploreSection.stop().clearQueue().transition({
