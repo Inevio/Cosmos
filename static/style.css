@@ -2424,6 +2424,43 @@ to {background-position: -200% 0;}
 
   }
 
+  .comment .delete-comment{
+
+    float: left;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 0;
+    cursor: pointer;
+
+  }
+
+  .comment:hover .delete-comment{
+
+    opacity: 1;
+
+  }
+
+  .comment .delete-comment:hover{
+
+    background-color: #e0e1e5;
+
+  }
+
+  .comment .delete-comment i{
+
+    float: left;
+    width: 12px;
+    height: 13px;
+    background-image: url('@static/trash.png');
+    background-size: 12px 13px;
+    margin-left: 5px;
+    margin-top: 4px;
+    cursor: pointer;
+
+  }
+
   .replay-list{
 
     float: left;
