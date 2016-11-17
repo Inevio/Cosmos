@@ -1774,6 +1774,7 @@ to {background-position: -200% 0;}
     margin-right: 10px;
     margin-top: 17px;
     cursor: pointer;
+    display: none;
 
   }
 
@@ -1826,6 +1827,7 @@ to {background-position: -200% 0;}
   .card-options-section.popup{
 
     opacity: 1;
+    display: inline-block;
 
   }
 
@@ -1843,10 +1845,6 @@ to {background-position: -200% 0;}
     border-radius: 6px 6px 0 0;
     cursor: pointer;
 
-  }
-
-  .card-options-section .delete{
-    display: none;
   }
 
   .card-options-section .delete span{
@@ -1942,14 +1940,10 @@ to {background-position: -200% 0;}
 
 }
 
-.removeable.card .card-options-section.popup{
+.mine .card-options{
 
   display: inline-block;
 
-}
-
-.removeable .card-options-section .delete{
-  display: inline-block;
 }
 
 .img-card.five{
