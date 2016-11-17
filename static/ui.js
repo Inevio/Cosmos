@@ -42,14 +42,46 @@ api.cosmos.on( 'postRemoved', function( postId , world ){
   var worldSelected = $( '.world.active' ).data( 'world' );
   if ( worldSelected.id === world.id ) {
 
-    $( '.post-' + postId ).remove();
+    if ( $( '.post-' + postId ) ) {
 
-    if ( $( '.cardDom' ).length === 0 ) {
+      $( '.post-' + postId ).remove();
+      if ( $( '.cardDom' ).length === 0 ) {
 
-      $( '.no-posts' ).css( 'opacity' , '1' );
-      $( '.no-posts' ).show();
-      app.addClass( 'no-post' );
-      decompressCover();
+        $( '.no-posts' ).css( 'opacity' , '1' );
+        $( '.no-posts' ).show();
+        app.addClass( 'no-post' );
+        decompressCover();
+
+      }
+
+    }
+
+    if ( $( '.comment-' + postId ) ) {
+
+      var card = $( '.comment-' + postId ).closest('.card');
+      var commentsText = card.find( '.comments-text' );
+      var ncomments = commentsText.data( 'num' ) - 1;
+      commentsText.text( ncomments + ' ' + lang.comments );
+      commentsText.data( 'num' , ncomments );
+
+      if ( ncomments === 0 ) {
+
+        var commentsSection = card.find( '.comments-section' );
+
+        card.removeClass( 'comments-open' );
+        commentsSection.transition({
+
+          'height'         : 0
+
+        }, 200, function(){
+
+          commentsSection.removeClass('opened');
+
+        });
+
+      }
+
+      $( '.comment-' + postId ).remove();
 
     }
 

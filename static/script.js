@@ -499,8 +499,15 @@ app
 
 .on( 'click' , '.card-options-section .delete' , function(){
 
-  var card = $(this).parent().parent().parent();
-  removeCardAsync( card );
+  var post = $(this).closest('.card').data('post');
+  removePostAsync( post );
+
+})
+
+.on( 'click' , '.delete-comment' , function(){
+
+  var post = $(this).closest('.comment').data('reply');
+  removePostAsync( post );
 
 })
 
@@ -1760,12 +1767,11 @@ var getStringHour = function( date ){
 
 }
 
-var removeCardAsync = function( card ){
+var removePostAsync = function( post ){
 
   confirm( lang.comfirmDeletePost , function(o){
     if(o){
 
-      var post = card.data( 'post' );
       worldSelected.removePost( post.id , function( e , o ){
 
         if (e) {
