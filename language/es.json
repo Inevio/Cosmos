@@ -107,11 +107,12 @@
     "private"       : "Privado",
     "newPost"       : "Nuevo post",
     "for"           : "para",
-    "uploadInevio"  : "Subir desde Inevio",
+    "uploadInevio"  : "Añadir desde Inevio",
     "uploadPC"      : "Subir desde el PC",
     "postit"        : "Postear",
     "createWorldShort"  : "Crear mundo",
     "notAllowedDeletePost"    : "No tienes los permisos para borrar este post",
-    "createNewPost" : "Crear nuevo post"
+    "createNewPost" : "Crear nuevo post",
+    "noInfo"        : "No hay información suficiente para poder crear el post"
 
 }

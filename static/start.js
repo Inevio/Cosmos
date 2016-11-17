@@ -10,6 +10,7 @@ wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
 
     noWorlds.show();
     starsCanvasContainer.removeClass( 'no-visible' );
+    starsCanvasContainer.css( 'opacity' , 1 );
     noWorlds.css({ 'opacity' : 1 });
 
   }else{

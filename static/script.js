@@ -206,23 +206,6 @@ api.cosmos.on( 'postAdded' , function( post ){
         appendReplyComment( grandparent , parentPost , post );
       }
 
-      if ( post.author != myContactID ) {
-
-        wz.user( post.author , function( e , user ){
-
-          api.banner()
-          .setTitle( user.name + ' ' + lang.hasComment + ' ' + lang.comment )
-          .setText( post.content )
-          .setIcon( user.avatar.tiny )
-          .on( 'click' , function(){
-            $( '.world-' + post.worldId ).click();
-          })
-          .render();
-
-        });
-
-      }
-
     }else{
 
       var ncomments = grandparent.find( '.comments-text' ).data( 'num' ) + 1;
@@ -233,41 +216,11 @@ api.cosmos.on( 'postAdded' , function( post ){
         appendReply( grandparent , post );
       }
 
-      if ( post.author != myContactID ) {
-
-        wz.user( post.author , function( e , user ){
-
-          api.banner()
-          .setTitle( user.name + ' ' + lang.hasComment + ' ' + lang.post )
-          .setText( post.content )
-          .setIcon( user.avatar.tiny )
-          .on( 'click' , function(){
-            $( '.world-' + post.worldId ).click();
-          })
-          .render();
-
-        });
-
-      }
-
     }
 
   }else{
 
     wz.user( post.author , function( e , user ){
-
-      if ( post.author != myContactID ) {
-
-        api.banner()
-        .setTitle( user.name + ' ' + lang.hasCreated + ' ' + lang.post )
-        .setText( post.title )
-        .setIcon( user.avatar.tiny )
-        .on( 'click' , function(){
-          $( '.world-' + post.worldId ).click();
-        })
-        .render();
-
-      }
 
       if ( worldSelected.id === post.worldId ) {
         switch (post.type) {
@@ -1286,6 +1239,11 @@ var postNewCardAsync = function(){
   var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
   var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
 
+  if ( text === 'none' && tit === 'none' ) {
+    alert( lang.noInfo );
+    return;
+  }
+
   var attach = $( '.new-card-section .attachments' ).data( 'attachs' );
 
   var addPost = function( node , type ){
@@ -1698,6 +1656,10 @@ var appendCard = function( card , post ){
   app.removeClass( 'no-post' );
 
   var cardsAppended = $( '.cardDom' );
+
+  if ( post.author === myContactID ) {
+    card.addClass( 'mine' );
+  }
 
   if ( !cardsAppended.length ) {
 

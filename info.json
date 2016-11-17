@@ -18,7 +18,7 @@
         "desktop" : {
 
             "primary" : "main",
-            "service" : [],
+            "service" : ["service.js"],
             "common"  : {
 
                 "css"    : [],

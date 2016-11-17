@@ -86,7 +86,7 @@ goBack.on( 'click' , function(){
 cover.on( 'mousewheel' , function( e , d , x , y ){
 
   if ( showingUsers ) {
-    return;
+    usersGoesDownNoAnimation();
   }
 
   if ( state == 1 && !onTransition && y < 0) {
@@ -105,8 +105,9 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 
 cardList.on( 'mousewheel' , function( e , d , x , y ){
 
+
   if ( showingUsers ) {
-    return;
+    usersGoesDownNoAnimation();
   }
 
   var obj = $( this );
@@ -418,16 +419,8 @@ app
 
   var post = $( this ).closest( '.card' ).data( 'post' );
 
-  $( this ).closest( '.card' ).removeClass( 'removeable' );
-
-  if ( post.author === api.system.user().id ) {
-    $( this ).closest( '.card' ).addClass( 'removeable' );
-  }
-
   $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
   $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
-
-
 
 })
 
@@ -1015,6 +1008,32 @@ var usersGoesUp = function(){
   }, 1000);
 
   app.addClass( 'user-animation' );
+
+}
+
+var usersGoesDownNoAnimation = function(){
+
+  showingUsers = false;
+
+  $( '.world-avatar, .world-title, .users-preview-container, .spot' ).css({
+
+    'transform' : 'translateY(0px)'
+
+  });
+
+  $( '.users-circles-container' ).css({
+
+    'transform' : 'translateY(350px)'
+
+  });
+
+  $( '.more-info' ).css({
+
+    'opacity' : '0.7'
+
+  });
+
+  app.removeClass( 'user-animation' );
 
 }
 
