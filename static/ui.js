@@ -325,6 +325,13 @@ unFollowButton.on( 'click' , function(){
     newWorldAnimationB();
 
     var world = app.data( 'worldSelected' );
+    if (world.hasCustomIcon) {
+      $( '.wz-groupicon-uploader-start' ).removeClass('non-icon');
+      $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
+    }else{
+      $( '.wz-groupicon-uploader-start' ).removeClass('custom-icon');
+      $( '.wz-groupicon-uploader-start' ).addClass('non-icon');
+    }
 
     $( '.new-world-desc textarea' ).val( world.description );
     $( '.new-world-name input' ).val( world.name );

@@ -180,6 +180,7 @@ api.cosmos.on( 'worldCreated' , function( world ){
   $( '.new-world-name input' ).val('');
   $( '.new-world-container' ).data( 'world' , world );
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+
   myWorlds.push( world.id );
 
   if ( world.owner === myContactID ) {
@@ -720,6 +721,7 @@ var starsCanvas = function( stars ){
 var getMyWorldsAsync = function(){
 
   var myWorldsApi = app.data( 'myWorlds' );
+  console.log(myWorldsApi);
 
   if ( myWorldsApi ) {
 
@@ -1517,11 +1519,11 @@ var appendDocumentCard = function( post , user , reason ){
 
     console.log( fsNode , 'imagen!');
 
-    card.find( '.doc-preview' ).css( 'background-image' , 'url( '+ fsNode.thumbnails['512'] +' )' );
+    card.find( '.doc-preview' ).css( 'background-image' , 'url( '+ fsNode.thumbnails.big +' )' );
     card.find( '.preview-title' ).text( fsNode.name );
     card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
     card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
-    card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons['16'] +' )' );;
+    card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' );;
 
     if ( post.title === 'none' ) {
 
