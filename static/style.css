@@ -3190,7 +3190,19 @@ to {background-position: -200% 0;}
 
 .new-world-container.editing .changer figure{
 
+  background-color: white;
+
+}
+
+.new-world-container.editing .changer figure.custom-icon{
+
   background-color: transparent;
+
+}
+
+.new-world-container.editing .changer figure.non-icon{
+
+  background-image: none !important;
 
 }
 
@@ -3368,7 +3380,20 @@ to {background-position: -200% 0;}
 
   }
 
+  .changer figure.custom-icon i{
+
+    opacity: 0;
+    background-position: 34px 0px;
+
+  }
+
   .changer figure:hover i{
+
+    opacity: 1;
+
+  }
+
+  .changer figure.custom-icon:hover i{
 
     opacity: 1;
 
