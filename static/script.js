@@ -1629,6 +1629,10 @@ var appendReply = function( card , reply ){
 
   wz.user( reply.author , function( e , user ){
 
+    if ( reply.author === myContactID ) {
+      comment.addClass('mine');
+    }
+
     comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     comment.find( '.name' ).text( user.fullName );
     comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
@@ -1655,6 +1659,9 @@ var appendCard = function( card , post ){
 
   var worldActive = $( '.world.active' ).data( 'world' );
   if ( post.worldId != worldActive.id ) {
+    return;
+  }
+  if ( $( '.post-' + post.id ).length != 0 ) {
     return;
   }
 

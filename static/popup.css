@@ -68,10 +68,9 @@
   .file-icon{
 
     float: left;
-    background-image: url( '@static/icontest.png' );
-    width: 50px;
+    width: 64px;
     height: 64px;
-    background-size: 50px 64px;
+    background-size: 64px 64px;
     margin-left: 26px;
     margin-top: 22px;
 
@@ -82,7 +81,7 @@
     float: left;
     height: 100%;
     width: 411px;
-    margin-left: 24px;
+    margin-left: 16px;
 
   }
 
@@ -105,11 +104,13 @@
 
   .cosmos-info{
 
-    margin-top: 18px;
-    font-size: 15px;
     color: @text-color;
+    margin-top: 11px;
+    font-size: 15px;
     float: left;
     letter-spacing: 0.25px;
+    line-height: 20px;
+    width: 450px;
 
   }
 
@@ -129,6 +130,7 @@
     background-size: 29px 14px;
     margin-top: 26px;
     margin-right: 25px;
+    display: none;
 
   }
 
