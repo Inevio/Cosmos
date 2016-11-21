@@ -51,6 +51,7 @@ var TYPES = {
 $('.file-info i').text( params.fsnode.name )
 $('.cosmos-info i').text( params.world.name )
 $('.post-title input').focus()
+$('.file-icon').css('background-image', 'url(' + params.fsnode.icons.tiny + ')');
 
 $('.post-button').on( 'click' , function(){
 

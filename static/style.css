@@ -2432,7 +2432,14 @@ to {background-position: -200% 0;}
     border-radius: 50%;
     transition: all 0.3s ease;
     opacity: 0;
+    display: none;
     cursor: pointer;
+
+  }
+
+  .comment.mine .delete-comment{
+
+    display: inline-block;
 
   }
 
