@@ -91,7 +91,6 @@ cardsList.on( 'scroll' , function(){
 
   var scrollDiv = $( this );
   var scrollFinish = $( '.cards-grid' )[0].scrollHeight - scrollDiv.height();
-  console.log( scrollFinish ,  scrollDiv.scrollTop() );
 
   if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
 
@@ -224,6 +223,10 @@ api.cosmos.on( 'postAdded' , function( post ){
     wz.user( post.author , function( e , user ){
 
       if ( worldSelected.id === post.worldId ) {
+
+        var nCards = parseInt( $( '.world-event-number .subtitle' ).text() ) + 1;
+        $( '.world-event-number .subtitle' ).text( nCards );
+
         switch (post.type) {
 
           case 1:
@@ -373,44 +376,7 @@ openChatButton.on( 'click' , function(){
 
 searchPostInput.on( 'input' , function(){
 
-  searchPostQuery = searchPostQuery + 1;
-  var searchPostQueryCopy = searchPostQuery;
-
-  if ( $( this ).val() === '' ) {
-    $( '.card' ).show();
-    return;
-  }
-
-  $( '.card' ).hide();
-
-  worldSelected.searchPost( $( this ).val() , {from:0 , to:1000} , function( e , posts ){
-
-    // Query desfasada
-    if ( searchPostQuery != searchPostQueryCopy ) {
-      return;
-    }
-
-    console.log( posts );
-
-    $.each( posts , function( i , post ){
-
-      var post;
-
-      if ( post.isReply ) {
-
-        post = $( '.post-' + post.parent );
-
-      }else{
-
-        post = $( '.post-' + post.id );
-
-      }
-
-      post.show();
-
-    });
-
-  });
+  searchPost( $( this ).val() );
 
 });
 
@@ -453,6 +419,8 @@ api.cosmos.on( 'worldIconSetted', function( o ){
 
   $( '.loading-animation-container' ).hide();
   $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + '?' + Date.now() + ')' );
+  $( '.wz-groupicon-uploader-start' ).removeClass('non-icon');
+  $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
 
 })
 
@@ -530,12 +498,22 @@ app
 
 })
 
-.on( 'keyup' , '.comments-footer input' , function( e ){
+.on( 'keydown' , '.comments-footer .comment-input' , function( e ){
 
   if (e.keyCode == 13) {
 
-    addReplayAsync( $( this ).parent().parent().parent() );
+    if (! e.shiftKey ) {
 
+      e.stopPropagation();
+      e.preventDefault();
+      addReplayAsync( $( this ).parent().parent().parent() );
+
+    }
+
+  }else if(e.keyCode == 8){
+    if ( $(this).text() === '' ) {
+      $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
+    }
   }
 
 })
@@ -612,7 +590,7 @@ var initTexts = function(){
   $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
   $( '.card-options-section .delete span' ).text( lang.deletePost );
   $( '.send-button span' ).text( lang.send );
-  $( '.comments-footer input' ).attr(  'placeholder' , lang.writeComment );
+  $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
   $( '.world-users-number .title' ).text( lang.users );
   $( '.world-event-number .title' ).text( lang.posts );
   $( '.world-files-number .title' ).text( lang.files );
@@ -897,6 +875,8 @@ var selectWorld = function( world ){
   $( '.category-list .world' ).removeClass( 'active' );
   world.addClass( 'active' );
   $( '.scrolled' ).removeClass( 'scrolled' );
+  searchPostInput.val('');
+  searchPost( '' );
 
   var worldApi = world.data( 'world' );
   worldSelected = worldApi;
@@ -1336,6 +1316,12 @@ var checkContains = function( base , contains ){
 
 var getWorldPostsAsync = function( world , interval ){
 
+  if ( interval.init === 0 ) {
+    world.getPosts( {from: 0 , to: 100000 } , function( e , posts ){
+      $( '.world-event-number .subtitle' ).text( posts.length );
+    });
+  }
+
   world.getPosts( {from: interval.init , to: interval.final } , function( e , posts ){
 
     if ( interval.init === 0 ) {
@@ -1354,7 +1340,6 @@ var getWorldPostsAsync = function( world , interval ){
 
     }
 
-    $( '.world-event-number .subtitle' ).text( posts.length );
     $( '.cards-list' ).data( 'lastCard' , interval.final );
 
     $.each( posts , function( i , post ){
@@ -1598,6 +1583,7 @@ var setRepliesAsync = function( card , post ){
 
   post.getReplies( {from:0 , to:1000} , function( e , replies ){
 
+    replies = replies.reverse();
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
     card.find( '.comments-text' ).data( 'num' , replies.length );
 
@@ -1606,6 +1592,8 @@ var setRepliesAsync = function( card , post ){
       appendReply( card , reply );
 
       reply.getReplies( {from:0 , to:1000} , function( e , responses ){
+
+        responses = responses.reverse();
 
         $.each( responses , function( i , response ){
 
@@ -1649,7 +1637,7 @@ var appendReply = function( card , reply ){
     card.find( '.comments-list' ).append( comment );
 
     comment.data( 'reply' , reply );
-    comment.data( 'name' , user.name );
+    comment.data( 'name' , user.name.split( ' ' )[0] );
 
   });
 
@@ -1706,7 +1694,6 @@ var appendCard = function( card , post ){
 
   card.data( 'time' , post.created );
   card.data( 'post' , post );
-
 
 }
 
@@ -1885,22 +1872,20 @@ var unFollowWorld = function(){
 var addReplayAsync = function( card ){
 
   var post = card.data( 'post' );
-  var msg = card.find( '.comments-footer input' ).val();
-  var input = card.find( '.comments-footer input' );
+  var msg = card.find( '.comments-footer .comment-input' ).html();
+  var input = card.find( '.comments-footer .comment-input' );
 
-  if ( msg[0] === '@' ) {
-
-    console.log('es un doble reply!');
+  if ( input.attr( 'placeholder' )[0] === '@' ) {
     post = input.data( 'reply' );
-
+    $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
   }
 
   var str = card.find( '.card-content .title' ).text();
-  if( str === '' ) str = input.val();
+  if( str === '' ) str = input.text();
 
-  post.reply( { content: input.val() , author: myContactID , worldId: post.worldId , title: str } , function(e,o){
+  post.reply( { content: msg , author: myContactID , worldId: post.worldId , title: str } , function(e,o){
 
-    input.val('');
+    input.text('');
 
   });
 
@@ -1997,9 +1982,9 @@ var prepareReplayComment = function( comment ){
 
   var post = comment.data( 'reply' );
   var name = comment.data( 'name' );
-  var input = comment.parent().parent().find( '.comments-footer input' );
+  var input = comment.parent().parent().find( '.comments-footer .comment-input' );
 
-  input.val( '@' + name + ' ');
+  input.attr( 'placeholder' ,  '@' + name + ' ');
   input.focus();
   input.data( 'reply' , post );
 
@@ -2018,7 +2003,7 @@ var appendReplyComment = function( card , reply , response ){
     reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     reply.find( '.name' ).text( user.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-    reply.find( '.replay-text' ).html( response.content.substr(response.content.indexOf(" ") + 1).replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+    reply.find( '.replay-text' ).html( response.content );
 
     reply.find( '.replay-text' ).find('a').each( function(){
 
@@ -2074,6 +2059,49 @@ var sortByName = function( nameA , nameB ){
       }
   }
   return nameB[i]? -1:0;
+
+}
+
+var searchPost = function( filter ){
+
+    searchPostQuery = searchPostQuery + 1;
+    var searchPostQueryCopy = searchPostQuery;
+
+    if ( filter === '' ) {
+      $( '.card' ).show();
+      return;
+    }
+
+    $( '.card' ).hide();
+
+    worldSelected.searchPost( filter , {from:0 , to:1000} , function( e , posts ){
+
+      // Query desfasada
+      if ( searchPostQuery != searchPostQueryCopy ) {
+        return;
+      }
+
+      console.log( posts );
+
+      $.each( posts , function( i , post ){
+
+        var post;
+
+        if ( post.isReply ) {
+
+          post = $( '.post-' + post.parent );
+
+        }else{
+
+          post = $( '.post-' + post.id );
+
+        }
+
+        post.show();
+
+      });
+
+    });
 
 }
 
