@@ -1765,7 +1765,11 @@ var getStringHour = function( date ){
 
 var removePostAsync = function( post ){
 
-  confirm( lang.comfirmDeletePost , function(o){
+  var confirmText = lang.comfirmDeletePost;
+  if ( post.isReply ) {
+    confirmText = lang.comfirmDeleteComment;
+  }
+  confirm( confirmText , function(o){
     if(o){
 
       worldSelected.removePost( post.id , function( e , o ){

@@ -51,7 +51,7 @@ var TYPES = {
 $('.file-info i').text( params.fsnode.name )
 $('.cosmos-info i').text( params.world.name )
 $('.post-title input').focus()
-$('.file-icon').css('background-image', 'url(' + params.fsnode.icons.tiny + ')');
+$('.file-icon').css('background-image', 'url(' + params.fsnode.icons.small + ')');
 
 $('.post-button').on( 'click' , function(){
 
@@ -61,5 +61,9 @@ $('.post-button').on( 'click' , function(){
 })
 
 $('.omit-button').on( 'click' , function(){
+  api.app.removeView( app )
+})
+
+$('.close-popup').on( 'click' , function(){
   api.app.removeView( app )
 })
