@@ -65,6 +65,7 @@
     "postCreated"   : "ha creado un nuevo post",
     "comments"      : "comentarios",
     "comfirmDeletePost" : "¿Esta seguro que quiere eliminar el post?",
+    "comfirmDeleteComment" : "¿Esta seguro que quiere eliminar el comentario?",
     "deletePost"    : "Borrar post",
     "following"     : "siguiendo",
     "writeComment"  : "Escribe tu comentario aquí...",
