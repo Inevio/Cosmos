@@ -2384,7 +2384,7 @@ to {background-position: -200% 0;}
     font-size: 13px;
     font-weight: bold;
     color: #545f65;
-    width: 338px;
+    width: 290px;
     margin-top: 2px;
 
   }
@@ -2402,6 +2402,25 @@ to {background-position: -200% 0;}
   }
 
   .comment:hover .replay-button{
+
+    opacity: 1;
+
+  }
+
+  .comment .edit-button{
+
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    color: #545f65;
+    opacity: 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-right: 9px;
+
+  }
+
+  .comment:hover .edit-button{
 
     opacity: 1;
 
@@ -2425,6 +2444,17 @@ to {background-position: -200% 0;}
     line-height: 20px;
     width: 440px;
     margin-top: 3px;
+
+  }
+
+  .editing.comment .comment-text{
+
+    background-color: #fff;
+    border: 1px solid #60b25e;
+    border-radius: 7px;
+    padding-left: 5px;
+    margin-left: 4px;
+    width: 438px;
 
   }
 

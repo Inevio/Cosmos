@@ -322,7 +322,6 @@ app.on( 'ui-view-resize' , function(){
 
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
-api.cosmos.on( 'postContentSetted', function(){console.log('postContentSetted');})
 api.cosmos.on( 'postFSNodeSetted', function(){console.log('postFSNodeSetted');})
 api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
 api.cosmos.on( 'postTitleSetted', function(){console.log('postTitleSetted');})
@@ -424,6 +423,12 @@ api.cosmos.on( 'worldIconSetted', function( o ){
 
 })
 
+api.cosmos.on( 'postContentSetted', function(){
+
+  console.log( arguments );
+
+});
+
 app
 
 .on( 'click' , '.create-world-button.step-a' , function(){
@@ -498,6 +503,12 @@ app
 
 })
 
+.on( 'click' , '.edit-button' , function(){
+
+  editComment( $( this ).parent() );
+
+})
+
 .on( 'keydown' , '.comments-footer .comment-input' , function( e ){
 
   if (e.keyCode == 13) {
@@ -560,6 +571,24 @@ app
 
   e.stopPropagation();
   $(this).toggleClass( 'active' );
+
+})
+
+.on( 'keydown' , '.comment.editing .comment-text' , function( e ){
+
+  var commentOnEditMode = $( this ).parent();
+  if (e.keyCode == 13) {
+    commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
+    commentOnEditMode.removeClass( 'editing' );
+    commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text' ).text() );
+  }
+
+  if (e.keyCode == 27) {
+    commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
+    commentOnEditMode.removeClass( 'editing' );
+    commentOnEditMode.find( '.comment-text' ).text( commentOnEditMode.data( 'oldText' ) );
+  }
+
 
 });
 
@@ -1614,6 +1643,7 @@ var appendReply = function( card , reply ){
   var comment = commentPrototype.eq(0).clone();
   comment.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + reply.id );
   comment.find( '.replay-button' ).text( lang.reply );
+  comment.find( '.edit-button' ).text( lang.edit );
 
   wz.user( reply.author , function( e , user ){
 
@@ -1991,6 +2021,16 @@ var prepareReplayComment = function( comment ){
   input.attr( 'placeholder' ,  '@' + name + ' ');
   input.focus();
   input.data( 'reply' , post );
+
+}
+
+var editComment = function( comment ){
+
+  comment.data( 'oldText' , comment.find( '.comment-text' ).text() );
+  comment.find( '.comment-text' ).attr( 'contenteditable' , true );
+  comment.find( '.comment-text' ).attr( 'placeholder' , lang.writeComment );
+  comment.find( '.comment-text' ).focus();
+  comment.addClass( 'editing' );
 
 }
 
