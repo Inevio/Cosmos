@@ -2457,6 +2457,7 @@ to {background-position: -200% 0;}
     line-height: 20px;
     width: 440px;
     margin-top: 3px;
+    word-wrap: break-word;
 
   }
 
