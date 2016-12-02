@@ -2384,8 +2384,14 @@ to {background-position: -200% 0;}
     font-size: 13px;
     font-weight: bold;
     color: #545f65;
-    width: 290px;
+    width: 335px;
     margin-top: 2px;
+
+  }
+
+  .comment.mine .name{
+
+    width: 290px;
 
   }
 
@@ -2417,6 +2423,13 @@ to {background-position: -200% 0;}
     transition: all 0.3s ease;
     cursor: pointer;
     margin-right: 9px;
+    display: none;
+
+  }
+
+  .comment.mine .edit-button{
+
+    display: inline-block;
 
   }
 
