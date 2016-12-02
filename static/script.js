@@ -36,7 +36,7 @@ var newPostButton         = $( '.new-post, .no-post-new-post-button' );
 var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
 var starsCanvasContainer           = $( '.stars-canvas' );
-var openFolder            = $( '.open-folder i' );
+var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
 
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
@@ -1626,6 +1626,8 @@ var setRepliesAsync = function( card , post ){
 
         $.each( responses , function( i , response ){
 
+          console.log( 'respuesta a comentario' , reply , response );
+
           appendReplyComment( card , reply , response );
 
         });
@@ -2058,6 +2060,7 @@ var appendReplyComment = function( card , reply , response ){
     });
 
     comment.find( '.replay-list' ).append( reply );
+    console.log('appended!!');
 
     reply.data( 'reply' , response );
 
