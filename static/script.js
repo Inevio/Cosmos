@@ -35,7 +35,7 @@ var searchPostInput       = $( '.pre-cover .search-button input' );
 var newPostButton         = $( '.new-post, .no-post-new-post-button' );
 var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
-var starsCanvasContainer           = $( '.stars-canvas' );
+var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
 
@@ -213,7 +213,7 @@ api.cosmos.on( 'postAdded' , function( post ){
       grandparent.find( '.comments-text' ).data( 'num' , ncomments );
 
       if ( worldSelected.id === post.worldId ) {
-        appendReply( grandparent , post );
+        appendReply( grandparent , post , function(){});
       }
 
     }
@@ -1618,17 +1618,19 @@ var setRepliesAsync = function( card , post ){
 
     $.each( replies , function( i , reply ){
 
-      appendReply( card , reply );
+      appendReply( card , reply , function(){
 
-      reply.getReplies( {from:0 , to:1000} , function( e , responses ){
+        reply.getReplies( {from:0 , to:1000} , function( e , responses ){
 
-        responses = responses.reverse();
+          responses = responses.reverse();
 
-        $.each( responses , function( i , response ){
+          $.each( responses , function( i , response ){
 
-          console.log( 'respuesta a comentario' , reply , response );
+            console.log( 'respuesta a comentario' , reply , response );
 
-          appendReplyComment( card , reply , response );
+            appendReplyComment( card , reply , response );
+
+          });
 
         });
 
@@ -1640,7 +1642,7 @@ var setRepliesAsync = function( card , post ){
 
 }
 
-var appendReply = function( card , reply ){
+var appendReply = function( card , reply , callback ){
 
   var comment = commentPrototype.eq(0).clone();
   comment.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + reply.id );
@@ -1670,6 +1672,8 @@ var appendReply = function( card , reply ){
 
     comment.data( 'reply' , reply );
     comment.data( 'name' , user.name.split( ' ' )[0] );
+
+    callback();
 
   });
 
