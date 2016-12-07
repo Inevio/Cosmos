@@ -21,8 +21,6 @@ var closeInviteUser       = $( '.close-invite-user, .cancel-invite-user' );
 var aceptInviteUser       = $( '.invite-user-container .invite-user' );
 var friendPrototype       = $( '.friend.wz-prototype' );
 var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
-var cancelNewCard         = $( '.cancel-new-card' );
-var postNewCardButton     = $( '.post-new-card' );
 var documentCardPrototype = $( '.doc-card.wz-prototype' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
@@ -133,21 +131,6 @@ aceptInviteUser.on( 'click' , function(){
 friendSearchBox.on( 'input' , function(){
 
   filterFriends( $( this ).val() );
-
-});
-
-cancelNewCard.on( 'click' , function(){
-
-  $( '.new-card-container' ).toggleClass( 'popup' );
-  $( '.new-card-container *' ).toggleClass( 'popup' );
-
-});
-
-postNewCardButton.on( 'click' , function(){
-
-  postNewCardAsync();
-  $( '.new-card-container' ).toggleClass( 'popup' );
-  $( '.new-card-container *' ).toggleClass( 'popup' );
 
 });
 
@@ -379,15 +362,6 @@ searchPostInput.on( 'input' , function(){
 
 });
 
-newPostButton.on( 'click' , function(){
-
-  $( '.new-card-title figure' ).text( worldSelected.name );
-  $( '.new-card-avatar' ).css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
-  $( '.new-card-section .attachments' ).data( 'numAttachs' , 0 );
-  $( '.new-card-section .attachments' ).removeClass( 'with-attach' );
-
-});
-
 openFolder.on( 'click' , function(){
 
   wz.fs( worldSelected.volume , function( e , o ){
@@ -485,12 +459,6 @@ app
 
 })
 
-.on( 'click' , '.attach-select.popup2 .inevio' , function(){
-
-  attachFromInevio();
-
-})
-
 .on( 'click' , '.comments-footer .send-button' , function(){
 
   addReplayAsync( $( this ).parent().parent().parent() );
@@ -545,19 +513,6 @@ app
 .on( 'click' , '.doc-preview' , function(){
 
   $( this ).data( 'fsNode' ).open();
-
-})
-
-.on( 'upload-prepared' , function( e , uploader ){
-
-  uploaderFunction = uploader;
-
-  $( '.popup' ).removeClass( 'popup2' );
-  $( this ).parent().find( '.new-card-section .attach-select' ).hide();
-
-  $( '.new-card-section .attachments' ).data( 'attachs' , 'fromPc' );
-
-  $( '.new-card-section .attachments' ).addClass( 'with-attach' );
 
 })
 
@@ -648,11 +603,6 @@ var initTexts = function(){
   $( '.option.public > span' ).text( lang.public );
   $( '.option.hidden > span' ).text( lang.private );
   $( '.create-world-button.step-a span' ).text( lang.createWorldShort );
-  $( 'new-card-title' ).html( '<i>' + lang.newPost + '</i>' + lang.for + '<figure></figure>' );
-  $( '.attach-select .inevio span' ).text( lang.uploadInevio );
-  $( '.attach-select .pc span' ).text( lang.uploadPC );
-  $( '.cancel-new-card span' ).text( lang.cancel );
-  $( '.post-new-card span' ).text( lang.postit );
   $( '.cancel-invite-user span' ).text( lang.cancel );
   $( '.invite-user span' ).text( lang.invite );
 
@@ -674,9 +624,9 @@ var starsCanvas = function( stars ){
   var padding2 = 0;
   var padding3 = 0;
 
-  layer1.src = 'https://staticbeta.inevio.com/app/360/starlayer1.png';
-  layer2.src = 'https://staticbeta.inevio.com/app/360/starlayer2.png';
-  layer3.src = 'https://staticbeta.inevio.com/app/360/starlayer3.png';
+  layer1.src = 'https://static.inevio.com/app/360/starlayer1.png';
+  layer2.src = 'https://static.inevio.com/app/360/starlayer2.png';
+  layer3.src = 'https://static.inevio.com/app/360/starlayer3.png';
 
   var draw = function(){
 
@@ -1252,90 +1202,6 @@ var asyncEach = function( list, step, callback ){
 
 };
 
-var postNewCardAsync = function(){
-
-  var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
-  var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
-
-  if ( text === 'none' && tit === 'none' ) {
-    alert( lang.noInfo );
-    return;
-  }
-
-  var attach = $( '.new-card-section .attachments' ).data( 'attachs' );
-
-  var addPost = function( node , type ){
-
-    if ( type === 1 || type === 7 || type === 8 ) {
-
-      worldSelected.addPost( { content: text , type: type, title: tit } , function( e , o ){
-
-        $( '.new-card-input' ).val('');
-        $( '.new-card-textarea' ).val('');
-
-      });
-
-    }else{
-
-      worldSelected.addPost( { content: text , type: type, title: tit, fsnode: node.id } , function( e , o ){
-
-        $( '.new-card-input' ).val('');
-        $( '.new-card-textarea' ).val('');
-        $( '.new-card-section .attachments' ).data( 'attachs' , '');
-
-      });
-
-    }
-
-  }
-
-  var checkTypePost = function( fsnode ){
-
-    var fileType = 1;
-
-    if ( fsnode.mime ) {
-
-      fileType = guessType( fsnode.mime );
-
-    }
-
-
-    addPost( fsnode , fileType );
-
-  }
-
-  if ( attach ) {
-
-    if ( attach === 'fromPc' ) {
-
-      uploaderFunction( worldSelected.volume , function( e , fsNode ){
-
-        auxFunction = checkTypePost;
-        fsnodeId = fsNode[0].id;
-
-      });
-
-    }else{
-
-      api.fs( attach[0] , function( e , fsNode ){
-
-        checkTypePost( fsNode );
-
-      });
-
-    }
-
-  }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
-
-    addPost( 0 , 8 );
-
-  }else{
-
-    addPost( 0 , 1 );
-
-  }
-
-}
 
 var checkContains = function( base , contains ){
 
@@ -1475,8 +1341,21 @@ var appendGenericCard = function( post , user , reason ){
   var card = genericCardPrototype.clone();
   card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
 
-  wz.fs( post.fsnode , function( e , fsNode ){
+  var fsnodes = [];
+  post.fsnode.forEach(function( fsnode ){
 
+    var promise = $.Deferred();
+    fsnodes.push( promise );
+
+    wz.fs( fsnode , function( e , fsnode ){
+      promise.resolve( e ? null: fsnode );
+    });
+
+  });
+
+  $.when.apply( null, fsnodes ).done( function(){
+
+    var fsNode = arguments[0];
     console.log( fsNode , 'imagen!');
 
     card.find( '.doc-icon' ).css( 'background-image' , 'url( ' + fsNode.icons['64'] + ' )' );
@@ -1821,42 +1700,6 @@ var removePostAsync = function( post ){
 
 }
 
-var attachFromInevio = function(){
-
-  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' } , function( e , s ){
-
-    $( '.popup' ).removeClass( 'popup2' );
-    $( this ).parent().find( '.new-card-section .attach-select' ).hide();
-
-    if (e) {
-      console.log( e );
-      return;
-    }
-
-    var numAttachs = $( '.new-card-section .attachments' ).data( 'numAttachs' );
-    if ( !numAttachs ) {
-      numAttachs = 0;
-    }
-
-    if ( s.constructor === Array ) {
-      numAttachs += s.length;
-    }else{
-      numAttachs++;
-    }
-
-    console.log( numAttachs, s );
-    $( '.new-card-section .attachments' ).data( 'numAttachs' , numAttachs );
-    $( '.new-card-section .attachments' ).data( 'attachs' , s );
-
-    if ( numAttachs > 0) {
-      $( '.new-card-section .attachments' ).addClass( 'with-attach' );
-      $( '.new-card-section .attachments figure i' ).text( numAttachs );
-    }
-
-  })
-
-}
-
 var unFollowWorld = function(){
 
   worldSelected.removeUser( myContactID , function( e , o ){
@@ -2077,10 +1920,6 @@ var cleanFilterWorldCards = function(){
   searchWorldCard.val( '' );
   filterWorldCards( '' );
 
-}
-
-var guessType = function( mime ){
-  return TYPES[ mime ] || 1
 }
 
 var sortByName = function( nameA , nameB ){
