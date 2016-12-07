@@ -21,14 +21,12 @@ var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-w
 var closeNewWorld   = $( '.close-new-world' );
 var notifications   = $( '.notifications' );
 var newPostButton   = $( '.new-post, .no-post-new-post-button' );
-var closeNewCard    = $( '.close-new-card' );
 var worldCategory   = $( '.category .opener, .category .category-name' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
 var searchExplore   = $( '.explore-container .search-bar' );
 var worldOptionsHelp = $( '.privacy-options .option i' );
 var attachCommentBut = $( '.comments-footer .attachments, .comments-footer .attachments i, .comments-footer .attachments div' );
-var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
 var privacyOption    = $( '.privacy-options .option' );
 var unFollowButton   = $( '.stop-follow' );
 var selectWorld      = $( '.select-world' );
@@ -206,23 +204,7 @@ notifications.on( 'click' , function(){
 
 newPostButton.on( 'click' , function(){
 
-  $( '.new-card-container' ).toggleClass( 'popup' );
-  $( '.new-card-container *' ).toggleClass( 'popup' );
-
-});
-
-attachNewPostBut.on( 'click' , function(){
-
-  $( this ).parent().find( '.attach-select' ).show();
-  $( this ).parent().find( '.attach-select' ).addClass( 'popup2' );
-  $( this ).parent().find( '.attach-select *' ).addClass( 'popup2' );
-
-});
-
-closeNewCard.on( 'click' , function(){
-
-  $( '.new-card-container' ).toggleClass( 'popup' );
-  $( '.new-card-container *' ).toggleClass( 'popup' );
+  api.app.createView( { type: 'manual' , world: app.data( 'worldSelected' ) } , 'newPost' );
 
 });
 
@@ -356,13 +338,6 @@ app
 
     $( '.popup' ).removeClass( 'popup' );
     $( this ).parent().find( '.comments-footer .attach-select' ).hide();
-
-  }
-
-  if ( ! $( e.target ).hasClass( 'popup2' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
-
-    $( '.popup' ).removeClass( 'popup2' );
-    $( this ).parent().find( '.new-card-section .attach-select' ).hide();
 
   }
 

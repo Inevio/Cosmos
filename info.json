@@ -58,17 +58,17 @@
 
                 },
 
-                "popup" : {
+                "newPost" : {
 
-                  "template" : "popup.html",
+                  "template" : "newPost.html",
 
                   "maxizable" : false,
                   "resizable" : false,
 
                   "width"  : {
 
-                      "default" : 569,
-                      "min"     : 569,
+                      "default" : 529,
+                      "min"     : 529,
                       "max"     : 0
 
                   },
@@ -81,8 +81,8 @@
 
                   },
 
-                  "css"    : [ "popup.css" ],
-                  "script" : [ "popup.js" ]
+                  "css"    : [ "newPost.css" ],
+                  "script" : [ "newPost.js" ]
 
                 }
 
