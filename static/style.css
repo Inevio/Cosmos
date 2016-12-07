@@ -2703,6 +2703,7 @@ to {background-position: -200% 0;}
     width: 410px;
     margin-right: 10px;
     margin-left: 20px;
+    overflow-wrap: break-word;
 
   }
 
