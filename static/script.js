@@ -1489,7 +1489,7 @@ var appendYoutubeCard = function( post , user , reason ){
 
 var setRepliesAsync = function( card , post ){
 
-  post.getReplies( {from:0 , to:1000} , function( e , replies ){
+  post.getReplies( post.worldId , {from:0 , to:1000} , function( e , replies ){
 
     replies = replies.reverse();
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
@@ -1499,7 +1499,7 @@ var setRepliesAsync = function( card , post ){
 
       appendReply( card , reply , function(){
 
-        reply.getReplies( {from:0 , to:1000} , function( e , responses ){
+        reply.getReplies( reply.worldId , {from:0 , to:1000} , function( e , responses ){
 
           responses = responses.reverse();
 
