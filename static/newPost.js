@@ -105,6 +105,12 @@ app
   $( '.new-card-section .attachments' ).addClass( 'with-attach' );
 
 })
+.on( 'click' , '.cancel-attachment' , function(){
+  $(this).closest('.attachment').remove();
+  if ($('.attachment:not(.wz-prototype)').length === 0) {
+    attachNewPostBut.removeClass('with-attach');
+  }
+});
 
 var startNewPost = function(){
   if (!params) {
@@ -313,9 +319,10 @@ var appendAttachment = function( fsnode ){
 
   var attachment = attachmentPrototype.clone();
   attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
-  attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icon + ')' );
+  attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
   attachment.find( '.title' ).text( fsnode.name );
   attachmentPrototype.after( attachment );
+  attachment.data( 'fsnode' , fsnode );
 
 }
 
