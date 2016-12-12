@@ -51,10 +51,11 @@ var TYPES = {
 
 }
 
-var closeNewCard    = $( '.close-new-card' );
-var attachNewPostBut = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
+var closeNewCard          = $( '.close-new-card' );
+var attachNewPostBut      = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
 var cancelNewCard         = $( '.cancel-new-card' );
 var postNewCardButton     = $( '.post-new-card' );
+var attachmentPrototype   = $( '.attachment.wz-prototype' );
 
 closeNewCard.on( 'click' , function(){
 
@@ -257,7 +258,7 @@ var postNewCardAsync = function(){
 
 var attachFromInevio = function(){
 
-  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' } , function( e , s ){
+  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' , 'multiple': true } , function( e , s ){
 
     if (e) {
       console.log( e );
@@ -281,6 +282,20 @@ var attachFromInevio = function(){
     $( '.new-card-section .attachments' ).data( 'numAttachs' , numAttachs );
     $( '.new-card-section .attachments' ).data( 'attachs' , s );
 
+    s.forEach(function( attach ){
+
+      api.fs( attach , function( e , fsnode ){
+
+        if (e) {
+          console.log(e);
+        }else{
+          appendAttachment( fsnode );
+        }
+
+      });
+
+    });
+
     if ( numAttachs > 0) {
       $( '.new-card-section .attachments' ).addClass( 'with-attach' );
       $( '.new-card-section .attachments figure i' ).text( numAttachs );
@@ -292,6 +307,16 @@ var attachFromInevio = function(){
 
 var guessType = function( mime ){
   return TYPES[ mime ] || 1
+}
+
+var appendAttachment = function( fsnode ){
+
+  var attachment = attachmentPrototype.clone();
+  attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
+  attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icon + ')' );
+  attachment.find( '.title' ).text( fsnode.name );
+  attachmentPrototype.after( attachment );
+
 }
 
 startNewPost();
