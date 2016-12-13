@@ -114,6 +114,12 @@
     "createWorldShort"  : "Crear mundo",
     "notAllowedDeletePost"    : "No tienes los permisos para borrar este post",
     "createNewPost" : "Crear nuevo post",
-    "noInfo"        : "No hay información suficiente para poder crear el post"
+    "noInfo"        : "No hay información suficiente para poder crear el post",
+    "uploading"     : "Subiendo...",
+
+    "bannerNewPost"       : "Nuevo post en ",
+    "bannerNewComment"    : "Nuevo comentario en ",
+    "bannerReplyPost"     : "ha comentado tu post",
+    "bannerReplyComment"  : "te ha respondido"
 
 }

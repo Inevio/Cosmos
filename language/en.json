@@ -114,6 +114,12 @@
     "createWorldShort"  : "Create world",
     "notAllowedDeletePost"    : "You are not allowed to delete this post",
     "createNewPost" : "Create new post",
-    "noInfo"        : "Not enough info for creating a post"
+    "noInfo"        : "Not enough info for creating a post",
+    "uploading"     : "Uploading...",
+
+    "bannerNewPost"       : "New post in ",
+    "bannerNewComment"    : "New comment in ",
+    "bannerReplyPost"     : "has commented your post",
+    "bannerReplyComment"  : "replied you"
 
 }
