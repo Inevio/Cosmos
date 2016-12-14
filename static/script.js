@@ -558,6 +558,10 @@ var initCosmos = function(){
   getMyWorldsAsync();
   starsCanvas( 'stars-canvas' );
 
+  if ( params && params.action === 'selectPost') {
+    selectWorld( $( '.world-' + params.world ) );
+  }
+
   wz.user( myContactID , function( e , user ){
 
     me = user;
@@ -675,7 +679,7 @@ var starsCanvas = function( stars ){
 
 }
 
-var getMyWorldsAsync = function(){
+var getMyWorldsAsync = function( options ){
 
   var myWorldsApi = app.data( 'myWorlds' );
   console.log(myWorldsApi);
