@@ -214,7 +214,7 @@ var postNewCardAsync = function(){
         attachment.push( $(fsnode).data( 'fsnode' ).id );
       });
     }else{
-      attachment = o.fsnode.id;
+      attachment = o.fsnode ? o.fsnode.id : '';
     }
 
     if ( o.type === 1 || o.type === 7 || o.type === 8 ) {

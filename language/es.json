@@ -119,6 +119,7 @@
 
     "bannerNewPost"       : "Nuevo post en ",
     "bannerNewComment"    : "Nuevo comentario en ",
+    "bannerNewCommentPostMine" : "Nuevo comentario en un post mio",
     "bannerReplyPost"     : "ha comentado tu post",
     "bannerReplyComment"  : "te ha respondido"
 
