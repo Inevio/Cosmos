@@ -35,7 +35,7 @@ api.cosmos.on( 'postAdded' , function( post ){
             }
 
             onclick = function(){
-              api.app.openApp( 360 , { action: 'selectPost' , post: parent.id } , function(){});
+              api.app.openApp( 360 , { action: 'selectPost' , post: parent.id , world: world.id , title: post.content } , function(){});
             }
             sendBanner( { title: title , text: text , image: world.icons.tiny , onclick: onclick } );
 
@@ -50,7 +50,7 @@ api.cosmos.on( 'postAdded' , function( post ){
                 title = author.name + lang.bannerReplyComment;
                 text = post.content;
                 onclick = function(){
-                  api.app.openApp( 360 , { action: 'selectPost' , post: grandparent.id } , function(){});
+                  api.app.openApp( 360 , { action: 'selectPost' , post: grandparent.id , world: world.id , title: post.content } , function(){});
                 }
                 sendBanner( { title: title , text: text , image: world.icons.tiny , onclick: onclick } );
 
@@ -63,8 +63,8 @@ api.cosmos.on( 'postAdded' , function( post ){
         title = lang.bannerNewPost + world.name;
         text = user.name + ': ' + post.title;
 
-        onclick = function(){
-          api.app.openApp( 360 , { action: 'selectPost' , post: post.id , world: world.id } , function(){});
+        var onclick = function(){
+          api.app.openApp( 360 , { action: 'selectPost' , post: post.id , world: world.id , title: post.title } , function(){});
         }
         sendBanner( { title: title , text: text , image: world.icons.tiny , onclick: onclick } );
 

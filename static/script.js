@@ -298,7 +298,6 @@ app.on( 'ui-view-resize' , function(){
 
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
-api.cosmos.on( 'postFSNodeSetted', function(){console.log('postFSNodeSetted');})
 api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
 api.cosmos.on( 'postTitleSetted', function(){console.log('postTitleSetted');})
 api.cosmos.on( 'tagAdded', function(){console.log('tagAdded');})
@@ -306,6 +305,10 @@ api.cosmos.on( 'userBanned', function(){console.log('userBanned');})
 api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
 api.cosmos.on( 'worldPrivateSetted', function(){console.log('worldPrivatized');})
 api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
+
+api.cosmos.on( 'postFSNodeSetted', function(){
+  console.log('postFSNodeSetted', arguments);
+})
 
 api.cosmos.on( 'worldNameSetted' , function( worldApi ){
 
@@ -344,8 +347,8 @@ openChatButton.on( 'click' , function(){
 
   console.log(o);
 
-  }] , 'hidden' );
-  */
+}] , 'hidden' );
+*/
 
 });
 
@@ -373,10 +376,12 @@ api.upload.on( 'avatarProgress', function( percent ){
 
 api.upload.on( 'fsnodeEnd', function( fsnode ){
 
-  if ( fsnode.id === fsnodeId ) {
-
-    auxFunction( fsnode );
-
+  var attachment = $( '.attach-list .attachment-' + fsnode.id );
+  if ( attachment.length != -1 ) {
+    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
+    attachment.find( '.aux-title' ).hide();
+    attachment.data( 'fsnode' , fsnode );
+    $('.new-card-section').removeClass( 'uploading' );
   }
 
 });
@@ -442,6 +447,17 @@ app
 
   var post = $(this).closest('.card').data('post');
   removePostAsync( post );
+
+})
+
+.on( 'click' , '.card-options-section .edit' , function(){
+
+  if ( $('.card.editing').length != 0 ) {
+    alert('only can be editing one card at time');
+    return;
+  }
+  $( this ).closest( '.card' ).addClass( 'editing' );
+  editPostAsync( $( this ).closest( '.card' ) );
 
 })
 
@@ -538,28 +554,97 @@ app
   }
 
 
-});
+})
+
+.on( 'click' , '.cancel-attachment' , function(){
+  $(this).closest('.attachment').remove();
+})
+
+.on( 'click' , '.cancel-new-card' , function(){
+  $( this ).closest( '.card' ).removeClass( 'editing' );
+})
+
+.on( 'click' , '.save-new-card' , function(){
+
+  var card = $( this ).closest( '.card' );
+  var post = card.data( 'post' );
+
+  var prevTitle = card.find( '.title-input' ).data( 'prev' );
+  var newTitle = card.find( '.title-input' ).val();
+
+  var prevContent = card.find( '.content-input' ).data( 'prev' );
+  var newContent = card.find( '.content-input' ).val();
+
+  var prevFsnode = card.find( '.attach-list' ).data( 'prev' );
+  var newAttachments = card.find( '.attachment:not(.wz-prototype)' );
+  var newFsnodeIds = [];
+  var newFsnode    = [];
+  $.each( newAttachments , function( i , attachment ){
+    newFsnodeIds.push( $(attachment).data( 'fsnode' ).id );
+    newFsnode.push( $(attachment).data( 'fsnode' ) );
+  })
+
+  if ( prevTitle != newTitle ) {
+    post.setTitle( newTitle , function(){
+      console.log(arguments);
+    });
+  }
+
+  if ( prevContent != newContent ) {
+    post.setContent( newContent , function(){
+      console.log(arguments);
+    });
+  }
+
+  if ( prevFsnode != newFsnodeIds ) {
+    post.setFSNode( newFsnodeIds , function(){
+      console.log(arguments);
+    });
+  }
+
+})
+
+.on( 'click' , '.card-content.edit-mode .attachments, .card-content.edit-mode .attachments i, .card-content.edit-mode .attachments div' , function(){
+  $(this).closest( '.card' ).find( '.attach-select' ).addClass( 'popup' );
+})
+
+.on( 'click' , '.attach-select .inevio' , function(){
+  attachFromInevio( $(this).closest( '.card' ) );
+})
+
+.on( 'upload-prepared' , function( e , uploader ){
+
+  uploader( worldSelected.volume , function( e , fsnode ){
+
+    appendAttachment( { fsnode: fsnode[0] , uploading: true , card: $('.card.editing') } );
+
+  });
+
+})
 
 //Functions
 var initCosmos = function(){
 
   app.css({'border-radius'    : '6px',
   'background-color' : 'transparent'
-  });
+});
 
-  initTexts();
-  getMyWorldsAsync();
-  starsCanvas( 'stars-canvas' );
+initTexts();
+getMyWorldsAsync();
+starsCanvas( 'stars-canvas' );
 
-  if ( params && params.action === 'selectPost') {
-    selectWorld( $( '.world-' + params.world ) );
-  }
+if ( params && params.action === 'selectPost') {
+  selectWorld( $( '.world-' + params.world ) );
+  $( '.search-button' ).addClass( 'popup' );
+  $( '.search-button input' ).val( params.title );
+  searchPost( params.title );
+}
 
-  wz.user( myContactID , function( e , user ){
+wz.user( myContactID , function( e , user ){
 
-    me = user;
+  me = user;
 
-  });
+});
 
 }
 
@@ -570,6 +655,9 @@ var initTexts = function(){
   $( '.explore-text, .search-title' ).text( lang.explore );
   $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
   $( '.card-options-section .delete span' ).text( lang.deletePost );
+  $( '.card-options-section .edit span' ).text( lang.editPost );
+  $( '.card-content.edit-mode .title-input' ).attr( 'placeholder' , lang.writeTitle );
+  $( '.card-content.edit-mode .content-input' ).attr( 'placeholder' , lang.writeDescription );
   $( '.send-button span' ).text( lang.send );
   $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
   $( '.world-users-number .title' ).text( lang.users );
@@ -602,7 +690,11 @@ var initTexts = function(){
   $( '.create-world-button.step-a span' ).text( lang.createWorldShort );
   $( '.cancel-invite-user span' ).text( lang.cancel );
   $( '.invite-user span' ).text( lang.invite );
-
+  $( '.cancel-new-card span' ).text( lang.cancel );
+  $( '.save-new-card span' ).text( lang.save );
+  $( '.attachments span' ).text( lang.addFiles );
+  $( '.attach-select .inevio span' ).text( lang.uploadInevio );
+  $( '.attach-select .pc span' ).text( lang.uploadPC );
 }
 
 var starsCanvas = function( stars ){
@@ -1092,8 +1184,8 @@ var followWorldAsync = function( worldCard ){
 
   console.log(o);
 
-  }] , 'hidden' );
-  */
+}] , 'hidden' );
+*/
 
 }
 
@@ -1352,13 +1444,25 @@ var appendGenericCard = function( post , user , reason ){
 
   $.when.apply( null, fsnodes ).done( function(){
 
-    var fsNode = arguments[0];
-    console.log( fsNode , 'imagen!');
+    var fsnodes = arguments;
 
-    card.find( '.doc-icon' ).css( 'background-image' , 'url( ' + fsNode.icons['64'] + ' )' );
-    card.find( '.doc-title' ).text( fsNode.name );
-    card.find( '.doc-info' ).text( fsNode.mime );
-    card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
+    for (var i = 0; i < fsnodes.length; i++) {
+
+      var fsnode = fsnodes[i];
+
+      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
+
+        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone();
+        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
+        docPreview.find( '.doc-icon' ).css( 'background-image' , 'url( ' + fsnode.icons['64'] + ' )' );
+        docPreview.find( '.doc-title' ).text( fsnode.name );
+        docPreview.find( '.doc-info' ).text( fsnode.mime );
+        card.find( '.desc' ).after( docPreview );
+        docPreview.data( 'fsnode' , fsnode );
+
+      }
+
+    }
 
     if ( post.title === 'none' ) {
 
@@ -1737,7 +1841,7 @@ var unFollowWorld = function(){
   }] , 'hidden' );
   */
 
-  });
+});
 
 }
 
@@ -1923,14 +2027,14 @@ var sortByName = function( nameA , nameB ){
   L= nameA.length;
 
   while(i<L){
-      if(!nameB[i]) return 1;
-      a1= nameA[i],
-      b1= nameB[i++];
-      if(a1!== b1){
-          n= a1-b1;
-          if(!isNaN(n)) return n;
-          return a1>b1? 1:-1;
-      }
+    if(!nameB[i]) return 1;
+    a1= nameA[i],
+    b1= nameB[i++];
+    if(a1!== b1){
+      n= a1-b1;
+      if(!isNaN(n)) return n;
+      return a1>b1? 1:-1;
+    }
   }
   return nameB[i]? -1:0;
 
@@ -1938,44 +2042,115 @@ var sortByName = function( nameA , nameB ){
 
 var searchPost = function( filter ){
 
-    searchPostQuery = searchPostQuery + 1;
-    var searchPostQueryCopy = searchPostQuery;
+  searchPostQuery = searchPostQuery + 1;
+  var searchPostQueryCopy = searchPostQuery;
 
-    if ( filter === '' ) {
-      $( '.card' ).show();
+  if ( filter === '' ) {
+    $( '.card' ).show();
+    return;
+  }
+
+  $( '.card' ).hide();
+
+  worldSelected.searchPost( filter , {from:0 , to:1000} , function( e , posts ){
+
+    // Query desfasada
+    if ( searchPostQuery != searchPostQueryCopy ) {
       return;
     }
 
-    $( '.card' ).hide();
+    console.log( posts );
 
-    worldSelected.searchPost( filter , {from:0 , to:1000} , function( e , posts ){
+    $.each( posts , function( i , post ){
 
-      // Query desfasada
-      if ( searchPostQuery != searchPostQueryCopy ) {
-        return;
+      var post;
+
+      if ( post.isReply ) {
+
+        post = $( '.post-' + post.parent );
+
+      }else{
+
+        post = $( '.post-' + post.id );
+
       }
 
-      console.log( posts );
+      post.show();
 
-      $.each( posts , function( i , post ){
+    });
 
-        var post;
+  });
 
-        if ( post.isReply ) {
+}
 
-          post = $( '.post-' + post.parent );
+var editPostAsync = function( card ){
 
+  var post = card.data( 'post' );
+  console.log(post);
+  card.find( '.title-input' ).val( post.title );
+  card.find( '.title-input' ).data( 'prev' , post.title );
+  card.find( '.content-input' ).val( post.content );
+  card.find( '.content-input' ).data( 'prev' , post.content );
+
+  card.find( '.attach-list' ).data( 'prev' , post.fsnode );
+  if ( post.fsnode.length != 0 ) {
+
+    post.fsnode.forEach(function( fsnodeId ){
+
+      var fsnode = card.find( '.attachment-' + fsnodeId ).data( 'fsnode' );
+      appendAttachment( { fsnode: fsnode , uploading: false , card: card  } );
+
+    });
+
+  }
+}
+
+var appendAttachment = function( info ){
+
+  if ( info.card.find( '.attach-list .attachment-' + info.fsnode.id ).length != 0 ) {
+    return;
+  }
+
+  var attachment = info.card.find( '.attachment.wz-prototype' ).clone();
+  attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + info.fsnode.id );
+  attachment.find( '.attachment-title' ).text( info.fsnode.name );
+  if ( info.uploading ) {
+    attachment.find( '.aux-title' ).show().text( lang.uploading );
+    $('.new-card-section').addClass( 'uploading' );
+  }else{
+    attachment.find( '.icon' ).css( 'background-image' , 'url(' + info.fsnode.icons.micro + ')' );
+  }
+  info.card.find( '.attachment.wz-prototype' ).after( attachment );
+  attachment.data( 'fsnode' , info.fsnode );
+
+}
+
+var attachFromInevio = function( card ){
+
+  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' , 'multiple': true } , function( e , s ){
+
+    if (e) {
+      console.log( e );
+      return;
+    }
+
+    $( '.attach-select' ).removeClass( 'popup' );
+
+    s.forEach(function( attach ){
+
+      api.fs( attach , function( e , fsnode ){
+
+        if (e) {
+          console.log(e);
         }else{
-
-          post = $( '.post-' + post.id );
-
+          appendAttachment( { fsnode: fsnode , uploading: false , card: card } );
         }
-
-        post.show();
 
       });
 
     });
+
+  })
 
 }
 

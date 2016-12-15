@@ -59,19 +59,25 @@ var attachmentPrototype   = $( '.attachment.wz-prototype' );
 
 closeNewCard.on( 'click' , function(){
 
-  wz.app.removeView( app );
+  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+    wz.app.removeView( app );
+  }
 
 });
 
 cancelNewCard.on( 'click' , function(){
 
-  wz.app.removeView( app );
+  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+    wz.app.removeView( app );
+  }
 
 });
 
 postNewCardButton.on( 'click' , function(){
 
-  postNewCardAsync();
+  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+    postNewCardAsync();
+  }
 
 });
 
@@ -92,6 +98,8 @@ api.upload.on( 'fsnodeEnd', function( fsnode ){
   if ( attachment.length != -1 ) {
     attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
     attachment.find( '.aux-title' ).hide();
+    attachment.data( 'fsnode' , fsnode );
+    $('.new-card-section').removeClass( 'uploading' );
   }
 
 });
@@ -159,6 +167,8 @@ var translate = function(){
   $( '.post-new-card span' ).text( lang.postit );
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span' ).text( lang.uploadPC );
+  $( '.new-card-input' ).attr( 'placeholder' , lang.writeTitle );
+  $( '.new-card-textarea' ).attr( 'placeholder' , lang.writeDescription );
 }
 
 var startManualPost = function(){
@@ -338,6 +348,7 @@ var appendAttachment = function( o ){
   attachment.find( '.title' ).text( o.fsnode.name );
   if ( o.uploading ) {
     attachment.find( '.aux-title' ).show().text( lang.uploading );
+    $('.new-card-section').addClass( 'uploading' );
   }else{
     attachment.find( '.icon' ).css( 'background-image' , 'url(' + o.fsnode.icons.micro + ')' );
   }

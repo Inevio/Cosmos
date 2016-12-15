@@ -7,6 +7,10 @@
   display: inline-block !important;
 }
 
+.new-card-section.uploading .post-new-card, .new-card-section.uploading .cancel-new-card{
+  opacity: 0.5;
+}
+
 .new-card-section{
 
   width: 529px;
@@ -143,6 +147,7 @@
     opacity: 1;
 
   }
+
   .attachments{
 
     position: absolute;
@@ -298,7 +303,6 @@
 
   }
 
-
   .attach-select article{
 
     float: left;
@@ -335,7 +339,6 @@
     transition: all 0.2s ease;
 
   }
-
 
   .attach-select article:hover span{
 
