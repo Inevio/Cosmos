@@ -93,7 +93,7 @@ cardsList.on( 'scroll' , function(){
   if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
 
     var lastCard = scrollDiv.data( 'lastCard' );
-    getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } );
+    getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
     loadingPost = true;
     console.log( 'cargado mas' , lastCard );
 
@@ -166,7 +166,7 @@ api.cosmos.on( 'worldCreated' , function( world ){
   myWorlds.push( world.id );
 
   if ( world.owner === myContactID ) {
-    selectWorld( $( '.world-' + world.id ) );
+    selectWorld( $( '.world-' + world.id ) , function(){});
   }
 
 });
@@ -217,7 +217,7 @@ api.cosmos.on( 'postAdded' , function( post ){
           break;
 
           case 2:
-          appendGenericCard( post , user , lang.postCreated );
+          appendGenericCard( post , user , lang.postCreated , function(){});
           break;
 
           case 3:
@@ -229,11 +229,11 @@ api.cosmos.on( 'postAdded' , function( post ){
           break;
 
           case 5:
-          appendGenericCard( post , user , lang.postCreated );
+          appendGenericCard( post , user , lang.postCreated , function(){});
           break;
 
           case 6:
-          appendGenericCard( post , user , lang.postCreated );
+          appendGenericCard( post , user , lang.postCreated , function(){});
           break;
 
           case 8:
@@ -425,7 +425,7 @@ app
 
 .on( 'click' , '.category-list .world' , function(){
 
-  selectWorld( $( this ) );
+  selectWorld( $( this ) , function(){});
 
 })
 
@@ -634,10 +634,12 @@ getMyWorldsAsync();
 starsCanvas( 'stars-canvas' );
 
 if ( params && params.action === 'selectPost') {
-  selectWorld( $( '.world-' + params.world ) );
-  $( '.search-button' ).addClass( 'popup' );
-  $( '.search-button input' ).val( params.title );
-  searchPost( params.title );
+  selectWorld( $( '.world-' + params.world ) , function(){
+    $( '.search-button' ).addClass( 'popup' );
+    $( '.search-button input' ).val( params.title );
+    searchPost( params.title );
+  });
+
 }
 
 wz.user( myContactID , function( e , user ){
@@ -937,7 +939,7 @@ var editWorldAsync = function(){
 
 }
 
-var selectWorld = function( world ){
+var selectWorld = function( world , callback ){
 
   $( '.clean' ).remove();
   $( '.category-list .world' ).removeClass( 'active' );
@@ -972,7 +974,9 @@ var selectWorld = function( world ){
   worldDescription.text( worldApi.description );
 
   getWorldUsersAsync( worldApi );
-  getWorldPostsAsync( worldApi , { init: 0 , final: 6 } );
+  getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
+    callback();
+  });
   $( '.select-world' ).hide();
 
 }
@@ -1298,7 +1302,7 @@ var checkContains = function( base , contains ){
 
 }
 
-var getWorldPostsAsync = function( world , interval ){
+var getWorldPostsAsync = function( world , interval , callback ){
 
   if ( interval.init === 0 ) {
     world.getPosts( {from: 0 , to: 100000 } , function( e , posts ){
@@ -1335,36 +1339,46 @@ var getWorldPostsAsync = function( world , interval ){
           case 1:
 
           appendNoFileCard( post , user , lang.postCreated );
+          callback();
           break;
 
           case 2:
 
-          appendGenericCard( post , user , lang.postCreated );
+          appendGenericCard( post , user , lang.postCreated , function(){
+            callback();
+          });
           break;
 
           case 3:
 
           appendDocumentCard( post , user , lang.postCreated );
+          callback();
           break;
 
           case 4:
 
           appendDocumentCard( post , user , lang.postCreated );
+          callback();
           break;
 
           case 5:
 
-          appendGenericCard( post , user , lang.postCreated );
+          appendGenericCard( post , user , lang.postCreated , function(){
+            callback();
+          });
           break;
 
           case 6:
 
-          appendGenericCard( post , user , lang.postCreated );
+          appendGenericCard( post , user , lang.postCreated , function(){
+            callback();
+          });
           break;
 
           case 8:
 
           appendYoutubeCard( post , user , lang.postCreated );
+          callback();
           break;
 
         }
@@ -1425,7 +1439,7 @@ var appendNoFileCard = function( post , user , reason ){
 
 }
 
-var appendGenericCard = function( post , user , reason ){
+var appendGenericCard = function( post , user , reason , callback ){
 
   var card = genericCardPrototype.clone();
   card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
@@ -1499,6 +1513,7 @@ var appendGenericCard = function( post , user , reason ){
 
     setRepliesAsync( card , post );
     appendCard( card , post );
+    callback();
 
   });
 
