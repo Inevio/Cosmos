@@ -18,24 +18,24 @@ api.cosmos.on( 'postAdded' , function( post ){
       var text;
       if ( post.isReply ) {
 
-        world.getPost( post.parent , function( e , parent ){
+        world.getPost( post.parent , function( e , postParent ){
 
           var onclick;
           // Reply lvl 1
-          if (!parent.isReply) {
+          if (!postParent.isReply) {
 
             // Reply to MY post
-            if ( parent.author === myContactID ) {
+            if ( postParent.author === myContactID ) {
               title = lang.bannerNewCommentPostMine;
               text = post.content;
               // Reply to a post
             }else{
-              title = lang.bannerNewCommentPostMine;
+              title = lang.bannerNewComment + world.name;
               text = post.content;
             }
 
             onclick = function(){
-              api.app.openApp( 360 , { action: 'selectPost' , post: parent.id , world: world.id , title: post.content } , function(){});
+              api.app.openApp( 360 , { action: 'selectPost' , post: postParent.id , world: world.id , title: postParent.title } , function(){});
             }
             sendBanner( { title: title , text: text , image: world.icons.tiny , onclick: onclick } );
 
@@ -44,13 +44,13 @@ api.cosmos.on( 'postAdded' , function( post ){
 
 
             // Reply to MY comment
-            if ( parent.author === myContactID ) {
-              world.getPost( post.parent , function( e , grandparent ){
+            if ( postParent.author === myContactID ) {
+              world.getPost( postParent.parent , function( e , grandparent ){
 
-                title = author.name + lang.bannerReplyComment;
+                title = user.name + ' ' + lang.bannerReplyComment;
                 text = post.content;
                 onclick = function(){
-                  api.app.openApp( 360 , { action: 'selectPost' , post: grandparent.id , world: world.id , title: post.content } , function(){});
+                  api.app.openApp( 360 , { action: 'selectPost' , post: grandparent.id , world: world.id , title: grandparent.title } , function(){});
                 }
                 sendBanner( { title: title , text: text , image: world.icons.tiny , onclick: onclick } );
 
