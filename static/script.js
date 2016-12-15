@@ -1767,11 +1767,7 @@ var addReplayAsync = function( card ){
     $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
   }
 
-  var str = card.find( '.card-content .title' ).text();
-  if( str === '' ) str = input.text();
-
-  post.reply( { content: msg , author: myContactID , worldId: post.worldId , title: str } , function(e,o){
-
+  post.reply( { content: msg }, function( e, o ){
     input.text('');
 
   });
