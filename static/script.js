@@ -213,37 +213,30 @@ api.cosmos.on( 'postAdded' , function( post ){
         switch (post.type) {
 
           case 1:
-
           appendNoFileCard( post , user , lang.postCreated );
           break;
 
           case 2:
-
           appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 3:
-
           appendDocumentCard( post , user , lang.postCreated );
           break;
 
           case 4:
-
           appendDocumentCard( post , user , lang.postCreated );
           break;
 
           case 5:
-
           appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 6:
-
           appendGenericCard( post , user , lang.postCreated );
           break;
 
           case 8:
-
           appendYoutubeCard( post , user , lang.postCreated );
           break;
 
@@ -1758,8 +1751,8 @@ var unFollowWorld = function(){
 
 var addReplayAsync = function( card ){
 
-  var post = card.data( 'post' );
-  var msg = card.find( '.comments-footer .comment-input' ).html();
+  var post  = card.data( 'post' );
+  var msg   = card.find( '.comments-footer .comment-input' ).html();
   var input = card.find( '.comments-footer .comment-input' );
 
   if ( input.attr( 'placeholder' )[0] === '@' ) {
@@ -1769,7 +1762,6 @@ var addReplayAsync = function( card ){
 
   post.reply( { content: msg }, function( e, o ){
     input.text('');
-
   });
 
 }
