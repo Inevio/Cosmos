@@ -116,11 +116,16 @@
     "createNewPost" : "Crear nuevo post",
     "noInfo"        : "No hay información suficiente para poder crear el post",
     "uploading"     : "Subiendo...",
+    "editPost"      : "Editar post",
 
     "bannerNewPost"       : "Nuevo post en ",
     "bannerNewComment"    : "Nuevo comentario en ",
     "bannerNewCommentPostMine" : "Nuevo comentario en un post mio",
     "bannerReplyPost"     : "ha comentado tu post",
-    "bannerReplyComment"  : "te ha respondido"
+    "bannerReplyComment"  : "te ha respondido",
+
+    "writeTitle"          : "Escribe un título para la publicación",
+    "writeDescription"    : "Escribe una descripción...",
+    "addFiles"            : "Añadir archivos"
 
 }
