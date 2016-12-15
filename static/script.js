@@ -1405,7 +1405,7 @@ var appendDocumentCard = function( post , user , reason ){
   var card = documentCardPrototype.clone();
   card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
 
-  wz.fs( post.fsnode , function( e , fsNode ){
+  api.fs( post.fsnode[ 0 ], function( e , fsNode ){
 
     console.log( fsNode , 'imagen!');
 
@@ -1416,23 +1416,15 @@ var appendDocumentCard = function( post , user , reason ){
     card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' );;
 
     if ( post.title === 'none' ) {
-
       card.find( '.title' ).hide();
-
     }else{
-
       card.find( '.title' ).text( post.title );
-
     }
 
     if ( post.content === 'none' ) {
-
       card.find( '.desc' ).hide();
-
     }else{
-
       card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
-
     }
 
     card.find( '.desc' ).find('a').each( function(){
