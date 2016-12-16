@@ -1,4 +1,5 @@
 var myContactID     = api.system.user().id;
+var nNotifications  = 0;
 
 api.cosmos.on( 'postAdded' , function( post ){
 
@@ -26,12 +27,12 @@ api.cosmos.on( 'postAdded' , function( post ){
 
             // Reply to MY post
             if ( postParent.author === myContactID ) {
-              title = lang.bannerNewCommentPostMine;
+              title = user.name + ' ' + lang.bannerReplyPost;
               text = post.content;
               // Reply to a post
             }else{
               title = lang.bannerNewComment + world.name;
-              text = post.content;
+              text = user.name + ': ' + post.content;
             }
 
             onclick = function(){
@@ -84,3 +85,34 @@ var sendBanner = function( info ){
   .on( 'click' , info.onclick )
   .render();
 }
+
+var checkNotifications = function(){
+
+  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
+
+    worlds.forEach(function( world ){
+
+      world.getPosts( {from: 0 , to: 1 } , function( e , lastPost ){
+
+        wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
+
+          if ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].id ) {
+
+            nNotifications = nNotifications + 1;
+            if (nNotifications != 0) {
+              wz.app.setBadge( parseInt(nNotifications) );
+            }
+
+          }
+
+        });
+
+      });
+
+    });
+
+  });
+
+}
+
+checkNotifications();

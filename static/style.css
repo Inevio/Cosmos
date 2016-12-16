@@ -196,18 +196,32 @@ to {background-position: -200% 0;}
 }
 
 .wz-scroll-bar-vertical{
-    z-index: 3;
-}
-
-.wz-scroll-bar-vertical{
     width: 5px;
     background: transparent;
     z-index: 3;
 }
 
+.wz-scroll-bar-vertical:hover{
+    width: 10px;
+}
+
+.wz-scroll-bar-vertical:active{
+    width: 10px;
+}
+
 .wz-scroll-bar-vertical .wz-scroll-slider{
     width: 5px;
-    background: rgba( 0, 0, 0, 0.2 );
+    background: rgba( 0, 0, 0, 0.3 );
+}
+
+.wz-scroll-bar-vertical .wz-scroll-slider:hover{
+    width: 10px;
+    background: rgba( 0, 0, 0, 0.5 );
+}
+
+.wz-scroll-bar-vertical .wz-scroll-slider:active{
+    width: 10px;
+    background: rgba( 0, 0, 0, 0.7 );
 }
 
 /* SIDEBAR */
@@ -412,15 +426,36 @@ to {background-position: -200% 0;}
     letter-spacing: 0.02em;
     transition: all 0.2s ease;
     cursor: pointer;
-    width: 230px;
+    width: 216px;
     height: 13px;
 
+  }
+
+  .world-notifications{
+
+    float: right;
+    width: 6px;
+    height: 6px;
+    background-color: #ee4c53;
+    margin-right: 10px;
+    border-radius: 50%;
+    margin-top: 11px;
+    display: none;
+
+  }
+
+  .world.with-notification{
+    display: inline-block;
   }
 
   .active.world .world-name, .world:hover .world-name{
 
     color: #fff;
 
+  }
+
+  .active.world .world-notifications{
+    display: none;
   }
 
   .explore-button{
@@ -2479,7 +2514,6 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 50px)';
     position: relative;
     padding-top: 20px;
-    padding-bottom: 20px;
     padding-left: 25px;
     padding-right: 25px;
     cursor: pointer;
@@ -2489,15 +2523,25 @@ to {background-position: -200% 0;}
   .card-content .doc-icon{
 
     float: left;
-    width: 64px;
+    width: 50px;
     height: 64px;
     border-radius: 4px;
-    background-image: url('@static/iconPreview.png');
     background-size: cover;
     cursor: pointer;
+    display: flex;
 
   }
 
+  .card-content .doc-icon img{
+    align-self: center;
+  }
+
+  .card-content .doc-icon.office{
+
+    width: 64px;
+    height: 64px;
+
+  }
 
   .card-content .doc-title{
 
@@ -2508,6 +2552,7 @@ to {background-position: -200% 0;}
     margin-top: 8px;
     margin-left: 20px;
     width: 390px;
+    cursor: pointer;
 
   }
 
@@ -2519,6 +2564,7 @@ to {background-position: -200% 0;}
     margin-left: 20px;
     margin-top: 8px;
     max-width: 386px;
+    cursor: pointer;
 
   }
 
