@@ -289,7 +289,6 @@ app.on( 'ui-view-resize' , function(){
     worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
 
   }else{
-
     worldTitle.text( name );
 
   }
@@ -299,15 +298,73 @@ app.on( 'ui-view-resize' , function(){
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
 api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
-api.cosmos.on( 'postTitleSetted', function(){console.log('postTitleSetted');})
 api.cosmos.on( 'tagAdded', function(){console.log('tagAdded');})
 api.cosmos.on( 'userBanned', function(){console.log('userBanned');})
 api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
 api.cosmos.on( 'worldPrivateSetted', function(){console.log('worldPrivatized');})
 api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
-api.cosmos.on( 'postFSNodeSetted', function(){
-  console.log('postFSNodeSetted', arguments);
+api.cosmos.on( 'postModified', function( post ){
+
+  if ( worldSelected.id === post.worldId ) {
+
+    $( '.post-' + post.id ).remove();
+
+    wz.user( post.author , function( e , user ){
+
+      switch (post.type) {
+
+        case 1:
+
+        appendNoFileCard( post , user , lang.postCreated );
+        callback();
+        break;
+
+        case 2:
+
+        appendGenericCard( post , user , lang.postCreated , function(){
+          callback();
+        });
+        break;
+
+        case 3:
+
+        appendDocumentCard( post , user , lang.postCreated );
+        callback();
+        break;
+
+        case 4:
+
+        appendDocumentCard( post , user , lang.postCreated );
+        callback();
+        break;
+
+        case 5:
+
+        appendGenericCard( post , user , lang.postCreated , function(){
+          callback();
+        });
+        break;
+
+        case 6:
+
+        appendGenericCard( post , user , lang.postCreated , function(){
+          callback();
+        });
+        break;
+
+        case 8:
+
+        appendYoutubeCard( post , user , lang.postCreated );
+        callback();
+        break;
+
+      }
+
+    });
+
+  }
+
 })
 
 api.cosmos.on( 'worldNameSetted' , function( worldApi ){
@@ -338,19 +395,6 @@ api.cosmos.on( 'worldPrivateSetted' , function( world ){
 });
 
 api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
-
-openChatButton.on( 'click' , function(){
-
-  alert('not supported yet');
-  /*
-  wz.app.openApp( 14 , [ 'open-chat' , worldSelected , function( o ){
-
-  console.log(o);
-
-}] , 'hidden' );
-*/
-
-});
 
 searchPostInput.on( 'input' , function(){
 
@@ -394,12 +438,6 @@ api.cosmos.on( 'worldIconSetted', function( o ){
   $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
 
 })
-
-api.cosmos.on( 'postContentSetted', function(){
-
-  console.log( arguments );
-
-});
 
 app
 
@@ -639,7 +677,6 @@ if ( params && params.action === 'selectPost') {
     $( '.search-button input' ).val( params.title );
     searchPost( params.title );
   });
-
 }
 
 wz.user( myContactID , function( e , user ){
@@ -952,7 +989,6 @@ var selectWorld = function( world , callback ){
   worldSelected = worldApi;
   app.data( 'worldSelected' , worldSelected )
 
-
   var name = worldApi.name;
   var winWidth = parseInt(app.css( 'width' ));
   var textWidth = Math.floor( winWidth * 0.032 );
@@ -975,6 +1011,11 @@ var selectWorld = function( world , callback ){
 
   getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
+
+    if ( $( '.world.active' ).hasClass( 'with-notification' ) ) {
+      updateNotifications( worldApi );
+    }
+
     callback();
   });
   $( '.select-world' ).hide();
@@ -1183,14 +1224,6 @@ var followWorldAsync = function( worldCard ){
 
   });
 
-  /*
-  wz.app.openApp( 14 , [ 'join-chat' , world , function( o ){
-
-  console.log(o);
-
-}] , 'hidden' );
-*/
-
 }
 
 var getFriendsAsync = function(){
@@ -1294,7 +1327,6 @@ var asyncEach = function( list, step, callback ){
   });
 
 };
-
 
 var checkContains = function( base , contains ){
 
@@ -1400,7 +1432,7 @@ var appendNoFileCard = function( post , user , reason ){
 
   card.find( '.doc-preview' ).hide();
 
-  if ( post.title === 'none' ) {
+  if ( post.title === '' ) {
 
     card.find( '.title' ).hide();
 
@@ -1410,7 +1442,7 @@ var appendNoFileCard = function( post , user , reason ){
 
   }
 
-  if ( post.content === 'none' ) {
+  if ( post.content === '' ) {
 
     card.find( '.desc' ).hide();
 
@@ -1468,7 +1500,10 @@ var appendGenericCard = function( post , user , reason , callback ){
 
         var docPreview = card.find( '.doc-preview.wz-prototype' ).clone();
         docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
-        docPreview.find( '.doc-icon' ).css( 'background-image' , 'url( ' + fsnode.icons['64'] + ' )' );
+        docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.small );
+        if ( fsnode.mime.indexOf( 'office' ) > -1 ) {
+          docPreview.find( '.doc-icon' ).addClass( 'office' );
+        }
         docPreview.find( '.doc-title' ).text( fsnode.name );
         docPreview.find( '.doc-info' ).text( fsnode.mime );
         card.find( '.desc' ).after( docPreview );
@@ -1478,7 +1513,7 @@ var appendGenericCard = function( post , user , reason , callback ){
 
     }
 
-    if ( post.title === 'none' ) {
+    if ( post.title === '' ) {
 
       card.find( '.title' ).hide();
 
@@ -1488,7 +1523,7 @@ var appendGenericCard = function( post , user , reason , callback ){
 
     }
 
-    if ( post.content === 'none' ) {
+    if ( post.content === '' ) {
 
       card.find( '.desc' ).hide();
 
@@ -1534,13 +1569,13 @@ var appendDocumentCard = function( post , user , reason ){
     card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
     card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' );;
 
-    if ( post.title === 'none' ) {
+    if ( post.title === '' ) {
       card.find( '.title' ).hide();
     }else{
       card.find( '.title' ).text( post.title );
     }
 
-    if ( post.content === 'none' ) {
+    if ( post.content === '' ) {
       card.find( '.desc' ).hide();
     }else{
       card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
@@ -1613,8 +1648,6 @@ var setRepliesAsync = function( card , post ){
 
           $.each( responses , function( i , response ){
 
-            console.log( 'respuesta a comentario' , reply , response );
-
             appendReplyComment( card , reply , response );
 
           });
@@ -1656,6 +1689,7 @@ var appendReply = function( card , reply , callback ){
     });
 
     card.find( '.comments-list' ).append( comment );
+    card.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
 
     comment.data( 'reply' , reply );
     comment.data( 'name' , user.name.split( ' ' )[0] );
@@ -1847,16 +1881,7 @@ var unFollowWorld = function(){
 
     }
 
-    /*
-    wz.app.openApp( 14 , [ 'remove-chat' , worldSelected , function( o ){
-
-    console.log(o);
-    worldSelected = null;
-
-  }] , 'hidden' );
-  */
-
-});
+  });
 
 }
 
@@ -2010,7 +2035,7 @@ var appendReplyComment = function( card , reply , response ){
     });
 
     comment.find( '.replay-list' ).append( reply );
-    console.log('appended!!');
+    card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
 
     reply.data( 'reply' , response );
 
@@ -2166,6 +2191,18 @@ var attachFromInevio = function( card ){
     });
 
   })
+
+}
+
+var updateNotifications = function( world ){
+
+  var lastPost = $( '.cardDom' );
+  if ( lastPost ) {
+    lastPost = lastPost.eq(0).data( 'post' );
+    wql.upsertLastRead( [ world.id , myContactID , lastPost.id ] , function( e , o ){
+      console.log(e);
+    });
+  }
 
 }
 

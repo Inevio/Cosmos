@@ -206,10 +206,10 @@ var startPopupPost = function(){
 
 var postNewCardAsync = function(){
 
-  var text = $( '.new-card-textarea' ).val() ? $( '.new-card-textarea' ).val() : 'none';
-  var tit = $( '.new-card-input' ).val() ? $( '.new-card-input' ).val() : 'none';
+  var text = $( '.new-card-textarea' ).val();
+  var tit = $( '.new-card-input' ).val();
 
-  if ( text === 'none' && tit === 'none' ) {
+  if ( tit === '' ) {
     alert( lang.noInfo );
     return;
   }

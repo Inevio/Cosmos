@@ -114,7 +114,7 @@
     "createWorldShort"  : "Create world",
     "notAllowedDeletePost"    : "You are not allowed to delete this post",
     "createNewPost" : "Create new post",
-    "noInfo"        : "Not enough info for creating a post",
+    "noInfo"        : "The post title is mandatory",
     "uploading"     : "Uploading...",
     "editPost"      : "Edit post",
 
