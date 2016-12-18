@@ -2,7 +2,9 @@ var app             = $( this );
 var myContactID     = api.system.user().id;
 var noWorlds        = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
+var parameters;
 
+parameters = params;
 if ( api.app.getViews( 'main' ).length === 1 ) {
 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
@@ -27,5 +29,7 @@ if ( api.app.getViews( 'main' ).length === 1 ) {
 
 }else{
 
+  wz.view.remove( false );
+  api.app.getViews( 'main' ).trigger( 'selectPost' , [ params ]);
 
 }

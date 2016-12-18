@@ -35,6 +35,9 @@ api.cosmos.on( 'postAdded' , function( post ){
               text = user.name + ': ' + post.content;
             }
 
+            title = title.replace(/\n/g, "<br />");
+            text = text.replace(/\n/g, "<br />");
+
             onclick = function(){
               api.app.openApp( 360 , { action: 'selectPost' , post: postParent.id , world: world.id , title: postParent.title } , function(){});
             }
@@ -50,6 +53,8 @@ api.cosmos.on( 'postAdded' , function( post ){
 
                 title = user.name + ' ' + lang.bannerReplyComment;
                 text = post.content;
+                title = title.replace(/\n/g, "<br />");
+                text = text.replace(/\n/g, "<br />");
                 onclick = function(){
                   api.app.openApp( 360 , { action: 'selectPost' , post: grandparent.id , world: world.id , title: grandparent.title } , function(){});
                 }
@@ -61,13 +66,21 @@ api.cosmos.on( 'postAdded' , function( post ){
         });
 
       }else{
+
         title = lang.bannerNewPost + world.name;
         text = user.name + ': ' + post.title;
+
+        title = title.replace(/\n/g, "<br />");
+        text = text.replace(/\n/g, "<br />");
 
         var onclick = function(){
           api.app.openApp( 360 , { action: 'selectPost' , post: post.id , world: world.id , title: post.title } , function(){});
         }
         sendBanner( { title: title , text: text , image: world.icons.tiny , onclick: onclick } );
+
+        if ( api.app.getViews( 'main' ).length === 0 ) {
+          checkNotifications();
+        }
 
       }
 
@@ -88,21 +101,28 @@ var sendBanner = function( info ){
 
 var checkNotifications = function(){
 
+  nNotifications = 0;
+
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
 
     worlds.forEach(function( world ){
 
       world.getPosts( {from: 0 , to: 1 } , function( e , lastPost ){
 
+        if( lastPost.length === 0){
+          wz.app.setBadge( parseInt(nNotifications) );
+          return;
+        }
+
         wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
 
-          if ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].id ) {
+          if ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) {
 
             nNotifications = nNotifications + 1;
-            if (nNotifications != 0) {
-              wz.app.setBadge( parseInt(nNotifications) );
-            }
+            wz.app.setBadge( parseInt(nNotifications) );
 
+          }else{
+            wz.app.setBadge( parseInt(nNotifications) );
           }
 
         });
