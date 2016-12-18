@@ -6,48 +6,48 @@ var status;
 var me;
 var TYPES = {
 
-  "application/pdf"   : 3,
-  "application/zip"    : 2,
-  "application/x-rar"  : 2,
-  "application/x-gzip" : 2,
-  "text/x-c"               : 3,
-  "text/x-c++"             : 3,
-  "text/x-php"             : 3,
-  "text/x-python"          : 3,
-  "application/json"       : 3,
-  "application/javascript" : 3,
-  "application/inevio-texts"                                                    : 2,
-  "application/msword"                                                          : 2,
-  "application/vnd.oasis.opendocument.text"                                     : 2,
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 2,
-  "application/inevio-grids"                                          : 2,
-  "application/vnd.ms-excel"                                          : 2,
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 2,
-  "application/vnd.ms-powerpoint"                                             : 2,
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 2,
-  "audio/mp4"          : 6,
-  "audio/mpeg"         : 6,
-  "audio/flac"         : 6,
-  "audio/x-vorbis+ogg" : 6,
-  "audio/x-wav"        : 6,
-  "image/gif"  : 4,
-  "image/jpeg" : 4,
-  "image/png"  : 4,
-  "image/tiff" : 4,
-  "image/vnd.adobe.photoshop" : 2,
-  "text/html"    : 2,
-  "text/plain"   : 2,
-  "text/rtf"     : 2,
-  "video/3gpp"         : 5,
-  "video/mp4"          : 5,
-  "video/quicktime"    : 5,
-  "video/webm"         : 5,
-  "video/x-flv"        : 5,
-  "video/x-matroska"   : 5,
-  "video/x-ms-asf"     : 5,
-  "video/x-ms-wmv"     : 5,
-  "video/x-msvideo"    : 5,
-  "video/x-theora+ogg" : 5
+  "application/pdf"   : 'document',
+  "application/zip"    : 'generic',
+  "application/x-rar"  : 'generic',
+  "application/x-gzip" : 'generic',
+  "text/x-c"               : 'document',
+  "text/x-c++"             : 'document',
+  "text/x-php"             : 'document',
+  "text/x-python"          : 'document',
+  "application/json"       : 'document',
+  "application/javascript" : 'document',
+  "application/inevio-texts"                                                    : 'generic',
+  "application/msword"                                                          : 'generic',
+  "application/vnd.oasis.opendocument.text"                                     : 'generic',
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 'generic',
+  "application/inevio-grids"                                          : 'generic',
+  "application/vnd.ms-excel"                                          : 'generic',
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 'generic',
+  "application/vnd.ms-powerpoint"                                             : 'generic',
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 'generic',
+  "audio/mp4"          : 'music',
+  "audio/mpeg"         : 'music',
+  "audio/flac"         : 'music',
+  "audio/x-vorbis+ogg" : 'music',
+  "audio/x-wav"        : 'music',
+  "image/gif"  : 'image',
+  "image/jpeg" : 'image',
+  "image/png"  : 'image',
+  "image/tiff" : 'image',
+  "image/vnd.adobe.photoshop" : 'generic',
+  "text/html"    : 'generic',
+  "text/plain"   : 'generic',
+  "text/rtf"     : 'generic',
+  "video/3gpp"         : 'video',
+  "video/mp4"          : 'video',
+  "video/quicktime"    : 'video',
+  "video/webm"         : 'video',
+  "video/x-flv"        : 'video',
+  "video/x-matroska"   : 'video',
+  "video/x-ms-asf"     : 'video',
+  "video/x-ms-wmv"     : 'video',
+  "video/x-msvideo"    : 'video',
+  "video/x-theora+ogg" : 'video'
 
 }
 
@@ -189,7 +189,7 @@ var startPopupPost = function(){
 
   $('.post-button').on( 'click' , function(){
 
-    params.callback( $('.post-title input').val().trim(), $('.post-desc textarea').val().trim(), TYPES[ params.fsnode.mime ] || 1 )
+    params.callback( $('.post-title input').val().trim(), $('.post-desc textarea').val().trim(), TYPES[ params.fsnode.mime ] || 'generic' )
     api.app.removeView( app )
 
   })
@@ -227,9 +227,9 @@ var postNewCardAsync = function(){
       attachment = o.fsnode ? o.fsnode.id : '';
     }
 
-    if ( o.type === 1 || o.type === 7 || o.type === 8 ) {
+    if ( o.linkType ) {
 
-      params.world.addPost( { content: text , type: o.type, title: tit } , function( e , o ){
+      params.world.addPost( { content: text, title: tit, metadata: { linkType : o.linkType } } , function( e , o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
@@ -237,13 +237,23 @@ var postNewCardAsync = function(){
 
       });
 
-    }else{
+    }else if( o.fileType ){
 
-      params.world.addPost( { content: text , type: o.type, title: tit, fsnode: attachment } , function( e , o ){
+      params.world.addPost( { content: text , title: tit, fsnode: attachment, metadata: { fileType : o.fileType } } , function( e , o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.new-card-section .attachments' ).data( 'withAttach' , '' );
+        wz.app.removeView( app );
+
+      });
+
+    }else{
+
+      params.world.addPost( { content: text, title: tit } , function( e , o ){
+
+        $( '.new-card-input' ).val('');
+        $( '.new-card-textarea' ).val('');
         wz.app.removeView( app );
 
       });
@@ -254,7 +264,7 @@ var postNewCardAsync = function(){
 
   var checkTypePost = function( fsnode ){
 
-    var fileType = 1;
+    var fileType = 'generic';
 
     if ( fsnode.mime ) {
 
@@ -263,7 +273,7 @@ var postNewCardAsync = function(){
     }
 
 
-    addPost( { fsnode: fsnode , type: fileType , multifile: false } );
+    addPost( { fsnode: fsnode , fileType: fileType , multifile: false } );
 
   }
 
@@ -274,16 +284,16 @@ var postNewCardAsync = function(){
     if ( attachments.length === 1 ) {
       checkTypePost( attachments.data( 'fsnode' ) );
     }else{
-      addPost( { fsnode: attachments , type: 2 , multifile: true } );
+      addPost( { fsnode: attachments , fileType: 'generic' , multifile: true } );
     }
 
   }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
 
-    addPost( { fsnode: null , type: 8 , multifile: false } );
+    addPost( { fsnode: null , linkType: 'youtube' , multifile: false } );
 
   }else{
 
-    addPost( { fsnode: null , type: 1 , multifile: false } );
+    addPost( { fsnode: null , multifile: false } );
 
   }
 
@@ -338,7 +348,7 @@ var attachFromInevio = function(){
 }
 
 var guessType = function( mime ){
-  return TYPES[ mime ] || 1
+  return TYPES[ mime ] || 'generic';
 }
 
 var appendAttachment = function( o ){

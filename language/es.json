@@ -114,7 +114,7 @@
     "createWorldShort"  : "Crear mundo",
     "notAllowedDeletePost"    : "No tienes los permisos para borrar este post",
     "createNewPost" : "Crear nuevo post",
-    "noInfo"        : "Como mínimo debe indicar el título del post",
+    "noInfo"        : "Es obligatorio que lleve título",
     "uploading"     : "Subiendo...",
     "editPost"      : "Editar post",
 

@@ -444,7 +444,7 @@ to {background-position: -200% 0;}
 
   }
 
-  .world.with-notification{
+  .world.with-notification .world-notifications{
     display: inline-block;
   }
 

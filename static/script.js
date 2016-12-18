@@ -5,6 +5,7 @@ var me;
 var uploaderFunction;
 var auxFunction;
 var fsnodeId;
+var nNotifications        = 0;
 var loadingPost           = false;
 var searchWorldQuery      = 0;
 var searchPostQuery       = 0;
@@ -37,52 +38,55 @@ var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
 
-var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
-
 var TYPES = {
-  "application/pdf"   : 3,
-  "application/zip"    : 2,
-  "application/x-rar"  : 2,
-  "application/x-gzip" : 2,
-  "text/x-c"               : 3,
-  "text/x-c++"             : 3,
-  "text/x-php"             : 3,
-  "text/x-python"          : 3,
-  "application/json"       : 3,
-  "application/javascript" : 3,
-  "application/inevio-texts"                                                    : 3,
-  "application/msword"                                                          : 5,
-  "application/vnd.oasis.opendocument.text"                                     : 3,
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 2,
-  "application/inevio-grids"                                          : 2,
-  "application/vnd.ms-excel"                                          : 2,
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 2,
-  "application/vnd.ms-powerpoint"                                             : 2,
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 2,
-  "audio/mp4"          : 6,
-  "audio/mpeg"         : 6,
-  "audio/flac"         : 6,
-  "audio/x-vorbis+ogg" : 6,
-  "audio/x-wav"        : 6,
-  "image/gif"  : 4,
-  "image/jpeg" : 4,
-  "image/png"  : 4,
-  "image/tiff" : 4,
-  "image/vnd.adobe.photoshop" : 2,
-  "text/html"    : 2,
-  "text/plain"   : 2,
-  "text/rtf"     : 2,
-  "video/3gpp"         : 5,
-  "video/mp4"          : 5,
-  "video/quicktime"    : 5,
-  "video/webm"         : 5,
-  "video/x-flv"        : 5,
-  "video/x-matroska"   : 5,
-  "video/x-ms-asf"     : 5,
-  "video/x-ms-wmv"     : 5,
-  "video/x-msvideo"    : 5,
-  "video/x-theora+ogg" : 5
+
+  "application/pdf"   : 'document',
+  "application/zip"    : 'generic',
+  "application/x-rar"  : 'generic',
+  "application/x-gzip" : 'generic',
+  "text/x-c"               : 'document',
+  "text/x-c++"             : 'document',
+  "text/x-php"             : 'document',
+  "text/x-python"          : 'document',
+  "application/json"       : 'document',
+  "application/javascript" : 'document',
+  "application/inevio-texts"                                                    : 'generic',
+  "application/msword"                                                          : 'generic',
+  "application/vnd.oasis.opendocument.text"                                     : 'generic',
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 'generic',
+  "application/inevio-grids"                                          : 'generic',
+  "application/vnd.ms-excel"                                          : 'generic',
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 'generic',
+  "application/vnd.ms-powerpoint"                                             : 'generic',
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 'generic',
+  "audio/mp4"          : 'music',
+  "audio/mpeg"         : 'music',
+  "audio/flac"         : 'music',
+  "audio/x-vorbis+ogg" : 'music',
+  "audio/x-wav"        : 'music',
+  "image/gif"  : 'image',
+  "image/jpeg" : 'image',
+  "image/png"  : 'image',
+  "image/tiff" : 'image',
+  "image/vnd.adobe.photoshop" : 'generic',
+  "text/html"    : 'generic',
+  "text/plain"   : 'generic',
+  "text/rtf"     : 'generic',
+  "video/3gpp"         : 'video',
+  "video/mp4"          : 'video',
+  "video/quicktime"    : 'video',
+  "video/webm"         : 'video',
+  "video/x-flv"        : 'video',
+  "video/x-matroska"   : 'video',
+  "video/x-ms-asf"     : 'video',
+  "video/x-ms-wmv"     : 'video',
+  "video/x-msvideo"    : 'video',
+  "video/x-theora+ogg" : 'video'
+
 }
+
+
+var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
 //Events
 cardsList.on( 'scroll' , function(){
@@ -207,42 +211,63 @@ api.cosmos.on( 'postAdded' , function( post ){
 
       if ( worldSelected.id === post.worldId ) {
 
+        wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
+          if (e) {
+            console.log(e);
+          }
+        });
+
         var nCards = parseInt( $( '.world-event-number .subtitle' ).text() ) + 1;
         $( '.world-event-number .subtitle' ).text( nCards );
 
-        switch (post.type) {
 
-          case 1:
+        if ( post.metadata && post.metadata.fileType ) {
+
+          switch (post.metadata.fileType) {
+
+            case 'generic':
+            appendGenericCard( post , user , lang.postCreated , function(){});
+            break;
+
+            case 'document':
+            appendDocumentCard( post , user , lang.postCreated );
+            break;
+
+            case 'image':
+            appendDocumentCard( post , user , lang.postCreated );
+            break;
+
+            case 'video':
+            appendGenericCard( post , user , lang.postCreated , function(){});
+            break;
+
+            case 'music':
+            appendGenericCard( post , user , lang.postCreated , function(){});
+            break;
+
+          }
+
+        }else if( post.metadata && post.metadata.linkType ){
+
+          switch (post.metadata.linkType) {
+
+            case 'youtube':
+            appendYoutubeCard( post , user , lang.postCreated );
+            break;
+
+          }
+
+        }else{
           appendNoFileCard( post , user , lang.postCreated );
-          break;
-
-          case 2:
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
-
-          case 3:
-          appendDocumentCard( post , user , lang.postCreated );
-          break;
-
-          case 4:
-          appendDocumentCard( post , user , lang.postCreated );
-          break;
-
-          case 5:
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
-
-          case 6:
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
-
-          case 8:
-          appendYoutubeCard( post , user , lang.postCreated );
-          break;
-
         }
-      }
 
+
+      }else{
+
+        checkNotifications();
+        $( '.world-' + post.worldId ).addClass( 'with-notification' );
+
+      }
 
     });
 
@@ -312,53 +337,44 @@ api.cosmos.on( 'postModified', function( post ){
 
     wz.user( post.author , function( e , user ){
 
-      switch (post.type) {
+      if ( post.metadata && post.metadata.fileType ) {
 
-        case 1:
+        switch (post.metadata.fileType) {
 
+          case 'generic':
+          appendGenericCard( post , user , lang.postCreated , function(){});
+          break;
+
+          case 'document':
+          appendDocumentCard( post , user , lang.postCreated );
+          break;
+
+          case 'image':
+          appendDocumentCard( post , user , lang.postCreated );
+          break;
+
+          case 'video':
+          appendGenericCard( post , user , lang.postCreated , function(){});
+          break;
+
+          case 'music':
+          appendGenericCard( post , user , lang.postCreated , function(){});
+          break;
+
+        }
+
+      }else if( post.metadata && post.metadata.linkType ){
+
+        switch (post.metadata.linkType) {
+
+          case 'youtube':
+          appendYoutubeCard( post , user , lang.postCreated );
+          break;
+
+        }
+
+      }else{
         appendNoFileCard( post , user , lang.postCreated );
-        callback();
-        break;
-
-        case 2:
-
-        appendGenericCard( post , user , lang.postCreated , function(){
-          callback();
-        });
-        break;
-
-        case 3:
-
-        appendDocumentCard( post , user , lang.postCreated );
-        callback();
-        break;
-
-        case 4:
-
-        appendDocumentCard( post , user , lang.postCreated );
-        callback();
-        break;
-
-        case 5:
-
-        appendGenericCard( post , user , lang.postCreated , function(){
-          callback();
-        });
-        break;
-
-        case 6:
-
-        appendGenericCard( post , user , lang.postCreated , function(){
-          callback();
-        });
-        break;
-
-        case 8:
-
-        appendYoutubeCard( post , user , lang.postCreated );
-        callback();
-        break;
-
       }
 
     });
@@ -559,7 +575,7 @@ app
 
 .on( 'click' , '.doc-preview' , function(){
 
-  $( this ).data( 'fsNode' ).open();
+  $( this ).data( 'fsnode' ).open();
 
 })
 
@@ -617,10 +633,13 @@ app
   var newAttachments = card.find( '.attachment:not(.wz-prototype)' );
   var newFsnodeIds = [];
   var newFsnode    = [];
+
   $.each( newAttachments , function( i , attachment ){
     newFsnodeIds.push( $(attachment).data( 'fsnode' ).id );
     newFsnode.push( $(attachment).data( 'fsnode' ) );
   })
+
+  var newMetadata = checkMetadata( newContent , newFsnode );
 
   if ( prevTitle != newTitle ) {
     post.setTitle( newTitle , function(){
@@ -634,8 +653,11 @@ app
     });
   }
 
-  if ( prevFsnode != newFsnodeIds ) {
+  if ( wz.tool.arrayDifference( prevFsnode, newFsnodeIds ).length || wz.tool.arrayDifference( newFsnodeIds, prevFsnode ).length ) {
     post.setFSNode( newFsnodeIds , function(){
+      console.log(arguments);
+    });
+    post.setMetadata( newMetadata , function(){
       console.log(arguments);
     });
   }
@@ -660,30 +682,38 @@ app
 
 })
 
-//Functions
-var initCosmos = function(){
+.on( 'selectPost' , function( e , params ){
 
-  app.css({'border-radius'    : '6px',
-  'background-color' : 'transparent'
-});
-
-initTexts();
-getMyWorldsAsync();
-starsCanvas( 'stars-canvas' );
-
-if ( params && params.action === 'selectPost') {
   selectWorld( $( '.world-' + params.world ) , function(){
     $( '.search-button' ).addClass( 'popup' );
     $( '.search-button input' ).val( params.title );
     searchPost( params.title );
   });
-}
 
-wz.user( myContactID , function( e , user ){
+})
 
-  me = user;
+//Functions
+var initCosmos = function(){
 
-});
+  app.css({'border-radius'    : '6px', 'background-color' : 'transparent'});
+
+  initTexts();
+  getMyWorldsAsync();
+  starsCanvas( 'stars-canvas' );
+
+  if ( params && params.action === 'selectPost') {
+    selectWorld( $( '.world-' + params.world ) , function(){
+      $( '.search-button' ).addClass( 'popup' );
+      $( '.search-button input' ).val( params.title );
+      searchPost( params.title );
+    });
+  }
+
+  checkNotifications();
+
+  wz.user( myContactID , function( e , user ){
+    me = user;
+  });
 
 }
 
@@ -1362,57 +1392,63 @@ var getWorldPostsAsync = function( world , interval , callback ){
 
     $( '.cards-list' ).data( 'lastCard' , interval.final );
 
+    var postPromises = [];
+
     $.each( posts , function( i , post ){
+
+      var promise = $.Deferred();
+      postPromises.push( promise );
 
       wz.user( post.author , function( e , user ){
 
-        switch (post.type) {
+        if ( post.metadata && post.metadata.fileType ) {
 
-          case 1:
+          switch (post.metadata.fileType) {
 
+            case 'generic':
+            appendGenericCard( post , user , lang.postCreated , function(){
+              promise.resolve();
+            });
+            break;
+
+            case 'document':
+            appendDocumentCard( post , user , lang.postCreated );
+            promise.resolve();
+            break;
+
+            case 'image':
+            appendDocumentCard( post , user , lang.postCreated );
+            promise.resolve();
+            break;
+
+            case 'video':
+            appendGenericCard( post , user , lang.postCreated , function(){
+              promise.resolve();
+            });
+            break;
+
+            case 'music':
+            appendGenericCard( post , user , lang.postCreated , function(){
+              promise.resolve();
+            });
+            break;
+
+          }
+
+        }else if( post.metadata && post.metadata.linkType ){
+
+          switch (post.metadata.linkType) {
+
+            case 'youtube':
+            appendYoutubeCard( post , user , lang.postCreated );
+            promise.resolve();
+            break;
+
+          }
+
+        }else{
           appendNoFileCard( post , user , lang.postCreated );
-          callback();
-          break;
-
-          case 2:
-
-          appendGenericCard( post , user , lang.postCreated , function(){
-            callback();
-          });
-          break;
-
-          case 3:
-
-          appendDocumentCard( post , user , lang.postCreated );
-          callback();
-          break;
-
-          case 4:
-
-          appendDocumentCard( post , user , lang.postCreated );
-          callback();
-          break;
-
-          case 5:
-
-          appendGenericCard( post , user , lang.postCreated , function(){
-            callback();
-          });
-          break;
-
-          case 6:
-
-          appendGenericCard( post , user , lang.postCreated , function(){
-            callback();
-          });
-          break;
-
-          case 8:
-
-          appendYoutubeCard( post , user , lang.postCreated );
-          callback();
-          break;
-
+          promise.resolve();
         }
 
       });
@@ -1420,6 +1456,10 @@ var getWorldPostsAsync = function( world , interval , callback ){
     });
 
     loadingPost = false;
+
+    $.when.apply( null, postPromises ).done( function(){
+      callback();
+    });
 
   });
 
@@ -1566,7 +1606,7 @@ var appendDocumentCard = function( post , user , reason ){
     card.find( '.doc-preview' ).css( 'background-image' , 'url( '+ fsNode.thumbnails.big +' )' );
     card.find( '.preview-title' ).text( fsNode.name );
     card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
-    card.find( '.doc-preview' ).data( 'fsNode' , fsNode );
+    card.find( '.doc-preview' ).data( 'fsnode' , fsNode );
     card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' );;
 
     if ( post.title === '' ) {
@@ -2136,8 +2176,13 @@ var editPostAsync = function( card ){
   if ( post.fsnode.length != 0 ) {
 
     post.fsnode.forEach(function( fsnodeId ){
+      var fsnode;
+      if ( post.fsnode.length === 1 ) {
+        fsnode = card.find( '.doc-preview' ).data( 'fsnode' );
+      }else{
+        fsnode = card.find( '.attachment-' + fsnodeId ).data( 'fsnode' );
+      }
 
-      var fsnode = card.find( '.attachment-' + fsnodeId ).data( 'fsnode' );
       appendAttachment( { fsnode: fsnode , uploading: false , card: card  } );
 
     });
@@ -2199,11 +2244,80 @@ var updateNotifications = function( world ){
   var lastPost = $( '.cardDom' );
   if ( lastPost ) {
     lastPost = lastPost.eq(0).data( 'post' );
-    wql.upsertLastRead( [ world.id , myContactID , lastPost.id ] , function( e , o ){
-      console.log(e);
+    wql.upsertLastRead( [ world.id , myContactID , lastPost.id , lastPost.id ] , function( e , o ){
+      checkNotifications();
+      $( '.world-' + world.id ).removeClass( 'with-notification' );
     });
   }
 
+}
+
+var checkNotifications = function(){
+
+  nNotifications = 0;
+
+  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
+
+    worlds.forEach(function( world ){
+
+      world.getPosts( {from: 0 , to: 1 } , function( e , lastPost ){
+
+        if( lastPost.length === 0){
+          wz.app.setBadge( parseInt(nNotifications) );
+          return;
+        }
+
+        wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
+
+          if ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) {
+
+            $( '.world-' + world.id ).addClass( 'with-notification' );
+            nNotifications = nNotifications + 1;
+            wz.app.setBadge( parseInt(nNotifications) );
+
+          }else{
+            wz.app.setBadge( parseInt(nNotifications) );
+          }
+
+        });
+
+      });
+
+    });
+
+  });
+
+}
+
+var checkMetadata = function( content , fsnode ){
+
+  var newMetadata;
+
+  if ( fsnode.length > 0 ) {
+    if ( fsnode.length === 1 ) {
+      newMetadata = { fileType: checkTypePost( fsnode[0] ) };
+    }else{
+      newMetadata = { fileType: 'generic' };
+    }
+  }else if( content.indexOf( 'www.youtube' ) != -1 ){
+    newMetadata = { linkType: 'youtube' };
+  }else{
+    newMetadata = null;
+  }
+  return newMetadata;
+}
+
+var checkTypePost = function( fsnode ){
+  var fileType = 'generic';
+  if ( fsnode.mime ) {
+    fileType = guessType( fsnode.mime );
+  }
+
+  return fileType;
+}
+
+var guessType = function( mime ){
+  return TYPES[ mime ] || 'generic';
 }
 
 initCosmos();
