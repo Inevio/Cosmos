@@ -3058,8 +3058,7 @@ to {background-position: -200% 0;}
     background-color: transparent;
     font-size: 15px;
     color: #889399;
-    margin-top: 17px;
-    margin-bottom: 17px;
+    padding-top: 17px;
     width: 410px;
     margin-right: 10px;
     margin-left: 20px;
@@ -3824,6 +3823,7 @@ to {background-position: -200% 0;}
     margin-right: 15px;
     transition: all 0.2s ease;
     cursor: pointer;
+    display: none;
 
   }
 
