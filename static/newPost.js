@@ -91,10 +91,9 @@ api.upload.on( 'fsnodeProgress', function( fsnode , percent ){
 
 });
 
-api.upload.on( 'fsnodeEnd', function( fsnode ){
+api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
 
-
-  var attachment = $( '.attachment-' + fsnode.id );
+  var attachment = $( '.attachment-' + fileId );
   if ( attachment.length != -1 ) {
     attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
     attachment.find( '.aux-title' ).hide();
@@ -126,7 +125,7 @@ app
 
   uploader( params.world.volume , function( e , fsnode ){
 
-    appendAttachment( { fsnode: fsnode[0] , uploading: true } );
+    appendAttachment( { fsnode: fsnode , uploading: true } );
 
   });
 
@@ -363,7 +362,7 @@ var appendAttachment = function( o ){
     attachment.find( '.icon' ).css( 'background-image' , 'url(' + o.fsnode.icons.micro + ')' );
   }
   attachmentPrototype.after( attachment );
-  attachment.data( 'fsnode' , o.fsnode );
+  attachment.data( 'file' , o );
 
 }
 

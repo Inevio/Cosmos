@@ -230,11 +230,11 @@ api.cosmos.on( 'postAdded' , function( post ){
             break;
 
             case 'document':
-            appendDocumentCard( post , user , lang.postCreated );
+            appendDocumentCard( post , user , lang.postCreated , function(){});
             break;
 
             case 'image':
-            appendDocumentCard( post , user , lang.postCreated );
+            appendDocumentCard( post , user , lang.postCreated , function(){});
             break;
 
             case 'video':
@@ -331,6 +331,10 @@ api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
 api.cosmos.on( 'postModified', function( post ){
 
+  if ( $( '.post-' + post.id ).hasClass( 'editing' ) ) {
+    return;
+  }
+
   if ( worldSelected.id === post.worldId ) {
 
     $( '.post-' + post.id ).remove();
@@ -346,11 +350,11 @@ api.cosmos.on( 'postModified', function( post ){
           break;
 
           case 'document':
-          appendDocumentCard( post , user , lang.postCreated );
+          appendDocumentCard( post , user , lang.postCreated , function(){});
           break;
 
           case 'image':
-          appendDocumentCard( post , user , lang.postCreated );
+          appendDocumentCard( post , user , lang.postCreated , function(){});
           break;
 
           case 'video':
@@ -511,6 +515,7 @@ app
     return;
   }
   $( this ).closest( '.card' ).addClass( 'editing' );
+  $( this ).closest( '.card' ).find( '.popup' ).removeClass( 'popup' );
   editPostAsync( $( this ).closest( '.card' ) );
 
 })
@@ -540,7 +545,7 @@ app
 
 })
 
-.on( 'keydown' , '.comments-footer .comment-input' , function( e ){
+.on( 'keyup' , '.comments-footer .comment-input' , function( e ){
 
   if (e.keyCode == 13) {
 
@@ -550,12 +555,17 @@ app
       e.preventDefault();
       addReplayAsync( $( this ).parent().parent().parent() );
 
+    }else{
+      adjustHeight( $(this) );
     }
 
   }else if(e.keyCode == 8){
+    adjustHeight( $(this) );
     if ( $(this).text() === '' ) {
       $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
     }
+  }else{
+    adjustHeight( $(this) );
   }
 
 })
@@ -641,25 +651,26 @@ app
 
   var newMetadata = checkMetadata( newContent , newFsnode );
 
-  if ( prevTitle != newTitle ) {
-    post.setTitle( newTitle , function(){
-      console.log(arguments);
-    });
-  }
-
-  if ( prevContent != newContent ) {
-    post.setContent( newContent , function(){
-      console.log(arguments);
-    });
-  }
-
-  if ( wz.tool.arrayDifference( prevFsnode, newFsnodeIds ).length || wz.tool.arrayDifference( newFsnodeIds, prevFsnode ).length ) {
+  if ( wz.tool.arrayDifference( prevFsnode, newFsnodeIds ).length || wz.tool.arrayDifference( newFsnodeIds, prevFsnode ).length ){
     post.setFSNode( newFsnodeIds , function(){
-      console.log(arguments);
+      post.setMetadata( newMetadata , function(){
+        post.setTitle( newTitle , function(){
+          post.setContent( newContent , function( e , post ){
+            setPost( post );
+          });
+        });
+      });
     });
-    post.setMetadata( newMetadata , function(){
-      console.log(arguments);
-    });
+  }else{
+
+    if ( prevTitle != newTitle || prevContent != newContent) {
+      post.setTitle( newTitle , function(){
+        post.setContent( newContent , function( e , post ){
+          setPost( post );
+        });
+      });
+    }
+
   }
 
 })
@@ -1412,13 +1423,15 @@ var getWorldPostsAsync = function( world , interval , callback ){
             break;
 
             case 'document':
-            appendDocumentCard( post , user , lang.postCreated );
-            promise.resolve();
+            appendDocumentCard( post , user , lang.postCreated , function(){
+              promise.resolve();
+            });
             break;
 
             case 'image':
-            appendDocumentCard( post , user , lang.postCreated );
-            promise.resolve();
+            appendDocumentCard( post , user , lang.postCreated , function(){
+              promise.resolve();
+            });
             break;
 
             case 'video':
@@ -1594,7 +1607,7 @@ var appendGenericCard = function( post , user , reason , callback ){
 
 }
 
-var appendDocumentCard = function( post , user , reason ){
+var appendDocumentCard = function( post , user , reason , callback ){
 
   var card = documentCardPrototype.clone();
   card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
@@ -1636,6 +1649,7 @@ var appendDocumentCard = function( post , user , reason ){
 
     setRepliesAsync( card , post );
     appendCard( card , post );
+    callback();
 
   });
 
@@ -1747,7 +1761,7 @@ var appendCard = function( card , post ){
     return;
   }
   if ( $( '.post-' + post.id ).length != 0 ) {
-    return;
+    $( '.post-' + post.id ).remove();
   }
 
   $( '.no-posts' ).css( 'opacity' , '0' );
@@ -1928,7 +1942,7 @@ var unFollowWorld = function(){
 var addReplayAsync = function( card ){
 
   var post  = card.data( 'post' );
-  var msg   = card.find( '.comments-footer .comment-input' ).html();
+  var msg   = card.find( '.comments-footer .comment-input' ).val();
   var input = card.find( '.comments-footer .comment-input' );
 
   if ( input.attr( 'placeholder' )[0] === '@' ) {
@@ -1937,7 +1951,8 @@ var addReplayAsync = function( card ){
   }
 
   post.reply( { content: msg }, function( e, o ){
-    input.text('');
+    input.val('');
+    adjustHeight( input );
   });
 
 }
@@ -2318,6 +2333,66 @@ var checkTypePost = function( fsnode ){
 
 var guessType = function( mime ){
   return TYPES[ mime ] || 'generic';
+}
+
+var setPost = function( post ){
+
+  if ( worldSelected.id === post.worldId ) {
+
+    $( '.post-' + post.id ).remove();
+
+    wz.user( post.author , function( e , user ){
+
+      if ( post.metadata && post.metadata.fileType ) {
+
+        switch (post.metadata.fileType) {
+
+          case 'generic':
+          appendGenericCard( post , user , lang.postCreated , function(){});
+          break;
+
+          case 'document':
+          appendDocumentCard( post , user , lang.postCreated , function(){});
+          break;
+
+          case 'image':
+          appendDocumentCard( post , user , lang.postCreated , function(){});
+          break;
+
+          case 'video':
+          appendGenericCard( post , user , lang.postCreated , function(){});
+          break;
+
+          case 'music':
+          appendGenericCard( post , user , lang.postCreated , function(){});
+          break;
+
+        }
+
+      }else if( post.metadata && post.metadata.linkType ){
+
+        switch (post.metadata.linkType) {
+
+          case 'youtube':
+          appendYoutubeCard( post , user , lang.postCreated );
+          break;
+
+        }
+
+      }else{
+        appendNoFileCard( post , user , lang.postCreated );
+      }
+
+    });
+
+  }
+
+}
+
+var adjustHeight = function( textarea ){
+  textarea[0].style.height = "1px";
+  textarea[0].style.height = (textarea[0].scrollHeight - 5 )+"px";
+
 }
 
 initCosmos();

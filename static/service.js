@@ -34,9 +34,8 @@ api.cosmos.on( 'postAdded' , function( post ){
               title = lang.bannerNewComment + world.name;
               text = user.name + ': ' + post.content;
             }
-
-            title = title.replace(/\n/g, "<br />");
-            text = text.replace(/\n/g, "<br />");
+            title = title.replace(/<br\s*[\/]?>/gi, "\n");
+            text = text.replace(/<br\s*[\/]?>/gi, "\n");
 
             onclick = function(){
               api.app.openApp( 360 , { action: 'selectPost' , post: postParent.id , world: world.id , title: postParent.title } , function(){});
@@ -53,8 +52,8 @@ api.cosmos.on( 'postAdded' , function( post ){
 
                 title = user.name + ' ' + lang.bannerReplyComment;
                 text = post.content;
-                title = title.replace(/\n/g, "<br />");
-                text = text.replace(/\n/g, "<br />");
+                title = title.replace(/<br\s*[\/]?>/gi, "\n");
+                text = text.replace(/<br\s*[\/]?>/gi, "\n");
                 onclick = function(){
                   api.app.openApp( 360 , { action: 'selectPost' , post: grandparent.id , world: world.id , title: grandparent.title } , function(){});
                 }
@@ -70,8 +69,8 @@ api.cosmos.on( 'postAdded' , function( post ){
         title = lang.bannerNewPost + world.name;
         text = user.name + ': ' + post.title;
 
-        title = title.replace(/\n/g, "<br />");
-        text = text.replace(/\n/g, "<br />");
+        title = title.replace(/<br\s*[\/]?>/gi, "\n");
+        text = text.replace(/<br\s*[\/]?>/gi, "\n");
 
         var onclick = function(){
           api.app.openApp( 360 , { action: 'selectPost' , post: post.id , world: world.id , title: post.title } , function(){});
