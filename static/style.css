@@ -2534,6 +2534,7 @@ to {background-position: -200% 0;}
 
   .card-content .doc-icon img{
     align-self: center;
+    width: 100%;
   }
 
   .card-content .doc-icon.office{
