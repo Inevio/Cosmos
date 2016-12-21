@@ -138,15 +138,14 @@ app
 });
 
 var startNewPost = function(){
+
   if (!params) {
-    warn('NO_PARAMS_NEW_POST');
-    return;
+    return warn('NO_PARAMS_NEW_POST');
   }
 
   wz.user( api.system.user().id , function( e , user ){
 
     me = user;
-    translate();
 
     if ( params.type === 'popup' ) {
       status = POPUP_MODE;
@@ -176,30 +175,17 @@ var startManualPost = function(){
   $( '.new-card-avatar' ).css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
   $( '.new-card-section .attachments' ).data( 'numAttachs' , 0 );
   $( '.new-card-section .attachments' ).removeClass( 'with-attach' );
+  $( '.new-card-input' ).focus()
 
 }
 
 var startPopupPost = function(){
 
-  $('.file-info i').text( params.fsnode.name )
-  $('.cosmos-info i').text( params.world.name )
-  $('.post-title input').focus()
-  $('.file-icon img').attr('src', params.fsnode.icons.small );
 
-  $('.post-button').on( 'click' , function(){
-
-    params.callback( $('.post-title input').val().trim(), $('.post-desc textarea').val().trim(), TYPES[ params.fsnode.mime ] || 'generic' )
-    api.app.removeView( app )
-
-  })
-
-  $('.omit-button').on( 'click' , function(){
-    api.app.removeView( app )
-  })
-
-  $('.close-popup').on( 'click' , function(){
-    api.app.removeView( app )
-  })
+  $('.new-card-title figure').text( params.world.name )
+  $('.new-card-avatar').css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
+  // To Do -> Add attachment
+  $( '.new-card-input' ).focus()
 
 }
 
@@ -366,4 +352,5 @@ var appendAttachment = function( o ){
 
 }
 
+translate();
 startNewPost();
