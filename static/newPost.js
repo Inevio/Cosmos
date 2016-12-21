@@ -124,17 +124,18 @@ app
   $( '.new-card-section .attachments' ).data( 'withAttach' , true );
 
   uploader( params.world.volume , function( e , fsnode ){
-
     appendAttachment( { fsnode: fsnode , uploading: true } );
-
   });
 
 })
-.on( 'click' , '.cancel-attachment' , function(){
+.on( 'click', '.cancel-attachment' , function(){
+
   $(this).closest('.attachment').remove();
+
   if ($('.attachment:not(.wz-prototype)').length === 0) {
     attachNewPostBut.removeClass('with-attach');
   }
+
 });
 
 var startNewPost = function(){
@@ -181,10 +182,12 @@ var startManualPost = function(){
 
 var startPopupPost = function(){
 
-
   $('.new-card-title figure').text( params.world.name )
   $('.new-card-avatar').css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
-  // To Do -> Add attachment
+  $('.new-card-section .attachments').data( 'withAttach' , true );
+  appendAttachment( params.fsnode );
+  $( '.new-card-section .attachments' ).addClass( 'with-attach' );
+  $( '.new-card-section .attachments figure i' ).text( 1 );
   $( '.new-card-input' ).focus()
 
 }
@@ -195,8 +198,7 @@ var postNewCardAsync = function(){
   var tit = $( '.new-card-input' ).val();
 
   if ( tit === '' ) {
-    alert( lang.noInfo );
-    return;
+    return alert( lang.noInfo );
   }
 
   var withAttach = $( '.new-card-section .attachments' ).data( 'withAttach' );
@@ -204,16 +206,21 @@ var postNewCardAsync = function(){
   var addPost = function( o ){
 
     var attachment = [];
+
     if ( o.multifile ) {
+
       $.each( o.fsnode , function( i , fsnode ){
         attachment.push( $(fsnode).data( 'fsnode' ).id );
       });
+
     }else{
-      attachment = o.fsnode ? o.fsnode.id : '';
+      // To Do -> Simplify this. Remove the anidated fsnode property inside other fsnode attribute
+      attachment = o.fsnode ? ( o.fsnode.fsnode ? o.fsnode.fsnode.id || o.fsnode.fsnode : null ) || o.fsnode.id || o.fsnode : '';
     }
 
     if ( o.linkType ) {
 
+      var res = { content: text, title: tit, metadata: { linkType : o.linkType } }
       params.world.addPost( { content: text, title: tit, metadata: { linkType : o.linkType } } , function( e , o ){
 
         $( '.new-card-input' ).val('');
@@ -224,6 +231,7 @@ var postNewCardAsync = function(){
 
     }else if( o.fileType ){
 
+      var res = { content: text , title: tit, fsnode: attachment, metadata: { fileType : o.fileType } }
       params.world.addPost( { content: text , title: tit, fsnode: attachment, metadata: { fileType : o.fileType } } , function( e , o ){
 
         $( '.new-card-input' ).val('');
@@ -235,6 +243,7 @@ var postNewCardAsync = function(){
 
     }else{
 
+      var res = { content: text, title: tit }
       params.world.addPost( { content: text, title: tit } , function( e , o ){
 
         $( '.new-card-input' ).val('');
@@ -252,11 +261,8 @@ var postNewCardAsync = function(){
     var fileType = 'generic';
 
     if ( fsnode.mime ) {
-
       fileType = guessType( fsnode.mime );
-
     }
-
 
     addPost( { fsnode: fsnode , fileType: fileType , multifile: false } );
 
@@ -267,19 +273,16 @@ var postNewCardAsync = function(){
     var attachments = $('.attachment:not(.wz-prototype)');
 
     if ( attachments.length === 1 ) {
-      checkTypePost( attachments.data( 'fsnode' ) );
+      checkTypePost( attachments.data('fsnode') );
     }else{
       addPost( { fsnode: attachments , fileType: 'generic' , multifile: true } );
     }
 
   }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
-
     addPost( { fsnode: null , linkType: 'youtube' , multifile: false } );
 
   }else{
-
     addPost( { fsnode: null , multifile: false } );
-
   }
 
 }
@@ -316,7 +319,7 @@ var attachFromInevio = function(){
         if (e) {
           console.log(e);
         }else{
-          appendAttachment( { fsnode: fsnode , uploading: false } );
+          appendAttachment( fsnode );
         }
 
       });
@@ -338,17 +341,20 @@ var guessType = function( mime ){
 
 var appendAttachment = function( o ){
 
+  var fsnode = o.fsnode || o
   var attachment = attachmentPrototype.clone();
-  attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + o.fsnode.id );
-  attachment.find( '.title' ).text( o.fsnode.name );
+  attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
+  attachment.find( '.title' ).text( fsnode.name );
+
   if ( o.uploading ) {
     attachment.find( '.aux-title' ).show().text( lang.uploading );
     $('.new-card-section').addClass( 'uploading' );
   }else{
-    attachment.find( '.icon' ).css( 'background-image' , 'url(' + o.fsnode.icons.micro + ')' );
+    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
   }
+
   attachmentPrototype.after( attachment );
-  attachment.data( 'file' , o );
+  attachment.data( 'fsnode' , o );
 
 }
 
