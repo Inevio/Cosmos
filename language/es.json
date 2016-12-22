@@ -125,6 +125,7 @@
 
     "writeTitle"          : "Escribe un título para la publicación",
     "writeDescription"    : "Escribe una descripción...",
-    "addFiles"            : "Añadir archivos"
+    "addFiles"            : "Añadir archivos",
+    "editingOne"          : "Ya estás editando otro post. Guarda o cancela el anterior para poder editar este."
 
 }

@@ -2035,6 +2035,7 @@ to {background-position: -200% 0;}
   box-shadow: 0 1px 4px rgba(0,0,0,.2);
   transition: all 0.2s ease;
   display: inline-table;
+  height: 100%;
 
 }
 
@@ -2409,6 +2410,10 @@ to {background-position: -200% 0;}
 
   }
 
+  .card-content .desc a{
+    cursor: pointer;
+  }
+
   .card-content .doc-preview{
 
     float: left;
@@ -2508,6 +2513,10 @@ to {background-position: -200% 0;}
 
   }
 
+  .card-content .desc a{
+    cursor: pointer;
+  }
+
   .card-content .doc-preview{
 
     float: left;
@@ -2598,6 +2607,10 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 62px)';
     word-wrap: break-word;
 
+  }
+
+  .card-content .desc a{
+    cursor: pointer;
   }
 
   .card-content .video-preview{
@@ -2819,6 +2832,12 @@ to {background-position: -200% 0;}
     width: 440px;
     margin-top: 3px;
     word-wrap: break-word;
+
+  }
+
+  .comment .comment-text a, .comment .replay-text a{
+
+    cursor: pointer;
 
   }
 
@@ -3328,6 +3347,7 @@ to {background-position: -200% 0;}
     margin-top: 10px;
     background-color: transparent;
     transition: all 0.2s ease;
+    z-index: 10;
 
   }
 
@@ -4096,6 +4116,10 @@ to {background-position: -200% 0;}
     line-height: 24px;
     width: ~'calc(100% - 24px)';
 
+  }
+
+  .info-section .desc a{
+    cursor: pointer;
   }
 
   .create-world-button{
