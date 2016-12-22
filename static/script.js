@@ -140,6 +140,7 @@ friendSearchBox.on( 'input' , function(){
 
 exploreButton.on( 'click' , function(){
 
+  $('.explore-container').scrollTop(0);
   $( '.world-card-dom' ).remove();
   cleanFilterWorldCards();
   getPublicWorldsAsync();
@@ -189,7 +190,7 @@ api.cosmos.on( 'postAdded' , function( post ){
       var parentPost = parent.data( 'reply' );
       grandparent = $( '.post-' + parentPost.parent );
 
-      if ( worldSelected.id === post.worldId ) {
+      if ( worldSelected && worldSelected.id === post.worldId ) {
         appendReplyComment( grandparent , parentPost , post );
       }
 
@@ -199,7 +200,7 @@ api.cosmos.on( 'postAdded' , function( post ){
       grandparent.find( '.comments-text' ).text( ncomments + ' ' + lang.comments );
       grandparent.find( '.comments-text' ).data( 'num' , ncomments );
 
-      if ( worldSelected.id === post.worldId ) {
+      if ( worldSelected && worldSelected.id === post.worldId ) {
         appendReply( grandparent , post , function(){});
       }
 
@@ -209,7 +210,7 @@ api.cosmos.on( 'postAdded' , function( post ){
 
     wz.user( post.author , function( e , user ){
 
-      if ( worldSelected.id === post.worldId ) {
+      if ( worldSelected && worldSelected.id === post.worldId ) {
 
         wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
           if (e) {
@@ -511,7 +512,7 @@ app
 .on( 'click' , '.card-options-section .edit' , function(){
 
   if ( $('.card.editing').length != 0 ) {
-    alert('only can be editing one card at time');
+    alert( lang.editingOne );
     return;
   }
   $( this ).closest( '.card' ).addClass( 'editing' );
@@ -559,7 +560,7 @@ app
       adjustHeight( $(this) );
     }
 
-  }else if(e.keyCode == 8){
+  }else if(e.keyCode == 27){
     adjustHeight( $(this) );
     if ( $(this).text() === '' ) {
       $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
@@ -1968,7 +1969,9 @@ var exploreAnimationIn = function(){
     'opacity' : 1
 
 
-  }, 300);
+  }, 300, function(){
+    $('.explore-container').scrollTop(0);
+  });
 
   // Fade in blue background
   exploreSection.stop().clearQueue().transition({
@@ -2079,7 +2082,7 @@ var appendReplyComment = function( card , reply , response ){
     reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
     reply.find( '.name' ).text( user.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-    reply.find( '.replay-text' ).html( response.content );
+    reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
 
     reply.find( '.replay-text' ).find('a').each( function(){
 

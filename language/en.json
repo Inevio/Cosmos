@@ -126,6 +126,7 @@
 
     "writeTitle"          : "Write a title for the post",
     "writeDescription"    : "Write a description...",
-    "addFiles"            : "Add files"
+    "addFiles"            : "Add files",
+    "editingOne"          : "You are already editing another post. Please save or cancel the other post to start editing a new one."
 
 }
