@@ -561,14 +561,21 @@ app
     }
 
   }else if(e.keyCode == 27){
-    adjustHeight( $(this) );
-    if ( $(this).text() === '' ) {
+    if ( $(this).val() === '' ) {
+      adjustHeight( $(this) );
       $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
     }
   }else{
     adjustHeight( $(this) );
   }
 
+})
+
+.on( 'focusout' , '.comments-footer .comment-input' , function(){
+  if ( $(this).val() === '' ) {
+    adjustHeight( $(this) );
+    $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
+  }
 })
 
 .on( 'click' , '.world-card-dom' , function(){
@@ -627,6 +634,8 @@ app
 
 .on( 'click' , '.cancel-new-card' , function(){
   $( this ).closest( '.card' ).removeClass( 'editing' );
+  $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' );
+
 })
 
 .on( 'click' , '.save-new-card' , function(){
@@ -2189,6 +2198,7 @@ var editPostAsync = function( card ){
   card.find( '.title-input' ).data( 'prev' , post.title );
   card.find( '.content-input' ).val( post.content );
   card.find( '.content-input' ).data( 'prev' , post.content );
+  card.find( '.card-options' ).addClass( 'hide' );
 
   card.find( '.attach-list' ).data( 'prev' , post.fsnode );
   if ( post.fsnode.length != 0 ) {
@@ -2395,7 +2405,6 @@ var setPost = function( post ){
 var adjustHeight = function( textarea ){
   textarea[0].style.height = "1px";
   textarea[0].style.height = (textarea[0].scrollHeight - 5 )+"px";
-
 }
 
 initCosmos();

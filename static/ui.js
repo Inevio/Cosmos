@@ -482,7 +482,9 @@ app
 
       commentsSection.addClass('opened');
       commentsSection.css('height', 'auto');
-      commentsSection.find( 'input' ).focus();
+      commentsSection.find( 'textarea' ).focus();
+
+      adjustHeight( commentsSection.find( 'textarea' ) );
 
     });
 
@@ -1426,6 +1428,11 @@ var newWorldAnimationOut = function(){
 
   });
 
+}
+
+var adjustHeight = function( textarea ){
+  textarea[0].style.height = "1px";
+  textarea[0].style.height = (textarea[0].scrollHeight - 5 )+"px";
 }
 
 // INIT Chat
