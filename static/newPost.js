@@ -59,6 +59,7 @@ var attachmentPrototype   = $( '.attachment.wz-prototype' );
 
 closeNewCard.on( 'click' , function(){
 
+  removeAttachments();
   if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
     wz.app.removeView( app );
   }
@@ -67,6 +68,7 @@ closeNewCard.on( 'click' , function(){
 
 cancelNewCard.on( 'click' , function(){
 
+  removeAttachments();
   if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
     wz.app.removeView( app );
   }
@@ -97,6 +99,7 @@ api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
   if ( attachment.length != -1 ) {
     attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
     attachment.find( '.aux-title' ).hide();
+    attachment.addClass( 'from-pc' ).removeClass( 'attachment-' + fileId ).addClass( 'attachment-' + fsnode.id );
     attachment.data( 'fsnode' , fsnode );
     $('.new-card-section').removeClass( 'uploading' );
   }
@@ -355,6 +358,23 @@ var appendAttachment = function( o ){
 
   attachmentPrototype.after( attachment );
   attachment.data( 'fsnode' , o );
+
+}
+
+var removeAttachments = function(){
+
+  var attachments = $('.attachment.from-pc');
+
+  $.each( attachments , function( i , attachment ){
+
+    var fsnode = $( attachment ).data( 'fsnode' );
+    fsnode.remove( function( e ){
+      if (e) {
+        console.log(e);
+      }
+    })
+
+  });
 
 }
 
