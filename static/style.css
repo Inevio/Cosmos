@@ -6,6 +6,11 @@
 *{
   font-family: 'Lato';
   letter-spacing: 0.02em;
+  line-height: -moz-block-height;
+}
+
+input, textarea {
+  line-height: -moz-block-height;
 }
 
 [contenteditable=true]:empty:before{
@@ -427,7 +432,7 @@ to {background-position: -200% 0;}
     transition: all 0.2s ease;
     cursor: pointer;
     width: 216px;
-    height: 13px;
+    height: 15px;
 
   }
 
@@ -1124,6 +1129,7 @@ to {background-position: -200% 0;}
     margin: 0 auto;
     display: table;
     letter-spacing: 0.02em;
+    height: 40px;
 
   }
 
@@ -2393,6 +2399,7 @@ to {background-position: -200% 0;}
     margin-right: 31px;
     margin-top: 8px;
     width: ~'calc(100% - 62px)';
+    height: 20px;
 
   }
 
@@ -2496,6 +2503,7 @@ to {background-position: -200% 0;}
     margin-right: 31px;
     margin-top: 8px;
     width: ~'calc(100% - 62px)';
+    height: 20px;
 
   }
 
@@ -2592,6 +2600,7 @@ to {background-position: -200% 0;}
     margin-right: 31px;
     margin-top: 8px;
     width: ~'calc(100% - 62px)';
+    height: 20px;
 
   }
 
