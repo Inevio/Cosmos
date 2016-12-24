@@ -1,9 +1,7 @@
+
+// Constants
 var POPUP_MODE = 0;
 var MANUALPOST_MODE = 1;
-
-var app = $(this);
-var status;
-var me;
 var TYPES = {
 
   "application/pdf"   : 'document',
@@ -51,128 +49,19 @@ var TYPES = {
 
 }
 
-var closeNewCard          = $( '.close-new-card' );
-var attachNewPostBut      = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
-var cancelNewCard         = $( '.cancel-new-card' );
-var postNewCardButton     = $( '.post-new-card' );
-var attachmentPrototype   = $( '.attachment.wz-prototype' );
+// Variables
+var app = $(this);
+var me = api.system.user();
+var status;
 
-closeNewCard.on( 'click' , function(){
+// DOM Variables
+var closeNewCard        = $( '.close-new-card' );
+var attachNewPostBut    = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
+var cancelNewCard       = $( '.cancel-new-card' );
+var postNewCardButton   = $( '.post-new-card' );
+var attachmentPrototype = $( '.attachment.wz-prototype' );
 
-  removeAttachments();
-  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
-    wz.app.removeView( app );
-  }
-
-});
-
-cancelNewCard.on( 'click' , function(){
-
-  removeAttachments();
-  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
-    wz.app.removeView( app );
-  }
-
-});
-
-postNewCardButton.on( 'click' , function(){
-
-  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
-    postNewCardAsync();
-  }
-
-});
-
-attachNewPostBut.on( 'click' , function(){
-  $( '.attach-select' ).addClass( 'popup' );
-});
-
-api.upload.on( 'fsnodeProgress', function( fsnode , percent ){
-
-  //console.log( arguments );
-
-});
-
-api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
-
-  var attachment = $( '.attachment-' + fileId );
-  if ( attachment.length != -1 ) {
-    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
-    attachment.find( '.aux-title' ).hide();
-    attachment.addClass( 'from-pc' ).removeClass( 'attachment-' + fileId ).addClass( 'attachment-' + fsnode.id );
-    attachment.data( 'fsnode' , fsnode );
-    $('.new-card-section').removeClass( 'uploading' );
-  }
-
-});
-
-app
-.on( 'click' , function( e ){
-
-  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
-    $( '.popup' ).removeClass( 'popup' );
-  }
-
-})
-.on( 'click' , '.attach-select .inevio' , function(){
-
-  attachFromInevio();
-
-})
-.on( 'upload-prepared' , function( e , uploader ){
-
-  $( '.popup' ).removeClass( 'popup2' );
-  $( this ).parent().find( '.new-card-section .attach-select' ).hide();
-
-  $( '.new-card-section .attachments' ).data( 'withAttach' , true );
-
-  uploader( params.world.volume , function( e , fsnode ){
-    appendAttachment( { fsnode: fsnode , uploading: true } );
-  });
-
-})
-.on( 'click', '.cancel-attachment' , function(){
-
-  $(this).closest('.attachment').remove();
-
-  if ($('.attachment:not(.wz-prototype)').length === 0) {
-    attachNewPostBut.removeClass('with-attach');
-  }
-
-});
-
-var startNewPost = function(){
-
-  if (!params) {
-    return warn('NO_PARAMS_NEW_POST');
-  }
-
-  wz.user( api.system.user().id , function( e , user ){
-
-    me = user;
-
-    if ( params.type === 'popup' ) {
-      status = POPUP_MODE;
-      startPopupPost();
-    }else if( params.type === 'manual' ){
-      status = MANUALPOST_MODE;
-      startManualPost();
-    }
-
-  });
-
-}
-
-var translate = function(){
-  $( '.new-card-title' ).html( '<i>' + lang.newPost + '</i>' + lang.for + '<figure></figure>' );
-  $( '.cancel-new-card span' ).text( lang.cancel );
-  $( '.post-new-card span' ).text( lang.postit );
-  $( '.attach-select .inevio span' ).text( lang.uploadInevio );
-  $( '.attach-select .pc span' ).text( lang.uploadPC );
-  $( '.new-card-input' ).attr( 'placeholder' , lang.writeTitle );
-  $( '.new-card-textarea' ).attr( 'placeholder' , lang.writeDescription );
-}
-
+// Functions
 var startManualPost = function(){
 
   $( '.new-card-title figure' ).text( params.world.name );
@@ -378,5 +267,127 @@ var removeAttachments = function(){
 
 }
 
-translate();
-startNewPost();
+var start = function(){
+
+  translate()
+
+  if( !params || !params.type ){
+    return warn('NO_PARAMS_NEW_POST');
+  }
+
+  if( params.type === 'popup' ) {
+
+    status = POPUP_MODE;
+    startPopupPost();
+
+  }else if( params.type === 'manual' ){
+
+    status = MANUALPOST_MODE;
+    startManualPost();
+
+  }else{
+    warn('NO_PARAMS_NEW_POST');
+  }
+
+}
+
+var translate = function(){
+
+  $( '.new-card-title' ).html( '<i>' + lang.newPost + '</i>' + lang.for + '<figure></figure>' );
+  $( '.cancel-new-card span' ).text( lang.cancel );
+  $( '.post-new-card span' ).text( lang.postit );
+  $( '.attach-select .inevio span' ).text( lang.uploadInevio );
+  $( '.attach-select .pc span' ).text( lang.uploadPC );
+  $( '.new-card-input' ).attr( 'placeholder' , lang.writeTitle );
+  $( '.new-card-textarea' ).attr( 'placeholder' , lang.writeDescription );
+
+}
+
+// API Events
+api.upload.on( 'fsnodeProgress', function( fsnode , percent ){
+
+  //console.log( arguments );
+
+});
+
+api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
+
+  var attachment = $( '.attachment-' + fileId );
+  if ( attachment.length != -1 ) {
+    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
+    attachment.find( '.aux-title' ).hide();
+    attachment.addClass( 'from-pc' ).removeClass( 'attachment-' + fileId ).addClass( 'attachment-' + fsnode.id );
+    attachment.data( 'fsnode' , fsnode );
+    $('.new-card-section').removeClass( 'uploading' );
+  }
+
+});
+
+// DOM Events
+closeNewCard.on( 'click' , function(){
+
+  removeAttachments();
+  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+    wz.app.removeView( app );
+  }
+
+});
+
+cancelNewCard.on( 'click' , function(){
+
+  removeAttachments();
+  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+    wz.app.removeView( app );
+  }
+
+});
+
+postNewCardButton.on( 'click' , function(){
+
+  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+    postNewCardAsync();
+  }
+
+});
+
+attachNewPostBut.on( 'click' , function(){
+  $( '.attach-select' ).addClass( 'popup' );
+});
+
+app
+.on( 'click' , function( e ){
+
+  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
+    $( '.popup' ).removeClass( 'popup' );
+  }
+
+})
+.on( 'click' , '.attach-select .inevio' , function(){
+
+  attachFromInevio();
+
+})
+.on( 'upload-prepared' , function( e , uploader ){
+
+  $( '.popup' ).removeClass( 'popup2' );
+  $( this ).parent().find( '.new-card-section .attach-select' ).hide();
+
+  $( '.new-card-section .attachments' ).data( 'withAttach' , true );
+
+  uploader( params.world.volume , function( e , fsnode ){
+    appendAttachment( { fsnode: fsnode , uploading: true } );
+  });
+
+})
+.on( 'click', '.cancel-attachment' , function(){
+
+  $(this).closest('.attachment').remove();
+
+  if ($('.attachment:not(.wz-prototype)').length === 0) {
+    attachNewPostBut.removeClass('with-attach');
+  }
+
+});
+
+// Start
+start();
