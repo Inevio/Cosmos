@@ -83,7 +83,8 @@
                   },
 
                   "css"    : [ "newPost.css" ],
-                  "script" : [ "newPost.js" ]
+                  "script" : [ "newPost.js" ],
+                  "start"  : [ "newPostStart.js" ]
 
                 }
 

@@ -4,8 +4,9 @@ var noWorlds        = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 var parameters;
 
-parameters = params;
-if ( api.app.getViews( 'main' ).length === 1 ) {
+parameters = params
+
+if( api.app.getViews('main').length === 1 ){
 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
 
@@ -17,9 +18,7 @@ if ( api.app.getViews( 'main' ).length === 1 ) {
       noWorlds.css({ 'opacity' : 1 });
 
     }else{
-
-      app.data( 'myWorlds' , o );
-
+      app.data( 'myWorlds', o );
     }
 
     console.log( api.app.getViews() , api.app.getViews( 'main' ) );

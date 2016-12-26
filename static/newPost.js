@@ -1,72 +1,46 @@
 
 // Constants
-var POPUP_MODE = 0;
-var MANUALPOST_MODE = 1;
 var TYPES = {
 
-  "application/pdf"   : 'document',
-  "application/zip"    : 'generic',
-  "application/x-rar"  : 'generic',
-  "application/x-gzip" : 'generic',
-  "text/x-c"               : 'document',
-  "text/x-c++"             : 'document',
-  "text/x-php"             : 'document',
-  "text/x-python"          : 'document',
-  "application/json"       : 'document',
-  "application/javascript" : 'document',
-  "application/inevio-texts"                                                    : 'generic',
-  "application/msword"                                                          : 'generic',
-  "application/vnd.oasis.opendocument.text"                                     : 'generic',
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"     : 'generic',
-  "application/inevio-grids"                                          : 'generic',
-  "application/vnd.ms-excel"                                          : 'generic',
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : 'generic',
-  "application/vnd.ms-powerpoint"                                             : 'generic',
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation" : 'generic',
-  "audio/mp4"          : 'music',
-  "audio/mpeg"         : 'music',
-  "audio/flac"         : 'music',
-  "audio/x-vorbis+ogg" : 'music',
-  "audio/x-wav"        : 'music',
-  "image/gif"  : 'image',
-  "image/jpeg" : 'image',
-  "image/png"  : 'image',
-  "image/tiff" : 'image',
-  "image/vnd.adobe.photoshop" : 'generic',
-  "text/html"    : 'generic',
-  "text/plain"   : 'generic',
-  "text/rtf"     : 'generic',
-  "video/3gpp"         : 'video',
-  "video/mp4"          : 'video',
-  "video/quicktime"    : 'video',
-  "video/webm"         : 'video',
-  "video/x-flv"        : 'video',
-  "video/x-matroska"   : 'video',
-  "video/x-ms-asf"     : 'video',
-  "video/x-ms-wmv"     : 'video',
-  "video/x-msvideo"    : 'video',
-  "video/x-theora+ogg" : 'video'
+  'application/pdf'    : 'document',
+  'audio/mp4'          : 'music',
+  'audio/mpeg'         : 'music',
+  'audio/flac'         : 'music',
+  'audio/x-vorbis+ogg' : 'music',
+  'audio/x-wav'        : 'music',
+  'image/gif'          : 'image',
+  'image/jpeg'         : 'image',
+  'image/png'          : 'image',
+  'image/tiff'         : 'image',
+  'video/3gpp'         : 'video',
+  'video/mp4'          : 'video',
+  'video/quicktime'    : 'video',
+  'video/webm'         : 'video',
+  'video/x-flv'        : 'video',
+  'video/x-matroska'   : 'video',
+  'video/x-ms-asf'     : 'video',
+  'video/x-ms-wmv'     : 'video',
+  'video/x-msvideo'    : 'video',
+  'video/x-theora+ogg' : 'video'
 
 }
 
 // Variables
 var app = $(this);
-var me = api.system.user();
-var status;
+var automaticPopupQueue = null
 
 // DOM Variables
-var closeNewCard        = $( '.close-new-card' );
-var attachNewPostBut    = $( '.new-card-section .attachments, .new-card-section .attachments i, .new-card-section .attachments div' );
-var cancelNewCard       = $( '.cancel-new-card' );
-var postNewCardButton   = $( '.post-new-card' );
-var attachmentPrototype = $( '.attachment.wz-prototype' );
+var closeNewCard        = $('.close-new-card');
+var attachNewPostButton = $('.new-card-section .attachments');
+var cancelNewCard       = $('.cancel-new-card');
+var postNewCardButton   = $('.post-new-card');
+var attachmentPrototype = $('.attachment.wz-prototype');
 
 // Functions
+/*
 var startManualPost = function(){
 
-  $( '.new-card-title figure' ).text( params.world.name );
-  $( '.new-card-avatar' ).css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
-  $( '.new-card-section .attachments' ).data( 'numAttachs' , 0 );
+  $( '.new-card-section .attachments' ).data( 'numAttachs', 0 );
   $( '.new-card-section .attachments' ).removeClass( 'with-attach' );
   $( '.new-card-input' ).focus()
 
@@ -74,122 +48,56 @@ var startManualPost = function(){
 
 var startPopupPost = function(){
 
-  $('.new-card-title figure').text( params.world.name )
-  $('.new-card-avatar').css( 'background-image' , 'url(' + me.avatar.tiny + ')' );
-  $('.new-card-section .attachments').data( 'withAttach' , true );
-  appendAttachment( params.fsnode );
+  $('.new-card-section .attachments').data( 'withAttach', true );
+  addAttachment( params.fsnode );
   $( '.new-card-section .attachments' ).addClass( 'with-attach' );
-  $( '.new-card-section .attachments figure i' ).text( 1 );
   $( '.new-card-input' ).focus()
 
 }
+*/
 
-var postNewCardAsync = function(){
+var addAttachment = function( attach ){
 
-  var text = $( '.new-card-textarea' ).val();
-  var tit = $( '.new-card-input' ).val();
+  var attachment = attachmentPrototype.clone()
 
-  if ( tit === '' ) {
-    return alert( lang.noInfo );
+  attachment.removeClass('wz-prototype')
+  attachment.find('.title').text( attach.fsnode ? attach.fsnode.name : attach.name )
+
+  if( typeof attach.id !== 'undefined' ){
+    attachment.addClass( 'attachment-' + attach.id )
   }
 
-  var withAttach = $( '.new-card-section .attachments' ).data( 'withAttach' );
-
-  var addPost = function( o ){
-
-    var attachment = [];
-
-    if ( o.multifile ) {
-
-      $.each( o.fsnode , function( i , fsnode ){
-        attachment.push( $(fsnode).data( 'fsnode' ).id );
-      });
-
-    }else{
-      // To Do -> Simplify this. Remove the anidated fsnode property inside other fsnode attribute
-      attachment = o.fsnode ? ( o.fsnode.fsnode ? o.fsnode.fsnode.id || o.fsnode.fsnode : null ) || o.fsnode.id || o.fsnode : '';
-    }
-
-    if ( o.linkType ) {
-
-      var res = { content: text, title: tit, metadata: { linkType : o.linkType } }
-      params.world.addPost( { content: text, title: tit, metadata: { linkType : o.linkType } } , function( e , o ){
-
-        $( '.new-card-input' ).val('');
-        $( '.new-card-textarea' ).val('');
-        wz.app.removeView( app );
-
-      });
-
-    }else if( o.fileType ){
-
-      var res = { content: text , title: tit, fsnode: attachment, metadata: { fileType : o.fileType } }
-      params.world.addPost( { content: text , title: tit, fsnode: attachment, metadata: { fileType : o.fileType } } , function( e , o ){
-
-        $( '.new-card-input' ).val('');
-        $( '.new-card-textarea' ).val('');
-        $( '.new-card-section .attachments' ).data( 'withAttach' , '' );
-        wz.app.removeView( app );
-
-      });
-
-    }else{
-
-      var res = { content: text, title: tit }
-      params.world.addPost( { content: text, title: tit } , function( e , o ){
-
-        $( '.new-card-input' ).val('');
-        $( '.new-card-textarea' ).val('');
-        wz.app.removeView( app );
-
-      });
-
-    }
-
+  if( attach.fsnode && attach.fsnode.id ){
+    attachment.addClass( 'attachment-fsnode-' + attach.fsnode.id )
   }
 
-  var checkTypePost = function( fsnode ){
+  if( !attach.uploaded ){
 
-    var fileType = 'generic';
-
-    if ( fsnode.mime ) {
-      fileType = guessType( fsnode.mime );
-    }
-
-    addPost( { fsnode: fsnode , fileType: fileType , multifile: false } );
-
-  }
-
-  if ( withAttach ) {
-
-    var attachments = $('.attachment:not(.wz-prototype)');
-
-    if ( attachments.length === 1 ) {
-      checkTypePost( attachments.data('fsnode') );
-    }else{
-      addPost( { fsnode: attachments , fileType: 'generic' , multifile: true } );
-    }
-
-  }else if ( text.indexOf( 'www.youtube' ) != -1 ) {
-    addPost( { fsnode: null , linkType: 'youtube' , multifile: false } );
+    attachment.addClass('from-pc')
+    attachment.find('.aux-title').show().text( lang.uploading )
+    //$('.new-card-section').addClass('uploading')
 
   }else{
-    addPost( { fsnode: null , multifile: false } );
+    attachment.find('.icon').css( 'background-image', 'url(' + attach.fsnode.icons.micro + ')' );
   }
+
+  attachmentPrototype.after( attachment );
+  attachment.data( 'attachment', attach );
 
 }
 
 var attachFromInevio = function(){
 
-  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' , 'multiple': true } , function( e , s ){
+  hideAttachSelect()
 
-    if (e) {
-      console.log( e );
-      return;
+  // To Do -> Translate
+  api.fs.selectSource( { 'title' : 'Selecciona!', 'mode' : 'file', 'multiple': true }, function( err, list ){
+
+    if( err ){
+      return console.log( err )
     }
 
-    $( '.attach-select' ).removeClass( 'popup' );
-
+    /*
     var numAttachs = $( '.new-card-section .attachments' ).data( 'numAttachs' );
     if ( !numAttachs ) {
       numAttachs = 0;
@@ -200,30 +108,112 @@ var attachFromInevio = function(){
     }else{
       numAttachs++;
     }
+    */
 
+    /*
     console.log( numAttachs, s );
-    $( '.new-card-section .attachments' ).data( 'withAttach' , true );
+    $( '.new-card-section .attachments' ).data( 'withAttach', true );
+    */
 
-    s.forEach(function( attach ){
+    list.forEach(function( fsnodeId ){
 
-      api.fs( attach , function( e , fsnode ){
+      api.fs( fsnodeId, function( err, fsnode ){
 
-        if (e) {
-          console.log(e);
-        }else{
-          appendAttachment( fsnode );
+        if( err ) {
+          return console.log( err )
         }
+
+        addAttachment( { fsnode : fsnode, uploaded : fsnode.fileId !== 'TO_UPDATE' } )
+
+      })
+
+    })
+
+    /*
+    if ( numAttachs > 0) {
+      $( '.new-card-section .attachments' ).addClass( 'with-attach' );
+    }
+    */
+
+  })
+
+}
+
+var postNewCardAsync = function(){
+
+  var text  = $( '.new-card-textarea' ).val();
+  var title = $( '.new-card-input' ).val();
+
+  if ( title === '' ) {
+    return alert( lang.noInfo );
+  }
+
+  var attachments = $('.attach-list .attachment').not('.wz-prototype');
+
+  var addPost = function( o ){
+
+    console.log( o )
+
+    var attachment = [];
+
+    $.each( o.fsnode, function(){
+      attachment.push( $( this ).data('attachment').fsnode.id )
+    })
+
+    console.log( attachment )
+
+    if ( o.linkType ) {
+
+      var res = { content: text, title: title, metadata: { linkType : o.linkType } }
+      params.world.addPost( { content: text, title: title, metadata: { linkType : o.linkType } }, function( e, o ){
+
+        $( '.new-card-input' ).val('');
+        $( '.new-card-textarea' ).val('');
+        wz.app.removeView( app );
 
       });
 
-    });
+    }else if( o.fileType ){
 
-    if ( numAttachs > 0) {
-      $( '.new-card-section .attachments' ).addClass( 'with-attach' );
-      $( '.new-card-section .attachments figure i' ).text( numAttachs );
+      var res = { content: text, title: title, fsnode: attachment, metadata: { fileType : o.fileType } }
+      params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: { fileType : o.fileType } }, function( e, o ){
+
+        $( '.new-card-input' ).val('');
+        $( '.new-card-textarea' ).val('');
+        //$( '.new-card-section .attachments' ).data( 'withAttach', '' );
+        wz.app.removeView( app );
+
+      });
+
+    }else{
+
+      var res = { content: text, title: title }
+      params.world.addPost( { content: text, title: title }, function( e, o ){
+
+        $( '.new-card-input' ).val('');
+        $( '.new-card-textarea' ).val('');
+        wz.app.removeView( app );
+
+      });
+
     }
 
-  })
+  }
+
+  if( attachments.length ){
+
+    if( attachments.length === 1 ){
+      addPost( { fsnode : attachments, fileType: guessType( attachments.data('attachment').fsnode.mime ), multifile: false } )
+    }else{
+      addPost( { fsnode : attachments, fileType : 'generic', multifile : true } );
+    }
+
+  }else if( text.indexOf( 'www.youtube' ) !== -1 ){
+    addPost( { fsnode : null, linkType : 'youtube', multifile : false } );
+
+  }else{
+    addPost( { fsnode : null, multifile : false } );
+  }
 
 }
 
@@ -231,163 +221,163 @@ var guessType = function( mime ){
   return TYPES[ mime ] || 'generic';
 }
 
-var appendAttachment = function( o ){
-
-  var fsnode = o.fsnode || o
-  var attachment = attachmentPrototype.clone();
-  attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
-  attachment.find( '.title' ).text( fsnode.name );
-
-  if ( o.uploading ) {
-    attachment.find( '.aux-title' ).show().text( lang.uploading );
-    $('.new-card-section').addClass( 'uploading' );
-  }else{
-    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
-  }
-
-  attachmentPrototype.after( attachment );
-  attachment.data( 'fsnode' , o );
-
+var hideAttachSelect = function(){
+  $('.attach-select').removeClass('popup')
 }
 
 var removeAttachments = function(){
 
+  if( automaticPopupQueue ){
+    return
+  }
+
   var attachments = $('.attachment.from-pc');
 
-  $.each( attachments , function( i , attachment ){
+  $.each( attachments, function(){
 
-    var fsnode = $( attachment ).data( 'fsnode' );
-    fsnode.remove( function( e ){
-      if (e) {
-        console.log(e);
-      }
-    })
+    var fsnode = $(this).data( 'attachment' ).fsnode;
+
+    if( fsnode ){
+
+      fsnode.remove( function( err ){
+
+        if( err ){
+          console.log( err );
+        }
+
+      })
+
+    }
 
   });
 
 }
 
-var start = function(){
+var showAttachSelect = function(){
+  $('.attach-select').addClass('popup')
+}
 
-  translate()
+var start = function(){
 
   if( !params || !params.type ){
     return warn('NO_PARAMS_NEW_POST');
   }
 
-  if( params.type === 'popup' ) {
+  // Set popup private info
+  automaticPopupQueue = params.queue
 
-    status = POPUP_MODE;
-    startPopupPost();
+  // Set popup texts and info
+  $('.new-card-avatar').css( 'background-image', 'url(' + api.system.user().avatar.tiny + ')' )
+  translateUI()
 
-  }else if( params.type === 'manual' ){
-
-    status = MANUALPOST_MODE;
-    startManualPost();
-
-  }else{
-    warn('NO_PARAMS_NEW_POST');
+  // Add files if any
+  if( params.fsnode ){
+    addAttachment({ fsnode : params.fsnode, uploaded : params.fsnode.fileId !== 'TO_UPDATE' });
   }
+
+  // Focus title
+  $( '.new-card-input' ).focus()
 
 }
 
-var translate = function(){
+var translateUI = function(){
 
-  $( '.new-card-title' ).html( '<i>' + lang.newPost + '</i>' + lang.for + '<figure></figure>' );
+  $( '.new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger">' + params.world.name + '</figure>' );
   $( '.cancel-new-card span' ).text( lang.cancel );
   $( '.post-new-card span' ).text( lang.postit );
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span' ).text( lang.uploadPC );
-  $( '.new-card-input' ).attr( 'placeholder' , lang.writeTitle );
-  $( '.new-card-textarea' ).attr( 'placeholder' , lang.writeDescription );
+  $( '.new-card-input' ).attr( 'placeholder', lang.writeTitle );
+  $( '.new-card-textarea' ).attr( 'placeholder', lang.writeDescription );
 
 }
 
 // API Events
-api.upload.on( 'fsnodeProgress', function( fsnode , percent ){
-
+api.upload.on( 'fsnodeProgress', function( fsnode, percent ){
   //console.log( arguments );
-
 });
 
-api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
+api.upload.on( 'fsnodeEnd', function( fsnode, fileId ){
 
-  var attachment = $( '.attachment-' + fileId );
-  if ( attachment.length != -1 ) {
-    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
-    attachment.find( '.aux-title' ).hide();
-    attachment.addClass( 'from-pc' ).removeClass( 'attachment-' + fileId ).addClass( 'attachment-' + fsnode.id );
-    attachment.data( 'fsnode' , fsnode );
-    $('.new-card-section').removeClass( 'uploading' );
+  var attachment = $( '.attachment-' + fileId + ', .attachment-fsnode-' + fsnode.id )
+
+  if( attachment.length ){
+
+    attachment.find('.title').text( fsnode.name )
+    attachment.find('.icon').css( 'background-image', 'url(' + fsnode.icons.micro + ')' );
+    attachment.find('.aux-title').hide();
+    attachment.addClass('from-pc').addClass( 'attachment-' + fileId ).addClass( 'attachment-fsnode-' + fsnode.id );
+    //attachment.data( 'fsnode', fsnode );
+    //$('.new-card-section').removeClass( 'uploading' );
+
   }
 
 });
 
 // DOM Events
-closeNewCard.on( 'click' , function(){
+closeNewCard.add( cancelNewCard ).on( 'click', function(){
 
-  removeAttachments();
-  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
-    wz.app.removeView( app );
+  removeAttachments()
+
+  if ( !$('.new-card-section').hasClass('uploading') ) {
+    wz.app.removeView( app )
   }
 
-});
+})
 
-cancelNewCard.on( 'click' , function(){
+postNewCardButton.on( 'click', function(){
 
-  removeAttachments();
-  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
-    wz.app.removeView( app );
-  }
-
-});
-
-postNewCardButton.on( 'click' , function(){
-
-  if ( !$('.new-card-section').hasClass( 'uploading' ) ) {
+  if ( !$('.new-card-section').hasClass('uploading') ) {
     postNewCardAsync();
   }
 
 });
 
-attachNewPostBut.on( 'click' , function(){
-  $( '.attach-select' ).addClass( 'popup' );
+attachNewPostButton.on( 'click', function(){
+  showAttachSelect()
 });
 
 app
-.on( 'click' , function( e ){
+.on( 'click', function( e ){
 
-  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
-    $( '.popup' ).removeClass( 'popup' );
+  if( !$( e.target ).hasClass('popup') && !$( e.target ).hasClass('popup-launcher') ){
+    hideAttachSelect()
   }
 
 })
-.on( 'click' , '.attach-select .inevio' , function(){
+.on( 'click', '.attach-select .inevio', attachFromInevio )
+.on( 'upload-prepared', function( e, uploader ){
 
-  attachFromInevio();
+  hideAttachSelect()
+  //$( '.new-card-section .attachments' ).data( 'withAttach', true )
 
-})
-.on( 'upload-prepared' , function( e , uploader ){
-
-  $( '.popup' ).removeClass( 'popup2' );
-  $( this ).parent().find( '.new-card-section .attach-select' ).hide();
-
-  $( '.new-card-section .attachments' ).data( 'withAttach' , true );
-
-  uploader( params.world.volume , function( e , fsnode ){
-    appendAttachment( { fsnode: fsnode , uploading: true } );
-  });
+  uploader( params.world.volume, function( e, uploadQueueItem ){
+    addAttachment( uploadQueueItem )
+  })
 
 })
-.on( 'click', '.cancel-attachment' , function(){
+.on( 'click', '.cancel-attachment', function(){
 
   $(this).closest('.attachment').remove();
 
   if ($('.attachment:not(.wz-prototype)').length === 0) {
-    attachNewPostBut.removeClass('with-attach');
+    attachNewPostButton.removeClass('with-attach');
   }
 
-});
+})
+
+.on( 'requestPostCreate', function( e, newParams, callback ){
+
+  if( automaticPopupQueue === newParams.queue ){
+    addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId === 'TO_UPDATE' })
+    callback( true )
+  }else if( newParams.queue ){
+    callback( $( '.attachment-' + newParams.queue.fsnode[ newParams.fsnode.id ].id + ', .attachment-fsnode-' + newParams.fsnode.id ).length )
+  }else{
+    callback( $( '.attachment-fsnode-' + newParams.fsnode.id ).length )
+  }
+
+})
 
 // Start
 start();
