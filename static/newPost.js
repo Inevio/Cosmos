@@ -37,25 +37,6 @@ var postNewCardButton   = $('.post-new-card');
 var attachmentPrototype = $('.attachment.wz-prototype');
 
 // Functions
-/*
-var startManualPost = function(){
-
-  $( '.new-card-section .attachments' ).data( 'numAttachs', 0 );
-  $( '.new-card-section .attachments' ).removeClass( 'with-attach' );
-  $( '.new-card-input' ).focus()
-
-}
-
-var startPopupPost = function(){
-
-  $('.new-card-section .attachments').data( 'withAttach', true );
-  addAttachment( params.fsnode );
-  $( '.new-card-section .attachments' ).addClass( 'with-attach' );
-  $( '.new-card-input' ).focus()
-
-}
-*/
-
 var addAttachment = function( attach, useItem ){
 
   var attachment = useItem || attachmentPrototype.clone()
@@ -73,9 +54,9 @@ var addAttachment = function( attach, useItem ){
 
   if( !attach.uploaded ){
 
-    attachment.addClass('from-pc')
+    attachment.addClass('from-pc uploading')
     attachment.find('.aux-title').show().text( lang.uploading )
-    //$('.new-card-section').addClass('uploading')
+    app.addClass('uploading')
 
   }else{
     attachment.find('.icon').css( 'background-image', 'url(' + attach.fsnode.icons.micro + ')' );
@@ -83,6 +64,7 @@ var addAttachment = function( attach, useItem ){
 
   attachmentPrototype.after( attachment );
   attachment.data( 'attachment', attach );
+  updateAttachmentCounter()
 
 }
 
@@ -94,33 +76,15 @@ var attachFromInevio = function(){
   api.fs.selectSource( { 'title' : 'Selecciona!', 'mode' : 'file', 'multiple': true }, function( err, list ){
 
     if( err ){
-      return console.log( err )
+      return console.error( err )
     }
-
-    /*
-    var numAttachs = $( '.new-card-section .attachments' ).data( 'numAttachs' );
-    if ( !numAttachs ) {
-      numAttachs = 0;
-    }
-
-    if ( s.constructor === Array ) {
-      numAttachs += s.length;
-    }else{
-      numAttachs++;
-    }
-    */
-
-    /*
-    console.log( numAttachs, s );
-    $( '.new-card-section .attachments' ).data( 'withAttach', true );
-    */
 
     list.forEach(function( fsnodeId ){
 
       api.fs( fsnodeId, function( err, fsnode ){
 
         if( err ) {
-          return console.log( err )
+          return console.error( err )
         }
 
         addAttachment( { fsnode : fsnode, uploaded : fsnode.fileId !== 'TO_UPDATE' } )
@@ -128,12 +92,6 @@ var attachFromInevio = function(){
       })
 
     })
-
-    /*
-    if ( numAttachs > 0) {
-      $( '.new-card-section .attachments' ).addClass( 'with-attach' );
-    }
-    */
 
   })
 
@@ -152,15 +110,11 @@ var postNewCardAsync = function(){
 
   var addPost = function( o ){
 
-    console.log( o )
-
     var attachment = [];
 
     $.each( o.fsnode, function(){
       attachment.push( $( this ).data('attachment').fsnode.id )
     })
-
-    console.log( attachment )
 
     if ( o.linkType ) {
 
@@ -248,7 +202,7 @@ var removeAttachment = function( options ){
       fsnode.remove( function( err ){
 
         if( err ){
-          console.log( err );
+          console.error( err );
         }
 
       })
@@ -298,10 +252,18 @@ var translateUI = function(){
 
 }
 
+var updateAttachmentCounter = function(){
+
+  if( $('.attachment:not(.wz-prototype)').length ){
+    attachNewPostButton.addClass('with-attach')
+  }else{
+    attachNewPostButton.removeClass('with-attach')
+  }
+
+}
+
 // API Events
-api.upload.on( 'fsnodeProgress', function( fsnode, percent ){
-  //console.log( arguments );
-});
+api.upload.on( 'fsnodeProgress', function( fsnode, percent ){});
 
 api.upload.on( 'fsnodeEnd', function( fsnode, fileId ){
 
@@ -313,8 +275,10 @@ api.upload.on( 'fsnodeEnd', function( fsnode, fileId ){
     attachment.find('.icon').css( 'background-image', 'url(' + fsnode.icons.micro + ')' );
     attachment.find('.aux-title').hide();
     attachment.addClass('from-pc').addClass( 'attachment-' + fileId ).addClass( 'attachment-fsnode-' + fsnode.id );
-    //attachment.data( 'fsnode', fsnode );
-    //$('.new-card-section').removeClass( 'uploading' );
+
+    if( $('.attachment.uploading').length ){
+      app.removeClass('uploading')
+    }
 
   }
 
@@ -323,9 +287,8 @@ api.upload.on( 'fsnodeEnd', function( fsnode, fileId ){
 // DOM Events
 closeNewCard.add( cancelNewCard ).on( 'click', function(){
 
-  removeAttachment( { selection: 'all' } )
-
-  if ( !$('.new-card-section').hasClass('uploading') ) {
+  if( !app.hasClass('uploading') ){
+    removeAttachment( { selection: 'all' } )
     wz.app.removeView( app )
   }
 
@@ -333,8 +296,8 @@ closeNewCard.add( cancelNewCard ).on( 'click', function(){
 
 postNewCardButton.on( 'click', function(){
 
-  if ( !$('.new-card-section').hasClass('uploading') ) {
-    postNewCardAsync();
+  if( !app.hasClass('uploading') ){
+    postNewCardAsync()
   }
 
 });
@@ -355,7 +318,6 @@ app
 .on( 'upload-prepared', function( e, uploader ){
 
   hideAttachSelect()
-  //$( '.new-card-section .attachments' ).data( 'withAttach', true )
 
   uploader( params.world.volume, function( e, uploadQueueItem ){
     addAttachment( uploadQueueItem )
@@ -365,12 +327,10 @@ app
 .on( 'click', '.cancel-attachment', function(){
 
   var attachment = $(this).closest('.attachment')
-  removeAttachment( { selection: attachment.data( 'attachment' ).fsnode.id } )
-  attachment.remove();
 
-  if ($('.attachment:not(.wz-prototype)').length === 0) {
-    attachNewPostButton.removeClass('with-attach');
-  }
+  removeAttachment( { selection: attachment.data('attachment').fsnode.id } )
+  attachment.remove()
+  updateAttachmentCounter()
 
 })
 
