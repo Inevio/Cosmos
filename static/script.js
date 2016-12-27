@@ -1529,7 +1529,6 @@ var appendNoFileCard = function( post , user , reason ){
 
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
-  card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
 
@@ -1610,7 +1609,6 @@ var appendGenericCard = function( post , user , reason , callback ){
 
     card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
     card.find( '.card-user-name' ).text( user.fullName );
-    card.find( '.shared-text' ).text( reason );
     card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
     setRepliesAsync( card , post );
@@ -1658,7 +1656,6 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
     card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
     card.find( '.card-user-name' ).text( user.fullName );
-    card.find( '.shared-text' ).text( reason );
     card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
     setRepliesAsync( card , post );
@@ -1679,7 +1676,6 @@ var appendYoutubeCard = function( post , user , reason ){
   card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
-  card.find( '.shared-text' ).text( reason );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
   card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
   card.find( '.title' ).text( post.title );
@@ -1774,13 +1770,44 @@ var appendCard = function( card , post ){
   if ( post.worldId != worldActive.id ) {
     return;
   }
+
   if ( $( '.post-' + post.id ).length != 0 ) {
     $( '.post-' + post.id ).remove();
   }
 
   $( '.no-posts' ).css( 'opacity' , '0' );
   $( '.no-posts' ).hide();
+
   card.find( '.delete span' ).text( lang.deletePost );
+  //Texto por defecto, post manual
+  var reason = '';
+  switch ( post.metadata.operation ) {
+    //Se ha subido este/estos archivos
+    case 'enqueue':
+      reason = '';
+      break;
+    //Se han modificado este/estos archivos
+    case 'modified':
+      reason = '';
+      break;
+    //Se han copiado este/estos archivos
+    case 'copy':
+      reason = '';
+      break;
+    //Se han movido dentro de la carpeta de este mundo este/estos archivos
+    case 'moveIn':
+      reason = '';
+      break;
+    //Se han movido fuera de la carpeta de este mundo este/estos archivos
+    case 'moveOut':
+      reason = '';
+      break;
+    case 'remove':
+      reason = '';
+      break;
+
+  }
+  card.find( '.shared-text' ).text( reason );
 
   app.removeClass( 'no-post' );
 
