@@ -56,9 +56,9 @@ var startPopupPost = function(){
 }
 */
 
-var addAttachment = function( attach ){
+var addAttachment = function( attach, useItem ){
 
-  var attachment = attachmentPrototype.clone()
+  var attachment = useItem || attachmentPrototype.clone()
 
   attachment.removeClass('wz-prototype')
   attachment.find('.title').text( attach.fsnode ? attach.fsnode.name : attach.name )
@@ -376,13 +376,31 @@ app
 
 .on( 'requestPostCreate', function( e, newParams, callback ){
 
-  if( automaticPopupQueue === newParams.queue ){
-    addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId === 'TO_UPDATE' })
+  if( automaticPopupQueue && automaticPopupQueue === newParams.queue ){
+
+    addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId !== 'TO_UPDATE' })
     callback( true )
+
   }else if( newParams.queue ){
-    callback( $( '.attachment-' + newParams.queue.fsnode[ newParams.fsnode.id ].id + ', .attachment-fsnode-' + newParams.fsnode.id ).length )
+
+    var found = $( '.attachment-' + newParams.queue.fsnode[ newParams.fsnode.id ].id + ', .attachment-fsnode-' + newParams.fsnode.id )
+
+    if( found.length ){
+      addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId !== 'TO_UPDATE' }, found )
+    }
+
+    callback( found.length )
+
   }else{
-    callback( $( '.attachment-fsnode-' + newParams.fsnode.id ).length )
+
+    var found = $( '.attachment-fsnode-' + newParams.fsnode.id )
+
+    if( found.length ){
+      addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId !== 'TO_UPDATE' }, found )
+    }
+
+    callback( found.length )
+
   }
 
 })
