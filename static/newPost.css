@@ -7,7 +7,7 @@
   display: inline-block !important;
 }
 
-.new-card-section.uploading .post-new-card, .new-card-section.uploading .cancel-new-card{
+.wz-view.uploading .post-new-card, .wz-view.uploading .cancel-new-card{
   opacity: 0.5;
 }
 
