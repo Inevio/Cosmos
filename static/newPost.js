@@ -107,6 +107,7 @@ var postNewCardAsync = function(){
   }
 
   var attachments = $('.attach-list .attachment').not('.wz-prototype');
+  var metadata = { operation: params.operation };
 
   var addPost = function( o ){
 
@@ -118,8 +119,8 @@ var postNewCardAsync = function(){
 
     if ( o.linkType ) {
 
-      var res = { content: text, title: title, metadata: { linkType : o.linkType } }
-      params.world.addPost( { content: text, title: title, metadata: { linkType : o.linkType } }, function( e, o ){
+      metadata.linkType = o.linkType;
+      params.world.addPost( { content: text, title: title, metadata: metadata }, function( e, o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
@@ -129,19 +130,17 @@ var postNewCardAsync = function(){
 
     }else if( o.fileType ){
 
-      var res = { content: text, title: title, fsnode: attachment, metadata: { fileType : o.fileType } }
-      params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: { fileType : o.fileType } }, function( e, o ){
+      metadata.fileType = o.fileType;
+      params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata }, function( e, o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
-        //$( '.new-card-section .attachments' ).data( 'withAttach', '' );
         wz.app.removeView( app );
 
       });
 
     }else{
 
-      var res = { content: text, title: title }
       params.world.addPost( { content: text, title: title }, function( e, o ){
 
         $( '.new-card-input' ).val('');
