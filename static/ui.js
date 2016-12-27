@@ -5,8 +5,11 @@ var showingUsers    = false;
 var onTransition    = false;
 var state           = 1;
 var titleLength     = 0;
+var worldRecortedName;
+var worldCompleteName;
 var app             = $( this );
 var cover           = $( '.cover' );
+var worldTitle      = $( '.world-title' );
 var spotDesc        = $( '.spot-desc' );
 var spotCover       = $( '.spot-cover' );
 var goBack          = $( '.go-back' );
@@ -573,6 +576,8 @@ var moveToCover = function(){
 // Compress de cover to show better the cards
 var compressCover = function(){
 
+  $( '.cover' ).addClass( 'compresed' );
+
   if ( app.hasClass( 'no-post' ) ) {
     return;
   }
@@ -635,7 +640,13 @@ var compressCover = function(){
     'font-size'     : '15px',
     'color'         : '#545f65'
 
-  }, 1000, animationEffect);
+  }, 1000, animationEffect , function(){
+
+    worldRecortedName = $( '.world-title' ).text();
+    worldCompleteName = $( '.world.active' ).data( 'world' ).name;
+    $( '.world-title' ).text( worldCompleteName );
+
+  });
 
   // Cover compress (animation)
   $( '.cover' ).stop().clearQueue().transition({
@@ -724,6 +735,17 @@ var compressCover = function(){
 
 // Decompress de cover to show better the cards
 var decompressCover = function( instant ){
+
+  $( '.cover' ).removeClass( 'compresed' );
+
+  var name = worldTitle.data( 'name' );
+  var winWidth = parseInt(app.css( 'width' ));
+  var textWidth = Math.floor( winWidth * 0.032 );
+  if ( name.length > textWidth ) {
+    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+  }else{
+    worldTitle.text( name );
+  }
 
   if ( instant ) {
 
@@ -1165,8 +1187,9 @@ var newWorldAnimationBNormal = function(){
   $( '.new-world-title' ).addClass( 'second' );
   $( '.create-world-button' ).addClass( 'step-b' );
   $( '.create-world-button' ).removeClass( 'step-a' );
-  $( '.option.private-option' ).removeClass( 'active' );
-  $( '.option.public' ).addClass( 'active' );
+  $( '.option.private-option' ).addClass( 'active' );
+  $( '.option.public' ).removeClass( 'active' );
+
 
   $( '.new-world-desc textarea' ).val('');
 

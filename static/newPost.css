@@ -30,7 +30,8 @@
     color: #889399;
     margin-top: 25px;
     margin-left: 25px;
-    width: 504px;
+    margin-right: 43px;
+    width: 461px;
 
   }
 
@@ -48,6 +49,7 @@
     font-weight: bold;
     display: inline-block;
     margin-left: 4px;
+    max-width: 329px;
 
   }
 

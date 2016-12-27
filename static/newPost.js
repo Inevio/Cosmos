@@ -225,13 +225,19 @@ var hideAttachSelect = function(){
   $('.attach-select').removeClass('popup')
 }
 
-var removeAttachments = function(){
+var removeAttachment = function( options ){
 
   if( automaticPopupQueue ){
     return
   }
 
-  var attachments = $('.attachment.from-pc');
+  var attachments;
+  if ( options.selection === 'all' ) {
+    attachments = $('.attachment.from-pc');
+  }else{
+    attachments = $('.attachment-' + options.selection + '.from-pc');
+  }
+
 
   $.each( attachments, function(){
 
@@ -282,7 +288,7 @@ var start = function(){
 
 var translateUI = function(){
 
-  $( '.new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger">' + params.world.name + '</figure>' );
+  $( '.new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
   $( '.cancel-new-card span' ).text( lang.cancel );
   $( '.post-new-card span' ).text( lang.postit );
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
@@ -317,7 +323,7 @@ api.upload.on( 'fsnodeEnd', function( fsnode, fileId ){
 // DOM Events
 closeNewCard.add( cancelNewCard ).on( 'click', function(){
 
-  removeAttachments()
+  removeAttachment( { selection: 'all' } )
 
   if ( !$('.new-card-section').hasClass('uploading') ) {
     wz.app.removeView( app )
@@ -358,7 +364,9 @@ app
 })
 .on( 'click', '.cancel-attachment', function(){
 
-  $(this).closest('.attachment').remove();
+  var attachment = $(this).closest('.attachment')
+  removeAttachment( { selection: attachment.data( 'attachment' ).fsnode.id } )
+  attachment.remove();
 
   if ($('.attachment:not(.wz-prototype)').length === 0) {
     attachNewPostButton.removeClass('with-attach');
