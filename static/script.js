@@ -304,7 +304,11 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
 });
 
-app.on( 'ui-view-resize' , function(){
+app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
+
+  if ( $( '.cover' ).hasClass( 'compresed' ) ) {
+    return;
+  }
 
   var name = worldTitle.data( 'name' );
   var winWidth = parseInt(app.css( 'width' ));
@@ -320,6 +324,7 @@ app.on( 'ui-view-resize' , function(){
   }
 
 });
+
 
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
@@ -978,12 +983,11 @@ var createWorldAsync = function(){
     return;
   }
 
-  wz.cosmos.create( worldName , null, false , null , function( e , o ){
+  wz.cosmos.create( worldName , null, true , null , function( e , o ){
 
     if ( e ) {
       console.log( e );
     }
-
     //createChat( o );
 
   });
