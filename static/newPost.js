@@ -62,6 +62,10 @@ var addAttachment = function( attach, useItem ){
     attachment.find('.icon').css( 'background-image', 'url(' + attach.fsnode.icons.micro + ')' );
   }
 
+  if ( params.operation === 'remove' ) {
+    attachment.find( '.cancel-attachment' ).hide();
+  }
+
   attachmentPrototype.after( attachment );
   attachment.data( 'attachment', attach );
   updateAttachmentCounter()
@@ -112,10 +116,11 @@ var postNewCardAsync = function(){
   var addPost = function( o ){
 
     var attachment = [];
-
-    $.each( o.fsnode, function(){
-      attachment.push( $( this ).data('attachment').fsnode.id )
-    })
+    if ( o.fsnode ) {
+      $.each( o.fsnode, function(){
+        attachment.push( $( this ).data('attachment').fsnode.id )
+      })
+    }
 
     if ( o.linkType ) {
 
@@ -188,7 +193,7 @@ var removeAttachment = function( options ){
   if ( options.selection === 'all' ) {
     attachments = $('.attachment.from-pc');
   }else{
-    attachments = $('.attachment-' + options.selection + '.from-pc');
+    attachments = $('.attachment-fsnode-' + options.selection + '.from-pc');
   }
 
 

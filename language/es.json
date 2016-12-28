@@ -62,7 +62,6 @@
     "to"            : "a",
     "search"        : "Buscar...",
     "updatedFile"   : "ha actualizado un arhivo",
-    "postCreated"   : "ha creado un nuevo post",
     "comments"      : "comentarios",
     "comfirmDeletePost" : "¿Esta seguro que quiere eliminar el post?",
     "comfirmDeleteComment" : "¿Esta seguro que quiere eliminar el comentario?",
@@ -126,6 +125,18 @@
     "writeTitle"          : "Escribe un título para la publicación",
     "writeDescription"    : "Escribe una descripción...",
     "addFiles"            : "Añadir archivos",
-    "editingOne"          : "Ya estás editando otro post. Guarda o cancela el anterior para poder editar este."
+    "editingOne"          : "Ya estás editando otro post. Guarda o cancela el anterior para poder editar este.",
+
+    "searchPost"          : "Buscar post",
+    "viewInfo"            : "Ver información",
+    "abandonWorld"        : "Abandonar mundo",
+
+    "postCreated"         : "ha creado un nuevo post",
+    "fileAdded"           : "ha añadido un archivo",
+    "filesAdded"          : "ha añadido varios archivos",
+    "fileModified"        : "ha modificado un archivo",
+    "filesModified"       : "ha modificado varios archivos",
+    "fileRemoved"         : "ha borrado un archivo",
+    "filesRemoved"        : "ha borrado varios archivos"
 
 }

@@ -1130,6 +1130,7 @@ to {background-position: -200% 0;}
     display: table;
     letter-spacing: 0.02em;
     height: 40px;
+    line-height: initial;
 
   }
 
