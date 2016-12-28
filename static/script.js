@@ -151,7 +151,7 @@ unFollowButton.on( 'click' , function(){
 
   if ( ! $( this ).hasClass( 'editable' ) ) {
 
-    unFollowWorld();
+    unFollowWorld( worldSelected );
 
   }else{
 
@@ -475,7 +475,7 @@ app
 
 .on( 'click' , '.delete-world-button' , function(){
 
-  unFollowWorld();
+  unFollowWorld( worldSelected );
   $( '.new-world-container' ).removeClass( 'editing' );
 
 })
@@ -718,6 +718,76 @@ app
 
 })
 
+.on( 'contextmenu' , '.worldDom' , function(){
+
+  var menu = api.menu();
+  var worldDom = $( this );
+  var world = worldDom.data( 'world' );
+  var isMine = world.owner === myContactID ? true : false;
+
+  menu.addOption( lang.searchPost , function(){
+
+    if ( worldDom.hasClass( 'active' ) ) {
+
+      $( '.search-button' ).click();
+
+    }else{
+
+      selectWorld( worldDom , function(){
+        $( '.search-button' ).click();
+      });
+
+    }
+
+  });
+
+  menu.addOption( lang.viewInfo , function(){
+
+    if ( worldDom.hasClass( 'active' ) ) {
+
+      $( '.more-info' ).click();
+
+    }else{
+
+      selectWorld( worldDom , function(){
+        $( '.more-info' ).click();
+      });
+
+    }
+
+  });
+
+  if ( isMine ) {
+
+    menu.addOption( lang.editWorld , function(){
+
+      if ( worldDom.hasClass( 'active' ) ) {
+
+        unFollowButton.click();
+
+      }else{
+
+        selectWorld( worldDom , function(){
+          unFollowButton.click();
+        });
+
+      }
+
+    });
+
+  }else{
+
+    menu.addOption( lang.abandonWorld , function(){
+
+      unFollowWorld( world );
+
+    });
+
+  }
+
+  menu.render();
+
+})
 //Functions
 var initCosmos = function(){
 
@@ -742,6 +812,7 @@ var initCosmos = function(){
   });
 
 }
+
 
 var initTexts = function(){
 
@@ -1779,34 +1850,35 @@ var appendCard = function( card , post ){
   $( '.no-posts' ).hide();
 
   card.find( '.delete span' ).text( lang.deletePost );
-  //Texto por defecto, post manual
-  var reason = '';
-  switch ( post.metadata.operation ) {
-    //Se ha subido este/estos archivos
-    case 'enqueue':
-      reason = '';
-      break;
-    //Se han modificado este/estos archivos
-    case 'modified':
-      reason = '';
-      break;
-    //Se han copiado este/estos archivos
-    case 'copy':
-      reason = '';
-      break;
-    //Se han movido dentro de la carpeta de este mundo este/estos archivos
-    case 'moveIn':
-      reason = '';
-      break;
-    //Se han movido fuera de la carpeta de este mundo este/estos archivos
-    case 'moveOut':
-      reason = '';
-      break;
-    case 'remove':
-      reason = '';
-      break;
+
+  var multipost = card.find( '.doc-preview' ).length > 1 ? true : false;
+  var reason = lang.postCreated;
+  if ( post.metadata ) {
+
+    switch ( post.metadata.operation ) {
+      case 'enqueue':
+        reason = multipost ? lang.filesAdded : lang.fileAdded;
+        break;
+      case 'modified':
+        reason = multipost ? lang.filesModified : lang.fileModified ;
+        break;
+      case 'copy':
+        reason = multipost ? lang.filesAdded : lang.fileAdded;
+        break;
+      case 'moveIn':
+        reason = multipost ? lang.filesAdded : lang.fileAdded;
+        break;
+      case 'moveOut':
+        reason = multipost ? lang.filesRemoved : lang.fileRemoved;
+        break;
+      case 'remove':
+        reason = multipost ? lang.filesRemoved : lang.fileRemoved;
+        break;
+
+    }
 
   }
+
   card.find( '.shared-text' ).text( reason );
 
   app.removeClass( 'no-post' );
@@ -1937,21 +2009,21 @@ var removePostAsync = function( post ){
 
 }
 
-var unFollowWorld = function(){
+var unFollowWorld = function( world ){
 
-  worldSelected.removeUser( myContactID , function( e , o ){
+  world.removeUser( myContactID , function( e , o ){
 
-    var worldList = $( '.world.active' ).parent();
+    var worldList = $( '.world-' + world.id ).parent();
 
-    $( '.world.active' ).parent().transition({
+    $( '.world-' + world.id ).parent().transition({
 
       'height'         : worldList.height() - 28
 
     }, 200);
-    $( '.world.active' ).remove();
+    $( '.world-' + world.id ).remove();
 
 
-    var index = myWorlds.indexOf( worldSelected.id );
+    var index = myWorlds.indexOf( world.id );
     if (index > -1) {
       myWorlds.splice(index, 1);
     }

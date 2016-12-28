@@ -127,6 +127,18 @@
     "writeTitle"          : "Write a title for the post",
     "writeDescription"    : "Write a description...",
     "addFiles"            : "Add files",
-    "editingOne"          : "You are already editing another post. Please save or cancel the other post to start editing a new one."
+    "editingOne"          : "You are already editing another post. Please save or cancel the other post to start editing a new one.",
+
+    "searchPost"          : "Search post",
+    "viewInfo"            : "View information",
+    "abandonWorld"        : "Leave world",
+
+    "postCreated"         : "has added a post",
+    "fileAdded"           : "has added a file",
+    "filesAdded"          : "has added some files",
+    "fileModified"        : "has modified a file",
+    "filesModified"       : "has modified some files",
+    "fileRemoved"         : "has removed a file",
+    "filesRemoved"        : "has removed some files"
 
 }
