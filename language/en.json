@@ -110,7 +110,8 @@
     "for"           : "for",
     "uploadInevio"  : "Add from Inevio",
     "uploadPC"      : "Upload from PC",
-    "postit"        : "Post",
+    "postit"        : "Publish",
+    
     "createWorldShort"  : "Create world",
     "notAllowedDeletePost"    : "You are not allowed to delete this post",
     "createNewPost" : "Create new post",
@@ -139,6 +140,13 @@
     "fileModified"        : "has modified a file",
     "filesModified"       : "has modified some files",
     "fileRemoved"         : "has removed a file",
-    "filesRemoved"        : "has removed some files"
+    "filesRemoved"        : "has removed some files",
+
+    "hadAddedFile"        : "You've added a new file to",
+    "hadAddedFiles"       : "You've added new files to",
+    "hadModifiedFile"     : "You've modified a file from",
+    "hadRemovedFile"      : "You've removed a file from",
+    "hadRemovedFiles"     : "You've removed several files from",
+    "wantToPublish"       : "Do you want to publish it in Cosmos?"
 
 }
