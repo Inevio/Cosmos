@@ -3,6 +3,14 @@
   letter-spacing: 0.02em;
 }
 
+input, textarea{
+  background: #f9f9fb;
+}
+
+.hide{
+  display: none;
+}
+
 .popup{
   display: inline-block !important;
 }
@@ -18,20 +26,41 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: #f9f9fb;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+
+  .new-card-header{
+    float: left;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #e2e6e8;
+    padding: 0 0 20px 0;
+  }
 
   .new-card-title{
 
     float: left;
     font-size: 17px;
     color: #889399;
-    margin-top: 25px;
+    margin-top: 20px;
     margin-left: 25px;
     margin-right: 43px;
     width: 461px;
+
+  }
+
+  .new-card-subtitle{
+
+    float: left;
+    font-size: 16px;
+    color: #889399;
+    margin-top: 14px;
+    margin-left: 25px;
+    margin-right: 43px;
+    padding-bottom: 2px;
+    width: 460px;
 
   }
 
@@ -180,10 +209,10 @@
   .attachments > i{
 
     float: left;
-    width: 16px;
-    height: 18px;
+    width: 17px;
+    height: 19px;
     background-image: url('@static/attach.png');
-    background-size: 32px 18px;
+    background-size: 17px 19px;
     margin-left: 9px;
     margin-top: 8px;
     cursor: pointer;

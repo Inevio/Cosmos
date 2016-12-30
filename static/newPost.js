@@ -35,6 +35,7 @@ var attachNewPostButton = $('.new-card-section .attachments');
 var cancelNewCard       = $('.cancel-new-card');
 var postNewCardButton   = $('.post-new-card');
 var attachmentPrototype = $('.attachment.wz-prototype');
+var myContactID         = api.system.user().id;
 
 // Functions
 var addAttachment = function( attach, useItem ){
@@ -129,7 +130,9 @@ var postNewCardAsync = function(){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
-        wz.app.removeView( app );
+        updateLastPostRead( o , function(){
+          wz.app.removeView( app );
+        });
 
       });
 
@@ -140,7 +143,9 @@ var postNewCardAsync = function(){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
-        wz.app.removeView( app );
+        updateLastPostRead( o , function(){
+          wz.app.removeView( app );
+        });
 
       });
 
@@ -150,7 +155,9 @@ var postNewCardAsync = function(){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
-        wz.app.removeView( app );
+        updateLastPostRead( o , function(){
+          wz.app.removeView( app );
+        });
 
       });
 
@@ -231,7 +238,8 @@ var start = function(){
   automaticPopupQueue = params.queue
 
   // Set popup texts and info
-  $('.new-card-avatar').css( 'background-image', 'url(' + api.system.user().avatar.tiny + ')' )
+  $('.new-card-avatar').css( 'background-image', 'url(' + api.system.user().avatar.tiny + ')' );
+  setTexts();
   translateUI()
 
   // Add files if any
@@ -246,7 +254,6 @@ var start = function(){
 
 var translateUI = function(){
 
-  $( '.new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
   $( '.cancel-new-card span' ).text( lang.cancel );
   $( '.post-new-card span' ).text( lang.postit );
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
@@ -266,6 +273,58 @@ var updateAttachmentCounter = function(){
 
 }
 
+var updateLastPostRead = function( post , callback ){
+
+  var post = post[0];
+  wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
+    if (e) {
+      console.log(e);
+    }else{
+      callback();
+    }
+  });
+
+}
+
+var setTexts = function(){
+
+  if ( params.operation ) {
+
+    var multipost = params.queue && params.queue.pending.length > 0 ? true : false;
+    var text;
+
+    switch ( params.operation ) {
+      case 'enqueue':
+      text = multipost ? lang.hadAddedFiles : lang.hadAddedFile;
+      break;
+      case 'modified':
+      text = lang.hadModifiedFile ;
+      break;
+      case 'copy':
+      text = multipost ? lang.hadAddedFiles : lang.hadAddedFile;
+      break;
+      case 'moveIn':
+      text = multipost ? lang.hadAddedFiles : lang.hadAddedFile;
+      break;
+      case 'moveOut':
+      text = multipost ? lang.hadRemovedFiles : lang.hadRemovedFile;
+      break;
+      case 'remove':
+      text = multipost ? lang.hadRemovedFiles : lang.hadRemovedFile;
+      break;
+
+    }
+
+    $( '.new-card-title' ).html( '<i class="wz-dragger">' + text + '</i>' + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
+    $( '.new-card-subtitle' ).html( lang.wantToPublish ).removeClass( 'hide' );
+
+  }else{
+
+    $( '.new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
+
+  }
+
+}
 // API Events
 api.upload.on( 'fsnodeProgress', function( fsnode, percent ){});
 

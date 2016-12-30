@@ -109,7 +109,8 @@
     "for"           : "para",
     "uploadInevio"  : "Añadir desde Inevio",
     "uploadPC"      : "Subir desde el PC",
-    "postit"        : "Postear",
+    "postit"        : "Publicar",
+    
     "createWorldShort"  : "Crear mundo",
     "notAllowedDeletePost"    : "No tienes los permisos para borrar este post",
     "createNewPost" : "Crear nuevo post",
@@ -137,6 +138,13 @@
     "fileModified"        : "ha modificado un archivo",
     "filesModified"       : "ha modificado varios archivos",
     "fileRemoved"         : "ha borrado un archivo",
-    "filesRemoved"        : "ha borrado varios archivos"
+    "filesRemoved"        : "ha borrado varios archivos",
+
+    "hadAddedFile"        : "Has añadido un archivo nuevo a",
+    "hadAddedFiles"       : "Has añadido varios archivos nuevos a",
+    "hadModifiedFile"     : "Has modificado un archivo de",
+    "hadRemovedFile"      : "Has eliminado un archivo de",
+    "hadRemovedFiles"     : "Has eliminado varios archivos de",
+    "wantToPublish"       : "¿Quieres publicarlo en Cosmos?"
 
 }
