@@ -335,7 +335,13 @@ api.cosmos.on( 'userUnbanned', function(){console.log('userUnbanned');})
 api.cosmos.on( 'worldPrivateSetted', function(){console.log('worldPrivatized');})
 api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
+api.cosmos.on( 'postContentSet', function(){
+  console.log( 'postContentSet', arguments )
+})
+
 api.cosmos.on( 'postModified', function( post ){
+
+  console.log('postModified',arguments)
 
   if ( $( '.post-' + post.id ).hasClass( 'editing' ) ) {
     return;
@@ -671,6 +677,7 @@ app
       post.setMetadata( newMetadata , function(){
         post.setTitle( newTitle , function(){
           post.setContent( newContent , function( e , post ){
+            console.log( e, post )
             setPost( post );
           });
         });
@@ -681,6 +688,7 @@ app
     if ( prevTitle != newTitle || prevContent != newContent) {
       post.setTitle( newTitle , function(){
         post.setContent( newContent , function( e , post ){
+          console.log( e, post )
           setPost( post );
         });
       });
