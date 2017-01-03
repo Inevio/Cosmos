@@ -37,10 +37,6 @@ from {background-position: 0 0;}
 to {background-position: -200% 0;}
 }
 
-.popup{
-  display: inline-block !important;
-}
-
 .no-worlds .close-app{
 
   padding: 15px;
