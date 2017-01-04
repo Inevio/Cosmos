@@ -1,5 +1,6 @@
 
 // Constants
+var OPERATION_SAMPLE_RANGE = 10000
 var TYPES = {
 
   'application/pdf'    : 'document',
@@ -28,6 +29,7 @@ var TYPES = {
 // Variables
 var app = $(this);
 var automaticPopupQueue = null
+var lastOperationSample = Date.now()
 
 // DOM Variables
 var closeNewCard        = $('.close-new-card');
@@ -413,6 +415,25 @@ app
     }
 
     callback( found.length )
+
+  }else if(
+    !newParams.queue &&
+    params.operation === newParams.operation &&
+    params.world.id === newParams.world.id &&
+    lastOperationSample >= ( Date.now() - OPERATION_SAMPLE_RANGE )
+  ){
+
+    var found = $( '.attachment-fsnode-' + newParams.fsnode.id )
+
+    if( found.length ){
+      addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId !== 'TO_UPDATE' }, found )
+    }else{
+      addAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId !== 'TO_UPDATE' } )
+    }
+
+    lastOperationSample = Date.now()
+
+    callback( true )
 
   }else{
 
