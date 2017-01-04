@@ -3,7 +3,7 @@ if( params.type !== 'popup' ){
   return start()
 }
 
-if( api.app.storage('ignoreRemoveEvent').indexOf( params.fsnode.id ) ){
+if( api.app.storage('ignoreRemoveEvent').indexOf( params.fsnode.id ) !== -1 ){
   return api.view.remove( false )
 }
 
