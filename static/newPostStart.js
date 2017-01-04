@@ -3,6 +3,10 @@ if( params.type !== 'popup' ){
   return start()
 }
 
+if( api.app.storage('ignoreRemoveEvent').indexOf( params.fsnode.id ) ){
+  return api.view.remove( false )
+}
+
 var win = $( this );
 var others = api.app.getViews('newPost').not( win )
 
