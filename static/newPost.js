@@ -203,13 +203,13 @@ var removeAttachment = function( options ){
     attachments = $('.attachment-fsnode-' + options.selection + '.from-pc');
   }
 
-
   $.each( attachments, function(){
 
     var fsnode = $(this).data( 'attachment' ).fsnode;
 
     if( fsnode ){
 
+      api.app.storage('ignoreRemoveEvent').push( fsnode.id )
       fsnode.remove( function( err ){
 
         if( err ){

@@ -1,7 +1,12 @@
-var myContactID     = api.system.user().id;
-var nNotifications  = 0;
 
-api.cosmos.on( 'postAdded' , function( post ){
+var myContactID    = api.system.user().id;
+var nNotifications = 0;
+
+if( !api.app.storage('ignoreRemoveEvent') ){
+  api.app.storage( 'ignoreRemoveEvent', [] )
+}
+
+api.cosmos.on( 'postAdded', function( post ){
 
   if ( post.author === myContactID ) {
     return;
