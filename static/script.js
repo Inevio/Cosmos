@@ -1363,6 +1363,12 @@ var getFriendsAsync = function(){
   $( '.friendDom' ).remove();
   api.user.friendList( false, function( error, friends ){
 
+    friends.sort(function(a , b){
+      if(a.fullName < b.fullName) return -1;
+      if(a.fullName > b.fullName) return 1;
+      return 0;
+    });
+
     $.each( friends , function( i , user ){
 
       appendFriend( user );
@@ -1501,7 +1507,13 @@ var getWorldPostsAsync = function( world , interval , callback ){
 
       wz.user( post.author , function( e , user ){
 
-        if ( post.metadata && post.metadata.fileType ) {
+        if( post.metadata && post.metadata.operation === 'remove' ){
+
+          appendGenericCard( post , user , lang.postCreated , function(){
+            promise.resolve();
+          });
+
+        }else if ( post.metadata && post.metadata.fileType ) {
 
           switch (post.metadata.fileType) {
 
@@ -1641,12 +1653,13 @@ var appendGenericCard = function( post , user , reason , callback ){
 
         var docPreview = card.find( '.doc-preview.wz-prototype' ).clone();
         docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
-        docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.small );
-        if ( fsnode.mime.indexOf( 'office' ) > -1 ) {
+        docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big );
+
+        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
           docPreview.find( '.doc-icon' ).addClass( 'office' );
         }
         docPreview.find( '.doc-title' ).text( fsnode.name );
-        docPreview.find( '.doc-info' ).text( fsnode.mime );
+        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) );
         card.find( '.desc' ).after( docPreview );
         docPreview.data( 'fsnode' , fsnode );
 
@@ -1701,9 +1714,7 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
   api.fs( post.fsnode[ 0 ], function( e , fsNode ){
 
-    console.log( fsNode , 'imagen!');
-
-    card.find( '.doc-preview' ).css( 'background-image' , 'url( '+ fsNode.thumbnails.big +' )' );
+    card.find( '.doc-preview img' ).attr( 'src' , 'https://download.inevio.com/' + fsNode.id );
     card.find( '.preview-title' ).text( fsNode.name );
     card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
     card.find( '.doc-preview' ).data( 'fsnode' , fsNode );

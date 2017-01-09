@@ -141,6 +141,7 @@ var postNewCardAsync = function(){
     }else if( o.fileType ){
 
       metadata.fileType = o.fileType;
+      metadata.fsnode = attachment;
       params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata }, function( e, o ){
 
         $( '.new-card-input' ).val('');
