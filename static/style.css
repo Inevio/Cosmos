@@ -9,8 +9,12 @@
   line-height: -moz-block-height;
 }
 
-input, textarea {
+input{
   line-height: -moz-block-height;
+}
+
+textarea{
+  line-height: initial;
 }
 
 [contenteditable=true]:empty:before{
@@ -2423,13 +2427,20 @@ to {background-position: -200% 0;}
   .card-content .doc-preview{
 
     float: left;
-    background-image: url('@static/docPreview.png');
     width: 100%;
     height: 283px;
     position: relative;
     background-size: cover;
     margin-top: 17px;
     cursor: pointer;
+    overflow: hidden;
+
+  }
+
+  .card-content .doc-preview img{
+
+    float: left;
+    width: 100%;
 
   }
 
@@ -2545,6 +2556,7 @@ to {background-position: -200% 0;}
     background-size: cover;
     cursor: pointer;
     display: flex;
+    overflow: hidden;
 
   }
 

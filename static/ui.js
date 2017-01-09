@@ -138,7 +138,6 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 
 cardList.on( 'mousewheel' , function( e , d , x , y ){
 
-
   if ( showingUsers ) {
     usersGoesDownNoAnimation();
   }
@@ -330,6 +329,12 @@ unFollowButton.on( 'click' , function(){
     }
 
   }
+
+});
+
+cardList.on( 'mousewheel' , '.comments-list' , function( e ){
+
+  e.stopPropagation();
 
 });
 
