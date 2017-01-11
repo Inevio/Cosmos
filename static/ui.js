@@ -349,13 +349,6 @@ app
 
   }
 
-  var commentOnEditMode = $( '.comment.editing' );
-  if ( commentOnEditMode.length > 0 && ! $( e.target ).hasClass( 'comment-text' ) && ! $( e.target ).hasClass( 'edit-button' )) {
-    commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
-    commentOnEditMode.removeClass( 'editing' );
-    commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text' ).text() );
-  }
-
 })
 
 .on( 'click' , '.create-world-button.step-a' , function(){

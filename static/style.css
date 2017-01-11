@@ -1669,10 +1669,10 @@ to {background-position: -200% 0;}
   i{
 
     float: left;
-    width: 16px;
-    height: 18px;
+    width: 17px;
+    height: 19px;
     background-image: url('@static/attach.png');
-    background-size: 32px 18px;
+    background-size: 17px 19px;
     margin-left: 9px;
     margin-top: 8px;
     cursor: pointer;
@@ -1838,6 +1838,10 @@ to {background-position: -200% 0;}
     z-index: 4;
     display: none;
 
+  }
+
+  .attach-select.popup{
+    display: block;
   }
 
   .attach-select article{

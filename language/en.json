@@ -111,7 +111,7 @@
     "uploadInevio"  : "Add from Inevio",
     "uploadPC"      : "Upload from PC",
     "postit"        : "Publish",
-    
+
     "createWorldShort"  : "Create world",
     "notAllowedDeletePost"    : "You are not allowed to delete this post",
     "createNewPost" : "Create new post",
@@ -147,6 +147,8 @@
     "hadModifiedFile"     : "You've modified a file from",
     "hadRemovedFile"      : "You've removed a file from",
     "hadRemovedFiles"     : "You've removed several files from",
-    "wantToPublish"       : "Do you want to publish it in Cosmos?"
+    "wantToPublish"       : "Do you want to publish it in Cosmos?",
+
+    "notWorking"          : "This functionality is not working, please be patient"
 
 }
