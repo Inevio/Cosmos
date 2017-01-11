@@ -178,7 +178,7 @@ api.cosmos.on( 'worldCreated' , function( world ){
 
 api.cosmos.on( 'postAdded' , function( post ){
 
-  console.log( 'ME HA LLEGADO UN POST!' , post );
+  console.log( 'Nuevo post: ' , post );
 
   if ( post.isReply ) {
 
@@ -598,7 +598,11 @@ app
 
 .on( 'click' , '.doc-preview' , function(){
 
-  $( this ).data( 'fsnode' ).open();
+  $( this ).data( 'fsnode' ).open( function( e , o ){
+    if (e) {
+      alert(e);
+    }
+  });
 
 })
 
@@ -612,24 +616,6 @@ app
 
   e.stopPropagation();
   $(this).toggleClass( 'active' );
-
-})
-
-.on( 'keydown' , '.comment.editing .comment-text' , function( e ){
-
-  var commentOnEditMode = $( this ).parent();
-  if (e.keyCode == 13) {
-    commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
-    commentOnEditMode.removeClass( 'editing' );
-    commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text' ).text() );
-  }
-
-  if (e.keyCode == 27) {
-    commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
-    commentOnEditMode.removeClass( 'editing' );
-    commentOnEditMode.find( '.comment-text' ).text( commentOnEditMode.data( 'oldText' ) );
-  }
-
 
 })
 
@@ -660,7 +646,7 @@ app
   var newFsnode    = [];
 
   $.each( newAttachments , function( i , attachment ){
-    newFsnodeIds.push( $(attachment).data( 'fsnode' ).id );
+    newFsnodeIds.push( parseInt($(attachment).data( 'fsnode' ).id) );
     newFsnode.push( $(attachment).data( 'fsnode' ) );
   })
 
@@ -680,6 +666,7 @@ app
 
     if ( prevTitle != newTitle || prevContent != newContent) {
       post.setTitle( newTitle , function(){
+        console.log(arguments);
         post.setContent( newContent , function( e , post ){
           setPost( post );
         });
@@ -2190,11 +2177,18 @@ var prepareReplayComment = function( comment ){
 
 var editComment = function( comment ){
 
+  alert(lang.notWorking);
+  /*
   comment.data( 'oldText' , comment.find( '.comment-text' ).text() );
   comment.find( '.comment-text' ).attr( 'contenteditable' , true );
   comment.find( '.comment-text' ).attr( 'placeholder' , lang.writeComment );
   comment.find( '.comment-text' ).focus();
   comment.addClass( 'editing' );
+  ---
+  commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
+  commentOnEditMode.removeClass( 'editing' );
+  commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text' ).text() );
+  */
 
 }
 
