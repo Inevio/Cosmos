@@ -444,10 +444,8 @@ openFolder.on( 'click' , function(){
 
 });
 
-api.upload.on( 'avatarProgress', function( percent ){
-
+api.upload.on( 'worldIconProgress', function( percent ){
   $( '.loading-animation-container' ).show();
-
 });
 
 api.upload.on( 'fsnodeEnd', function( fsnode ){
@@ -462,7 +460,7 @@ api.upload.on( 'fsnodeEnd', function( fsnode ){
 
 });
 
-api.cosmos.on( 'worldIconSetted', function( o ){
+api.upload.on( 'worldIconEnd', function( worldId ){
 
   $( '.loading-animation-container' ).hide();
   $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + '?' + Date.now() + ')' );
