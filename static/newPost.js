@@ -71,6 +71,9 @@ var addAttachment = function( attach, useItem ){
 
   attachmentPrototype.after( attachment );
   attachment.data( 'attachment', attach );
+  if ( attach.pending ) {
+    attachment.data( 'mime', attach.type );
+  }
   updateAttachmentCounter()
 
 }
@@ -171,7 +174,8 @@ var postNewCardAsync = function(){
   if( attachments.length ){
 
     if( attachments.length === 1 ){
-      addPost( { fsnode : attachments, fileType: guessType( attachments.data('attachment').fsnode.mime ), multifile: false } )
+      var mime = attachments.data('attachment').fsnode.mime ? attachments.data('attachment').fsnode.mime : attachments.data('mime');
+      addPost( { fsnode : attachments, fileType: guessType( mime ), multifile: false } )
     }else{
       addPost( { fsnode : attachments, fileType : 'generic', multifile : true } );
     }
@@ -320,6 +324,7 @@ var setTexts = function(){
 
     $( '.new-card-title' ).html( '<i class="wz-dragger">' + text + '</i>' + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
     $( '.new-card-subtitle' ).html( lang.wantToPublish ).removeClass( 'hide' );
+    $( '.attach-list, .attach-list .list' ).css( 'max-height' , '69px' );
 
   }else{
 
