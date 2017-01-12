@@ -178,8 +178,6 @@ api.cosmos.on( 'worldCreated' , function( world ){
 
 api.cosmos.on( 'postAdded' , function( post ){
 
-  console.log( 'Nuevo post: ' , post );
-
   if ( post.isReply ) {
 
     var parent = $( '.comment-' + post.parent );
@@ -337,57 +335,65 @@ api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 
 api.cosmos.on( 'postModified', function( post ){
 
-  if ( $( '.post-' + post.id ).hasClass( 'editing' ) ) {
-    return;
-  }
+  if ( post.isReply ) {
 
-  if ( worldSelected.id === post.worldId ) {
+    $( '.comment-' + post.id ).find( '.comment-text' ).text( post.content );
 
-    $( '.post-' + post.id ).remove();
+  }else{
 
-    wz.user( post.author , function( e , user ){
+    if ( $( '.post-' + post.id ).hasClass( 'editing' ) ) {
+      return;
+    }
 
-      if ( post.metadata && post.metadata.fileType ) {
+    if ( worldSelected.id === post.worldId ) {
 
-        switch (post.metadata.fileType) {
+      $( '.post-' + post.id ).remove();
 
-          case 'generic':
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
+      wz.user( post.author , function( e , user ){
 
-          case 'document':
-          appendDocumentCard( post , user , lang.postCreated , function(){});
-          break;
+        if ( post.metadata && post.metadata.fileType ) {
 
-          case 'image':
-          appendDocumentCard( post , user , lang.postCreated , function(){});
-          break;
+          switch (post.metadata.fileType) {
 
-          case 'video':
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
+            case 'generic':
+            appendGenericCard( post , user , lang.postCreated , function(){});
+            break;
 
-          case 'music':
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
+            case 'document':
+            appendDocumentCard( post , user , lang.postCreated , function(){});
+            break;
 
+            case 'image':
+            appendDocumentCard( post , user , lang.postCreated , function(){});
+            break;
+
+            case 'video':
+            appendGenericCard( post , user , lang.postCreated , function(){});
+            break;
+
+            case 'music':
+            appendGenericCard( post , user , lang.postCreated , function(){});
+            break;
+
+          }
+
+        }else if( post.metadata && post.metadata.linkType ){
+
+          switch (post.metadata.linkType) {
+
+            case 'youtube':
+            appendYoutubeCard( post , user , lang.postCreated );
+            break;
+
+          }
+
+        }else{
+          appendNoFileCard( post , user , lang.postCreated );
         }
 
-      }else if( post.metadata && post.metadata.linkType ){
+      });
 
-        switch (post.metadata.linkType) {
-
-          case 'youtube':
-          appendYoutubeCard( post , user , lang.postCreated );
-          break;
-
-        }
-
-      }else{
-        appendNoFileCard( post , user , lang.postCreated );
-      }
-
-    });
+    }
 
   }
 
@@ -466,6 +472,27 @@ api.cosmos.on( 'worldIconSetted', function( o ){
 })
 
 app
+
+.on( 'keyup' , '.comment-text-edit' , function( e ){
+
+  var commentOnEditMode = $( this ).parent();
+  if (e.keyCode == 13) {
+
+    if (! e.shiftKey) {
+      commentOnEditMode.find( '.comment-text' ).text( commentOnEditMode.find( '.comment-text-edit' ).val() );
+      commentOnEditMode.removeClass( 'editing' );
+      commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
+    }
+
+  }
+
+  if (e.keyCode == 27) {
+    commentOnEditMode.removeClass( 'editing' );
+  }
+
+  adjustHeight( $(this) );
+
+})
 
 .on( 'click' , '.create-world-button.step-a' , function(){
 
@@ -598,10 +625,19 @@ app
 
 .on( 'click' , '.doc-preview' , function(){
 
-  $( this ).data( 'fsnode' ).open( function( e , o ){
-    if (e) {
-      alert(e);
+  var attachment = $( this );
+  var fsnode =  $( this ).data( 'fsnode' );
+  var fsnodeList = [];
+  $.each( attachment.closest( '.card' ).find( '.doc-preview:not(.wz-prototype)' ) , function( i , attachment ){
+    fsnodeList.push( $( attachment ).data( 'fsnode' ) );
+  });
+
+  fsnode.open( fsnodeList.filter(function( item ){ return item.type === fsnode.type; }).map( function( item ){ return item.id; }), function( error ){
+
+    if ( error ) {
+      alert( error );
     }
+
   });
 
 })
@@ -1465,7 +1501,7 @@ var getWorldPostsAsync = function( world , interval , callback ){
     });
   }
 
-  world.getPosts( {from: interval.init , to: interval.final } , function( e , posts ){
+  world.getPosts( {from: interval.init , to: interval.final , withFullUsers: true } , function( e , posts ){
 
     if ( interval.init === 0 ) {
 
@@ -1492,67 +1528,63 @@ var getWorldPostsAsync = function( world , interval , callback ){
       var promise = $.Deferred();
       postPromises.push( promise );
 
-      wz.user( post.author , function( e , user ){
+      if( post.metadata && post.metadata.operation === 'remove' ){
 
-        if( post.metadata && post.metadata.operation === 'remove' ){
+        appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+          promise.resolve();
+        });
 
-          appendGenericCard( post , user , lang.postCreated , function(){
+      }else if ( post.metadata && post.metadata.fileType ) {
+
+        switch (post.metadata.fileType) {
+
+          case 'generic':
+          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
             promise.resolve();
           });
+          break;
 
-        }else if ( post.metadata && post.metadata.fileType ) {
-
-          switch (post.metadata.fileType) {
-
-            case 'generic':
-            appendGenericCard( post , user , lang.postCreated , function(){
-              promise.resolve();
-            });
-            break;
-
-            case 'document':
-            appendDocumentCard( post , user , lang.postCreated , function(){
-              promise.resolve();
-            });
-            break;
-
-            case 'image':
-            appendDocumentCard( post , user , lang.postCreated , function(){
-              promise.resolve();
-            });
-            break;
-
-            case 'video':
-            appendGenericCard( post , user , lang.postCreated , function(){
-              promise.resolve();
-            });
-            break;
-
-            case 'music':
-            appendGenericCard( post , user , lang.postCreated , function(){
-              promise.resolve();
-            });
-            break;
-
-          }
-
-        }else if( post.metadata && post.metadata.linkType ){
-
-          switch (post.metadata.linkType) {
-
-            case 'youtube':
-            appendYoutubeCard( post , user , lang.postCreated );
+          case 'document':
+          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
             promise.resolve();
-            break;
+          });
+          break;
 
-          }
+          case 'image':
+          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
+            promise.resolve();
+          });
+          break;
 
-        }else{
-          appendNoFileCard( post , user , lang.postCreated );
-          promise.resolve();
+          case 'video':
+          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+            promise.resolve();
+          });
+          break;
+
+          case 'music':
+          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+            promise.resolve();
+          });
+          break;
+
         }
 
-      });
+      }else if( post.metadata && post.metadata.linkType ){
+
+        switch (post.metadata.linkType) {
+
+          case 'youtube':
+          appendYoutubeCard( post , post.authorObject , lang.postCreated );
+          promise.resolve();
+          break;
+
+        }
+
+      }else{
+        appendNoFileCard( post , post.authorObject , lang.postCreated );
+        promise.resolve();
+      }
 
     });
 
@@ -1769,7 +1801,7 @@ var appendYoutubeCard = function( post , user , reason ){
 
 var setRepliesAsync = function( card , post ){
 
-  post.getReplies( { from : 0, to : 1000 }, function( e , replies ){
+  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( e , replies ){
 
     replies = replies.reverse();
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
@@ -1779,7 +1811,7 @@ var setRepliesAsync = function( card , post ){
 
       appendReply( card , reply , function(){
 
-        reply.getReplies( { from : 0 , to : 1000 }, function( e , responses ){
+        reply.getReplies( { from : 0 , to : 1000 , withFullUsers: true }, function( e , responses ){
 
           responses = responses.reverse();
 
@@ -1806,14 +1838,49 @@ var appendReply = function( card , reply , callback ){
   comment.find( '.replay-button' ).text( lang.reply );
   comment.find( '.edit-button' ).text( lang.edit );
 
-  wz.user( reply.author , function( e , user ){
+  if ( reply.author === myContactID ) {
+    comment.addClass('mine');
+  }
 
-    if ( reply.author === myContactID ) {
-      comment.addClass('mine');
-    }
+  //parche hasta #1356 fix
+  if (! reply.authorObject ) {
+    var userReady = $.Deferred();
+    wz.user( reply.author , function( e , user ){
+      userReady.resolve( user );
+    });
+  }
 
-    comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
-    comment.find( '.name' ).text( user.fullName );
+  if (userReady) {
+
+    $.when( userReady ).done(function( user ){
+
+      comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+      comment.find( '.name' ).text( user.fullName );
+      comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
+      comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+
+      comment.find( '.comment-text' ).find('a').each( function(){
+
+        if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+          $(this).attr( 'href', 'http://' + $(this).attr('href') );
+        }
+
+      });
+
+      card.find( '.comments-list' ).append( comment );
+      card.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
+
+      comment.data( 'reply' , reply );
+      comment.data( 'name' , user.name.split( ' ' )[0] );
+
+      callback();
+
+    })
+
+  }else{
+
+    comment.find( '.avatar' ).css( 'background-image' , 'url(' + reply.authorObject.avatar.tiny + ')' );
+    comment.find( '.name' ).text( reply.authorObject.fullName );
     comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
     comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
 
@@ -1829,11 +1896,11 @@ var appendReply = function( card , reply , callback ){
     card.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
 
     comment.data( 'reply' , reply );
-    comment.data( 'name' , user.name.split( ' ' )[0] );
+    comment.data( 'name' , reply.authorObject.name.split( ' ' )[0] );
 
     callback();
 
-  });
+  }
 
 }
 
@@ -1859,23 +1926,23 @@ var appendCard = function( card , post ){
 
     switch ( post.metadata.operation ) {
       case 'enqueue':
-        reason = multipost ? lang.filesAdded : lang.fileAdded;
-        break;
+      reason = multipost ? lang.filesAdded : lang.fileAdded;
+      break;
       case 'modified':
-        reason = multipost ? lang.filesModified : lang.fileModified ;
-        break;
+      reason = multipost ? lang.filesModified : lang.fileModified ;
+      break;
       case 'copy':
-        reason = multipost ? lang.filesAdded : lang.fileAdded;
-        break;
+      reason = multipost ? lang.filesAdded : lang.fileAdded;
+      break;
       case 'moveIn':
-        reason = multipost ? lang.filesAdded : lang.fileAdded;
-        break;
+      reason = multipost ? lang.filesAdded : lang.fileAdded;
+      break;
       case 'moveOut':
-        reason = multipost ? lang.filesRemoved : lang.fileRemoved;
-        break;
+      reason = multipost ? lang.filesRemoved : lang.fileRemoved;
+      break;
       case 'remove':
-        reason = multipost ? lang.filesRemoved : lang.fileRemoved;
-        break;
+      reason = multipost ? lang.filesRemoved : lang.fileRemoved;
+      break;
 
     }
 
@@ -2177,11 +2244,17 @@ var prepareReplayComment = function( comment ){
 
 var editComment = function( comment ){
 
-  alert(lang.notWorking);
+  comment.addClass( 'editing' );
+  var oldText = comment.find( '.comment-text' ).text();
+  if ( oldText ) {
+    comment.find( '.comment-text-edit' ).val( oldText );
+  }
+  comment.find( '.comment-text-edit' ).attr( 'placeholder' , lang.writeComment );
+  adjustHeight( comment.find( '.comment-text-edit' ) );
+
   /*
   comment.data( 'oldText' , comment.find( '.comment-text' ).text() );
   comment.find( '.comment-text' ).attr( 'contenteditable' , true );
-  comment.find( '.comment-text' ).attr( 'placeholder' , lang.writeComment );
   comment.find( '.comment-text' ).focus();
   comment.addClass( 'editing' );
   ---
@@ -2200,10 +2273,43 @@ var appendReplyComment = function( card , reply , response ){
   var reply = comment.find( '.replay.wz-prototype' ).clone();
   reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id );
 
-  wz.user( response.author , function( e , user ){
+  //parche hasta #1356 fix
+  if (! response.authorObject ) {
+    var userReady = $.Deferred();
+    wz.user( response.author , function( e , user ){
+      userReady.resolve( user );
+    });
+  }
 
-    reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
-    reply.find( '.name' ).text( user.fullName );
+  if (userReady) {
+
+    $.when( userReady ).done(function( user ){
+
+      reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
+      reply.find( '.name' ).text( user.fullName );
+      reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
+      reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+
+      reply.find( '.replay-text' ).find('a').each( function(){
+
+        if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+          $(this).attr( 'href', 'http://' + $(this).attr('href') );
+        }
+
+      });
+
+      comment.find( '.replay-list' ).append( reply );
+      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+
+      reply.data( 'reply' , response );
+
+
+    });
+
+  }else{
+
+    reply.find( '.avatar' ).css( 'background-image' , 'url(' + response.authorObject.avatar.tiny + ')' );
+    reply.find( '.name' ).text( response.authorObject.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
     reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
 
@@ -2220,7 +2326,7 @@ var appendReplyComment = function( card , reply , response ){
 
     reply.data( 'reply' , response );
 
-  });
+  }
 
 }
 
@@ -2517,7 +2623,7 @@ var setPost = function( post ){
 }
 
 var adjustHeight = function( textarea ){
-  textarea[0].style.height = "1px";
+  textarea[0].style.height = "23px";
   textarea[0].style.height = (textarea[0].scrollHeight - 5 )+"px";
 }
 

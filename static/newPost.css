@@ -250,11 +250,11 @@ input, textarea{
     padding-right: 22px;
     width: ~'calc(100% - 104px)';
     position: absolute;
-    max-height: 130px;
+    max-height: 95px;
     bottom: 54px;
 
     .list{
-      max-height: 130px;
+      max-height: 95px;
       padding-right: 10px;
     }
 

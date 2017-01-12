@@ -338,6 +338,13 @@ cardList.on( 'mousewheel' , '.comments-list' , function( e ){
 
 });
 
+$('.new-world-container-wrap').on( 'mousewheel' , '.new-world-desc textarea' , function( e ){
+
+  e.preventDefault();
+  e.stopPropagation();
+
+});
+
 app
 
 .on( 'click' , function( e ){
@@ -347,6 +354,13 @@ app
     $( '.popup' ).removeClass( 'popup' );
     $( this ).parent().find( '.comments-footer .attach-select' ).hide();
 
+  }
+
+  var commentOnEditMode = $( '.comment.editing' );
+  if ( commentOnEditMode.length > 0 && ! $( e.target ).hasClass( 'comment-text-edit' ) && ! $( e.target ).hasClass( 'edit-button' )) {
+    commentOnEditMode.find( '.comment-text' ).text( commentOnEditMode.find( '.comment-text-edit' ).val() );
+    commentOnEditMode.removeClass( 'editing' );
+    commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
   }
 
 })
@@ -485,7 +499,7 @@ app
       commentsSection.css('height', 'auto');
       commentsSection.find( 'textarea' ).focus();
 
-      adjustHeight( commentsSection.find( 'textarea' ) );
+      adjustHeight( $( '.comments-footer' ).find( 'textarea' ) );
 
     });
 
