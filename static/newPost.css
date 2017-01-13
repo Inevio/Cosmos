@@ -19,6 +19,25 @@ input, textarea{
   opacity: 0.5;
 }
 
+.new-card-section.with-attach.three{
+  .new-card-textarea{
+    height: 70px;
+  }
+}
+
+.new-card-section.with-attach.two{
+  .new-card-textarea{
+    height: 95px;
+  }
+}
+
+
+.new-card-section.with-attach.one{
+  .new-card-textarea{
+    height: 130px;
+  }
+}
+
 .new-card-section{
 
   width: 529px;
@@ -115,11 +134,10 @@ input, textarea{
     margin-top: 17px;
     margin-left: 87px;
     width: 398px;
-    height: 70px;
+    height: 170px;
     color: #545f65;
     font-size: 15px;
     line-height: 25px;
-
   }
 
   .close-new-card{

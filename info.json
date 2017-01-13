@@ -54,7 +54,7 @@
                     },
 
                     "css"    : [ "style.css" , "spinkit.css" ],
-                    "script" : [ "ui.js" , "script.js" ],
+                    "script" : [ "ui.js" , "script.js" , "autoResize.js"],
                     "start"  : [ "start.js" ]
 
                 },

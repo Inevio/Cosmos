@@ -1897,6 +1897,7 @@ to {background-position: -200% 0;}
   background: #f9f9fb;
   top: 317px;
   height: ~'calc(100% - 317px)';
+  overflow-y: auto;
 
 }
 
@@ -2738,6 +2739,7 @@ to {background-position: -200% 0;}
     float: left;
     max-height: 300px;
     width: 100%;
+    overflow-y: auto;
 
   }
 
@@ -2853,16 +2855,14 @@ to {background-position: -200% 0;}
     font-size: 13px;
     color: #889399;
     line-height: 20px;
-    width: 440px;
+    width: 420px;
     margin-top: 3px;
     word-wrap: break-word;
 
   }
 
   .comment .comment-text a, .comment .replay-text a{
-
     cursor: pointer;
-
   }
 
   .comment .comment-text-edit{
@@ -2870,16 +2870,19 @@ to {background-position: -200% 0;}
     background-color: #fff;
     border: 1px solid #60b25e;
     border-radius: 7px;
-    padding-left: 5px;
     margin-left: 4px;
-    width: 425px;
+    width: 410px;
     display: none;
-    padding-top: 10px;
     float: left;
-    margin-top: 10px;
+    margin-top: 5px;
     font-size: 13px;
     color: #889399;
-
+    box-sizing: border-box;
+    min-height: 25px;
+    height: 25px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 5px 10px;
   }
 
   .editing.comment .comment-text-edit{
@@ -2896,7 +2899,8 @@ to {background-position: -200% 0;}
 
   .comment .delete-comment{
 
-    float: left;
+
+    float: right;
     width: 22px;
     height: 22px;
     border-radius: 50%;
@@ -2905,6 +2909,11 @@ to {background-position: -200% 0;}
     display: none;
     cursor: pointer;
 
+  }
+
+  .comment.editing .delete-comment{
+    margin-left: 18px;
+    margin-top: 5px;
   }
 
   .comment.mine .delete-comment{
@@ -2995,6 +3004,11 @@ to {background-position: -200% 0;}
     width: 100%;
     border-radius: 0 0 6px 6px;
     position: relative;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 35px;
 
   }
 
@@ -3120,10 +3134,14 @@ to {background-position: -200% 0;}
     background-color: transparent;
     font-size: 15px;
     color: #889399;
-    padding-top: 17px;
     width: 410px;
     margin-right: 10px;
     margin-left: 20px;
+    overflow: hidden;
+    min-height: 20px;
+    height: 20px;
+    overflow-x: hidden;
+    box-sizing: border-box;
     overflow-wrap: break-word;
 
   }
@@ -3135,9 +3153,11 @@ to {background-position: -200% 0;}
   	height: 33px;
   	border-radius: 17px 17px 16px 16px;
   	background-color: #60b25e;
-    margin-top: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: absolute;
+    right: 8px;
+    top: 8px;
 
   }
 
