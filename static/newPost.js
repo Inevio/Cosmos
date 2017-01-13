@@ -71,9 +71,31 @@ var addAttachment = function( attach, useItem ){
 
   attachmentPrototype.after( attachment );
   attachment.data( 'attachment', attach );
+
   if ( attach.pending ) {
     attachment.data( 'mime', attach.type );
   }
+
+  var nAttachs = $( '.attachment:not(.wz-prototype)' ).length;
+  switch (nAttachs) {
+    case 0:
+      break;
+    case 1:
+      $( '.new-card-section' ).addClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'three' );
+      break;
+    case 2:
+      $( '.new-card-section' ).addClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'three' );
+      break;
+    default:
+      $( '.new-card-section' ).addClass( 'three' );
+      $( '.new-card-section' ).removeClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'one' );
+  }
+
   updateAttachmentCounter()
 
 }
@@ -274,8 +296,10 @@ var updateAttachmentCounter = function(){
 
   if( $('.attachment:not(.wz-prototype)').length ){
     attachNewPostButton.addClass('with-attach')
+    attachNewPostButton.closest( '.new-card-section' ).addClass('with-attach');
   }else{
     attachNewPostButton.removeClass('with-attach')
+    attachNewPostButton.closest( '.new-card-section' ).removeClass('with-attach');
   }
 
 }
@@ -402,6 +426,25 @@ app
   removeAttachment( { selection: attachment.data('attachment').fsnode.id } )
   attachment.remove()
   updateAttachmentCounter()
+  var nAttachs = $( '.attachment:not(.wz-prototype)' ).length;
+  switch (nAttachs) {
+    case 0:
+      break;
+    case 1:
+      $( '.new-card-section' ).addClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'three' );
+      break;
+    case 2:
+      $( '.new-card-section' ).addClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'three' );
+      break;
+    default:
+      $( '.new-card-section' ).addClass( 'three' );
+      $( '.new-card-section' ).removeClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'one' );
+  }
 
 })
 

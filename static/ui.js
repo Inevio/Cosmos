@@ -334,7 +334,9 @@ unFollowButton.on( 'click' , function(){
 
 cardList.on( 'mousewheel' , '.comments-list' , function( e ){
 
-  e.stopPropagation();
+  if ( $(this).scrollTop() ) {
+    e.stopPropagation();
+  }
 
 });
 
@@ -354,11 +356,11 @@ app
     $( '.popup' ).removeClass( 'popup' );
     $( this ).parent().find( '.comments-footer .attach-select' ).hide();
 
+
   }
 
   var commentOnEditMode = $( '.comment.editing' );
   if ( commentOnEditMode.length > 0 && ! $( e.target ).hasClass( 'comment-text-edit' ) && ! $( e.target ).hasClass( 'edit-button' )) {
-    commentOnEditMode.find( '.comment-text' ).text( commentOnEditMode.find( '.comment-text-edit' ).val() );
     commentOnEditMode.removeClass( 'editing' );
     commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
   }
@@ -498,8 +500,6 @@ app
       commentsSection.addClass('opened');
       commentsSection.css('height', 'auto');
       commentsSection.find( 'textarea' ).focus();
-
-      adjustHeight( $( '.comments-footer' ).find( 'textarea' ) );
 
     });
 
@@ -1465,10 +1465,6 @@ var newWorldAnimationOut = function(){
 
 }
 
-var adjustHeight = function( textarea ){
-  textarea[0].style.height = "1px";
-  textarea[0].style.height = (textarea[0].scrollHeight - 5 )+"px";
-}
 
 // INIT Chat
 initCosmos();

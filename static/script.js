@@ -336,8 +336,7 @@ api.cosmos.on( 'worldNameSetted', function(){console.log('worldNameSetted');})
 api.cosmos.on( 'postModified', function( post ){
 
   if ( post.isReply ) {
-
-    $( '.comment-' + post.id ).find( '.comment-text' ).text( post.content );
+    $( '.comment-' + post.id ).find( '.comment-text' ).html( post.content.replace(/\n/g, "<br />") );
 
   }else{
 
@@ -463,21 +462,28 @@ api.upload.on( 'fsnodeEnd', function( fsnode ){
 api.upload.on( 'worldIconEnd', function( worldId ){
 
   $( '.loading-animation-container' ).hide();
-  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + o.icons.normal + '?' + Date.now() + ')' );
   $( '.wz-groupicon-uploader-start' ).removeClass('non-icon');
   $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
 
 })
 
+api.cosmos.on( 'worldIconSetted' , function( world ){
+
+  if ( $( '.world.active' ).hasClass( 'world-' + world.id ) ) {
+    $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
+    $( '.world-avatar' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
+  }
+
+});
+
 app
 
-.on( 'keyup' , '.comment-text-edit' , function( e ){
+.on( 'keydown' , '.comment-text-edit' , function( e ){
 
   var commentOnEditMode = $( this ).parent();
   if (e.keyCode == 13) {
 
     if (! e.shiftKey) {
-      commentOnEditMode.find( '.comment-text' ).text( commentOnEditMode.find( '.comment-text-edit' ).val() );
       commentOnEditMode.removeClass( 'editing' );
       commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
     }
@@ -487,8 +493,6 @@ app
   if (e.keyCode == 27) {
     commentOnEditMode.removeClass( 'editing' );
   }
-
-  adjustHeight( $(this) );
 
 })
 
@@ -570,40 +574,16 @@ app
 
 })
 
-.on( 'click' , '.edit-button' , function(){
-
-  editComment( $( this ).parent() );
-
-})
-
-.on( 'keyup' , '.comments-footer .comment-input' , function( e ){
-
+.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
   if (e.keyCode == 13) {
-
     if (! e.shiftKey ) {
-
-      e.stopPropagation();
-      e.preventDefault();
       addReplayAsync( $( this ).parent().parent().parent() );
-
-    }else{
-      adjustHeight( $(this) );
     }
-
-  }else if(e.keyCode == 27){
-    if ( $(this).val() === '' ) {
-      adjustHeight( $(this) );
-      $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
-    }
-  }else{
-    adjustHeight( $(this) );
   }
-
 })
 
 .on( 'focusout' , '.comments-footer .comment-input' , function(){
   if ( $(this).val() === '' ) {
-    adjustHeight( $(this) );
     $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
   }
 })
@@ -1056,7 +1036,7 @@ var appendWorldCard = function( worldApi ){
     worldTitle = worldTitle.substr(0 , 29) + '...';
   }
   world.find( '.world-title-min' ).text( worldTitle );
-  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?' + Date.now() + ')' );;
+  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );;
 
   if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
 
@@ -1154,7 +1134,7 @@ var selectWorld = function( world , callback ){
 
   }
 
-  $( '.world-avatar' ).css( 'background-image' , 'url(' + worldApi.icons.normal + ')' );
+  $( '.world-avatar' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
 
   worldTitle.data( 'name' , name );
 
@@ -2134,7 +2114,6 @@ var addReplayAsync = function( card ){
 
   post.reply( { content: msg }, function( e, o ){
     input.val('');
-    adjustHeight( input );
   });
 
 }
@@ -2237,29 +2216,6 @@ var prepareReplayComment = function( comment ){
   input.attr( 'placeholder' ,  '@' + name + ' ');
   input.focus();
   input.data( 'reply' , post );
-
-}
-
-var editComment = function( comment ){
-
-  comment.addClass( 'editing' );
-  var oldText = comment.find( '.comment-text' ).text();
-  if ( oldText ) {
-    comment.find( '.comment-text-edit' ).val( oldText );
-  }
-  comment.find( '.comment-text-edit' ).attr( 'placeholder' , lang.writeComment );
-  adjustHeight( comment.find( '.comment-text-edit' ) );
-
-  /*
-  comment.data( 'oldText' , comment.find( '.comment-text' ).text() );
-  comment.find( '.comment-text' ).attr( 'contenteditable' , true );
-  comment.find( '.comment-text' ).focus();
-  comment.addClass( 'editing' );
-  ---
-  commentOnEditMode.find( '.comment-text' ).attr( 'contenteditable' , false );
-  commentOnEditMode.removeClass( 'editing' );
-  commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text' ).text() );
-  */
 
 }
 
@@ -2618,11 +2574,6 @@ var setPost = function( post ){
 
   }
 
-}
-
-var adjustHeight = function( textarea ){
-  textarea[0].style.height = "23px";
-  textarea[0].style.height = (textarea[0].scrollHeight - 5 )+"px";
 }
 
 initCosmos();
