@@ -358,7 +358,10 @@ var setTexts = function(){
 
 }
 // API Events
-api.upload.on( 'fsnodeProgress', function( fsnode, percent ){});
+api.upload.on( 'fsnodeProgress', function( fsnode, percent ){
+  var attachment = $( '.attachment-fsnode-' + fsnode )
+  attachment.find('.aux-title').text( lang.uploading + (percent.toFixed(2) * 100).toFixed() + ' %')
+});
 
 api.upload.on( 'fsnodeEnd', function( fsnode, fileId ){
 
