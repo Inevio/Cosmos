@@ -554,8 +554,26 @@ to {background-position: -200% 0;}
 
 .select-world .close-app{
 
-  float: right;
-  margin: 25px;
+  padding: 15px;
+  margin: 10px;
+  right: 0;
+  position: absolute;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+}
+
+.select-world .close-app i{
+
+  cursor: pointer;
+
+}
+
+.select-world .close-app:hover{
+
+  background-color: #f7f8fa;
 
 }
 

@@ -281,9 +281,35 @@ api.cosmos.on( 'userAdded', function( userId , world ){
     myWorlds.push( world.id );
     appendWorld( world );
 
+    if ( noWorlds.css( 'display' ) != 'none' ) {
+      noWorlds.transition({
+
+        'opacity'         : 0
+
+      }, 200, animationEffect , function(){
+
+        noWorlds.hide();
+        starsCanvasContainer.stop().clearQueue().transition({
+
+          'opacity' : 0
+
+
+        }, 300 , function(){
+
+          starsCanvasContainer.addClass( 'no-visible' );
+          if ( $( '.world-' + world.id ).length ) {
+            selectWorld( $( '.world-' + world.id ) , function(){});
+          }
+
+        });
+
+      });
+
+    }
+
   }
 
-  if( world.id === worldSelected.id ){
+  if( worldSelected && world.id === worldSelected.id ){
 
     getWorldUsersAsync( worldSelected );
 
