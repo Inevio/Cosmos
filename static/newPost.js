@@ -84,16 +84,29 @@ var addAttachment = function( attach, useItem ){
       $( '.new-card-section' ).addClass( 'one' );
       $( '.new-card-section' ).removeClass( 'two' );
       $( '.new-card-section' ).removeClass( 'three' );
+      $( '.new-card-section' ).removeClass( 'four' );
+      app.css( 'height' ,  '372px' );
       break;
     case 2:
       $( '.new-card-section' ).addClass( 'two' );
       $( '.new-card-section' ).removeClass( 'one' );
       $( '.new-card-section' ).removeClass( 'three' );
+      $( '.new-card-section' ).removeClass( 'four' );
+      app.css( 'height' ,  '415px' );
       break;
-    default:
+    case 3:
       $( '.new-card-section' ).addClass( 'three' );
       $( '.new-card-section' ).removeClass( 'two' );
       $( '.new-card-section' ).removeClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'four' );
+      app.css( 'height' ,  '442px' );
+      break;
+    default:
+      $( '.new-card-section' ).addClass( 'four' );
+      $( '.new-card-section' ).removeClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'three' );
+      app.css( 'height' ,  '480px' );
   }
 
   updateAttachmentCounter()
@@ -149,6 +162,7 @@ var postNewCardAsync = function(){
         attachment.push( $( this ).data('attachment').fsnode.id )
       })
     }
+
 
     if ( o.linkType ) {
 
@@ -348,7 +362,7 @@ var setTexts = function(){
 
     $( '.new-card-title' ).html( '<i class="wz-dragger">' + text + '</i>' + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
     $( '.new-card-subtitle' ).html( lang.wantToPublish ).removeClass( 'hide' );
-    $( '.attach-list, .attach-list .list' ).css( 'max-height' , '69px' );
+    $( '.new-card-section' ).addClass( 'autopost' );
 
   }else{
 
@@ -437,17 +451,31 @@ app
       $( '.new-card-section' ).addClass( 'one' );
       $( '.new-card-section' ).removeClass( 'two' );
       $( '.new-card-section' ).removeClass( 'three' );
+      $( '.new-card-section' ).removeClass( 'four' );
+      app.css( 'height' ,  '372px' );
       break;
     case 2:
       $( '.new-card-section' ).addClass( 'two' );
       $( '.new-card-section' ).removeClass( 'one' );
       $( '.new-card-section' ).removeClass( 'three' );
+      $( '.new-card-section' ).removeClass( 'four' );
+      app.css( 'height' ,  '415px' );
       break;
-    default:
+    case 3:
       $( '.new-card-section' ).addClass( 'three' );
       $( '.new-card-section' ).removeClass( 'two' );
       $( '.new-card-section' ).removeClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'four' );
+      app.css( 'height' ,  '442px' );
+      break;
+    default:
+      $( '.new-card-section' ).addClass( 'four' );
+      $( '.new-card-section' ).removeClass( 'two' );
+      $( '.new-card-section' ).removeClass( 'one' );
+      $( '.new-card-section' ).removeClass( 'three' );
+      app.css( 'height' ,  '480px' );
   }
+
 
 })
 

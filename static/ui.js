@@ -340,13 +340,6 @@ cardList.on( 'mousewheel' , '.comments-list' , function( e ){
 
 });
 
-$('.new-world-container-wrap').on( 'mousewheel' , '.new-world-desc textarea' , function( e ){
-
-  e.preventDefault();
-  e.stopPropagation();
-
-});
-
 app
 
 .on( 'click' , function( e ){
