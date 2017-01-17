@@ -19,15 +19,39 @@ input, textarea{
   opacity: 0.5;
 }
 
+.new-card-section.with-attach.four{
+  .new-card-textarea{
+    height: 140px;
+  }
+}
+
+.autopost.new-card-section.with-attach.four{
+  .new-card-textarea{
+    height: 113px;
+  }
+}
+
 .new-card-section.with-attach.three{
   .new-card-textarea{
-    height: 70px;
+    height: 140px;
+  }
+}
+
+.autopost.new-card-section.with-attach.three{
+  .new-card-textarea{
+    height: 113px;
   }
 }
 
 .new-card-section.with-attach.two{
   .new-card-textarea{
-    height: 95px;
+    height: 140px;
+  }
+}
+
+.autopost.new-card-section.with-attach.two{
+  .new-card-textarea{
+    height: 113px;
   }
 }
 
@@ -38,10 +62,16 @@ input, textarea{
   }
 }
 
+.autopost.new-card-section.with-attach.one{
+  .new-card-textarea{
+    height: 105px;
+  }
+}
+
 .new-card-section{
 
   width: 529px;
-  height: 372px;
+  height: 100%;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -268,11 +298,11 @@ input, textarea{
     padding-right: 22px;
     width: ~'calc(100% - 104px)';
     position: absolute;
-    max-height: 95px;
+    max-height: 140px;
     bottom: 54px;
 
     .list{
-      max-height: 95px;
+      max-height: 140px;
       padding-right: 10px;
     }
 

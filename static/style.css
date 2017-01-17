@@ -207,11 +207,11 @@ to {background-position: -200% 0;}
 }
 
 .wz-scroll-bar-vertical:hover{
-    width: 10px;
+    width: 5px;
 }
 
 .wz-scroll-bar-vertical:active{
-    width: 10px;
+    width: 5px;
 }
 
 .wz-scroll-bar-vertical .wz-scroll-slider{
@@ -220,12 +220,12 @@ to {background-position: -200% 0;}
 }
 
 .wz-scroll-bar-vertical .wz-scroll-slider:hover{
-    width: 10px;
+    width: 5px;
     background: rgba( 0, 0, 0, 0.5 );
 }
 
 .wz-scroll-bar-vertical .wz-scroll-slider:active{
-    width: 10px;
+    width: 5px;
     background: rgba( 0, 0, 0, 0.7 );
 }
 
@@ -3679,6 +3679,7 @@ to {background-position: -200% 0;}
   opacity: 0;
   display: none;
   border-radius: 6px;
+  overflow: auto;
 
 }
 
@@ -3992,6 +3993,7 @@ to {background-position: -200% 0;}
     color: #545f65;
     font-size: 19px;
     transition: all 0.2s ease;
+    overflow: auto;
 
   }
 
