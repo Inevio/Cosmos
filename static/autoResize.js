@@ -56,12 +56,27 @@ app.on( 'click' , '.comments-opener' , function(){
 });
 
 app.on( 'click' , '.edit-button' , function(){
+
+  var button = $( this );
   var comment = $( this ).parent();
-  comment.addClass( 'editing' );
-  comment.find( '.comment-text-edit' ).textareaAutoSize();
-  var oldText = comment.find( '.comment-text' ).html();
-  if ( oldText ) {
-    comment.find( '.comment-text-edit' ).val( oldText.replace(  /<br\s*[\/]?>/gi , "\n" ) ).trigger('input');
+
+  if ( button.hasClass( 'save' ) ) {
+    comment.removeClass( 'editing' );
+    comment.data( 'reply' ).setContent( comment.find( '.comment-text-edit' ).val() );
+    button.removeClass( 'save' );
+    button.text( lang.edit );
+  }else{
+
+    button.text( lang.save );
+    button.addClass( 'save' );
+
+    comment.addClass( 'editing' );
+    comment.find( '.comment-text-edit' ).textareaAutoSize();
+    var oldText = comment.find( '.comment-text' ).html();
+    if ( oldText ) {
+      comment.find( '.comment-text-edit' ).val( oldText.replace(  /<br\s*[\/]?>/gi , "\n" ) ).trigger('input');
+    }
+    comment.find( '.comment-text-edit' ).attr( 'placeholder' , lang.writeComment );
+
   }
-  comment.find( '.comment-text-edit' ).attr( 'placeholder' , lang.writeComment );
 });

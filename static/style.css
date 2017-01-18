@@ -1915,7 +1915,7 @@ to {background-position: -200% 0;}
   background: #f9f9fb;
   top: 317px;
   height: ~'calc(100% - 317px)';
-  overflow-y: auto;
+  overflow-y: scroll;
 
 }
 
@@ -2464,6 +2464,7 @@ to {background-position: -200% 0;}
 
     float: left;
     width: 100%;
+    cursor: pointer;
 
   }
 
@@ -2586,6 +2587,7 @@ to {background-position: -200% 0;}
   .card-content .doc-icon img{
     align-self: center;
     width: 100%;
+    cursor: pointer;
   }
 
   .card-content .doc-icon.office{
@@ -4541,7 +4543,7 @@ to {background-position: -200% 0;}
     color: #889399;
     margin-top: 25px;
     margin-left: 25px;
-    width: 504px;
+    width: 335px;
 
   }
 
@@ -4559,6 +4561,7 @@ to {background-position: -200% 0;}
     font-weight: bold;
     display: inline-block;
     margin-left: 4px;
+    max-width: 225px;
 
   }
 

@@ -144,8 +144,8 @@ var attachFromInevio = function(){
 
 var postNewCardAsync = function(){
 
-  var text  = $( '.new-card-textarea' ).val();
-  var title = $( '.new-card-input' ).val();
+  var text  = $( '.new-card-textarea' ).val().trim();
+  var title = $( '.new-card-input' ).val().trim();
 
   if ( title === '' ) {
     return alert( lang.noInfo );
@@ -297,7 +297,7 @@ var start = function(){
 
 var translateUI = function(){
 
-  $( '.cancel-new-card span' ).text( lang.cancel );
+  $( '.cancel-new-card span' ).text( lang.omit );
   $( '.post-new-card span' ).text( lang.postit );
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span' ).text( lang.uploadPC );

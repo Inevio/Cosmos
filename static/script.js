@@ -195,7 +195,11 @@ api.cosmos.on( 'postAdded' , function( post ){
     }else{
 
       var ncomments = grandparent.find( '.comments-text' ).data( 'num' ) + 1;
-      grandparent.find( '.comments-text' ).text( ncomments + ' ' + lang.comments );
+      if ( ncomments === 1 ) {
+        grandparent.find( '.comments-text' ).text( ncomments + ' ' + lang.comment );
+      }else{
+        grandparent.find( '.comments-text' ).text( ncomments + ' ' + lang.comments );
+      }
       grandparent.find( '.comments-text' ).data( 'num' , ncomments );
 
       if ( worldSelected && worldSelected.id === post.worldId ) {
@@ -512,6 +516,9 @@ app
     if (! e.shiftKey) {
       commentOnEditMode.removeClass( 'editing' );
       commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
+
+      commentOnEditMode.find('.edit-button').removeClass( 'save' );
+      commentOnEditMode.find('.edit-button').text( lang.edit );
     }
 
   }
@@ -638,8 +645,9 @@ app
 
   fsnode.open( fsnodeList.filter(function( item ){ return item.type === fsnode.type; }).map( function( item ){ return item.id; }), function( error ){
 
-    if ( error ) {
-      alert( error );
+    if( error ){
+      console.log( error );
+      fsnode.openLocal();
     }
 
   });
@@ -702,17 +710,16 @@ app
         });
       });
     });
-  }else{
-
-    if ( prevTitle != newTitle || prevContent != newContent) {
-      post.setTitle( newTitle , function(){
-        console.log(arguments);
-        post.setContent( newContent , function( e , post ){
-          setPost( post );
-        });
+  }else if ( prevTitle != newTitle || prevContent != newContent) {
+    post.setTitle( newTitle , function(){
+      console.log(arguments);
+      post.setContent( newContent , function( e , post ){
+        setPost( post );
       });
-    }
-
+    });
+  }else{
+    $( this ).closest( '.card' ).removeClass( 'editing' );
+    $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' );
   }
 
 })
@@ -839,7 +846,6 @@ var initCosmos = function(){
   });
 
 }
-
 
 var initTexts = function(){
 
@@ -1385,7 +1391,7 @@ var followWorldAsync = function( worldCard ){
 
 var getFriendsAsync = function(){
 
-  $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure>' + worldSelected.name + '</figure>' );
+  $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure class="ellipsis">' + worldSelected.name + '</figure>' );
 
   $( '.friendDom' ).remove();
   api.user.friendList( false, function( error, friends ){
@@ -1809,6 +1815,11 @@ var setRepliesAsync = function( card , post ){
 
     replies = replies.reverse();
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
+    if ( replies.length === 1 ) {
+      card.find( '.comments-text' ).text( replies.length + ' ' + lang.comment );
+    }else{
+      card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
+    }
     card.find( '.comments-text' ).data( 'num' , replies.length );
 
     $.each( replies , function( i , reply ){
@@ -2010,7 +2021,7 @@ var timeElapsed = function( lastTime ){
 
     }else if( new Date ( now.setDate( now.getDate() - 1 ) ).getDate() === last.getDate() ){
 
-      message = lang.lastDay;
+      message = lang.lastDay + ' ' + lang.at + ' ' + getStringHour( lastTime );
       calculated = true;
 
     }
@@ -2030,7 +2041,7 @@ var timeElapsed = function( lastTime ){
       month='0'+month
     }
 
-    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 );
+    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + getStringHour( lastTime );
     calculated = true;
 
   }

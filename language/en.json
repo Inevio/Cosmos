@@ -149,6 +149,9 @@
     "hadRemovedFiles"     : "You've removed several files from",
     "wantToPublish"       : "Do you want to publish it in Cosmos?",
 
-    "notWorking"          : "This functionality is not working, please be patient"
+    "notWorking"          : "This functionality is not working, please be patient",
 
+    "omit"                : "Skip",
+    "at"                  : "at"
+    
 }

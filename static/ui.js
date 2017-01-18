@@ -62,7 +62,11 @@ api.cosmos.on( 'postRemoved', function( postId , world ){
       var card = $( '.comment-' + postId ).closest('.card');
       var commentsText = card.find( '.comments-text' );
       var ncomments = commentsText.data( 'num' ) - 1;
-      commentsText.text( ncomments + ' ' + lang.comments );
+      if ( ncomments === 1 ) {
+        commentsText.text( ncomments + ' ' + lang.comment );
+      }else{
+        commentsText.text( ncomments + ' ' + lang.comments );
+      }
       commentsText.data( 'num' , ncomments );
 
       if ( ncomments === 0 ) {
@@ -136,7 +140,7 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 
 });
 
-cardList.on( 'mousewheel' , function( e , d , x , y ){
+cardList.on( 'scroll' , function( e ){
 
   if ( showingUsers ) {
     usersGoesDownNoAnimation();
@@ -151,18 +155,31 @@ cardList.on( 'mousewheel' , function( e , d , x , y ){
 
   }
 
-  if ( state == 1 && !onTransition && y < 0) {
+  if ( state == 1 && !onTransition ) {
 
     e.preventDefault();
     e.stopPropagation();
     compressCover();
 
-  }else if( state == 0 && !onTransition && obj.scrollTop() < 5 && y > 0 ){
+  }else if( state == 0 && !onTransition && obj.scrollTop() < 5 ){
 
     decompressCover();
 
   }
 
+});
+
+cardList.on( 'mousewheel' , function( e , d , x , y ){
+
+  var obj = $( this );
+
+  if( state == 0 && !onTransition && y > 0 && obj.scrollTop() < 5 ){
+    e.preventDefault();
+    e.stopPropagation();
+    decompressCover();
+    $('.cards-list').scrollTop( 0 );
+
+  }
 });
 
 closeExplore.on( 'click' , function(){
@@ -356,6 +373,8 @@ app
   if ( commentOnEditMode.length > 0 && ! $( e.target ).hasClass( 'comment-text-edit' ) && ! $( e.target ).hasClass( 'edit-button' )) {
     commentOnEditMode.removeClass( 'editing' );
     commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
+    commentOnEditMode.find('.edit-button').removeClass( 'save' );
+    commentOnEditMode.find('.edit-button').text( lang.edit );
   }
 
 })
