@@ -2,9 +2,6 @@
 var worldSelected;
 var worldSelectedUsrs;
 var me;
-var uploaderFunction;
-var auxFunction;
-var fsnodeId;
 var nNotifications        = 0;
 var loadingPost           = false;
 var searchWorldQuery      = 0;
@@ -28,11 +25,11 @@ var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var exploreButton         = $( '.explore-button, .explore-button-no-worlds' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
-var openChatButton        = $( '.open-chat' );
+//var openChatButton        = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input' );
-var newPostButton         = $( '.new-post, .no-post-new-post-button' );
-var closeExplore          = $( '.close-explore' );
+//var newPostButton         = $( '.new-post, .no-post-new-post-button' );
+//var closeExplore          = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
@@ -85,7 +82,7 @@ var TYPES = {
 
 }
 
-
+var URL_REGEX = /^http(s)?:\/\//i;
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
 //Events
@@ -133,9 +130,7 @@ aceptInviteUser.on( 'click' , function(){
 });
 
 friendSearchBox.on( 'input' , function(){
-
   filterFriends( $( this ).val() );
-
 });
 
 exploreButton.on( 'click' , function(){
@@ -228,23 +223,14 @@ api.cosmos.on( 'postAdded' , function( post ){
 
           switch (post.metadata.fileType) {
 
-            case 'generic':
-            appendGenericCard( post , user , lang.postCreated , function(){});
-            break;
-
             case 'document':
-            appendDocumentCard( post , user , lang.postCreated , function(){});
-            break;
-
             case 'image':
             appendDocumentCard( post , user , lang.postCreated , function(){});
-            break;
 
+            /*case 'generic':
             case 'video':
-            appendGenericCard( post , user , lang.postCreated , function(){});
-            break;
-
-            case 'music':
+            case 'music':*/
+            default:
             appendGenericCard( post , user , lang.postCreated , function(){});
             break;
 
@@ -352,7 +338,6 @@ app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
   }
 
 });
-
 
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
@@ -1637,7 +1622,7 @@ var appendNoFileCard = function( post , user , reason ){
 
   card.find( '.desc' ).find('a').each( function(){
 
-    if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+    if( !URL_REGEX.test( $(this).attr('href') ) ){
       $(this).attr( 'href', 'http://' + $(this).attr('href') );
     }
 
@@ -1718,7 +1703,7 @@ var appendGenericCard = function( post , user , reason , callback ){
 
     card.find( '.desc' ).find('a').each( function(){
 
-      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+      if( !URL_REGEX.test( $(this).attr('href') ) ){
         $(this).attr( 'href', 'http://' + $(this).attr('href') );
       }
 
@@ -1763,7 +1748,7 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
     card.find( '.desc' ).find('a').each( function(){
 
-      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+      if( !URL_REGEX.test( $(this).attr('href') ) ){
         $(this).attr( 'href', 'http://' + $(this).attr('href') );
       }
 
@@ -1798,7 +1783,7 @@ var appendYoutubeCard = function( post , user , reason ){
 
   card.find( '.desc' ).find('a').each( function(){
 
-    if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+    if( !URL_REGEX.test( $(this).attr('href') ) ){
       $(this).attr( 'href', 'http://' + $(this).attr('href') );
     }
 
@@ -1876,7 +1861,7 @@ var appendReply = function( card , reply , callback ){
 
       comment.find( '.comment-text' ).find('a').each( function(){
 
-        if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+        if( !URL_REGEX.test( $(this).attr('href') ) ){
           $(this).attr( 'href', 'http://' + $(this).attr('href') );
         }
 
@@ -1901,7 +1886,7 @@ var appendReply = function( card , reply , callback ){
 
     comment.find( '.comment-text' ).find('a').each( function(){
 
-      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+      if( !URL_REGEX.test( $(this).attr('href') ) ){
         $(this).attr( 'href', 'http://' + $(this).attr('href') );
       }
 
@@ -2283,7 +2268,7 @@ var appendReplyComment = function( card , reply , response ){
 
       reply.find( '.replay-text' ).find('a').each( function(){
 
-        if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+        if( !URL_REGEX.test( $(this).attr('href') ) ){
           $(this).attr( 'href', 'http://' + $(this).attr('href') );
         }
 
@@ -2306,7 +2291,7 @@ var appendReplyComment = function( card , reply , response ){
 
     reply.find( '.replay-text' ).find('a').each( function(){
 
-      if( !(/^http(s)?:\/\//i).test( $(this).attr('href') ) ){
+      if( !URL_REGEX.test( $(this).attr('href') ) ){
         $(this).attr( 'href', 'http://' + $(this).attr('href') );
       }
 
@@ -2571,23 +2556,15 @@ var setPost = function( post ){
 
         switch (post.metadata.fileType) {
 
-          case 'generic':
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
-
           case 'document':
-          appendDocumentCard( post , user , lang.postCreated , function(){});
-          break;
-
           case 'image':
           appendDocumentCard( post , user , lang.postCreated , function(){});
           break;
 
+          /*case 'generic':
           case 'video':
-          appendGenericCard( post , user , lang.postCreated , function(){});
-          break;
-
-          case 'music':
+          case 'music':*/
+          default:
           appendGenericCard( post , user , lang.postCreated , function(){});
           break;
 
