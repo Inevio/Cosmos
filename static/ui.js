@@ -36,6 +36,7 @@ var selectWorld      = $( '.select-world' );
 var noWorlds         = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 
+
 // --- EVENTS ---
 // SERVER EVENTS
 api.cosmos.on( 'postRemoved', function( postId , world ){
@@ -90,6 +91,12 @@ api.cosmos.on( 'postRemoved', function( postId , world ){
 
     }
 
+    if ( $( '.reply-' + postId ) ) {
+
+      $( '.reply-' + postId ).remove();
+
+    }
+
   }
 
 });
@@ -131,16 +138,16 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
     compressCover();
     $('.cards-list').scrollTop( 6 );
 
-  }else if( state == 0 && !onTransition && y > 0 ){
-
-    decompressCover();
-    $('.cards-list').scrollTop( 0 );
-
   }
 
 });
 
-cardList.on( 'scroll' , function( e ){
+cover.on( 'mouseup' , function(){
+  if(app.hasClass('wz-view-dragging')) return;
+  decompressCover();
+} );
+
+cardList.on( 'mousewheel' , function( e ){
 
   if ( showingUsers ) {
     usersGoesDownNoAnimation();
@@ -161,26 +168,27 @@ cardList.on( 'scroll' , function( e ){
     e.stopPropagation();
     compressCover();
 
-  }else if( state == 0 && !onTransition && obj.scrollTop() < 5 ){
-
-    decompressCover();
-
   }
 
 });
 
-cardList.on( 'mousewheel' , function( e , d , x , y ){
+cardList.on( 'scroll' , function( e ){
 
+  e.preventDefault();
+  e.stopPropagation();
+
+  if ( showingUsers ) {
+    usersGoesDownNoAnimation();
+  }
   var obj = $( this );
-
-  if( state == 0 && !onTransition && y > 0 && obj.scrollTop() < 5 ){
+  if ( state == 1 && !onTransition ) {
     e.preventDefault();
     e.stopPropagation();
-    decompressCover();
-    $('.cards-list').scrollTop( 0 );
-
+    compressCover();
   }
+
 });
+
 
 closeExplore.on( 'click' , function(){
 

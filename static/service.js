@@ -1,4 +1,3 @@
-
 var myContactID    = api.system.user().id;
 var nNotifications = 0;
 
@@ -91,6 +90,14 @@ api.cosmos.on( 'postAdded', function( post ){
     });
 
   });
+
+});
+
+api.cosmos.on( 'userAdded', function( userId , world ){
+
+  if ( userId === myContactID ) {
+    checkNotifications();
+  }
 
 });
 

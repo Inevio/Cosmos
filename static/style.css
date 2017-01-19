@@ -930,6 +930,10 @@ to {background-position: -200% 0;}
   display: block;
 }
 
+.cover.compresed .world-title{
+  cursor: default;
+}
+
 .cover{
 
   .shadow{
