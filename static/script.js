@@ -226,7 +226,7 @@ api.cosmos.on( 'postAdded' , function( post ){
             case 'document':
             case 'image':
             appendDocumentCard( post , user , lang.postCreated , function(){});
-
+            break;
             /*case 'generic':
             case 'video':
             case 'music':*/
@@ -270,6 +270,7 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
     myWorlds.push( world.id );
     appendWorld( world );
+    checkNotifications();
 
     if ( noWorlds.css( 'display' ) != 'none' ) {
       noWorlds.transition({
@@ -313,6 +314,43 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
     $( '.user-circle' ).remove();
     getWorldUsersAsync( worldSelected );
+
+  }else if( userId === myContactID ){
+
+    var worldList = $( '.world-' + world.id ).parent();
+
+    $( '.world-' + world.id ).parent().transition({
+
+      'height'         : worldList.height() - 28
+
+    }, 200);
+    $( '.world-' + world.id ).remove();
+
+
+    var index = myWorlds.indexOf( world.id );
+    if (index > -1) {
+      myWorlds.splice(index, 1);
+    }
+
+    $( '.select-world' ).show();
+
+    if( $( '.worldDom' ).length === 0 ){
+
+      noWorlds.show();
+      starsCanvasContainer.removeClass( 'no-visible' );
+      starsCanvasContainer.stop().clearQueue().transition({
+
+        'opacity' : 1
+
+
+      }, 300);
+      noWorlds.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }
 
   }
 
@@ -573,9 +611,16 @@ app
 
 })
 
-.on( 'click' , '.delete-comment' , function(){
+.on( 'click' , '.delete-comment.parent' , function(){
 
   var post = $(this).closest('.comment').data('reply');
+  removePostAsync( post );
+
+})
+
+.on( 'click' , '.delete-comment.child' , function(){
+
+  var post = $(this).closest('.replyDom').data('reply');
   removePostAsync( post );
 
 })
@@ -1728,7 +1773,12 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
   api.fs( post.fsnode[ 0 ], function( e , fsNode ){
 
-    card.find( '.doc-preview img' ).attr( 'src' , 'https://download.inevio.com/' + fsNode.id );
+    if( fsNode.mime.indexOf( 'image' ) != -1 ){
+      card.find( '.doc-preview img' ).attr( 'src' , 'https://download.inevio.com/' + fsNode.id );
+    }else{
+      card.find( '.doc-preview img' ).attr( 'src' ,  fsNode.thumbnails.big );
+    }
+
     card.find( '.preview-title' ).text( fsNode.name );
     card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
     card.find( '.doc-preview' ).data( 'fsnode' , fsNode );
@@ -2080,45 +2130,16 @@ var removePostAsync = function( post ){
 
 var unFollowWorld = function( world ){
 
-  console.log( 'saliendo del mundo:' , world , 'soy' , myContactID );
   world.removeUser( myContactID , function( e , o ){
-
-    console.log( 'recibido' , e , o );
-    var worldList = $( '.world-' + world.id ).parent();
-
-    $( '.world-' + world.id ).parent().transition({
-
-      'height'         : worldList.height() - 28
-
-    }, 200);
-    $( '.world-' + world.id ).remove();
-
-
-    var index = myWorlds.indexOf( world.id );
-    if (index > -1) {
-      myWorlds.splice(index, 1);
+    if (e) {
+      console.log(e);
+    }else{
+      wql.deleteLastRead( [ world.id ] , function( e ){
+        if (e) {
+          console.log(e);
+        }
+      });
     }
-
-    $( '.select-world' ).show();
-
-    if( $( '.worldDom' ).length === 0 ){
-
-      noWorlds.show();
-      starsCanvasContainer.removeClass( 'no-visible' );
-      starsCanvasContainer.stop().clearQueue().transition({
-
-        'opacity' : 1
-
-
-      }, 300);
-      noWorlds.transition({
-
-        'opacity'         : 1
-
-      }, 200, animationEffect );
-
-    }
-
   });
 
 }
