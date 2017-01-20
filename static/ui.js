@@ -129,11 +129,11 @@ goBack.on( 'click' , function(){
 
 cover.on( 'mousewheel' , function( e , d , x , y ){
 
-  if ( showingUsers ) {
-    usersGoesDownNoAnimation();
-  }
-
   if ( state == 1 && !onTransition && y < 0) {
+
+    if ( showingUsers ) {
+      usersGoesDownNoAnimation();
+    }
 
     compressCover();
     $('.cards-list').scrollTop( 6 );
@@ -144,7 +144,9 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 
 cover.on( 'mouseup' , function(){
   if(app.hasClass('wz-view-dragging')) return;
-  decompressCover();
+  if(cover.hasClass('compresed')){
+    decompressCover();
+  }
 } );
 
 cardList.on( 'mousewheel' , function( e ){
@@ -511,6 +513,7 @@ app
   }else{
 
     card.addClass( 'comments-open' );
+    commentsSection.find( '.comments-list' ).scrollTop(9999999);
     commentsSection.transition({
 
       'height'         : height

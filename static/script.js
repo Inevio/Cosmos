@@ -2270,6 +2270,10 @@ var appendReplyComment = function( card , reply , response ){
   var reply = comment.find( '.replay.wz-prototype' ).clone();
   reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id );
 
+  if ( response.author === myContactID ) {
+    reply.addClass('mine');
+  }
+
   //parche hasta #1356 fix
   if (! response.authorObject ) {
     var userReady = $.Deferred();
