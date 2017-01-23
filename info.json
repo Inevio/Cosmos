@@ -90,6 +90,31 @@
 
             }
 
+        },
+
+        "mobile" : {
+
+            "primary" : "main",
+            "common"  : {
+
+                "css"    : [],
+                "script" : [],
+                "start"  : []
+
+            },
+
+            "view" : {
+
+                "main" : {
+
+                    "template" : "mainMobile.html",
+                    "css"    : ["style.css"],
+                    "script" : ["script.js"]
+
+                }
+
+            }
+
         }
 
     },

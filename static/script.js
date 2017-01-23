@@ -25,11 +25,11 @@ var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var exploreButton         = $( '.explore-button, .explore-button-no-worlds' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
-//var openChatButton        = $( '.open-chat' );
+//var openChatButton      = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input' );
-//var newPostButton         = $( '.new-post, .no-post-new-post-button' );
-//var closeExplore          = $( '.close-explore' );
+//var newPostButton       = $( '.new-post, .no-post-new-post-button' );
+//var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
@@ -96,7 +96,6 @@ cardsList.on( 'scroll' , function(){
     var lastCard = scrollDiv.data( 'lastCard' );
     getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
     loadingPost = true;
-    console.log( 'cargado mas' , lastCard );
 
   }
 
@@ -2134,7 +2133,7 @@ var unFollowWorld = function( world ){
     if (e) {
       console.log(e);
     }else{
-      wql.deleteLastRead( [ world.id ] , function( e ){
+      wql.deleteLastRead( [ world.id , myContactID ] , function( e ){
         if (e) {
           console.log(e);
         }
@@ -2504,6 +2503,7 @@ var updateNotifications = function( world ){
 var checkNotifications = function(){
 
   nNotifications = 0;
+  $( '.with-notification' ).removeClass( 'with-notification' );
 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
 
@@ -2518,7 +2518,9 @@ var checkNotifications = function(){
 
         wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
 
-          if ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) {
+          var lastPostReadedTime = lastPostReaded[0] && lastPostReaded[0].time ? new Date( lastPostReaded[0].time ) : false;
+          var lastPostTime = new Date( lastPost[0].created );
+          if ( ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) && ( !lastPostReadedTime || lastPostReadedTime < lastPostTime ) ) {
 
             $( '.world-' + world.id ).addClass( 'with-notification' );
             nNotifications = nNotifications + 1;
