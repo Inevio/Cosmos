@@ -7,6 +7,7 @@ var state           = 1;
 var titleLength     = 0;
 var worldRecortedName;
 var worldCompleteName;
+var myContactID           = api.system.user().id;
 var app             = $( this );
 var cover           = $( '.cover' );
 var worldTitle      = $( '.world-title' );
@@ -41,6 +42,7 @@ var starsCanvasContainer  = $( '.stars-canvas' );
 // SERVER EVENTS
 api.cosmos.on( 'postRemoved', function( postId , world ){
 
+  checkNotifications();
   var worldSelected = $( '.world.active' ).data( 'world' );
   if ( worldSelected.id === world.id ) {
 
@@ -135,6 +137,7 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
       usersGoesDownNoAnimation();
     }
 
+    console.log( 'mouse' );
     compressCover();
     $('.cards-list').scrollTop( 6 );
 
@@ -145,6 +148,7 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 cover.on( 'mouseup' , function(){
   if(app.hasClass('wz-view-dragging')) return;
   if(cover.hasClass('compresed')){
+    console.log('click');
     decompressCover();
   }
 } );
@@ -168,6 +172,7 @@ cardList.on( 'mousewheel' , function( e ){
 
     e.preventDefault();
     e.stopPropagation();
+    console.log('mousewheel2');
     compressCover();
 
   }
@@ -183,10 +188,15 @@ cardList.on( 'scroll' , function( e ){
     usersGoesDownNoAnimation();
   }
   var obj = $( this );
-  if ( state == 1 && !onTransition ) {
+  if ( state == 1 && !onTransition && !app.hasClass( 'selectingWorld' )) {
     e.preventDefault();
     e.stopPropagation();
+    console.log('wheel scroll');
     compressCover();
+  }
+
+  if ( app.hasClass( 'selectingWorld' ) ) {
+    app.removeClass( 'selectingWorld' );
   }
 
 });
@@ -533,6 +543,7 @@ app
 
 .on( 'click' , '.world' , function(){
 
+  app.addClass( 'selectingWorld' );
   if ( app.hasClass( 'user-animation' ) ) {
     usersGoesDown();
   }else if( app.hasClass( 'desc-animation' ) ){
@@ -1488,6 +1499,45 @@ var newWorldAnimationOut = function(){
 
 }
 
+var checkNotifications = function(){
+
+  nNotifications = 0;
+  $( '.with-notification' ).removeClass( 'with-notification' );
+
+  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
+
+    worlds.forEach(function( world ){
+
+      world.getPosts( {from: 0 , to: 1 } , function( e , lastPost ){
+
+        if( lastPost.length === 0){
+          wz.app.setBadge( parseInt(nNotifications) );
+          return;
+        }
+
+        wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
+
+          var lastPostReadedTime = lastPostReaded[0] && lastPostReaded[0].time ? new Date( lastPostReaded[0].time ) : false;
+          var lastPostTime = new Date( lastPost[0].created );
+          if ( ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) && ( !lastPostReadedTime || lastPostReadedTime < lastPostTime ) ) {
+
+            $( '.world-' + world.id ).addClass( 'with-notification' );
+            nNotifications = nNotifications + 1;
+            wz.app.setBadge( parseInt(nNotifications) );
+
+          }else{
+            wz.app.setBadge( parseInt(nNotifications) );
+          }
+
+        });
+
+      });
+
+    });
+
+  });
+
+}
 
 // INIT Chat
 initCosmos();

@@ -127,7 +127,9 @@ var checkNotifications = function(){
 
         wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
 
-          if ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) {
+          var lastPostReadedTime = lastPostReaded[0] && lastPostReaded[0].time ? new Date( lastPostReaded[0].time ) : false;
+          var lastPostTime = new Date( lastPost[0].created );
+          if ( ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) && ( !lastPostReadedTime || lastPostReadedTime < lastPostTime ) ) {
 
             nNotifications = nNotifications + 1;
             wz.app.setBadge( parseInt(nNotifications) );

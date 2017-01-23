@@ -297,7 +297,11 @@ var start = function(){
 
 var translateUI = function(){
 
-  $( '.cancel-new-card span' ).text( lang.omit );
+  if (params.operation) {
+    $( '.cancel-new-card span' ).text( lang.omit );
+  }else{
+    $( '.cancel-new-card span' ).text( lang.cancel );
+  }
   $( '.post-new-card span' ).text( lang.postit );
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span' ).text( lang.uploadPC );

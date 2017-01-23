@@ -2,5 +2,5 @@
 {
     "upsertLastRead" : "INSERT INTO last_read (world,user,post,time) VALUES (?,?,?, NOW() ) ON DUPLICATE KEY UPDATE post=? , time= NOW()",
     "selectLastRead" : "SELECT post, time FROM last_read WHERE world = ? AND user = ? LIMIT 1",
-    "deleteLastRead" : "DELETE FROM last_read WHERE world = ?"
+    "deleteLastRead" : "DELETE FROM last_read WHERE world = ? AND user = ?"
 }
