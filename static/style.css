@@ -4843,3 +4843,13 @@ to {background-position: -200% 0;}
   display: none;
   z-index: 10;
 }
+
+/* Mobile */
+.mobile-world-list{
+  float: left;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  z-index: auto;
+  position: relative;
+}

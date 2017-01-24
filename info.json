@@ -95,6 +95,8 @@
         "mobile" : {
 
             "primary" : "main",
+            "service" : ["service.js"],
+
             "common"  : {
 
                 "css"    : [],
@@ -108,8 +110,11 @@
                 "main" : {
 
                     "template" : "mainMobile.html",
-                    "css"    : ["style.css"],
-                    "script" : ["script.js"]
+
+                    "css"    : [ "style.css" ],
+                    "script" : [ "script.js" ],
+                    "start"  : [ "start.js" ]
+
 
                 }
 

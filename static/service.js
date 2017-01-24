@@ -101,6 +101,12 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
 });
 
+api.cosmos.on( 'postRemoved', function( postId , world ){
+
+  checkNotifications();
+
+});
+
 var sendBanner = function( info ){
   api.banner()
   .setTitle( info.title )
@@ -113,7 +119,7 @@ var sendBanner = function( info ){
 var checkNotifications = function(){
 
   nNotifications = 0;
-
+                 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
 
     worlds.forEach(function( world ){

@@ -6,7 +6,7 @@ var parameters;
 
 parameters = params
 
-if( api.app.getViews('main').length === 1 ){
+if( api.app.getViews('main').length === 1 || app.hasClass( 'wz-mobile-view' ) ){
 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
 

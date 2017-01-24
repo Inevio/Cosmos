@@ -188,15 +188,10 @@ cardList.on( 'scroll' , function( e ){
     usersGoesDownNoAnimation();
   }
   var obj = $( this );
-  if ( state == 1 && !onTransition && !app.hasClass( 'selectingWorld' )) {
+  if ( state == 1 && !onTransition && cardList.scrollTop() === 0 ) {
     e.preventDefault();
     e.stopPropagation();
-    console.log('wheel scroll');
     compressCover();
-  }
-
-  if ( app.hasClass( 'selectingWorld' ) ) {
-    app.removeClass( 'selectingWorld' );
   }
 
 });
@@ -543,7 +538,6 @@ app
 
 .on( 'click' , '.world' , function(){
 
-  app.addClass( 'selectingWorld' );
   if ( app.hasClass( 'user-animation' ) ) {
     usersGoesDown();
   }else if( app.hasClass( 'desc-animation' ) ){
