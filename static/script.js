@@ -1170,6 +1170,7 @@ var editWorldAsync = function(){
 
 var selectWorld = function( world , callback ){
 
+  app.addClass( 'selectingWorld' );
   $( '.clean' ).remove();
   $( '.category-list .world' ).removeClass( 'active' );
   world.addClass( 'active' );
@@ -1209,6 +1210,7 @@ var selectWorld = function( world , callback ){
     }
 
     callback();
+    app.removeClass( 'selectingWorld' );
   });
   $( '.select-world' ).hide();
 
@@ -1420,9 +1422,12 @@ var followWorldAsync = function( worldCard ){
 
 var getFriendsAsync = function(){
 
-  $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure class="ellipsis">' + worldSelected.name + '</figure>' );
+  $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure>' + worldSelected.name + '</figure>' );
 
   $( '.friendDom' ).remove();
+  friendSearchBox.val('');
+  filterFriends('');
+
   api.user.friendList( false, function( error, friends ){
 
     friends.sort(function(a , b){
@@ -2457,6 +2462,7 @@ var appendAttachment = function( info ){
   attachment.data( 'fsnode' , info.fsnode );
 
 }
+
 
 var attachFromInevio = function( card ){
 
