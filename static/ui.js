@@ -145,6 +145,10 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
 
 });
 
+cover.on( 'mousewheel' , '.user-circles-section' , function( e ){
+  e.stopPropagation();
+});
+
 cover.on( 'mouseup' , function(){
   if(app.hasClass('wz-view-dragging')) return;
   if(cover.hasClass('compresed')){
@@ -195,7 +199,6 @@ cardList.on( 'scroll' , function( e ){
   }
 
 });
-
 
 closeExplore.on( 'click' , function(){
 
@@ -376,6 +379,7 @@ app
 
 .on( 'click' , function( e ){
 
+  console.log(e);
   if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
 
     $( '.popup' ).removeClass( 'popup' );

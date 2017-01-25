@@ -854,7 +854,9 @@ app
 //Functions
 var initCosmos = function(){
 
-  app.css({'border-radius'    : '6px', 'background-color' : 'transparent'});
+  if (!isMobile()) {
+    app.css({'border-radius'    : '6px', 'background-color' : 'transparent'});
+  }
 
   initTexts();
   getMyWorldsAsync();
@@ -2463,6 +2465,9 @@ var appendAttachment = function( info ){
 
 }
 
+var isMobile = function(){
+  return app.hasClass( 'wz-mobile-view' );
+}
 
 var attachFromInevio = function( card ){
 
