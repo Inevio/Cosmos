@@ -1390,6 +1390,7 @@ to {background-position: -200% 0;}
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    align-content: flex-start;
 
   }
 
@@ -4565,6 +4566,7 @@ to {background-position: -200% 0;}
     display: inline-block;
     margin-left: 4px;
     max-width: 225px;
+    height: 19px;
 
   }
 
@@ -4848,8 +4850,17 @@ to {background-position: -200% 0;}
 .mobile-world-list{
   float: left;
   width: 100%;
-  height: 100%;
+  height: ~'calc(100% - 17px)';
   border-radius: 0;
   z-index: auto;
   position: relative;
+
+  .category-list{
+    height: ~'calc(100% - 104px)';
+  }
+
+  .explore-button{
+    border-radius: 0;
+  }
+
 }
