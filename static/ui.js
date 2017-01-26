@@ -149,9 +149,9 @@ cover.on( 'mousewheel' , '.user-circles-section' , function( e ){
   e.stopPropagation();
 });
 
-cover.on( 'mouseup' , function(){
+cover.on( typeof cordova === 'undefined' ? 'mouseup' : 'touchend' , function(){
   if(app.hasClass('wz-view-dragging')) return;
-  if(cover.hasClass('compresed')){
+  if(uiContent.hasClass('compresed')){
     console.log('click');
     decompressCover();
   }
@@ -192,7 +192,7 @@ cardList.on( 'scroll' , function( e ){
     usersGoesDownNoAnimation();
   }
   var obj = $( this );
-  if ( state == 1 && !onTransition && cardList.scrollTop() === 0 ) {
+  if ( state == 1 && !onTransition ) {
     e.preventDefault();
     e.stopPropagation();
     compressCover();
@@ -257,7 +257,7 @@ worldCategory.on( 'click' , function(){
 
     }, 200);
   }else{
-    var height = category.find( '.world' ).length * 28;
+    var height = category.find( '.world' ).length * parseInt($( '.world.wz-prototype' ).css('height'));
     category.find( '.world-list' ).transition({
 
       'height'         : height
@@ -551,7 +551,7 @@ app
   }
 
 
-});
+})
 
 // END UI EVENTS
 
@@ -560,14 +560,6 @@ app
 // END APP EVENTS
 
 // --- FUNCTIONS ---
-var initCosmos = function(){
-
-  app.css({'border-radius'    : '6px',
-  'background-color' : '#2c3238'
-  });
-
-}
-
 var moveToDesc = function(){
 
   $( '.cover-first' ).stop().clearQueue().transition({
@@ -620,14 +612,13 @@ var moveToCover = function(){
 // Compress de cover to show better the cards
 var compressCover = function(){
 
-  $( '.cover' ).addClass( 'compresed' );
+  uiContent.addClass( 'compresed' );
 
   if ( app.hasClass( 'no-post' ) ) {
     return;
   }
 
   onTransition = true;
-  $( '.ui-window' ).addClass( 'scrolled' );
 
   var avatar = $( '.world-avatar' );
   var avatarLeftM = parseInt( avatar.css( 'margin-left' ) );
@@ -780,7 +771,7 @@ var compressCover = function(){
 // Decompress de cover to show better the cards
 var decompressCover = function( instant ){
 
-  $( '.cover' ).removeClass( 'compresed' );
+  uiContent.removeClass( 'compresed' );
 
   var name = worldTitle.data( 'name' );
   var winWidth = parseInt(app.css( 'width' ));
@@ -873,7 +864,6 @@ var decompressCover = function( instant ){
   }
 
   onTransition = true;
-  $( '.ui-window' ).removeClass( 'scrolled' );
 
   var avatar = $( '.world-avatar' );
   var avatarLeft = ( parseInt( $('.cover-first').css( 'width' ) ) - 52 ) / 2;
@@ -1536,6 +1526,3 @@ var checkNotifications = function(){
   });
 
 }
-
-// INIT Chat
-initCosmos();

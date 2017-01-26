@@ -930,7 +930,7 @@ to {background-position: -200% 0;}
   display: block;
 }
 
-.cover.compresed .world-title{
+.compresed .cover .world-title{
   cursor: default;
 }
 
@@ -1463,7 +1463,7 @@ to {background-position: -200% 0;}
 
 /* SCROLLED */
 
-.scrolled{
+.compresed{
 
   .search-button i{
 
@@ -2610,9 +2610,8 @@ to {background-position: -200% 0;}
     color: #545f65;
     margin-top: 8px;
     margin-left: 20px;
-    width: 390px;
+    width: ~'calc(100% - 85px)';
     cursor: pointer;
-
   }
 
   .card-content .doc-info{
@@ -4848,12 +4847,37 @@ to {background-position: -200% 0;}
 
 /* Mobile */
 .mobile-world-list{
-  float: left;
+
   width: 100%;
   height: ~'calc(100% - 17px)';
   border-radius: 0;
-  z-index: auto;
-  position: relative;
+  z-index: 0;
+  position: absolute;
+
+  .wz-scroll{
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category .category-name{
+    font-size: 20px;
+  }
+
+  .world-list{
+    margin-top: 17px;
+  }
+
+  .world-icon{
+    margin-top: 11px;
+  }
+
+  .world{
+    height: 35px;
+  }
+
+  .world-name{
+    font-size: 17px;
+    height: auto;
+  }
 
   .category-list{
     height: ~'calc(100% - 104px)';
@@ -4861,6 +4885,82 @@ to {background-position: -200% 0;}
 
   .explore-button{
     border-radius: 0;
+  }
+
+}
+
+.mobile-world-content{
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  float: left;
+  z-index: 1;
+  transform: translateX(100%);
+
+  .wz-scroll{
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cosmos-buttons{
+    right: 0px;
+  }
+
+  .pre-cover{
+    border-radius: 0px;
+  }
+
+  .back-image{
+    border-radius: 0px;
+  }
+
+  .cards-list{
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .card{
+    width: 100%;
+    margin-left: 0px;
+
+    .top-card{
+      padding: 13px 0;
+      height: auto;
+    }
+
+    .card-user-avatar{
+      margin-top: 0px;
+      margin-right: 10px;
+    }
+
+    .card-user-name{
+      width: auto;
+      max-width: 140px;
+      margin: 0 5px 0 0;
+    }
+
+    .shared-text{
+      margin: 0px;
+      margin: 0 5px 0 0;
+    }
+
+    .time-text{
+      margin: 0px;
+    }
+
+  }
+
+  .comments-list{
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .new-world-container-wrap{
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .new-world-desc textarea{
+    -webkit-overflow-scrolling: touch;
   }
 
 }
