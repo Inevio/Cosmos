@@ -34,6 +34,8 @@ var noWorlds              = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
+var mobileWorldContent      = $( '.mobile-world-content' );
+var mobileWorldSidebar      = $( '.mobile-world-list' );
 
 var TYPES = {
 
@@ -320,7 +322,7 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
     $( '.world-' + world.id ).parent().transition({
 
-      'height'         : worldList.height() - 28
+      'height'         : worldList.height() - parseInt($( '.world.wz-prototype' ).css('height'))
 
     }, 200);
     $( '.world-' + world.id ).remove();
@@ -357,7 +359,7 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
 app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
 
-  if ( $( '.cover' ).hasClass( 'compresed' ) ) {
+  if ( $( '.ui-content' ).hasClass( 'compresed' ) ) {
     return;
   }
 
@@ -454,7 +456,7 @@ api.cosmos.on( 'worldNameSetted' , function( worldApi ){
 
   var category = $( '.world-' + worldApi.id ).parent();
   $( '.world-' + worldApi.id ).remove();
-  var height = category.find( '.world' ).length * 28;
+  var height = category.find( '.world' ).length * parseInt($( '.world.wz-prototype' ).css('height'));
   category.css({
 
     'height'         : height
@@ -851,16 +853,23 @@ app
   menu.render();
 
 })
+
+.on( 'swiperight' , function(){
+  if (isMobile()) {
+    changeMobileView('worldSidebar');
+  }
+})
+
 //Functions
 var initCosmos = function(){
 
   if (!isMobile()) {
-    app.css({'border-radius'    : '6px', 'background-color' : 'transparent'});
+    app.css({'border-radius'    : '6px', 'background-color' : '#2c3238'});
+    starsCanvas( 'stars-canvas' );
   }
 
   initTexts();
   getMyWorldsAsync();
-  starsCanvas( 'stars-canvas' );
 
   if ( params && params.action === 'selectPost') {
     selectWorld( $( '.world-' + params.world ) , function(){
@@ -1050,7 +1059,7 @@ var appendWorld = function( worldApi ){
   }
 
   appendWorldInOrder( category , world , worldApi );
-  var height = category.find( '.world' ).length * 28;
+  var height = category.find( '.world' ).length * parseInt($( '.world.wz-prototype' ).css('height'));
   category.css({
 
     'height'         : height
@@ -1172,11 +1181,14 @@ var editWorldAsync = function(){
 
 var selectWorld = function( world , callback ){
 
+  if (isMobile()) {
+    changeMobileView('worldContent');
+  }
+
   app.addClass( 'selectingWorld' );
   $( '.clean' ).remove();
   $( '.category-list .world' ).removeClass( 'active' );
   world.addClass( 'active' );
-  $( '.scrolled' ).removeClass( 'scrolled' );
   searchPostInput.val('');
   searchPost( '' );
 
@@ -2623,6 +2635,34 @@ var setPost = function( post ){
       }
 
     });
+
+  }
+
+}
+
+var changeMobileView = function( view ){
+
+  switch (view) {
+
+    case 'worldContent':
+
+      mobileWorldContent.removeClass('hide');
+      mobileWorldContent.stop().clearQueue().transition({
+        'transform' : 'translateX(0%)'
+      }, 300, function(){
+        mobileWorldSidebar.addClass('hide');
+      });
+      break;
+
+    case 'worldSidebar':
+
+      mobileWorldSidebar.removeClass('hide');
+      mobileWorldContent.stop().clearQueue().transition({
+        'transform' : 'translateX(100%)'
+      }, 300, function(){
+        mobileWorldContent.addClass('hide');
+      });
+      break;
 
   }
 
