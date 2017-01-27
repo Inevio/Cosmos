@@ -37,7 +37,6 @@ var selectWorld      = $( '.select-world' );
 var noWorlds         = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 
-
 // --- EVENTS ---
 // SERVER EVENTS
 api.cosmos.on( 'postRemoved', function( postId , world ){
@@ -504,6 +503,10 @@ app
   var card = $(this).parent().parent();
   var height = parseInt(card.find('.comments-list').css('height')) + 50;
   var commentsSection = card.find( '.comments-section' );
+
+  if (isMobile()) {
+    return;
+  }
 
   if (commentsSection.hasClass('opened')) {
 
@@ -1525,4 +1528,8 @@ var checkNotifications = function(){
 
   });
 
+}
+
+var isMobile = function(){
+  return app.hasClass( 'wz-mobile-view' );
 }

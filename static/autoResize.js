@@ -7,6 +7,10 @@ var app = $( this );
 var pluginName = "textareaAutoSize";
 var pluginDataName = "plugin_" + pluginName;
 
+var isMobile = function(){
+  return app.hasClass( 'wz-mobile-view' );
+}
+
 var containsText = function (value) {
   return (value.replace(/\s/g, '').length > 0);
 };
@@ -52,7 +56,11 @@ $.fn[pluginName] = function (options) {
 };
 
 app.on( 'click' , '.comments-opener' , function(){
-  $( this ).closest( '.card' ).find( '.comment-input' ).textareaAutoSize();
+  if (isMobile()) {
+    $( '.comment-input' ).textareaAutoSize();
+  }else{
+    $( this ).closest( '.card' ).find( '.comment-input' ).textareaAutoSize();
+  }
 });
 
 app.on( 'click' , '.edit-button' , function(){
