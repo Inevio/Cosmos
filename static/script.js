@@ -34,8 +34,10 @@ var noWorlds              = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
+var mobileView              = 'worldSidebar'
 var mobileWorldContent      = $( '.mobile-world-content' );
 var mobileWorldSidebar      = $( '.mobile-world-list' );
+var mobileWorldComments     = $( '.mobile-world-comments' );
 
 var TYPES = {
 
@@ -860,12 +862,30 @@ app
   }
 })
 
+.on( 'click' , '.comments-opener' , function(){
+  if (isMobile()) {
+    changeMobileView('worldComments');
+    var card = $(this).closest('.card');
+    var post = card.data('post');
+    setRepliesAsyncOnlyAppendMobile( card , post );
+    mobileWorldComments.data( 'post' , post );
+  }
+})
+
+.on( 'click' , '.close-comments' , function(){
+
+  changeMobileView('worldContent');
+
+})
+
 //Functions
 var initCosmos = function(){
 
   if (!isMobile()) {
     app.css({'border-radius'    : '6px', 'background-color' : '#2c3238'});
     starsCanvas( 'stars-canvas' );
+  }else{
+    setMobile();
   }
 
   initTexts();
@@ -1696,7 +1716,11 @@ var appendNoFileCard = function( post , user , reason ){
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
 
-  setRepliesAsync( card , post );
+  if (!isMobile()) {
+    setRepliesAsync( card , post );
+  }else{
+    setRepliesAsyncWithoutAppendMobile( card , post );
+  }
   appendCard( card , post );
 
 }
@@ -1776,7 +1800,11 @@ var appendGenericCard = function( post , user , reason , callback ){
     card.find( '.card-user-name' ).text( user.fullName );
     card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
-    setRepliesAsync( card , post );
+    if (!isMobile()) {
+      setRepliesAsync( card , post );
+    }else{
+      setRepliesAsyncWithoutAppendMobile( card , post );
+    }
     appendCard( card , post );
     callback();
 
@@ -1826,7 +1854,11 @@ var appendDocumentCard = function( post , user , reason , callback ){
     card.find( '.card-user-name' ).text( user.fullName );
     card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
 
-    setRepliesAsync( card , post );
+    if (!isMobile()) {
+      setRepliesAsync( card , post );
+    }else{
+      setRepliesAsyncWithoutAppendMobile( card , post );
+    }
     appendCard( card , post );
     callback();
 
@@ -1857,8 +1889,61 @@ var appendYoutubeCard = function( post , user , reason ){
 
   });
 
-  setRepliesAsync( card , post );
+  if (!isMobile()) {
+    setRepliesAsync( card , post );
+  }else{
+    setRepliesAsyncWithoutAppendMobile( card , post );
+  }
   appendCard( card , post );
+
+}
+
+var setRepliesAsyncWithoutAppendMobile = function( card , post ){
+
+  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( e , replies ){
+
+    replies = replies.reverse();
+    card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
+    if ( replies.length === 1 ) {
+      card.find( '.comments-text' ).text( replies.length + ' ' + lang.comment );
+    }else{
+      card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
+    }
+    card.find( '.comments-text' ).data( 'num' , replies.length );
+
+  });
+
+}
+
+var setRepliesAsyncOnlyAppendMobile = function( card , post ){
+
+  $( '.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove();
+
+  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( e , replies ){
+
+    replies = replies.reverse();
+
+    $.each( replies , function( i , reply ){
+
+      appendReply( card , reply , function(){
+
+        reply.getReplies( { from : 0 , to : 1000 , withFullUsers: true }, function( e , responses ){
+
+          responses = responses.reverse();
+
+          $.each( responses , function( i , response ){
+
+            appendReplyComment( card , reply , response );
+
+          });
+
+        });
+
+      });
+
+    });
+
+  });
 
 }
 
@@ -1935,8 +2020,15 @@ var appendReply = function( card , reply , callback ){
 
       });
 
-      card.find( '.comments-list' ).append( comment );
-      card.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
+      var container;
+      if (isMobile()) {
+        container = mobileWorldComments;
+      }else{
+        container = card;
+      }
+
+      container.find( '.comments-list' ).append( comment );
+      container.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
 
       comment.data( 'reply' , reply );
       comment.data( 'name' , user.name.split( ' ' )[0] );
@@ -1960,8 +2052,15 @@ var appendReply = function( card , reply , callback ){
 
     });
 
-    card.find( '.comments-list' ).append( comment );
-    card.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
+    var container;
+    if (isMobile()) {
+      container = mobileWorldComments;
+    }else{
+      container = card;
+    }
+
+    container.find( '.comments-list' ).append( comment );
+    container.find( '.comments-list' ).scrollTop( comment[0].offsetTop );
 
     comment.data( 'reply' , reply );
     comment.data( 'name' , reply.authorObject.name.split( ' ' )[0] );
@@ -2164,9 +2263,18 @@ var unFollowWorld = function( world ){
 
 var addReplayAsync = function( card ){
 
-  var post  = card.data( 'post' );
-  var msg   = card.find( '.comments-footer .comment-input' ).val();
-  var input = card.find( '.comments-footer .comment-input' );
+  var post;
+  var msg;
+  var input;
+  if (isMobile()) {
+    post  = mobileWorldComments.data('post');
+    msg   = mobileWorldComments.find( '.comments-footer .comment-input' ).val();
+    input = mobileWorldComments.find( '.comments-footer .comment-input' );
+  }else{
+    post  = card.data( 'post' );
+    msg   = card.find( '.comments-footer .comment-input' ).val();
+    input = card.find( '.comments-footer .comment-input' );
+  }
 
   if ( input.attr( 'placeholder' )[0] === '@' ) {
     post = input.data( 'reply' );
@@ -2318,7 +2426,9 @@ var appendReplyComment = function( card , reply , response ){
       });
 
       comment.find( '.replay-list' ).append( reply );
-      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+      if (!isMobile()) {
+        card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+      }
 
       reply.data( 'reply' , response );
 
@@ -2341,7 +2451,9 @@ var appendReplyComment = function( card , reply , response ){
     });
 
     comment.find( '.replay-list' ).append( reply );
-    card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+    if (!isMobile()) {
+      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+    }
 
     reply.data( 'reply' , response );
 
@@ -2646,12 +2758,30 @@ var changeMobileView = function( view ){
 
     case 'worldContent':
 
-      mobileWorldContent.removeClass('hide');
-      mobileWorldContent.stop().clearQueue().transition({
-        'transform' : 'translateX(0%)'
-      }, 300, function(){
-        mobileWorldSidebar.addClass('hide');
-      });
+      switch (mobileView) {
+
+        case 'worldSidebar':
+
+          mobileWorldContent.removeClass('hide');
+          mobileWorldContent.stop().clearQueue().transition({
+            'transform' : 'translateX(0%)'
+          }, 300, function(){
+            mobileWorldSidebar.addClass('hide');
+          });
+          break;
+
+        case 'worldComments':
+
+          mobileWorldContent.removeClass('hide');
+          mobileWorldComments.stop().clearQueue().transition({
+            'transform' : 'translateY(100%)'
+          }, 300, function(){
+            mobileWorldComments.addClass('hide');
+          });
+          break;
+
+      }
+      mobileView = 'worldContent'
       break;
 
     case 'worldSidebar':
@@ -2661,11 +2791,32 @@ var changeMobileView = function( view ){
         'transform' : 'translateX(100%)'
       }, 300, function(){
         mobileWorldContent.addClass('hide');
+        mobileView = 'worldSidebar'
+      });
+      break;
+
+    case 'worldComments':
+
+      mobileWorldComments.removeClass('hide');
+      mobileWorldComments.stop().clearQueue().transition({
+        'transform' : 'translateY(0%)'
+      }, 300, function(){
+        mobileWorldContent.addClass('hide');
+        mobileView = 'worldComments'
       });
       break;
 
   }
 
+}
+
+var setMobile = function(){
+  $('input, textarea').on('focus', function(){
+    Keyboard.shrinkView(true);
+  })
+  .on('blur', function(){
+    Keyboard.shrinkView(false);
+  });
 }
 
 initCosmos();
