@@ -61,7 +61,12 @@ api.cosmos.on( 'postRemoved', function( postId , world ){
 
     if ( $( '.comment-' + postId ) ) {
 
-      var card = $( '.comment-' + postId ).closest('.card');
+      var card;
+      if (isMobile()) {
+        card = $( '.mobile-world-comments' ).data( 'card' );
+      }else{
+        card = $( '.comment-' + postId ).closest('.card');
+      }
       var commentsText = card.find( '.comments-text' );
       var ncomments = commentsText.data( 'num' ) - 1;
       if ( ncomments === 1 ) {
@@ -224,7 +229,7 @@ newWorldButton.on( 'click' , function(){
 });
 
 closeNewWorld.on( 'click' , function(){
-
+  
   newWorldAnimationOut();
   $( '.new-world-container' ).removeClass( 'editing' );
 

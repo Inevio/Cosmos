@@ -1,4 +1,8 @@
 /* EVERYTHING */
+@redHorbito: #ff2153;
+@redHorbitoHover: #f81d4e;
+@redHorbitoActive: #e51846;
+
 .hide{
   display: none !important;
 }
@@ -5028,9 +5032,75 @@ to {background-position: -200% 0;}
     margin-left: 48px;
   }
 
+  .comment .replay-button{
+    float: left;
+    font-size: 12px;
+    color: #889399;
+    margin-top: 3px;
+    margin-left: 5px;
+  }
+
+  .comment .edit-button{
+    float: left;
+    font-size: 12px;
+    color: #889399;
+    margin-top: 3px;
+  }
+
+  .comment .comment-text-edit{
+    width: 210px;
+  }
+
   .comments-footer{
     position: absolute;
     bottom: 0;
+  }
+
+}
+
+.mobile-new-world{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  float: left;
+  z-index: 3;
+  transform: translateY(-100%);
+
+  .close-new-world{
+    position: relative;
+    float: left;
+
+    figure{
+      width: 13px;
+      height: 13px;
+      background-size: cover;
+      background-image: url('@static/closeMobile.png');
+      background-position: 0;
+    }
+
+  }
+
+  .new-world-container{
+    width: 100%;
+    height: 100%;
+  }
+
+  .new-world-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 70px;
+  }
+
+  .new-world-title figure {
+    margin-left: 0;
+    background-image: url('@static/planetIcon@2x.png');
+  }
+
+  .new-world-title .title{
+    font-size: 28px;
   }
 
 }
