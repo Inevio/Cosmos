@@ -38,6 +38,10 @@ var mobileView              = 'worldSidebar'
 var mobileWorldContent      = $( '.mobile-world-content' );
 var mobileWorldSidebar      = $( '.mobile-world-list' );
 var mobileWorldComments     = $( '.mobile-world-comments' );
+var mobileNewWorld          = $( '.mobile-new-world' );
+var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-world-button-mini' );
+var closeNewWorld   = $( '.close-new-world' );
+
 
 var TYPES = {
 
@@ -529,6 +533,20 @@ api.cosmos.on( 'worldIconSetted' , function( world ){
     $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
     $( '.world-avatar' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
   }
+
+});
+
+newWorldButton.on( 'click' , function(){
+
+  if (isMobile()) {
+    changeMobileView('newWorld');
+  }
+
+});
+
+closeNewWorld.on( 'click' , function(){
+
+  changeMobileView( 'worldSidebar' );
 
 });
 
@@ -1918,6 +1936,7 @@ var setRepliesAsyncWithoutAppendMobile = function( card , post ){
 var setRepliesAsyncOnlyAppendMobile = function( card , post ){
 
   $( '.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove();
+  $( '.mobile-world-comments' ).data( 'card' , card );
 
   post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( e , replies ){
 
@@ -1988,7 +2007,11 @@ var appendReply = function( card , reply , callback ){
 
   var comment = commentPrototype.eq(0).clone();
   comment.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + reply.id );
-  comment.find( '.replay-button' ).text( lang.reply );
+  if (isMobile()) {
+    comment.find( '.replay-button' ).text( '-   ' + lang.reply );
+  }else{
+    comment.find( '.replay-button' ).text( lang.reply );
+  }
   comment.find( '.edit-button' ).text( lang.edit );
 
   if ( reply.author === myContactID ) {
@@ -2229,20 +2252,32 @@ var removePostAsync = function( post ){
   if ( post.isReply ) {
     confirmText = lang.comfirmDeleteComment;
   }
-  confirm( confirmText , function(o){
-    if(o){
 
-      worldSelected.removePost( post.id , function( e , o ){
+  if (isMobile()) {
 
-        if (e) {
-          alert( lang.notAllowedDeletePost );
-        }
+    worldSelected.removePost( post.id , function( e , o ){
+      if (e) {
+        navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+      }
+    });
 
-      });
+  }else{
 
-    }
-  });
+    confirm( confirmText , function(o){
+      if(o){
 
+        worldSelected.removePost( post.id , function( e , o ){
+
+          if (e) {
+            alert( lang.notAllowedDeletePost );
+          }
+
+        });
+
+      }
+    });
+
+  }
 }
 
 var unFollowWorld = function( world ){
@@ -2786,13 +2821,30 @@ var changeMobileView = function( view ){
 
     case 'worldSidebar':
 
-      mobileWorldSidebar.removeClass('hide');
-      mobileWorldContent.stop().clearQueue().transition({
-        'transform' : 'translateX(100%)'
-      }, 300, function(){
-        mobileWorldContent.addClass('hide');
-        mobileView = 'worldSidebar'
-      });
+      switch (mobileView) {
+
+        case 'worldContent':
+
+          mobileWorldSidebar.removeClass('hide');
+          mobileWorldContent.stop().clearQueue().transition({
+            'transform' : 'translateX(100%)'
+          }, 300, function(){
+            mobileWorldContent.addClass('hide');
+          });
+          break;
+
+        case 'newWorld':
+
+          mobileWorldSidebar.removeClass('hide');
+          mobileNewWorld.stop().clearQueue().transition({
+            'transform' : 'translateY(-100%)'
+          }, 300, function(){
+            mobileNewWorld.addClass('hide');
+          });
+          break;
+
+      }
+      mobileView = 'worldSidebar'
       break;
 
     case 'worldComments':
@@ -2806,9 +2858,21 @@ var changeMobileView = function( view ){
       });
       break;
 
+    case 'newWorld':
+
+      mobileNewWorld.removeClass('hide');
+      mobileNewWorld.stop().clearQueue().transition({
+        'transform' : 'translateY(0%)'
+      }, 300, function(){
+        mobileWorldSidebar.addClass('hide');
+        mobileView = 'newWorld'
+      });
+      break;
+
   }
 
 }
+
 
 var setMobile = function(){
   $('input, textarea').on('focus', function(){
