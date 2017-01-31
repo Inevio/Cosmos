@@ -39,6 +39,7 @@ var mobileWorldContent      = $( '.mobile-world-content' );
 var mobileWorldSidebar      = $( '.mobile-world-list' );
 var mobileWorldComments     = $( '.mobile-world-comments' );
 var mobileNewWorld          = $( '.mobile-new-world' );
+var mobileExplore           = $( '.mobile-explore' );
 var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
 
@@ -142,6 +143,9 @@ friendSearchBox.on( 'input' , function(){
 
 exploreButton.on( 'click' , function(){
 
+  if (isMobile()) {
+    changeMobileView('explore');
+  }
   $('.explore-container').scrollTop(0);
   $( '.world-card-dom' ).remove();
   cleanFilterWorldCards();
@@ -2425,7 +2429,12 @@ var prepareReplayComment = function( comment ){
 
 var appendReplyComment = function( card , reply , response ){
 
-  var comment = card.find( '.comment-' + reply.id );
+  var comment;
+  if (isMobile()) {
+    comment = mobileWorldComments.find( '.comment-' + reply.id );
+  }else{
+    comment = card.find( '.comment-' + reply.id );
+  }
 
   comment.find( '.replay-list' ).show();
   var reply = comment.find( '.replay.wz-prototype' ).clone();
@@ -2869,10 +2878,20 @@ var changeMobileView = function( view ){
       });
       break;
 
+    case 'explore':
+
+      mobileExplore.removeClass('hide');
+      mobileExplore.stop().clearQueue().transition({
+        'transform' : 'translateY(0%)'
+      }, 300, function(){
+        mobileWorldSidebar.addClass('hide');
+        mobileView = 'explore'
+      });
+      break;
+
   }
 
 }
-
 
 var setMobile = function(){
   $('input, textarea').on('focus', function(){

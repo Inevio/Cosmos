@@ -229,7 +229,7 @@ newWorldButton.on( 'click' , function(){
 });
 
 closeNewWorld.on( 'click' , function(){
-  
+
   newWorldAnimationOut();
   $( '.new-world-container' ).removeClass( 'editing' );
 
@@ -810,9 +810,10 @@ var decompressCover = function( instant ){
 
     });
 
+    var coverHeight = isMobile() ? 247 : 317;
     $( '.cover' ).css({
 
-        'height'      : 317,
+        'height'      : coverHeight,
         'background-color'  : 'transparent'
 
     });
@@ -829,10 +830,11 @@ var decompressCover = function( instant ){
 
     });
 
+    var coverHeight = isMobile() ? 247 : 317;
     $( '.cards-list' ).css({
 
-        'height' : 'calc(100% - 317px)',
-        'top'    : 317
+        'height' : 'calc(100% - '+coverHeight+'px)',
+        'top'    : coverHeight
 
     });
 
@@ -903,9 +905,10 @@ var decompressCover = function( instant ){
   }, 1000, animationEffect);
 
   // Cover decompress (animation)
+  var coverHeight = isMobile() ? 247 : 317;
   $( '.cover' ).stop().clearQueue().transition({
 
-      'height'      : 317,
+      'height'      : coverHeight,
       'background-color'  : 'transparent'
 
   }, 1000, animationEffect , function(){
@@ -945,10 +948,11 @@ var decompressCover = function( instant ){
   }, 1000 , animationEffect );
 
   // Card list gets smaller (animation)
+  var coverHeight = isMobile() ? 247 : 317;
   $( '.cards-list' ).stop().clearQueue().transition({
 
-      'height' : 'calc(100% - 317px)',
-      'top'    : 317
+      'height' : 'calc(100% - '+coverHeight+'px)',
+      'top'    : coverHeight
 
   }, 1000, animationEffect );
 
@@ -1238,9 +1242,10 @@ var newWorldAnimationBNormal = function(){
   $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'none' );
 
   // Fade in and goes up title (animation)
+  var translate = isMobile() ? '0px' : '-67px';
   $( '.new-world-title' ).stop().clearQueue().transition({
 
-    'transform' : 'translateY(-67px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000, animationEffect);
 
@@ -1254,23 +1259,25 @@ var newWorldAnimationBNormal = function(){
 
 
   // Fade in and goes up button (animation)
-  $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
+  if (!isMobile()) {
+    $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
 
-    'opacity'   : 0
+      'opacity'   : 0
 
-  }, 800, animationEffect, function(){
+    }, 800, animationEffect, function(){
 
-    $( this ).css( {
+      $( this ).css( {
 
-      'top'       : '819px',
-      'transform' : 'translateY(20px)',
-      'right'     : '0',
-      'left'      : 'calc(50% - 472px/2 + 150px)'
+        'top'       : '819px',
+        'transform' : 'translateY(20px)',
+        'right'     : '0',
+        'left'      : 'calc(50% - 472px/2 + 150px)'
 
-    } ).find( 'span' ).text( lang.accept );
+      } ).find( 'span' ).text( lang.accept );
 
 
-  });
+    });
+  }
 
   // Fade in and goes up avatar (animation)
   $( '.new-world-avatar' ).stop().clearQueue().transition({
@@ -1324,9 +1331,10 @@ var newWorldAnimationBEditing = function(){
   $('.new-world-container-wrap').scrollTop(0);
 
   // Fade in and goes up title (animation)
+  var translate = isMobile() ? '0px' : '-67px';
   $( '.new-world-title' ).stop().clearQueue().transition({
 
-    'transform' : 'translateY(-67px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
   // Fade in and goes up name (animation)
@@ -1458,13 +1466,16 @@ var newWorldAnimationOut = function(){
       'opacity'   : 0
     });
 
-    $( '.create-world-button' ).css( {
+    if (!isMobile()) {
+      $( '.create-world-button' ).css( {
 
-      'top'       : '383px',
-      'transform' : 'translateY(20px)',
-      'left'      : 'calc((50% - 236px) + 298px)'
+        'top'       : '383px',
+        'transform' : 'translateY(20px)',
+        'left'      : 'calc((50% - 236px) + 307px)'
 
-    } ).find( 'span' ).text( 'Crear mundo' );
+
+      } ).find( 'span' ).text( 'Crear mundo' );
+    }
 
     exploreAnimationOut();
 
