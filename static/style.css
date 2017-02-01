@@ -445,7 +445,7 @@ to {background-position: -200% 0;}
     float: right;
     width: 6px;
     height: 6px;
-    background-color: #ee4c53;
+    background-color: @redHorbito;
     margin-right: 10px;
     border-radius: 50%;
     margin-top: 11px;
@@ -3334,7 +3334,7 @@ to {background-position: -200% 0;}
 
     position: absolute;
     top: 124px;
-    font-size: 33px;
+    font-size: 55px;
     color: #fff;
     text-align: center;
     width: 100%;
@@ -3350,7 +3350,7 @@ to {background-position: -200% 0;}
     width: 474px;
   	height: 50px;
   	border-radius: 6px;
-  	background-color: rgba(0,0,0,0.3);
+  	background-color: #fff;
     position: relative;
     top: 209px;
     margin: 0 auto;
@@ -3371,7 +3371,7 @@ to {background-position: -200% 0;}
 
     float: left;
     background-image: url('@static/sprite-lupa-explore.png');
-    background-size: 41px 20px;
+    background-size: 20px 20px;
     width: 20px;
     height: 20px;
     margin-left: 22px;
@@ -3379,7 +3379,6 @@ to {background-position: -200% 0;}
     background-position: 20px 0;
     opacity: 0.7;
     transition: all 0.2s ease;
-
   }
 
   .search-bar.popup figure{
@@ -3401,7 +3400,7 @@ to {background-position: -200% 0;}
     width: 390px;
     margin-top: 15px;
     margin-left: 20px;
-    color: #fff;
+    color: #717171;
     font-size: 19px;
 
   }
@@ -4237,28 +4236,29 @@ to {background-position: -200% 0;}
     position: absolute;
     left: ~'calc((50% - 135px) + 142px)';
     top: 383px;
-    width: 174px;
-    height: 47px;
-    border-radius: 23px 23px 24px 24px;
-    background-color: #e85c5c;
+    width: 170px;
+    height: 43px;
+    border-radius: 6px;
+    background-color: transparent;
     margin-top: 30px;
     margin-bottom: 50px;
-    opacity: 0;
+    opacity: 0.5;
     transform: translateY(20px);
     transition: all 0.2s ease;
     cursor: pointer;
+    border: 2px solid #252525
 
   }
 
   .delete-world-button:hover{
 
-    background-color: #e25353;
+    opacity: 1 !important;
 
   }
 
   .delete-world-button:active{
 
-    background-color: #d84f4f;
+    opacity: 1 !important;
 
   }
 
@@ -4268,10 +4268,9 @@ to {background-position: -200% 0;}
     width: 100%;
     text-align: center;
     font-size: 19px;
-    color: #fff;
-    margin-top: 14px;
+    color: #252525;
+    margin-top: 12px;
     cursor: pointer;
-
   }
 
 }
