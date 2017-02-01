@@ -69,7 +69,7 @@
     "following"     : "siguiendo",
     "writeComment"  : "Escribe tu comentario aquí...",
     "editWorld"     : "Editar mundo",
-    "unfollowWorld" : "Dejar de seguir",
+    "unfollowWorld" : "Salir del mundo",
     "users"         : "Usuarios",
     "posts"         : "Eventos",
     "files"         : "Ficheros",
@@ -153,5 +153,6 @@
     "at"                  : "a las",
 
     "yourWorlds"          : "Tus mundos"
+
 
 }
