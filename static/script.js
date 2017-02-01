@@ -1086,7 +1086,11 @@ var appendWorld = function( worldApi ){
   var world = worldPrototype.clone();
   world.removeClass( 'wz-prototype' ).addClass( 'world-' + worldApi.id ).addClass( 'worldDom' );
   world.find( '.world-name' ).text( worldApi.name );
-  world.find( '.world-icon' ).css( 'border-color' , colors[ worldApi.id % colors.length ] );
+  if (isMobile()) {
+    world.find( '.world-icon' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+  }else{
+    world.find( '.world-icon' ).css( 'border-color' , colors[ worldApi.id % colors.length ] );
+  }
 
   var category;
 
@@ -1150,7 +1154,7 @@ var appendWorldCard = function( worldApi ){
     worldTitle = worldTitle.substr(0 , 29) + '...';
   }
   world.find( '.world-title-min' ).text( worldTitle );
-  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );;
+  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
 
   if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
 
@@ -2853,6 +2857,7 @@ var changeMobileView = function( view ){
           break;
 
       }
+      $('.world.active').removeClass('active');
       mobileView = 'worldSidebar'
       break;
 
@@ -2894,12 +2899,14 @@ var changeMobileView = function( view ){
 }
 
 var setMobile = function(){
+  StatusBar.backgroundColorByHexString("#272c34");
   $('input, textarea').on('focus', function(){
     Keyboard.shrinkView(true);
   })
   .on('blur', function(){
     Keyboard.shrinkView(false);
   });
+  $('.app-title').text(lang.yourWorlds);
 }
 
 initCosmos();
