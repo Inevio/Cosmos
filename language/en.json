@@ -134,8 +134,8 @@
     "viewInfo"            : "View information",
     "abandonWorld"        : "Leave world",
 
-    "postCreated"         : "has added a post",
-    "fileAdded"           : "has added a file",
+    "postCreated"         : "has added a new post",
+    "fileAdded"           : "has added a new file",
     "filesAdded"          : "has added some files",
     "fileModified"        : "has modified a file",
     "filesModified"       : "has modified some files",
@@ -152,6 +152,8 @@
     "notWorking"          : "This functionality is not working, please be patient",
 
     "omit"                : "Skip",
-    "at"                  : "at"
-    
+    "at"                  : "at",
+
+    "yourWorlds"          : "Your worlds"
+
 }

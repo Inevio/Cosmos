@@ -256,16 +256,12 @@ worldCategory.on( 'click' , function(){
   if ( category.hasClass( 'closed' ) ) {
     category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) );
     category.find( '.world-list' ).transition({
-
       'height'         : '0px'
-
     }, 200);
   }else{
     var height = category.find( '.world' ).length * parseInt($( '.world.wz-prototype' ).css('height'));
     category.find( '.world-list' ).transition({
-
       'height'         : height
-
     }, 200);
 
 
