@@ -2,6 +2,9 @@
 @redHorbito: #ff2153;
 @redHorbitoHover: #f81d4e;
 @redHorbitoActive: #e51846;
+@grayHorbito: #51575f;
+@grayHorbitoHover: #474d54;
+@grayHorbitoActive: #42464d;
 
 .hide{
   display: none !important;
@@ -88,10 +91,8 @@ to {background-position: -200% 0;}
 .explore-button-no-worlds{
   width: 300px;
   height: 80px;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  border-radius: 40px;
-  background-color: #60b25e;
+  border-radius: 12px;
+  background-color: @redHorbito;
   margin-top: 77px;
   margin-left: ~'calc(50% - 300px/2)';
   position: absolute;
@@ -99,11 +100,11 @@ to {background-position: -200% 0;}
 }
 
 .explore-button-no-worlds:hover{
-	background-color: #4ea34b;
+	background-color: @redHorbitoHover;
 }
 
 .explore-button-no-worlds:active{
-	background-color: #3d903b;
+	background-color: @redHorbitoActive;
 }
 
 .explore-button-no-worlds span{
@@ -917,6 +918,10 @@ to {background-position: -200% 0;}
 
   }
 
+}
+
+.compresed .world-avatar{
+  background-color: #f0f0f0;
 }
 
 /* COVER */
@@ -4305,9 +4310,9 @@ to {background-position: -200% 0;}
   float: left;
   width: 14px;
   height: 14px;
-  background-image: url('@static/close-create.png');
-  background-size: 29px 14px;
-  background-position: 14px 0;
+  background-image: url('@static/close-icons.png');
+  background-size: 25px 14px;
+  background-position: 25px 0;
   opacity: 0.7;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -4521,25 +4526,24 @@ to {background-position: -200% 0;}
 
     float: left;
     font-size: 17px;
-    color: #889399;
+    color: #252525;
     margin-top: 25px;
     margin-left: 25px;
     width: 335px;
+    font-weight: bold;
 
   }
 
   .invite-user-title i{
 
     color: #545f65;
-    font-weight: bold;
     margin-right: 4px;
 
   }
 
   .invite-user-title figure{
 
-    color: #60b25e;
-    font-weight: bold;
+    color: @redHorbito;
     display: inline-block;
     margin-left: 4px;
     max-width: 225px;
@@ -4552,10 +4556,8 @@ to {background-position: -200% 0;}
     position: absolute;
     width: 89px;
   	height: 33px;
-  	-webkit-border-radius: 16px 16px 17px 17px;
-  	-moz-border-radius: 16px 16px 17px 17px;
-  	border-radius: 16px 16px 17px 17px;
-  	background-color: #889399;
+  	border-radius: 6px;
+  	background-color: @grayHorbito;
     right: 114px;
     bottom: 10px;
     cursor: pointer;
@@ -4564,13 +4566,13 @@ to {background-position: -200% 0;}
 
   .cancel-invite-user:hover{
 
-    background-color: #7a848a;
+    background-color: @grayHorbitoHover;
 
   }
 
   .cancel-invite-user:active{
 
-    background-color: #6a7379;
+    background-color: @grayHorbitoActive;
 
   }
 
@@ -4591,10 +4593,8 @@ to {background-position: -200% 0;}
     position: absolute;
     width: 89px;
     height: 33px;
-    -webkit-border-radius: 16px 16px 17px 17px;
-    -moz-border-radius: 16px 16px 17px 17px;
-    border-radius: 16px 16px 17px 17px;
-    background-color: #60b25e;
+    border-radius: 6px;
+    background-color: @redHorbito;
     right: 15px;
     bottom: 10px;
     cursor: pointer;
@@ -4603,13 +4603,13 @@ to {background-position: -200% 0;}
 
   .invite-user:hover{
 
-    background-color: #4ea34b;
+    background-color: @redHorbitoHover;
 
   }
 
   .invite-user:active{
 
-    background-color: #3d903b;
+    background-color: @redHorbitoActive;
 
   }
 
@@ -4628,8 +4628,8 @@ to {background-position: -200% 0;}
 
     position: absolute;
     right: 0;
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     padding: 10px;
     border-radius: 50%;
     margin-right: 10px;
@@ -4649,11 +4649,11 @@ to {background-position: -200% 0;}
   .close-invite-user figure{
 
     float: left;
-    width: 14px;
-    height: 14px;
-    background-image: url('@static/close-create.png');
-    background-size: 29px 14px;
-    background-position: 14px 0;
+    width: 10px;
+    height: 10px;
+    background-image: url('@static/close-icons.png');
+    background-size: 25px 14px;
+    background-position: 10px -4px;
     opacity: 0.7;
     transition: all 0.2s ease;
     cursor: pointer;
@@ -4688,18 +4688,26 @@ to {background-position: -200% 0;}
   .ui-input-search{
 
     float: left;
-    border: solid 2px #c0c6ca;
-    border-radius: 40px;
+    border: solid 2px transparent;
     margin-top: 19px;
     margin-left: 20px;
     width: 375px;
     transition: all 0.2s ease;
+    background-color: #f0f0f0;
+    color: #717171;
+  }
 
+  .ui-input-search .search-icon i{
+    background-image: url('@static/sprite-white.png');
+  }
+
+  .ui-input-search input{
+    background-color: #f0f0f0;
   }
 
   .active.ui-input-search{
 
-    border-color: #60b25e;
+    border-color: @redHorbito;
 
   }
 
@@ -4748,12 +4756,9 @@ to {background-position: -200% 0;}
   }
 
   .friend .ui-checkbox{
-
     position: absolute;
     bottom: 24px;
     right: 10px;
-    border-radius: 50%;
-
   }
 
 }
