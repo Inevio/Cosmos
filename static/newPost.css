@@ -1,10 +1,17 @@
+@redHorbito: #ff2153;
+@redHorbitoHover: #f81d4e;
+@redHorbitoActive: #e51846;
+@grayHorbito: #51575f;
+@grayHorbitoHover: #474d54;
+@grayHorbitoActive: #42464d;
+
 *{
   font-family: 'Lato';
   letter-spacing: 0.02em;
 }
 
 input, textarea{
-  background: #f9f9fb;
+  background: #f0f0f0;
 }
 
 .hide{
@@ -21,50 +28,50 @@ input, textarea{
 
 .new-card-section.with-attach.four{
   .new-card-textarea{
-    height: 140px;
+    height: 124px;
   }
 }
 
 .autopost.new-card-section.with-attach.four{
   .new-card-textarea{
-    height: 113px;
+    height: 97px;
   }
 }
 
 .new-card-section.with-attach.three{
   .new-card-textarea{
-    height: 140px;
+    height: 124px;
   }
 }
 
 .autopost.new-card-section.with-attach.three{
   .new-card-textarea{
-    height: 113px;
+    height: 97px;
   }
 }
 
 .new-card-section.with-attach.two{
   .new-card-textarea{
-    height: 140px;
+    height: 124px;
   }
 }
 
 .autopost.new-card-section.with-attach.two{
   .new-card-textarea{
-    height: 113px;
+    height: 97px;
   }
 }
 
 
 .new-card-section.with-attach.one{
   .new-card-textarea{
-    height: 130px;
+    height: 114px;
   }
 }
 
 .autopost.new-card-section.with-attach.one{
   .new-card-textarea{
-    height: 105px;
+    height: 89px;
   }
 }
 
@@ -75,7 +82,7 @@ input, textarea{
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  background-color: #f9f9fb;
+  background-color: #fff;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -123,7 +130,7 @@ input, textarea{
 
   .new-card-title figure{
 
-    color: #60b25e;
+    color: @redHorbito;
     font-weight: bold;
     display: inline;
     margin-left: 4px;
@@ -144,18 +151,20 @@ input, textarea{
   }
 
   .new-card-input{
-
     float: left;
     margin-top: 25px;
     margin-left: 20px;
-    width: 400px;
+    width: 387px;
     color: #545f65;
     font-size: 19px;
     font-weight: bold;
-    border-bottom: 1px solid #e5e9ea;
-    padding-bottom: 17px;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 8px;
+    padding-top: 8px;
     height: 22px;
-
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    padding-left: 13px;
   }
 
   .new-card-textarea{
@@ -163,19 +172,26 @@ input, textarea{
     float: left;
     margin-top: 17px;
     margin-left: 87px;
-    width: 398px;
-    height: 170px;
+    width: 385px;
+    height: 154px;
     color: #545f65;
     font-size: 15px;
     line-height: 25px;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    font-weight: bold;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    padding-left: 13px;
+
   }
 
   .close-new-card{
 
     position: absolute;
     right: 0;
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     padding: 10px;
     border-radius: 50%;
     margin-right: 10px;
@@ -194,11 +210,11 @@ input, textarea{
   .close-new-card figure{
 
     float: left;
-    width: 14px;
-    height: 14px;
-    background-image: url('@static/close-create.png');
-    background-size: 29px 14px;
-    background-position: 14px 0;
+    width: 10px;
+    height: 10px;
+    background-image: url('@static/close-icons.png');
+    background-size: 25px 14px;
+    background-position: 10px -4px;
     opacity: 0.7;
     cursor: pointer;
 
@@ -310,7 +326,7 @@ input, textarea{
 
       float: left;
       width: 100%;
-      border-top: 1px solid #e5e9ea;
+      border-top: 1px solid transparent;
       padding-top: 8px;
       padding-bottom: 8px;
 
@@ -347,11 +363,12 @@ input, textarea{
 
       }
 
+
       .aux-title{
         float: left;
         width: 100%;
         font-size: 11px;
-        color: #60b25e;
+        color: #217cfa;
         padding-top: 5px;
         padding-bottom: 2px;
         display: none;
@@ -432,10 +449,8 @@ input, textarea{
     position: absolute;
     width: 89px;
   	height: 33px;
-  	-webkit-border-radius: 16px 16px 17px 17px;
-  	-moz-border-radius: 16px 16px 17px 17px;
-  	border-radius: 16px 16px 17px 17px;
-  	background-color: #889399;
+  	border-radius: 6px;
+  	background-color: @grayHorbito;
     right: 114px;
     bottom: 10px;
     cursor: pointer;
@@ -443,14 +458,12 @@ input, textarea{
   }
 
   .cancel-new-card:hover{
-
-    background-color: #7a848a;
-
+    background-color: @grayHorbitoHover;
   }
 
   .cancel-new-card:active{
 
-    background-color: #6a7379;
+    background-color: @grayHorbitoActive;
 
   }
 
@@ -471,10 +484,8 @@ input, textarea{
     position: absolute;
     width: 89px;
     height: 33px;
-    -webkit-border-radius: 16px 16px 17px 17px;
-    -moz-border-radius: 16px 16px 17px 17px;
-    border-radius: 16px 16px 17px 17px;
-    background-color: #60b25e;
+    border-radius: 6px;
+    background-color: @redHorbito;
     right: 15px;
     bottom: 10px;
     cursor: pointer;
@@ -483,13 +494,13 @@ input, textarea{
 
   .post-new-card:hover{
 
-    background-color: #4ea34b;
+    background-color: @redHorbitoHover;
 
   }
 
   .post-new-card:active{
 
-    background-color: #3d903b;
+    background-color: @redHorbitoActive;
 
   }
 
