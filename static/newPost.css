@@ -28,50 +28,25 @@ input, textarea{
 
 .new-card-section.with-attach.four{
   .new-card-textarea{
-    height: 124px;
-  }
-}
-
-.autopost.new-card-section.with-attach.four{
-  .new-card-textarea{
-    height: 97px;
+    height: 110px;
   }
 }
 
 .new-card-section.with-attach.three{
   .new-card-textarea{
-    height: 124px;
-  }
-}
-
-.autopost.new-card-section.with-attach.three{
-  .new-card-textarea{
-    height: 97px;
+    height: 93px;
   }
 }
 
 .new-card-section.with-attach.two{
   .new-card-textarea{
-    height: 124px;
+    height: 112px;
   }
 }
-
-.autopost.new-card-section.with-attach.two{
-  .new-card-textarea{
-    height: 97px;
-  }
-}
-
 
 .new-card-section.with-attach.one{
   .new-card-textarea{
-    height: 114px;
-  }
-}
-
-.autopost.new-card-section.with-attach.one{
-  .new-card-textarea{
-    height: 89px;
+    height: 145px;
   }
 }
 
@@ -89,34 +64,28 @@ input, textarea{
 
   .new-card-header{
     float: left;
-    width: 100%;
+    width: ~'calc(100% - 38px)';
     background-color: #fff;
     border-bottom: 1px solid #e2e6e8;
-    padding: 0 0 20px 0;
+    padding: 18px 19px 21px 19px;
+    height: 48px;
   }
+
+  .new-card-cosmos{
+    float: left;
+    font-size: 21px;
+    color: @redHorbito;
+    font-weight: 900;
+  }
+
 
   .new-card-title{
 
     float: left;
     font-size: 17px;
     color: #889399;
-    margin-top: 20px;
-    margin-left: 25px;
-    margin-right: 43px;
+    margin-top: 12px;
     width: 461px;
-
-  }
-
-  .new-card-subtitle{
-
-    float: left;
-    font-size: 16px;
-    color: #889399;
-    margin-top: 14px;
-    margin-left: 25px;
-    margin-right: 43px;
-    padding-bottom: 2px;
-    width: 460px;
 
   }
 
@@ -145,35 +114,35 @@ input, textarea{
     height: 40px;
     border-radius: 50%;
     background-size: cover;
-    margin-left: 25px;
-    margin-top: 25px;
+    margin-left: 24px;
+    margin-top: 15px;
 
   }
 
   .new-card-input{
     float: left;
-    margin-top: 25px;
-    margin-left: 20px;
-    width: 387px;
+    margin-top: 15px;
+    margin-left: 19px;
+    width: 405px;
     color: #545f65;
     font-size: 19px;
     font-weight: bold;
-    border-bottom: 1px solid transparent;
     padding-bottom: 8px;
     padding-top: 8px;
     height: 22px;
     background-color: #f0f0f0;
     border-radius: 6px;
     padding-left: 13px;
+    padding-right: 13px;
   }
 
   .new-card-textarea{
 
     float: left;
-    margin-top: 17px;
-    margin-left: 87px;
-    width: 385px;
-    height: 154px;
+    margin-top: 10px;
+    margin-left: 83px;
+    width: 405px;
+    height: 121px;
     color: #545f65;
     font-size: 15px;
     line-height: 25px;
@@ -183,7 +152,7 @@ input, textarea{
     padding-bottom: 8px;
     padding-top: 8px;
     padding-left: 13px;
-
+    padding-right: 13px;
   }
 
   .close-new-card{
@@ -340,14 +309,12 @@ input, textarea{
       }
 
       .title{
-
         float: left;
         font-size: 13px;
         margin-left: 10px;
         margin-top: 2px;
         margin-bottom: 2px;
-        width: 350px;
-
+        width: 280px;
       }
 
       .cancel-attachment{
@@ -365,11 +332,11 @@ input, textarea{
 
 
       .aux-title{
-        float: left;
-        width: 100%;
+        float: right;
+        width: 90px;
         font-size: 11px;
         color: #217cfa;
-        padding-top: 5px;
+        padding-top: 3px;
         padding-bottom: 2px;
         display: none;
       }
@@ -451,7 +418,7 @@ input, textarea{
   	height: 33px;
   	border-radius: 6px;
   	background-color: @grayHorbito;
-    right: 114px;
+    right: 165px;
     bottom: 10px;
     cursor: pointer;
 
@@ -482,7 +449,7 @@ input, textarea{
   .post-new-card{
 
     position: absolute;
-    width: 89px;
+    width: 140px;
     height: 33px;
     border-radius: 6px;
     background-color: @redHorbito;

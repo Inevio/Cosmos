@@ -79,35 +79,21 @@ var addAttachment = function( attach, useItem ){
   var nAttachs = $( '.attachment:not(.wz-prototype)' ).length;
   switch (nAttachs) {
     case 0:
+      app.css( 'height' ,  '360px' );
       break;
     case 1:
-      $( '.new-card-section' ).addClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'three' );
-      $( '.new-card-section' ).removeClass( 'four' );
-      app.css( 'height' ,  '372px' );
+      app.css( 'height' ,  '390px' );
       break;
     case 2:
-      $( '.new-card-section' ).addClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'three' );
-      $( '.new-card-section' ).removeClass( 'four' );
-      app.css( 'height' ,  '415px' );
+      app.css( 'height' ,  '420px' );
       break;
     case 3:
-      $( '.new-card-section' ).addClass( 'three' );
-      $( '.new-card-section' ).removeClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'four' );
-      app.css( 'height' ,  '442px' );
+      app.css( 'height' ,  '450px' );
       break;
     default:
-      $( '.new-card-section' ).addClass( 'four' );
-      $( '.new-card-section' ).removeClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'three' );
-      app.css( 'height' ,  '480px' );
+      app.css( 'height' ,  '490px' );
   }
+
 
   updateAttachmentCounter()
 
@@ -299,10 +285,12 @@ var translateUI = function(){
 
   if (params.operation) {
     $( '.cancel-new-card span' ).text( lang.omit );
+    $( '.post-new-card span' ).text( lang.publishChanges );
   }else{
     $( '.cancel-new-card span' ).text( lang.cancel );
+    $( '.post-new-card span' ).text( lang.publishPost );
   }
-  $( '.post-new-card span' ).text( lang.postit );
+
   $( '.attach-select .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span' ).text( lang.uploadPC );
   $( '.new-card-input' ).attr( 'placeholder', lang.writeTitle );
@@ -365,7 +353,6 @@ var setTexts = function(){
     }
 
     $( '.new-card-title' ).html( '<i class="wz-dragger">' + text + '</i>' + '<figure class="wz-dragger ellipsis">' + params.world.name + '</figure>' );
-    $( '.new-card-subtitle' ).html( lang.wantToPublish ).removeClass( 'hide' );
     $( '.new-card-section' ).addClass( 'autopost' );
 
   }else{
@@ -450,36 +437,20 @@ app
   var nAttachs = $( '.attachment:not(.wz-prototype)' ).length;
   switch (nAttachs) {
     case 0:
+      app.css( 'height' ,  '360px' );
       break;
     case 1:
-      $( '.new-card-section' ).addClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'three' );
-      $( '.new-card-section' ).removeClass( 'four' );
-      app.css( 'height' ,  '372px' );
+      app.css( 'height' ,  '390px' );
       break;
     case 2:
-      $( '.new-card-section' ).addClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'three' );
-      $( '.new-card-section' ).removeClass( 'four' );
-      app.css( 'height' ,  '415px' );
+      app.css( 'height' ,  '420px' );
       break;
     case 3:
-      $( '.new-card-section' ).addClass( 'three' );
-      $( '.new-card-section' ).removeClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'four' );
-      app.css( 'height' ,  '442px' );
+      app.css( 'height' ,  '450px' );
       break;
     default:
-      $( '.new-card-section' ).addClass( 'four' );
-      $( '.new-card-section' ).removeClass( 'two' );
-      $( '.new-card-section' ).removeClass( 'one' );
-      $( '.new-card-section' ).removeClass( 'three' );
-      app.css( 'height' ,  '480px' );
+      app.css( 'height' ,  '490px' );
   }
-
 
 })
 
