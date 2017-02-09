@@ -110,7 +110,8 @@
     "for"           : "for",
     "uploadInevio"  : "Add from Inevio",
     "uploadPC"      : "Upload from PC",
-    "postit"        : "Publish",
+    "publishPost"     : "Publish post",
+    "publishChanges"  : "Publish changes",
 
     "createWorldShort"  : "Create world",
     "notAllowedDeletePost"    : "You are not allowed to delete this post",

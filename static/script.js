@@ -878,6 +878,31 @@ app
 
 })
 
+.on( 'click' , '.world-context-menu' , function(){
+
+  $('.world-option:not(.wz-prototype)').remove();
+  $('.world-options, .world-options *').addClass('popup');
+  var option = $('.world-option.wz-prototype').clone();
+  option.removeClass('wz-prototype').addClass('popup');
+
+  var isMine = worldSelected.owner === myContactID ? true : false;
+  if ( isMine ) {
+    option.addClass('editWorldOption').find('span').text( lang.editWorld );
+  }else{
+    option.addClass('removeWorldOption').find('span').text( lang.abandonWorld );
+  }
+
+  $('.world-options').append(option);
+})
+
+.on( 'click' , '.editWorldOption' , function(){
+  unFollowButton.click();
+})
+
+.on( 'click' , '.removeWorldOption' , function(){
+  unFollowWorld( worldSelected );
+})
+
 .on( 'swiperight' , function(){
   if (isMobile()) {
     changeMobileView('worldSidebar');

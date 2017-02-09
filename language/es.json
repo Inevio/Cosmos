@@ -109,7 +109,8 @@
     "for"           : "para",
     "uploadInevio"  : "Añadir desde Inevio",
     "uploadPC"      : "Subir desde el PC",
-    "postit"        : "Publicar",
+    "publishPost"     : "Publicar post",
+    "publishChanges"  : "Publicar cambios",
 
     "createWorldShort"  : "Crear mundo",
     "notAllowedDeletePost"    : "No tienes los permisos para borrar este post",

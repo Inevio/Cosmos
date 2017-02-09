@@ -773,51 +773,38 @@ to {background-position: -200% 0;}
   }
 
   .cosmos-buttons .open-folder i{
-
     background-position: 177px 0;
     opacity: 0.7;
     transition: opacity 0.2s ease;
-
   }
 
   .cosmos-buttons .open-folder:hover i{
-
     opacity: 1;
-
   }
 
   .cosmos-buttons .new-post{
-
     width: 23px;
     height: 17px;
     padding-left: 6px;
     padding-right: 4px;
     margin-top: 1px;
-
-
   }
 
-
   .cosmos-buttons .new-post i{
-
     width: 23px;
     background-position: 220px 0;
     opacity: 0.7;
     transition: opacity 0.2s ease;
-
   }
 
   .cosmos-buttons .new-post:hover i{
-
     opacity: 1;
-
   }
 
   .search-button{
-
     width: 33px;
     height: 33px;
-    border-radius: 50%;
+    border-radius: 6px;
     background-color: rgba(0,0,0,0.3);
     margin-top: 12px;
     z-index: 3;
@@ -827,7 +814,6 @@ to {background-position: -200% 0;}
     transition-timing-function: cubic-bezier(.32,.06,.1,.99);
     box-shadow: 0px 0px 0px 1px transparent;
     cursor: pointer;
-
   }
 
   .search-button.popup{
@@ -944,6 +930,10 @@ to {background-position: -200% 0;}
   cursor: default;
 }
 
+.compresed .world-context-menu{
+  display: none;
+}
+
 .cover{
 
   .shadow{
@@ -963,7 +953,6 @@ to {background-position: -200% 0;}
     width: 50%;
     height: 100%;
     background-image: url('@static/cover.png');
-
     background-size: cover;
     position: absolute;
     z-index: 1;
@@ -1340,6 +1329,102 @@ to {background-position: -200% 0;}
   .more-info:hover{
 
     opacity: 1;
+
+  }
+
+  .world-context-menu{
+
+    position: absolute;
+    z-index: 3;
+    top: 52px;
+    right: 12px;
+    width: 3px;
+    height: 15px;
+    background-color: #681835;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 5px 11px;
+    border-radius: 50%;
+
+  }
+
+  .world-context-menu:hover{
+
+    background-color: #5f1630;
+
+  }
+
+  .world-context-menu:active{
+
+    background-color: #440f22;
+
+  }
+
+
+  .world-context-menu i{
+
+    float: left;
+    width: 3px;
+    height: 15px;
+    background-image: url('@static/moreOptions.png');
+    background-size: 3px 15px;
+
+  }
+
+  .world-options{
+    position: absolute;
+    display: none;
+    right: 44px;
+    top: 47px;
+    width: 157px;
+  	-webkit-border-radius: 6px;
+  	-moz-border-radius: 6px;
+  	border-radius: 6px;
+  	background-color: #fff;
+  	-webkit-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  	-moz-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  	box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  	border: solid 1px rgba(0,0,0,.15);
+    z-index: 4;
+    opacity: 0;
+    transition: all 0.2s ease;
+
+  }
+
+  .world-options.popup{
+
+    opacity: 1;
+    display: inline-block;
+
+  }
+
+  .world-options article{
+
+    float: left;
+    width: 100%;
+    height: 50%;
+    cursor: pointer;
+
+  }
+
+  .world-options article span{
+
+    float: left;
+    padding-left: 20px;
+    width: ~'calc(100% - 20px)';
+    line-height: 100%;
+    font-size: 13px;
+    color: #545f65;
+    height: 33.5px;
+    line-height: 33.5px;
+    transition: all 0.2s ease;
+
+  }
+
+
+  .world-options article:hover span{
+
+    background-color: #f7f8fa;
 
   }
 
@@ -4945,6 +5030,12 @@ to {background-position: -200% 0;}
 
 }
 
+.mobile-world-content.compresed{
+  .back-cover{
+    background-image: url('@static/backMobileBlack.png');
+  }
+}
+
 .mobile-world-content{
 
   position: absolute;
@@ -4971,8 +5062,25 @@ to {background-position: -200% 0;}
     border-radius: 0px;
   }
 
+  .back-cover{
+    position: absolute;
+    background-image: url('@static/backMobileWhite.png');
+    background-size: 15px 15px;
+    width: 15px;
+    height: 15px;
+    left: 20px;
+    z-index: 3;
+    top: 20px;
+  }
+
+  .search-button{
+    left: auto;
+    right: 20px;
+  }
+
   .back-image{
     border-radius: 0px;
+    background-image: url('@static/coverMobile.png');
   }
 
   .cards-list{
@@ -5280,12 +5388,29 @@ to {background-position: -200% 0;}
   float: left;
   z-index: 3;
   transform: translateY(100%);
-  background-color: #334b5c;
-	background-image: -webkit-linear-gradient(bottom, #08416b 11%, #09314f);
-	background-image: -moz-linear-gradient(bottom, #08416b 11%, #09314f);
-	background-image: -o-linear-gradient(bottom, #08416b 11%, #09314f);
-	background-image: -ms-linear-gradient(bottom, #08416b 11%, #09314f);
-	background-image: linear-gradient(to top, #08416b 11%, #09314f);
+	background-image: url('@static/exploreBackMobile.png');
+  background-size: 375px 367px;
   border-radius: 0px;
+
+  .search-title{
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    top: 20px;
+  }
+
+  .search-bar{
+    width: ~'calc(100% - 40px)';
+    margin: 0 20px;
+    top: 60px;
+
+    input{
+      width: ~'calc(100% - 70px)';
+    }
+  }
+
+  .tend-list{
+    top: 87px;
+  }
 
 }
