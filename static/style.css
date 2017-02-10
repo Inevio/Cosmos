@@ -6,6 +6,7 @@
 @grayHorbitoHover: #474d54;
 @grayHorbitoActive: #42464d;
 
+
 .hide{
   display: none !important;
 }
@@ -606,6 +607,45 @@ to {background-position: -200% 0;}
 
 .ui-content{
 
+  .world-context-menu{
+
+    position: absolute;
+    z-index: 3;
+    top: 52px;
+    right: 12px;
+    width: 3px;
+    height: 15px;
+    background-color: #681835;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 5px 11px;
+    border-radius: 50%;
+
+  }
+
+  .world-context-menu:hover{
+
+    background-color: #5f1630;
+
+  }
+
+  .world-context-menu:active{
+
+    background-color: #440f22;
+
+  }
+
+
+  .world-context-menu i{
+
+    float: left;
+    width: 3px;
+    height: 15px;
+    background-image: url('@static/moreOptions.png');
+    background-size: 3px 15px;
+
+  }
+
   .pre-cover{
 
     position: absolute;
@@ -906,6 +946,10 @@ to {background-position: -200% 0;}
 
 }
 
+.compresed .world-context-menu{
+  display: none;
+}
+
 .compresed .world-avatar{
   background-color: #f0f0f0;
 }
@@ -928,10 +972,6 @@ to {background-position: -200% 0;}
 
 .compresed .cover .world-title{
   cursor: default;
-}
-
-.compresed .world-context-menu{
-  display: none;
 }
 
 .cover{
@@ -1329,45 +1369,6 @@ to {background-position: -200% 0;}
   .more-info:hover{
 
     opacity: 1;
-
-  }
-
-  .world-context-menu{
-
-    position: absolute;
-    z-index: 3;
-    top: 52px;
-    right: 12px;
-    width: 3px;
-    height: 15px;
-    background-color: #681835;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    padding: 5px 11px;
-    border-radius: 50%;
-
-  }
-
-  .world-context-menu:hover{
-
-    background-color: #5f1630;
-
-  }
-
-  .world-context-menu:active{
-
-    background-color: #440f22;
-
-  }
-
-
-  .world-context-menu i{
-
-    float: left;
-    width: 3px;
-    height: 15px;
-    background-image: url('@static/moreOptions.png');
-    background-size: 3px 15px;
 
   }
 
@@ -5031,8 +5032,26 @@ to {background-position: -200% 0;}
 }
 
 .mobile-world-content.compresed{
-  .back-cover{
+  .go-back{
     background-image: url('@static/backMobileBlack.png');
+  }
+}
+
+.searching.mobile-world-content .search-bar{
+  display: block;
+}
+
+.compresed.mobile-world-content{
+
+  .search-button i{
+    background-image: url('@static/searchMobileBlack.png');
+  }
+
+  .world-context-menu{
+    display: inline-block;
+    i{
+      background-image: url('@static/moreOptionsBlackMobile.png');
+    }
   }
 }
 
@@ -5054,6 +5073,47 @@ to {background-position: -200% 0;}
     right: 0px;
   }
 
+  .search-bar{
+    position: absolute;
+    width: 100%;
+    height: 57px;
+    z-index: 5;
+    background-color: #fff;
+    display: none;
+
+    i{
+      width: 16px;
+      position: absolute;
+      height: 16px;
+      z-index: 4;
+      top: 18px;
+      left: 25px;
+      background-image: url('@static/sprite.png');
+      background-size: 312px 27px;
+    }
+
+    input{
+      background-color: #f0f0f0;
+      height: 35px;
+      width: ~'calc(100% - 140px)';
+      margin-left: 15px;
+      margin-top: 10px;
+      color: #252525;
+      font-weight: bold;
+      padding-left: 40px;
+      float: left;
+    }
+
+    .cancel-search{
+      float: left;
+      padding-top: 19px;
+      padding-bottom: 10px;
+      width: 85px;
+      text-align: center;
+      color: @redHorbito;
+    }
+  }
+
   .cover{
     height: 247px;
   }
@@ -5062,7 +5122,7 @@ to {background-position: -200% 0;}
     border-radius: 0px;
   }
 
-  .back-cover{
+  .go-back{
     position: absolute;
     background-image: url('@static/backMobileWhite.png');
     background-size: 15px 15px;
@@ -5075,6 +5135,23 @@ to {background-position: -200% 0;}
 
   .search-button{
     left: auto;
+    right: 45px;
+    background-color: transparent !important;
+
+    i{
+      opacity: 1;
+      background-image: url('@static/searchMobileWhite.png');
+      background-size: 18px 18px;
+      width: 18px;
+      height: 18px;
+      background-position: 0px 0px;
+    }
+  }
+
+  .world-context-menu{
+    padding: 0px;
+    background-color: transparent;
+    top: 20px;
     right: 20px;
   }
 
@@ -5083,15 +5160,58 @@ to {background-position: -200% 0;}
     background-image: url('@static/coverMobile.png');
   }
 
+  .open-folder{
+    position: absolute;
+    padding: 13px 15px;
+    width: 19px;
+    height: 15px;
+    background-color: @redHorbito;
+    bottom: 95px;
+    right: 27px;
+    border-radius: 50%;
+    z-index: 3;
+    opacity: 1;
+
+    i{
+      float: left;
+      width: 19px;
+      height: 15px;
+      background-image: url('@static/openFolderMobile.png');
+      background-size: 19px 15px;
+      cursor: pointer;
+    }
+
+  }
+
+
+  .new-post{
+    position: absolute;
+    padding: 18px 18px 15px 22px;
+    width: 27px;
+    height: 20px;
+    background-color: @redHorbito;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 50%;
+    z-index: 3;
+    opacity: 1;
+
+    i{
+      float: left;
+      width: 27px;
+      height: 20px;
+      background-image: url('@static/newPostMobile.png');
+      background-size: 27px 20px;
+      cursor: pointer;
+    }
+
+  }
+
   .cards-list{
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     top: 247px;
     height: ~'calc(100% - 247px)';
-  }
-
-  .spot{
-    top: 214px;
   }
 
   .card{
@@ -5389,7 +5509,7 @@ to {background-position: -200% 0;}
   z-index: 3;
   transform: translateY(100%);
 	background-image: url('@static/exploreBackMobile.png');
-  background-size: 375px 367px;
+  background-size: cover;
   border-radius: 0px;
 
   .search-title{
@@ -5411,6 +5531,25 @@ to {background-position: -200% 0;}
 
   .tend-list{
     top: 87px;
+    height: ~'calc(100% - 137px)';
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .world-card{
+    width: ~'calc(50% - 10px)';
+    margin: 0 5px 10px 5px;
+  }
+
+  .go-back{
+    position: absolute;
+    background-image: url('@static/backMobileWhite.png');
+    background-size: 15px 15px;
+    width: 15px;
+    height: 15px;
+    left: 20px;
+    z-index: 8;
+    top: 20px;
   }
 
 }

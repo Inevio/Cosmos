@@ -27,7 +27,7 @@ var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
 //var openChatButton      = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
-var searchPostInput       = $( '.pre-cover .search-button input' );
+var searchPostInput       = $( '.pre-cover .search-button input, .mobile-world-content .search-bar input' );
 //var newPostButton       = $( '.new-post, .no-post-new-post-button' );
 //var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
@@ -42,6 +42,8 @@ var mobileNewWorld          = $( '.mobile-new-world' );
 var mobileExplore           = $( '.mobile-explore' );
 var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
+var searchBar       = $( '.search-button' );
+var searchBarFigure = $( '.search-button i' );
 
 
 var TYPES = {
@@ -904,7 +906,7 @@ app
 })
 
 .on( 'swiperight' , function(){
-  if (isMobile()) {
+  if (isMobile() && mobileView == 'worldContent') {
     changeMobileView('worldSidebar');
   }
 })
@@ -920,10 +922,20 @@ app
 })
 
 .on( 'click' , '.close-comments' , function(){
-
   changeMobileView('worldContent');
-
 })
+
+.on( 'click' , '.mobile-explore .go-back' , function(){
+  changeMobileView('worldSidebar');
+})
+
+.on( 'click' , '.mobile-world-content .go-back' , function(){
+  changeMobileView('worldSidebar');
+})
+
+.on( 'click' , '.cancel-search' , function(){
+  $('.mobile-world-content').removeClass('searching');
+});
 
 //Functions
 var initCosmos = function(){
@@ -2881,7 +2893,18 @@ var changeMobileView = function( view ){
           });
           break;
 
+        case 'explore':
+
+          mobileWorldSidebar.removeClass('hide');
+          mobileExplore.stop().clearQueue().transition({
+            'transform' : 'translateY(100%)'
+          }, 300, function(){
+            mobileExplore.addClass('hide');
+          });
+          break;
+
       }
+      StatusBar.backgroundColorByHexString("#272c34");
       $('.world.active').removeClass('active');
       mobileView = 'worldSidebar'
       break;
@@ -2911,6 +2934,7 @@ var changeMobileView = function( view ){
     case 'explore':
 
       mobileExplore.removeClass('hide');
+      StatusBar.backgroundColorByHexString("#0f141c");
       mobileExplore.stop().clearQueue().transition({
         'transform' : 'translateY(0%)'
       }, 300, function(){
@@ -2932,6 +2956,8 @@ var setMobile = function(){
     Keyboard.shrinkView(false);
   });
   $('.app-title').text(lang.yourWorlds);
+  $('.cancel-search').text(lang.cancel);
+  $('.search-bar input').attr( 'placeholder' , lang.search );
 }
 
 initCosmos();
