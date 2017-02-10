@@ -141,7 +141,6 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
       usersGoesDownNoAnimation();
     }
 
-    console.log( 'mouse' );
     compressCover();
     $('.cards-list').scrollTop( 6 );
 
@@ -271,15 +270,36 @@ worldCategory.on( 'click' , function(){
 
 searchBar.on( 'click' , function(){
 
-  $( this ).addClass( 'popup' );
-  $( this ).find( 'input' ).focus();
+  if (!isMobile()) {
+    $( this ).addClass( 'popup' );
+    $( this ).find( 'input' ).focus();
+  }else{
+    if ( showingUsers ) {
+      usersGoesDownNoAnimation();
+    }
+    if ( state == 1 && !onTransition ) {
+      compressCover();
+    }
+    uiContent.addClass('searching');
+    $('.search-bar input').focus();
+  }
 
 });
 
 searchBarFigure.on( 'click' , function(){
 
-  $( this ).parent().addClass( 'popup' );
-
+  if (!isMobile()) {
+    $( this ).parent().addClass( 'popup' );
+  }else{
+    if ( showingUsers ) {
+      usersGoesDownNoAnimation();
+    }
+    if ( state == 1 && !onTransition ) {
+      compressCover();
+    }
+    uiContent.addClass('searching');
+    $('.search-bar input').focus();
+  }
 });
 
 searchExplore.on( 'click' , function(){
@@ -379,7 +399,6 @@ app
 
 .on( 'click' , function( e ){
 
-  console.log(e);
   if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
 
     $( '.popup' ).removeClass( 'popup' );
