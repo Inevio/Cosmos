@@ -71,6 +71,7 @@
     "writeComment"  : "Write your comment here...",
     "editWorld"     : "Edit world",
     "unfollowWorld" : "Unfollow world",
+    "exit"          : "Exit world",
     "users"         : "Users",
     "posts"         : "Posts",
     "files"         : "Files",
@@ -127,7 +128,9 @@
     "bannerReplyComment"  : "replied you",
 
     "writeTitle"          : "Write a title for the post",
+    "title"               : "Title...",
     "writeDescription"    : "Write a description...",
+    "description"         : "Description...",
     "addFiles"            : "Add files",
     "editingOne"          : "You are already editing another post. Please save or cancel the other post to start editing a new one.",
 

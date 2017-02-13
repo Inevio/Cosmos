@@ -1366,59 +1366,66 @@ var newWorldAnimationBEditing = function(){
     'transform' : 'translateY('+translate+')'
 
   }, 1000);
+
   // Fade in and goes up name (animation)
+  var translate = isMobile() ? '-38px' : '-58px';
   $( '.new-world-name' ).stop().clearQueue().transition({
 
     delay       : 100,
     'opacity'   : 1,
-    'transform' : 'translateY(-58px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
 
   // Fade in and goes up avatar (animation)
+  var translate = isMobile() ? '50px' : '120px';
   $( '.new-world-avatar' ).css( 'transform' , 'translateY(158px)' );
   $( '.new-world-avatar' ).stop().clearQueue().transition({
 
     delay       : 300,
     'opacity'   : 1,
-    'transform' : 'translateY(120px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
 
   // Fade in and goes up desc (animation)
+  var translate = isMobile() ? '50px' : '120px';
   $( '.new-world-desc' ).css( 'transform' , 'translateY(158px)' );
   $( '.new-world-desc' ).stop().clearQueue().transition({
 
     delay       : 500,
     'opacity'   : 1,
-    'transform' : 'translateY(120px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
 
   // Fade in and goes up privacy (animation)
+  var translate = isMobile() ? '50px' : '120px';
   $( '.new-world-privacy' ).css( 'transform' , 'translateY(158px)' );
   $( '.new-world-privacy' ).stop().clearQueue().transition({
 
     delay       : 700,
     'opacity'   : 1,
-    'transform' : 'translateY(120px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
 
+
   // Fade in and goes up privacy (animation)
+  var translate = isMobile() ? '80px' : '120px';
   $( '.create-world-button, .delete-world-button' ).css( 'transform' , 'translateY(158px)' );
   $( '.create-world-button' ).transition({
 
     delay       : 900,
     'opacity'   : 1,
-    'transform' : 'translateY(120px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
   $( '.delete-world-button' ).transition({
 
     delay       : 900,
     'opacity'   : 0.5,
-    'transform' : 'translateY(120px)'
+    'transform' : 'translateY('+translate+')'
 
   }, 1000);
 
@@ -1448,7 +1455,8 @@ var bypassNewWorldAnimationA = function(){
 
   });
   $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept );
-  $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' ).find( 'span' ).text( lang.unfollowWorld );
+  var text = isMobile() ? lang.exit : lang.unfollowWorld;
+  $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' ).find( 'span' ).text( text );
   $( '.create-world-button , .delete-world-button' ).css( {
 
     'top'       : '819px',

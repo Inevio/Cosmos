@@ -40,6 +40,7 @@ var mobileWorldSidebar      = $( '.mobile-world-list' );
 var mobileWorldComments     = $( '.mobile-world-comments' );
 var mobileNewWorld          = $( '.mobile-new-world' );
 var mobileExplore           = $( '.mobile-explore' );
+var mobileNewPost           = $( '.mobile-new-post' );
 var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
 var searchBar       = $( '.search-button' );
@@ -164,6 +165,9 @@ unFollowButton.on( 'click' , function(){
   }else{
 
     $( '.new-world-container' ).data( 'world' , worldSelected );
+    if (isMobile()) {
+      changeMobileView('newWorld');
+    }
 
   }
 
@@ -589,6 +593,10 @@ app
 
   unFollowWorld( worldSelected );
   $( '.new-world-container' ).removeClass( 'editing' );
+  if (isMobile()) {
+    changeMobileView('worldContent');
+    changeMobileView('worldSidebar');
+  }
 
 })
 
@@ -935,8 +943,27 @@ app
 
 .on( 'click' , '.cancel-search' , function(){
   $('.mobile-world-content').removeClass('searching');
-});
+})
 
+.on( 'click' , '.new-post-mobile' , function(){
+  if (isMobile()) {
+    newPostMobile();
+  }
+})
+
+.on( 'click' , '.close-new-post' , function(){
+  changeMobileView('worldContent');
+})
+
+.on( 'click' , '.post-new-card' , function(){
+  if (isMobile()) {
+    if ( $( '.new-card-input' ).val().trim() === '' ) {
+      navigator.notification.alert( '', function(){},lang.noInfo );
+    }else{
+      changeMobileView('worldContent');
+    }
+  }
+})
 //Functions
 var initCosmos = function(){
 
@@ -982,7 +1009,11 @@ var initTexts = function(){
   $( '.world-event-number .title' ).text( lang.posts );
   $( '.world-files-number .title' ).text( lang.files );
   $( '.new-world-title .title' ).text( lang.worldCreation );
-  $( '.delete-world-button span' ).text( lang.unfollowWorld );
+  if (isMobile()) {
+    $( '.stop-follow span' ).text( lang.exit );
+  }else{
+    $( '.stop-follow span' ).text( lang.unfollowWorld );
+  }
   $( '.select-world span' ).text( lang.selectWorld );
   $( '.no-posts .left-side span' ).text( lang.noPosts );
   $( '.no-posts .right-side span' ).text( lang.createNewPost );
@@ -1373,7 +1404,11 @@ var getWorldUsersAsync = function( worldApi ){
 
     $( '.world-users-number .subtitle' ).text( o.length );
     $( '.stop-follow' ).removeClass( 'editable' );
-    $( '.stop-follow span' ).text( lang.unfollowWorld );
+    if (isMobile()) {
+      $( '.stop-follow span' ).text( lang.exit );
+    }else{
+      $( '.stop-follow span' ).text( lang.unfollowWorld );
+    }
     $( '.user-circle.clean' ).remove();
 
     $.each( o , function( i , user ){
@@ -2865,6 +2900,16 @@ var changeMobileView = function( view ){
           });
           break;
 
+        case 'newPost':
+
+          mobileWorldContent.removeClass('hide');
+          mobileNewPost.stop().clearQueue().transition({
+            'transform' : 'translateY(-100%)'
+          }, 300, function(){
+            mobileNewPost.addClass('hide');
+          });
+          break;
+
       }
       mobileView = 'worldContent'
       break;
@@ -2943,13 +2988,24 @@ var changeMobileView = function( view ){
       });
       break;
 
+    case 'newPost':
+
+      mobileNewPost.removeClass('hide');
+      mobileNewPost.stop().clearQueue().transition({
+        'transform' : 'translateY(0%)'
+      }, 300, function(){
+        mobileWorldContent.addClass('hide');
+        mobileView = 'newPost'
+      });
+      break;
+
   }
 
 }
 
 var setMobile = function(){
   StatusBar.backgroundColorByHexString("#272c34");
-  $('input, textarea').on('focus', function(){
+  $('input:not(.new-world-name input), textarea').on('focus', function(){
     Keyboard.shrinkView(true);
   })
   .on('blur', function(){
@@ -2958,6 +3014,16 @@ var setMobile = function(){
   $('.app-title').text(lang.yourWorlds);
   $('.cancel-search').text(lang.cancel);
   $('.search-bar input').attr( 'placeholder' , lang.search );
+}
+
+var newPostMobile = function(){
+  changeMobileView('newPost');
+  $( '.mobile-new-post .new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger ellipsis">' + worldSelected.name + '</figure>' );
+  $( '.mobile-new-post .post-new-card span' ).text( lang.publishPost );
+  $( '.mobile-new-post .new-card-input' ).attr( 'placeholder', lang.title );
+  $( '.mobile-new-post .new-card-textarea' ).attr( 'placeholder', lang.description );
+  $( '.mobile-new-post .new-card-input' ).val('');
+  $( '.mobile-new-post .new-card-textarea' ).val('');
 }
 
 initCosmos();

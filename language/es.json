@@ -70,6 +70,7 @@
     "writeComment"  : "Escribe tu comentario aquí...",
     "editWorld"     : "Editar mundo",
     "unfollowWorld" : "Salir del mundo",
+    "exit"          : "Salir",
     "users"         : "Usuarios",
     "posts"         : "Eventos",
     "files"         : "Ficheros",
@@ -125,6 +126,8 @@
     "bannerReplyComment"  : "te ha respondido",
 
     "writeTitle"          : "Escribe un título para la publicación",
+    "title"               : "Título...",
+    "description"         : "Descripción...",
     "writeDescription"    : "Escribe una descripción...",
     "addFiles"            : "Añadir archivos",
     "editingOne"          : "Ya estás editando otro post. Guarda o cancela el anterior para poder editar este.",
