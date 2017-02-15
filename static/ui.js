@@ -7,7 +7,7 @@ var state           = 1;
 var titleLength     = 0;
 var worldRecortedName;
 var worldCompleteName;
-var myContactID           = api.system.user().id;
+var myContactID     = api.system.user().id;
 var app             = $( this );
 var cover           = $( '.cover' );
 var worldTitle      = $( '.world-title' );
@@ -258,7 +258,7 @@ worldCategory.on( 'click' , function(){
       'height'         : '0px'
     }, 200);
   }else{
-    var height = category.find( '.world' ).length * parseInt($( '.world.wz-prototype' ).css('height'));
+    var height = category.find( '.world' ).length * $( '.world.wz-prototype' ).outerHeight();
     category.find( '.world-list' ).transition({
       'height'         : height
     }, 200);
@@ -431,6 +431,7 @@ app
 
   if (e.keyCode == 13 && $( '.new-world-name input' ).val() ) {
 
+    $( this ).blur();
     $( this ).parent().parent().find( '.create-world-button' ).click();
 
   }

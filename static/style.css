@@ -4931,37 +4931,65 @@ to {background-position: -200% 0;}
 
   .sidebar-header{
     float: left;
-    height: 32px;
+    height: 49px;
     background-color: #272c34;
-    padding-top: 17px;
     width: 100%;
   }
 
+
   .new-world-button-mini{
     float: left;
+    padding-left: 18px;
+    padding-right: 18px;
+    width: 24px;
+    height: 20px;
+    background-image: none;
+    margin: 0px;
+    padding-top: 20px;
+    padding-bottom: 8px;
+  }
+
+  .new-world-button-mini i{
+    float: left;
+    width: 24px;
+    height: 20px;
     background-image: url('@static/sprite@2x.png');
-    margin-left: 18px;
-    margin-right: 0px;
+    background-size: 321px 27px;
+    background-position: 346px 0;
   }
 
   .app-title{
-    width: ~'calc(100% - 79px)';
+    width: ~'calc(100% - 115px)';
     text-align: center;
     font-size: 20px;
     font-weight: bold;
     color: #fff;
-    margin-top: 1px;
+    margin-top: 18px;
   }
 
   .explore-button{
     float: right;
+    padding-left: 18px;
+    padding-right: 19px;
     width: 18px;
     height: 24px;
+    background-image: none;
     background-color: transparent;
     box-shadow: none;
+    padding-bottom: 8px;
+    padding-top: 17px;
+  }
+
+  .explore-button:hover{
+    background-color: transparent;
+  }
+
+  .explore-button i{
+    float: right;
+    width: 18px;
+    height: 24px;
     background-image: url('@static/rocket-normal@2x.png');
     background-size: 18px 24px;
-    margin-right: 19px;
   }
 
   .category-list{
@@ -5031,7 +5059,7 @@ to {background-position: -200% 0;}
 }
 
 .mobile-world-content.compresed{
-  .go-back{
+  .go-back i{
     background-image: url('@static/backMobileBlack.png');
   }
 }
@@ -5123,18 +5151,27 @@ to {background-position: -200% 0;}
 
   .go-back{
     position: absolute;
+    width: 15px;
+    height: 15px;
+    z-index: 8;
+    padding: 20px;
+  }
+
+  .go-back i{
+    position: absolute;
     background-image: url('@static/backMobileWhite.png');
     background-size: 15px 15px;
     width: 15px;
     height: 15px;
-    left: 20px;
-    z-index: 3;
-    top: 20px;
   }
 
   .search-button{
     left: auto;
+    margin: 0px;
     right: 45px;
+    padding: 17px 12px 10px 10px;
+    width: 18px;
+    height: 18px;
     background-color: transparent !important;
 
     i{
@@ -5144,15 +5181,16 @@ to {background-position: -200% 0;}
       width: 18px;
       height: 18px;
       background-position: 0px 0px;
+      top: auto;
+      left: auto;
     }
   }
 
   .world-context-menu{
-    padding: 0px;
     background-color: transparent !important;
-    top: 10px;
-    right: 10px;
-    padding: 10px;
+    padding: 18px 20px 15px 19px;
+    top: 0px;
+    right: 0px;
   }
 
   .world-options{
@@ -5197,7 +5235,6 @@ to {background-position: -200% 0;}
       background-size: 19px 15px;
       cursor: pointer;
     }
-
   }
 
   .new-post-mobile{
@@ -5412,6 +5449,10 @@ to {background-position: -200% 0;}
     margin-top: 3px;
   }
 
+  .comments-footer .comment-input {
+    width: ~'calc(100% - 115px)';
+  }
+
 }
 
 .mobile-new-world{
@@ -5426,10 +5467,11 @@ to {background-position: -200% 0;}
   -webkit-overflow-scrolling: touch;
 
   .close-new-world{
-    position: absolute;;
+    position: absolute;
     top: 0;
     left: 0;
-    margin-left: 10px;
+    margin: 0px;
+    padding: 20px;
 
     figure{
       width: 13px;
@@ -5440,6 +5482,10 @@ to {background-position: -200% 0;}
       opacity: 1;
     }
 
+  }
+
+  .close-new-world:hover{
+    background-color: transparent;
   }
 
   .new-world-container{
@@ -5583,6 +5629,17 @@ to {background-position: -200% 0;}
 
 }
 
+.mobile-new-world.reduce-margin{
+
+  .new-world-title{
+    margin-top: 50px;
+  }
+  .new-world-name{
+    margin-top: 15px;
+    padding-bottom: 20px;
+  }
+}
+
 .mobile-explore{
   position: absolute;
   width: 100%;
@@ -5626,13 +5683,18 @@ to {background-position: -200% 0;}
 
   .go-back{
     position: absolute;
+    width: 15px;
+    height: 15px;
+    z-index: 8;
+    padding: 20px;
+  }
+
+  .go-back i{
+    position: absolute;
     background-image: url('@static/backMobileWhite.png');
     background-size: 15px 15px;
     width: 15px;
     height: 15px;
-    left: 20px;
-    z-index: 8;
-    top: 20px;
   }
 
 }
@@ -5671,11 +5733,9 @@ to {background-position: -200% 0;}
   }
 
   .new-card-title{
-
     float: left;
     font-size: 17px;
     color: #889399;
-
   }
 
   .new-card-title i{
@@ -5687,13 +5747,11 @@ to {background-position: -200% 0;}
   }
 
   .new-card-title figure{
-
     color: @redHorbito;
     font-weight: bold;
-    display: inline;
+    display: inline-block;
     margin-left: 4px;
-    max-width: 329px;
-
+    max-width: 170px;
   }
 
   .new-card-input{
