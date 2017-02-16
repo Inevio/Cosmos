@@ -5064,8 +5064,13 @@ to {background-position: -200% 0;}
   }
 }
 
-.searching.mobile-world-content .search-bar{
-  display: block;
+.searching.mobile-world-content{
+  .go-back{
+    display: none;
+  }
+  .search-bar{
+    display: block;
+  }
 }
 
 .compresed.mobile-world-content{

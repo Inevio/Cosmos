@@ -156,7 +156,8 @@
     "omit"                : "Omitir",
     "at"                  : "a las",
 
-    "yourWorlds"          : "Tus mundos"
+    "yourWorlds"          : "Tus mundos",
 
+    "selectFile"          : "Selecciona el archivo"
 
 }
