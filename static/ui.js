@@ -566,6 +566,11 @@ app
 
 .on( 'click' , '.world' , function(){
 
+  //Not select allowed while animations
+  if (app.hasClass('animated')) {
+    return;
+  }
+
   if ( app.hasClass( 'user-animation' ) ) {
     usersGoesDown();
   }else if( app.hasClass( 'desc-animation' ) ){
@@ -643,6 +648,7 @@ var compressCover = function(){
   }
 
   onTransition = true;
+  app.addClass('animated');
 
   var avatar = $( '.world-avatar' );
   var avatarLeftM = parseInt( avatar.css( 'margin-left' ) );
@@ -717,6 +723,7 @@ var compressCover = function(){
 
     state = 0;
     onTransition = false;
+    app.removeClass('animated');
 
   });
 
@@ -885,11 +892,13 @@ var decompressCover = function( instant ){
     app.removeClass( 'cover-animation' );
     state = 1;
     onTransition = false;
+    app.removeClass('animated');
     return;
 
   }
 
   onTransition = true;
+  app.addClass('animated');
 
   var avatar = $( '.world-avatar' );
   var avatarLeft = ( parseInt( $('.cover-first').css( 'width' ) ) - 52 ) / 2;
@@ -931,6 +940,7 @@ var decompressCover = function( instant ){
 
     state = 1;
     onTransition = false;
+    app.removeClass('animated');
 
     avatar.css({
 

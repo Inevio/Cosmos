@@ -158,6 +158,9 @@
     "omit"                : "Skip",
     "at"                  : "at",
 
-    "yourWorlds"          : "Your worlds"
+    "yourWorlds"          : "Your worlds",
+
+    "selectFile"          : "Select the file"
+
 
 }

@@ -975,6 +975,38 @@ app
   }
 })
 
+.on( 'backbutton' , function( e ){
+
+  e.stopPropagation();
+
+  switch (mobileView) {
+
+    case 'worldContent':
+      var view = $('.mobile-world-content');
+      if (view.hasClass('searching')) {
+        view.removeClass('searching');
+      }else if(view.find('.editing').length > 0){
+        view.find('.editing .cancel-new-card').click();
+      }else{
+        changeMobileView('worldSidebar');
+      }
+      break;
+    case 'worldComments':
+      changeMobileView('worldContent');
+      break;
+    case 'newPost':
+      changeMobileView('worldContent');
+      break;
+    case 'explore':
+      changeMobileView('worldSidebar');
+      break;
+    case 'newWorld':
+      changeMobileView('worldSidebar');
+      break;
+  }
+
+})
+
 //Functions
 var initCosmos = function(){
 
@@ -1305,6 +1337,11 @@ var editWorldAsync = function(){
 }
 
 var selectWorld = function( world , callback ){
+
+  //Not select allowed while animations
+  if (app.hasClass('animated')) {
+    return;
+  }
 
   if (isMobile()) {
     changeMobileView('worldContent');
@@ -2726,7 +2763,7 @@ var isMobile = function(){
 
 var attachFromInevio = function( card ){
 
-  api.fs.selectSource( { 'title' : 'Selecciona!' , 'mode' : 'file' , 'multiple': true } , function( e , s ){
+  api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( e , s ){
 
     if (e) {
       console.log( e );
