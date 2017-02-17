@@ -877,7 +877,7 @@ to {background-position: -200% 0;}
   .search-button.popup input{
 
     float: left;
-    width: 230px;
+    width: 225px;
     margin-left: 33px;
     margin-top: 7px;
 
@@ -901,15 +901,30 @@ to {background-position: -200% 0;}
   }
 
   .search-button:hover i{
-
     opacity: 1;
-
   }
 
   .popup.search-button i{
-
     opacity: 1;
+  }
 
+  .search-button .clean-search{
+    background-image: url('@static/sprite-white.png');
+    width: 14px;
+    height: 14px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-position: -32px 0px;
+    background-size: 99px 16px;
+    opacity: 0;
+    transition: opacity 1s ease;
+    position: absolute;
+    top: 9px;
+    right: 8px;
+  }
+
+  .popup.search-button .clean-search{
+    opacity: 1;
   }
 
   .spot{
@@ -1249,6 +1264,10 @@ to {background-position: -200% 0;}
     height: 40px;
     line-height: initial;
 
+  }
+
+  .world-title.small{
+    font-size: 27px;
   }
 
   .users-preview-container{
@@ -3768,8 +3787,8 @@ to {background-position: -200% 0;}
 
   position: absolute;
   border-radius: 6px;
-  padding-left: ~'calc(50% - 500px/2)';
-  padding-right: ~'calc(50% - 500px/2)';
+  margin-left: ~'calc(50% - 500px/2)';
+  margin-right: ~'calc(50% - 500px/2)';
 
 }
 
@@ -3831,7 +3850,8 @@ to {background-position: -200% 0;}
     font-size: 55px;
     font-weight: 900;
     color: #252525;
-
+    width: 100%;
+    text-align: center;
   }
 
   .new-world-title .step-a{
@@ -3911,7 +3931,7 @@ to {background-position: -200% 0;}
 
   .new-world-avatar{
 
-    width: 474px;
+    width: 100%;
     top: 212px;
     opacity: 0;
     transform: translateY(20px);
@@ -4034,7 +4054,7 @@ to {background-position: -200% 0;}
 
   .new-world-desc{
 
-    width: 474px;
+    width: 100%;
     opacity: 0;
     transform: translateY(20px);
     position: absolute;
@@ -4083,7 +4103,7 @@ to {background-position: -200% 0;}
 
   .new-world-privacy{
 
-    width: 474px;
+    width: 100%;
     opacity: 0;
     transform: translateY(20px);
     position: absolute;
@@ -4108,6 +4128,8 @@ to {background-position: -200% 0;}
 
     float: left;
     width: 100%;
+    display: flex;
+    justify-content: space-around;
 
   }
 
@@ -4124,18 +4146,6 @@ to {background-position: -200% 0;}
     transition: all 0.2s ease;
     opacity: 0.7;
     cursor: pointer;
-
-  }
-
-  .public{
-
-    margin-left: 80px;
-
-  }
-
-  .hidden{
-
-    margin-left: 60px;
 
   }
 
@@ -4376,7 +4386,7 @@ to {background-position: -200% 0;}
   padding: 10px;
   border-radius: 50%;
   margin-right: 10px;
-  margin-top: 10px;
+  top: 10px;
   background-color: transparent;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -5461,12 +5471,13 @@ to {background-position: -200% 0;}
 }
 
 .mobile-new-world{
+
   position: absolute;
   width: 100%;
   height: 100%;
   left: 0;
   float: left;
-  z-index: 3;
+  z-index: 5;
   transform: translateY(-100%);
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
@@ -5496,7 +5507,7 @@ to {background-position: -200% 0;}
   .new-world-container{
     width: 100%;
     height: 100%;
-    padding: 0;
+    margin: 0;
   }
 
   .new-world-title{
@@ -5513,6 +5524,8 @@ to {background-position: -200% 0;}
     font-size: 55px;
     font-weight: 900;
     color: #252525;
+    width: 100%;
+    text-align: center;
   }
 
   .new-world-title .step-a, .new-world-title .step-b{

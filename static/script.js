@@ -28,6 +28,7 @@ var commentPrototype      = $( '.comment.wz-prototype' );
 //var openChatButton      = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input, .mobile-world-content .search-bar input' );
+var cleanPostSearch       = $( '.search-button .clean-search' );
 //var newPostButton       = $( '.new-post, .no-post-new-post-button' );
 //var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
@@ -181,6 +182,10 @@ api.cosmos.on( 'worldCreated' , function( world ){
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
 
   myWorlds.push( world.id );
+
+  if ( world.owner === myContactID ) {
+    selectWorld( $( '.world-' + world.id ) , function(){});
+  }
 
 });
 
@@ -477,8 +482,8 @@ api.cosmos.on( 'worldNameSetted' , function( worldApi ){
 
   appendWorld( worldApi );
 
-  if ( worldSelected && worldApi.id === worldSelected.id ) {
-    $( '.world-' + worldApi.id ).click();
+  if ( ( worldSelected && worldApi.id === worldSelected.id ) || worldApi.owner === myContactID ){
+    selectWorld( $( '.world-' + worldApi.id ) , function(){});
   }
 
 });
@@ -495,6 +500,12 @@ searchPostInput.on( 'input' , function(){
 
   searchPost( $( this ).val() );
 
+});
+
+cleanPostSearch.on( 'click' , function(){
+  var searcher = $(this).closest('.search-button');
+  searcher.find('input').val('')
+  searchPost('');
 });
 
 openFolder.on( 'click' , function(){
@@ -550,7 +561,13 @@ newWorldButton.on( 'click' , function(){
 
 closeNewWorld.on( 'click' , function(){
 
-  changeMobileView( 'worldSidebar' );
+  if (isMobile()) {
+    mobileNewWorld.stop().clearQueue().transition({
+      'transform' : 'translateY(-100%)'
+    }, 300, function(){
+      mobileNewWorld.addClass('hide');
+    });
+  }
 
 });
 
@@ -588,8 +605,12 @@ app
   unFollowWorld( worldSelected );
   $( '.new-world-container' ).removeClass( 'editing' );
   if (isMobile()) {
-    changeMobileView('worldContent');
     changeMobileView('worldSidebar');
+    mobileNewWorld.stop().clearQueue().transition({
+      'transform' : 'translateY(-100%)'
+    }, 300, function(){
+      mobileNewWorld.addClass('hide');
+    });
   }
 
 })
@@ -598,7 +619,11 @@ app
 
   editWorldAsync();
   if (isMobile()) {
-    changeMobileView('worldSidebar');
+    mobileNewWorld.stop().clearQueue().transition({
+      'transform' : 'translateY(-100%)'
+    }, 300, function(){
+      mobileNewWorld.addClass('hide');
+    });
   }
   $( '.new-world-container' ).removeClass( 'editing' );
 
@@ -771,9 +796,17 @@ app
         });
       });
     });
+  }else if ( newContent.indexOf( 'www.youtube' ) !== -1 ) {
+    newMetadata.linkType = 'youtube';
+    post.setMetadata( newMetadata , function(){
+      post.setTitle( newTitle , function(){
+        post.setContent( newContent , function( e , post ){
+          setPost( post );
+        });
+      });
+    });
   }else if ( prevTitle != newTitle || prevContent != newContent) {
     post.setTitle( newTitle , function(){
-      console.log(arguments);
       post.setContent( newContent , function( e , post ){
         setPost( post );
       });
@@ -1001,7 +1034,11 @@ app
       changeMobileView('worldSidebar');
       break;
     case 'newWorld':
-      changeMobileView('worldSidebar');
+      mobileNewWorld.stop().clearQueue().transition({
+        'transform' : 'translateY(-100%)'
+      }, 300, function(){
+        mobileNewWorld.addClass('hide');
+      });
       break;
   }
 
@@ -1364,11 +1401,18 @@ var selectWorld = function( world , callback ){
 
   if ( name.length > textWidth ) {
 
-    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    textWidth = Math.floor( winWidth * 0.1 );
+    worldTitle.addClass('small');
+
+    if (name.length > textWidth) {
+      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    }else{
+      worldTitle.text( name );
+    }
 
   }else{
 
-    worldTitle.text( name );
+    worldTitle.removeClass('small').text( name );
 
   }
 
@@ -2976,16 +3020,6 @@ var changeMobileView = function( view ){
           });
           break;
 
-        case 'newWorld':
-
-          mobileWorldSidebar.removeClass('hide');
-          mobileNewWorld.stop().clearQueue().transition({
-            'transform' : 'translateY(-100%)'
-          }, 300, function(){
-            mobileNewWorld.addClass('hide');
-          });
-          break;
-
         case 'explore':
 
           mobileWorldSidebar.removeClass('hide');
@@ -3018,10 +3052,7 @@ var changeMobileView = function( view ){
       mobileNewWorld.removeClass('hide');
       mobileNewWorld.stop().clearQueue().transition({
         'transform' : 'translateY(0%)'
-      }, 300, function(){
-        mobileWorldSidebar.addClass('hide');
-        mobileView = 'newWorld'
-      });
+      }, 300);
       break;
 
     case 'explore':
