@@ -374,7 +374,7 @@ unFollowButton.on( 'click' , function(){
 
     $( '.new-world-desc textarea' ).val( world.description );
     $( '.new-world-name input' ).val( world.name );
-    $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?' + Date.now() + ')' );
+    $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
     $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
     $( '.privacy-options .option' ).removeClass( 'active' );
     if ( world.isPrivate ) {
@@ -808,9 +808,20 @@ var decompressCover = function( instant ){
   var winWidth = parseInt(app.css( 'width' ));
   var textWidth = Math.floor( winWidth * 0.032 );
   if ( name.length > textWidth ) {
-    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+
+    textWidth = Math.floor( winWidth * 0.1 );
+    worldTitle.addClass('small');
+
+    if (name.length > textWidth) {
+      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    }else{
+      worldTitle.text( name );
+    }
+
   }else{
-    worldTitle.text( name );
+
+    worldTitle.removeClass('small').text( name );
+
   }
 
   if ( instant ) {
@@ -824,9 +835,10 @@ var decompressCover = function( instant ){
 
     });
 
+    var fontSize = worldTitle.hasClass('small') ? '27px' : '37px';
     $( '.world-title' ).css({
 
-      'font-size'     : '37px',
+      'font-size'     : fontSize,
       'color'         : '#fff',
       'transform'     : 'translate(0,0)',
       'margin'        : '0 auto'
@@ -920,10 +932,11 @@ var decompressCover = function( instant ){
   console.log(parseInt($('.cover-first').css( 'width' )), parseInt(title.css( 'width' )), titleLeft);
 
   // Title goes down (animation)
+  var fontSize = worldTitle.hasClass('small') ? '27px' : '37px';
   $( '.world-title' ).transition({
 
     'transform'     : 'translateY( 0px )',
-    'font-size'     : '37px',
+    'font-size'     : fontSize,
     'color'         : '#fff',
     'margin-left'   : titleLeft
 
@@ -1244,7 +1257,8 @@ var newWorldAnimationB = function(){
 
   var editing = $( '.new-world-container' ).hasClass( 'editing' );
 
-  $( '.new-world-container' ).css( 'height' , '933px' );
+  var height = isMobile() ? '990px' : '1050px';
+  $( '.new-world-container' ).css( 'height' , height );
 
   if ( editing ) {
 
@@ -1524,7 +1538,8 @@ var newWorldAnimationOut = function(){
     if (!isMobile()) {
       $( '.create-world-button' ).css( {
 
-        'top'       : '383px',
+
+        'top'       : '400px',
         'transform' : 'translateY(20px)',
         'left'      : 'calc((50% - 236px) + 307px)'
 
