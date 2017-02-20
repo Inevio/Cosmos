@@ -263,7 +263,6 @@ worldCategory.on( 'click' , function(){
       'height'         : height
     }, 200);
 
-
   }
 
 });
@@ -808,20 +807,9 @@ var decompressCover = function( instant ){
   var winWidth = parseInt(app.css( 'width' ));
   var textWidth = Math.floor( winWidth * 0.032 );
   if ( name.length > textWidth ) {
-
-    textWidth = Math.floor( winWidth * 0.1 );
-    worldTitle.addClass('small');
-
-    if (name.length > textWidth) {
-      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-    }else{
-      worldTitle.text( name );
-    }
-
+    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
   }else{
-
-    worldTitle.removeClass('small').text( name );
-
+    worldTitle.text( name );
   }
 
   if ( instant ) {
