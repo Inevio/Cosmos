@@ -1207,6 +1207,18 @@ var getMyWorldsAsync = function( options ){
 
     });
 
+    $.each( $('.category') , function( i , category ){
+
+      if ( $(category).find('.world-list .world').length === 0 ) {
+        $(category).find( '.world-list' ).transition({
+          'height'         : '0px'
+        }, 200);
+        $(category).addClass('closed');
+      }
+
+
+    });
+
   }
 
 };
@@ -1400,20 +1412,9 @@ var selectWorld = function( world , callback ){
   var textWidth = Math.floor( winWidth * 0.032 );
 
   if ( name.length > textWidth ) {
-
-    textWidth = Math.floor( winWidth * 0.1 );
-    worldTitle.addClass('small');
-
-    if (name.length > textWidth) {
-      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-    }else{
-      worldTitle.text( name );
-    }
-
+    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
   }else{
-
-    worldTitle.removeClass('small').text( name );
-
+    worldTitle.text( name );
   }
 
   $( '.world-avatar' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
