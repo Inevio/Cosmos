@@ -1,6 +1,13 @@
 
 {
 
+    "search"  : "Busca aquí...",
+    "cancel"  : "Cancelar",
+    "save"    : "Guardar",
+    "edit"    : "Editar",
+    "send"    : "Enviar",
+    "lastDay" : "Ayer",
+
     "publics"       : "Mundos públicos",
     "privates"      : "Mundos privados",
     "explore"       : "Explorar",
