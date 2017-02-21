@@ -1,6 +1,13 @@
 
 {
 
+    "search"  : "Search here...",
+    "cancel"  : "Cancel",
+    "save"    : "Save",
+    "edit"    : "Edit",
+    "send"    : "Send",
+    "lastDay" : "Yesterday",
+
     "publics"       : "Public worlds",
     "privates"      : "Private worlds",
     "explore"       : "Explore",
