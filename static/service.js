@@ -119,7 +119,7 @@ var sendBanner = function( info ){
 var checkNotifications = function(){
 
   nNotifications = 0;
-                 
+
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
 
     worlds.forEach(function( world ){

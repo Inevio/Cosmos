@@ -36,6 +36,7 @@ var unFollowButton   = $( '.stop-follow' );
 var selectWorld      = $( '.select-world' );
 var noWorlds         = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' );
+var scrollableContent = $('.scrollable-content');
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -154,7 +155,7 @@ cover.on( 'mousewheel' , '.user-circles-section' , function( e ){
 
 cover.on( typeof cordova === 'undefined' ? 'mouseup' : 'touchend' , function(){
   if(app.hasClass('wz-view-dragging')) return;
-  if(uiContent.hasClass('compresed')){
+  if(uiContent.hasClass('compressed')){
     console.log('click');
     decompressCover();
   }
@@ -202,6 +203,16 @@ cardList.on( 'scroll' , function( e ){
   }
 
 });
+
+scrollableContent.on( 'scroll' , function(e){
+  if ( $(this).scrollTop() >= 190 ) {
+    $('.mobile-world-content').addClass('compressed');
+    $('.compressed-cover').addClass('active');
+  }else{
+    $('.mobile-world-content').removeClass('compressed');
+    $('.compressed-cover').removeClass('active');
+  }
+})
 
 closeExplore.on( 'click' , function(){
 
@@ -575,11 +586,12 @@ app
   }else if( app.hasClass( 'desc-animation' ) ){
     moveToCover();
   }else if( app.hasClass( 'cover-animation' ) ){
-    decompressCover( true );
+    decompressCover( { instant : true , world : $(this) } );
   }
 
 
 })
+
 
 // END UI EVENTS
 
@@ -640,11 +652,11 @@ var moveToCover = function(){
 // Compress de cover to show better the cards
 var compressCover = function(){
 
-  uiContent.addClass( 'compresed' );
-
-  if ( app.hasClass( 'no-post' ) ) {
+  if ( app.hasClass( 'no-post' ) || isMobile()) {
     return;
   }
+
+  uiContent.addClass( 'compressed' );
 
   onTransition = true;
   app.addClass('animated');
@@ -706,9 +718,11 @@ var compressCover = function(){
 
   }, 1000, animationEffect , function(){
 
+    /*
     worldRecortedName = $( '.world-title' ).text();
     worldCompleteName = $( '.world.active' ).data( 'world' ).name;
     $( '.world-title' ).text( worldCompleteName );
+    */
 
   });
 
@@ -799,20 +813,34 @@ var compressCover = function(){
 }
 
 // Decompress de cover to show better the cards
-var decompressCover = function( instant ){
+var decompressCover = function( options ){
 
-  uiContent.removeClass( 'compresed' );
+  if (isMobile()) {
+    return;
+  }
 
-  var name = worldTitle.data( 'name' );
-  var winWidth = parseInt(app.css( 'width' ));
-  var textWidth = Math.floor( winWidth * 0.032 );
+  uiContent.removeClass( 'compressed' );
+
+  var name = options && options.instant ? options.world.find('.world-name').text() : worldTitle.data( 'name' );
+  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
+  var textWidth = Math.floor( winWidth * 0.054 );
+  var titleFontSize;
+
   if ( name.length > textWidth ) {
-    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+
+    titleFontSize = '27px';
+    textWidth = Math.floor( winWidth * 0.07 );
+    if ( name.length > textWidth ) {
+      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    }else{
+      worldTitle.text( name );
+    }
   }else{
+    titleFontSize = '37px';
     worldTitle.text( name );
   }
 
-  if ( instant ) {
+  if ( options && options.instant ) {
 
     $( '.world-avatar' ).css({
 
@@ -823,20 +851,18 @@ var decompressCover = function( instant ){
 
     });
 
-    var fontSize = worldTitle.hasClass('small') ? '27px' : '37px';
     $( '.world-title' ).css({
 
-      'font-size'     : fontSize,
+      'font-size'     : titleFontSize,
       'color'         : '#fff',
       'transform'     : 'translate(0,0)',
       'margin'        : '0 auto'
 
     });
 
-    var coverHeight = isMobile() ? 247 : 317;
     $( '.cover' ).css({
 
-        'height'      : coverHeight,
+        'height'      : 317,
         'background-color'  : 'transparent'
 
     });
@@ -853,11 +879,10 @@ var decompressCover = function( instant ){
 
     });
 
-    var coverHeight = isMobile() ? 247 : 317;
     $( '.cards-list' ).css({
 
-        'height' : 'calc(100% - '+coverHeight+'px)',
-        'top'    : coverHeight
+        'height' : 'calc(100% - 317px)',
+        'top'    : 317
 
     });
 
@@ -920,21 +945,19 @@ var decompressCover = function( instant ){
   console.log(parseInt($('.cover-first').css( 'width' )), parseInt(title.css( 'width' )), titleLeft);
 
   // Title goes down (animation)
-  var fontSize = worldTitle.hasClass('small') ? '27px' : '37px';
   $( '.world-title' ).transition({
 
     'transform'     : 'translateY( 0px )',
-    'font-size'     : fontSize,
+    'font-size'     : titleFontSize,
     'color'         : '#fff',
     'margin-left'   : titleLeft
 
   }, 1000, animationEffect);
 
   // Cover decompress (animation)
-  var coverHeight = isMobile() ? 247 : 317;
   $( '.cover' ).stop().clearQueue().transition({
 
-      'height'      : coverHeight,
+      'height'      : 317,
       'background-color'  : 'transparent'
 
   }, 1000, animationEffect , function(){
@@ -975,11 +998,10 @@ var decompressCover = function( instant ){
   }, 1000 , animationEffect );
 
   // Card list gets smaller (animation)
-  var coverHeight = isMobile() ? 247 : 317;
   $( '.cards-list' ).stop().clearQueue().transition({
 
-      'height' : 'calc(100% - '+coverHeight+'px)',
-      'top'    : coverHeight
+      'height' : 'calc(100% - 317px)',
+      'top'    : 317
 
   }, 1000, animationEffect );
 
@@ -1245,17 +1267,16 @@ var newWorldAnimationB = function(){
 
   var editing = $( '.new-world-container' ).hasClass( 'editing' );
 
-  var height = isMobile() ? '990px' : '1050px';
-  $( '.new-world-container' ).css( 'height' , height );
-
   if ( editing ) {
 
+    var height = isMobile() ? '800px' : '770px';
+    $( '.new-world-container' ).css( 'height' , height );
     newWorldAnimationBEditing();
 
   }else{
-
+    var height = isMobile() ? '720px' : '770px';
+    $( '.new-world-container' ).css( 'height' , height );
     newWorldAnimationBNormal();
-
   }
 
 }
@@ -1303,7 +1324,7 @@ var newWorldAnimationBNormal = function(){
 
       $( this ).css( {
 
-        'top'       : '819px',
+        'top'       : '640px',
         'transform' : 'translateY(20px)',
         'right'     : '0',
         'left'      : 'calc(50% - 472px/2 + 150px)'
@@ -1380,8 +1401,9 @@ var newWorldAnimationBEditing = function(){
 
   }, 1000);
 
+
   // Fade in and goes up name (animation)
-  var translate = isMobile() ? '-38px' : '-58px';
+  var translate = isMobile() ? '-15px' : '-58px';
   $( '.new-world-name' ).stop().clearQueue().transition({
 
     delay       : 100,
@@ -1472,7 +1494,7 @@ var bypassNewWorldAnimationA = function(){
   $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' ).find( 'span' ).text( text );
   $( '.create-world-button , .delete-world-button' ).css( {
 
-    'top'       : '819px',
+    'top'       : '640px',
     'transform' : 'translateY(20px)',
     'right'     : '0',
     'opacity'   : '0'
@@ -1487,6 +1509,7 @@ var bypassNewWorldAnimationA = function(){
   $( '.new-world-title .step-b' ).addClass( 'hide' );
 
 }
+
 
 var newWorldAnimationOut = function(){
 
