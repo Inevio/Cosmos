@@ -5145,7 +5145,7 @@ to {background-position: -200% 0;}
       position: absolute;
       left: 106px;
       top: 21px;
-      width: 180px;
+      width: ~'calc(100% - 190px)';
       margin: 0px;
       text-align: left;
       line-height: 16px;

@@ -284,14 +284,15 @@ searchBar.on( 'click' , function(){
     $( this ).addClass( 'popup' );
     $( this ).find( 'input' ).focus();
   }else{
-    if ( showingUsers ) {
-      usersGoesDownNoAnimation();
+    if ( scrollableContent.scrollTop() <= 190 ) {
+      $('.scrollable-content').animate( {scrollTop:191} , '200', 'swing', function() {
+        uiContent.addClass('searching');
+        $('.search-bar input').focus();
+      });
+    }else{
+      uiContent.addClass('searching');
+      $('.search-bar input').focus();
     }
-    if ( state == 1 && !onTransition ) {
-      compressCover();
-    }
-    uiContent.addClass('searching');
-    $('.search-bar input').focus();
   }
 
 });
@@ -301,12 +302,6 @@ searchBarFigure.on( 'click' , function(){
   if (!isMobile()) {
     $( this ).parent().addClass( 'popup' );
   }else{
-    if ( showingUsers ) {
-      usersGoesDownNoAnimation();
-    }
-    if ( state == 1 && !onTransition ) {
-      compressCover();
-    }
     uiContent.addClass('searching');
     $('.search-bar input').focus();
   }
