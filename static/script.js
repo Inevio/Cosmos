@@ -376,21 +376,26 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
 app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
 
-  if ( $( '.ui-content' ).hasClass( 'compresed' ) ) {
+  if(isMobile()){
     return;
   }
 
   var name = worldTitle.data( 'name' );
-  var winWidth = parseInt(app.css( 'width' ));
-  var textWidth = Math.floor( winWidth * 0.032 );
+  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
+  var textWidth = Math.floor( winWidth * 0.054 );
 
   if ( name.length > textWidth ) {
 
-    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-
+    worldTitle.css('font-size' , '27px');
+    textWidth = Math.floor( winWidth * 0.07 );
+    if ( !isMobile() && name.length > textWidth ) {
+      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    }else{
+      worldTitle.text( name );
+    }
   }else{
+    worldTitle.css('font-size' , '37px');
     worldTitle.text( name );
-
   }
 
 });
@@ -714,7 +719,11 @@ app
   var worldSelectable = $( '.world-' + world.id );
   if ( worldSelectable.length > 0 ) {
 
-    $( '.close-explore' ).click();
+    if (isMobile()) {
+      changeMobileView('worldSidebar');
+    }else{
+      $( '.close-explore' ).click();
+    }
     worldSelectable.click();
 
   }
@@ -867,23 +876,7 @@ app
 
     }
 
-  });
-
-  menu.addOption( lang.viewInfo , function(){
-
-    if ( worldDom.hasClass( 'active' ) ) {
-
-      $( '.more-info' ).click();
-
-    }else{
-
-      selectWorld( worldDom , function(){
-        $( '.more-info' ).click();
-      });
-
-    }
-
-  });
+  })
 
   if ( isMine ) {
 
@@ -1408,12 +1401,19 @@ var selectWorld = function( world , callback ){
   app.data( 'worldSelected' , worldSelected )
 
   var name = worldApi.name;
-  var winWidth = parseInt(app.css( 'width' ));
-  var textWidth = Math.floor( winWidth * 0.032 );
+  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
+  var textWidth = Math.floor( winWidth * 0.054 );
 
   if ( name.length > textWidth ) {
-    worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    worldTitle.css('font-size' , '27px');
+    textWidth = Math.floor( winWidth * 0.07 );
+    if ( !isMobile() && name.length > textWidth ) {
+      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
+    }else{
+      worldTitle.text( name );
+    }
   }else{
+    worldTitle.css('font-size' , '37px');
     worldTitle.text( name );
   }
 
@@ -2064,7 +2064,12 @@ var appendYoutubeCard = function( post , user , reason ){
 
   var youtubeCode = post.content.match(/v=([A-z0-9-_]+)/)[1];
 
-  card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
+  if (isMobile()) {
+    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
+  }else{
+    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
+  }
+
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
