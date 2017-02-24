@@ -2827,7 +2827,7 @@ to {background-position: -200% 0;}
   .separator{
 
     float: left;
-    width: 486px;
+    width: ~'calc(100% - 24px)';
     height: 4px;
     background-color: #e5e9ea;
     margin-left: 24px;
@@ -5296,46 +5296,79 @@ to {background-position: -200% 0;}
     background-image: url('@static/coverMobile.png');
   }
 
+  .mobile-buttons{
+    float: left;
+    display: flex;
+    justify-content: space-between;
+    width: ~'calc(100% - 130px)';
+    padding-left: 65px;
+    padding-right: 65px;
+  }
+
+
   .open-folder{
-    position: absolute;
-    padding: 15px 13px;
-    width: 19px;
-    height: 15px;
-    background-color: @redHorbito;
+    float: left;
+    padding: 15px 13px 16px 13px;
+    width: 24px;
+    height: 19px;
+    background-color: #fff;
     bottom: 95px;
-    right: 27px;
     border-radius: 50%;
     z-index: 5;
     opacity: 1;
+    margin-top: 20px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.1);
 
     i{
       float: left;
-      width: 19px;
-      height: 15px;
+      width: 24px;
+      height: 19px;
       background-image: url('@static/openFolderMobile.png');
-      background-size: 19px 15px;
+      background-size: 24px 19px;
       cursor: pointer;
     }
   }
 
   .new-post-mobile{
-    position: absolute;
-    padding: 22px 15px 21px 18px;
-    width: 27px;
-    height: 20px;
-    background-color: @redHorbito;
-    bottom: 20px;
-    right: 20px;
+    float: left;
+    padding: 24px 16px 22px 20px;
+    width: 35px;
+    height: 25px;
+    background-color: #fff;
     border-radius: 50%;
     z-index: 5;
     opacity: 1;
+    margin-top: 10px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.1);
+
+    i{
+      float: left;
+      width: 35px;
+      height: 25px;
+      background-image: url('@static/newPostMobile.png');
+      background-size: 35px 25px;
+      cursor: pointer;
+    }
+  }
+
+  .open-chat{
+    float: left;
+    padding: 14px 11.5px 13px 11.5px;
+    width: 27px;
+    height: 23px;
+    background-color: #fff;
+    border-radius: 50%;
+    z-index: 5;
+    opacity: 1;
+    margin-top: 20px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.1);
 
     i{
       float: left;
       width: 27px;
-      height: 20px;
-      background-image: url('@static/newPostMobile.png');
-      background-size: 27px 20px;
+      height: 23px;
+      background-image: url('@static/openChatMobile.png');
+      background-size: 27px 23px;
       cursor: pointer;
     }
   }
@@ -5353,6 +5386,7 @@ to {background-position: -200% 0;}
     width: 100%;
     margin-left: 0px;
     height: auto;
+    margin-top: 15px;
 
     .top-card{
       padding: 13px 0 13px 55px;

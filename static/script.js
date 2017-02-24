@@ -2496,6 +2496,7 @@ var addReplayAsync = function( card ){
 
   post.reply( { content: msg }, function( e, o ){
     input.val('');
+    input.css('height','20px');
   });
 
 }
