@@ -25,7 +25,7 @@ var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var exploreButton         = $( '.explore-button, .explore-button-no-worlds' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
-//var openChatButton      = $( '.open-chat' );
+var openChatButton        = $( '.open-chat' );
 var worldDescription      = $( '.world-desc' );
 var searchPostInput       = $( '.pre-cover .search-button input, .mobile-world-content .search-bar input' );
 var cleanPostSearch       = $( '.search-button .clean-search' );
@@ -172,6 +172,12 @@ unFollowButton.on( 'click' , function(){
 
   }
 
+});
+
+openChatButton.on( 'click' , function(){
+  wz.app.openApp( 14 , [ 'open-world-chat' , world , function( o ){
+    console.log(o);
+  }]);
 });
 
 api.cosmos.on( 'worldCreated' , function( world ){
@@ -1335,7 +1341,7 @@ var createWorldAsync = function(){
     if ( e ) {
       console.log( e );
     }
-    //createChat( o );
+    createChat( o );
 
   });
 
@@ -2582,7 +2588,7 @@ var exploreAnimationIn = function(){
 
 var createChat = function( world ){
 
-  wz.app.openApp( 14 , [ 'new-chat' , world , function( o ){
+  wz.app.openApp( 14 , [ 'new-world-chat' , world , function( o ){
 
     console.log(o);
 
