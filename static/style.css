@@ -5900,7 +5900,7 @@ to {background-position: -200% 0;}
   .new-card-textarea{
     float: left;
     margin: 25px 25px 10px 25px;
-    width: ~'calc(100% - 0px)';
+    width: ~'calc(100% - 50px)';
     height: 280px;
     color: #545f65;
     font-size: 15px;
@@ -5944,4 +5944,71 @@ to {background-position: -200% 0;}
     font-weight: bold;
 
   }
+
+  .attachments{
+    position: absolute;
+    bottom: 100px;
+    padding: 15px;
+    background-color: #f0f0f0;
+
+    i{
+      margin: 0px;
+    }
+  }
+
+  .attach-select{
+    position: absolute;
+    left: 48px;
+    bottom: 112px;
+    width: 157px;
+    height: 67px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    border: solid 1px rgba(0,0,0,.15);
+    z-index: 4;
+    display: none;
+  }
+
+  .attach-select.popup{
+    display: block;
+  }
+
+  .attach-select article{
+    float: left;
+    width: 100%;
+    height: 50%;
+    cursor: pointer;
+  }
+
+  .attach-select .inevio span{
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+  }
+
+  .attach-select .pc span{
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+  }
+
+  .attach-select article span{
+    float: left;
+    padding-left: 20px;
+    width: ~'calc(100% - 20px)';
+    line-height: 100%;
+    font-size: 13px;
+    color: #545f65;
+    height: 33.5px;
+    line-height: 33.5px;
+    transition: all 0.2s ease;
+  }
+
+  .attach-select article:hover span{
+    background-color: #f7f8fa;
+  }
+
 }

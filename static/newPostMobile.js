@@ -33,7 +33,7 @@ var lastOperationSample = Date.now()
 
 // DOM Variables
 var closeNewCard        = $('.close-new-card');
-var attachNewPostButton = $('.new-card-section .attachments');
+var attachNewPostButton = $('.mobile-new-post .attachments');
 var cancelNewCard       = $('.cancel-new-card');
 var attachmentPrototype = $('.attachment.wz-prototype');
 var myContactID         = api.system.user().id;
@@ -102,28 +102,17 @@ var attachFromInevio = function(){
 
   hideAttachSelect()
 
-  // To Do -> Translate
-  api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file', 'multiple': true }, function( err, list ){
+  wz.app.openApp( 1 , [ 'select-source' , function( o ){
 
-    if( err ){
-      return console.error( err )
-    }
+    $( '.attach-select' ).removeClass( 'popup' );
 
-    list.forEach(function( fsnodeId ){
+    o.forEach(function( fsnode ){
 
-      api.fs( fsnodeId, function( err, fsnode ){
+      addAttachment( { fsnode : fsnode, uploaded : fsnode.fileId !== 'TO_UPDATE' } )
 
-        if( err ) {
-          return console.error( err )
-        }
+    });
 
-        addAttachment( { fsnode : fsnode, uploaded : fsnode.fileId !== 'TO_UPDATE' } )
-
-      })
-
-    })
-
-  })
+  }] , 'selectSource');
 
 }
 
@@ -316,7 +305,6 @@ app
   }
 
 })
-.on( 'click', '.attach-select .inevio', attachFromInevio )
 .on( 'upload-prepared', function( e, uploader ){
 
   hideAttachSelect()
@@ -326,7 +314,7 @@ app
   })
 
 })
-.on( 'click' , '.cancel-attachment', function(){
+.on( 'click' , '.new-post .cancel-attachment', function(){
 
   var attachment = $(this).closest('.attachment')
 
