@@ -2820,30 +2820,46 @@ var isMobile = function(){
 
 var attachFromInevio = function( card ){
 
-  api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( e , s ){
+  if ( isMobile() ) {
 
-    if (e) {
-      console.log( e );
-      return;
-    }
+    wz.app.openApp( 1 , [ 'select-source' , function( o ){
 
-    $( '.attach-select' ).removeClass( 'popup' );
+      $( '.attach-select' ).removeClass( 'popup' );
 
-    s.forEach(function( attach ){
+      o.forEach(function( fsnode ){
 
-      api.fs( attach , function( e , fsnode ){
-
-        if (e) {
-          console.log(e);
-        }else{
-          appendAttachment( { fsnode: fsnode , uploading: false , card: card } );
-        }
+        appendAttachment( { fsnode: fsnode , uploading: false , card: card } );
 
       });
 
-    });
+    }] , 'selectSource');
 
-  })
+  }else{
+    api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( e , s ){
+
+      if (e) {
+        console.log( e );
+        return;
+      }
+
+      $( '.attach-select' ).removeClass( 'popup' );
+
+      s.forEach(function( attach ){
+
+        api.fs( attach , function( e , fsnode ){
+
+          if (e) {
+            console.log(e);
+          }else{
+            appendAttachment( { fsnode: fsnode , uploading: false , card: card } );
+          }
+
+        });
+
+      });
+
+    })
+  }
 
 }
 
