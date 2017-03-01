@@ -69,116 +69,110 @@ to {background-position: -200% 0;}
 
 .no-worlds .title{
   font-size: 55px;
-  font-weight: bold;
+  font-weight: 900;
   color: #fff;
   width: 100%;
   text-align: center;
   float: left;
-  margin-top: 155px;
+  margin-top: 61px;
 }
 
 .no-worlds .subtitle{
-  font-size: 21px;
+  font-size: 19px;
   color: #fff;
-  width: 522px;
+  width: ~'calc(100% - 400px)';
   height: 60px;
-  text-align: center;
+  margin: 42px 200px;
   float: left;
-  margin-top: 62px;
-  margin-left: ~'calc(50% - 522px/2)';
-  line-height: 35px;
+  line-height: 27px;
+  text-align: center;
 }
 
-.explore-button-no-worlds{
-  width: 300px;
-  height: 80px;
-  border-radius: 12px;
+.no-worlds .subtitle2{
+  font-size: 19px;
+  color: #fff;
+  width: ~'calc(100% - 400px)';
+  height: 60px;
+  margin: 10px 200px;
+  float: left;
+  line-height: 27px;
+  text-align: center;
+}
+
+.no-worlds .cosmos-features {
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+
+  .feature{
+    float: left;
+    height: 100%;
+
+    .icon{
+      float: left;
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+    }
+
+    .description{
+      float: left;
+      font-size: 17px;
+      color: #fff;
+      text-align: center;
+      i{
+        font-weight: bold;
+      }
+    }
+
+  }
+
+  .chat-feature{
+    .icon{
+      background: linear-gradient(to bottom, rgba(10,144,216,1) 0%, rgba(24,175,245,1) 100%);
+    }
+  }
+  .files-feature{
+    .icon{
+      background: linear-gradient(to bottom, #00b25c 0%, #00d25e 100%);
+    }
+  }
+  .posts-feature{
+    .icon{
+      background: linear-gradient(to bottom, #fe1843 0%, #ff2d68 100%);
+    }
+  }
+
+}
+
+.start-button-no-worlds{
+  width: 220px;
+  height: 58px;
+  border-radius: 6px;
   background-color: @redHorbito;
-  margin-top: 77px;
-  margin-left: ~'calc(50% - 300px/2)';
+  margin-left: ~'calc(50% - 220px/2)';
   position: absolute;
-  top: 337px;
+  bottom: 34px;
 }
 
-.explore-button-no-worlds:hover{
+.start-button-no-worlds:hover{
 	background-color: @redHorbitoHover;
 }
 
-.explore-button-no-worlds:active{
+.start-button-no-worlds:active{
 	background-color: @redHorbitoActive;
 }
 
-.explore-button-no-worlds span{
+.start-button-no-worlds span{
   width: 100%;
   text-align: center;
-  font-size: 35px;
+  font-size: 25px;
   font-weight: bold;
   color: #fff;
   float: left;
   margin-top: 21px;
-}
-
-.new-world-button-no-worlds{
-
-  margin-left: ~'calc(50% - 180px/2)';
-  margin-top: 30px;
-  transform: translateY(10px);
-  position: absolute;
-  top: 487px;
-
-}
-
-.new-world-button-no-worlds figure{
-
-  float: left;
-  background-image: url('@static/newWorld.png');
-  background-size: 27px 20px;
-  width: 27px;
-  height: 20px;
-  margin-right: 10px;
-  background-position: 27px 0;
-  opacity: 0.7;
-  transition: all 0.2s ease;
-
-}
-
-.new-world-button-no-worlds:hover figure{
-
-  opacity: 1;
-
-}
-
-.new-world-button-no-worlds span{
-
-  float: left;
-  color: #fff;
-  font-size: 17px;
-  opacity: 0.7;
-  transition: all 0.2s ease;
-
-}
-
-.new-world-button-no-worlds:hover span{
-
-  opacity: 1;
-
-}
-
-.new-world-button-no-worlds:hover span::after {
-
-  width: 100%;
-
-}
-
-.new-world-button-no-worlds span::after {
-  content: "";
-  display: block;
-  width: 0;
-  height: 1px;
-  background: #fff;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-
 }
 
 .cosmos.ui-window{
@@ -5398,6 +5392,9 @@ to {background-position: -200% 0;}
 
     .card-options{
       margin: 0px;
+      i{
+        background-image: url('@static/more@2x.png');
+      }
     }
 
     .card-user-avatar{
@@ -5426,6 +5423,10 @@ to {background-position: -200% 0;}
       margin: 2px 0 0 0;
     }
 
+    .comments-icon{
+      background-image: url('@static/comment@2x.png');
+    }
+
   }
 
   .comments-list{
@@ -5449,6 +5450,27 @@ to {background-position: -200% 0;}
       border: none;
     }
 
+  }
+
+  .attachments i{
+    background-image: url('@static/attach@2x.png');
+  }
+
+  .attach-list .attachment .attachment-title{
+    width: ~'calc(100% - 60px)';
+  }
+
+  .attach-list .attachment .cancel-attachment{
+    background-image: none;
+    margin: 0px;
+    padding: 5px 10px;
+    i{
+      float: left;
+      width: 7px;
+      height: 7px;
+      background-image: url('@static/cancel-attach@2x.png');
+      background-size: cover;
+    }
   }
 
 }
@@ -5901,7 +5923,7 @@ to {background-position: -200% 0;}
     float: left;
     margin: 25px 25px 10px 25px;
     width: ~'calc(100% - 50px)';
-    height: 280px;
+    height: 100px;
     color: #545f65;
     font-size: 15px;
     line-height: 25px;
@@ -5950,13 +5972,15 @@ to {background-position: -200% 0;}
     bottom: 100px;
     padding: 15px;
     background-color: #f0f0f0;
+    z-index: 3;
 
     i{
       margin: 0px;
+      background-image: url('@static/attach@2x.png');
     }
   }
 
-  .attach-select{
+  .attach-select-new-post{
     position: absolute;
     left: 48px;
     bottom: 112px;
@@ -5974,28 +5998,28 @@ to {background-position: -200% 0;}
     display: none;
   }
 
-  .attach-select.popup{
+  .attach-select-new-post.popup{
     display: block;
   }
 
-  .attach-select article{
+  .attach-select-new-post article{
     float: left;
     width: 100%;
     height: 50%;
     cursor: pointer;
   }
 
-  .attach-select .inevio span{
+  .attach-select-new-post .inevio span{
     border-radius: 6px 6px 0 0;
     cursor: pointer;
   }
 
-  .attach-select .pc span{
+  .attach-select-new-post .pc span{
     border-radius: 0 0 6px 6px;
     cursor: pointer;
   }
 
-  .attach-select article span{
+  .attach-select-new-post article span{
     float: left;
     padding-left: 20px;
     width: ~'calc(100% - 20px)';
@@ -6007,8 +6031,86 @@ to {background-position: -200% 0;}
     transition: all 0.2s ease;
   }
 
-  .attach-select article:hover span{
+  .attach-select-new-post article:hover span{
     background-color: #f7f8fa;
+  }
+
+  .attach-list{
+
+    padding-left: 84px;
+    padding-right: 22px;
+    width: ~'calc(100% - 106px)';
+    position: absolute;
+    max-height: 140px;
+    bottom: 100px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .list{
+      max-height: 140px;
+      padding-right: 10px;
+    }
+
+    .attachment{
+
+      float: left;
+      width: 100%;
+      border-top: 1px solid transparent;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      margin: 0px;
+
+      .icon{
+
+        float: left;
+        width: 16px;
+        height: 16px;
+        background-size: 16px 16px;
+
+      }
+
+      .title{
+        float: left;
+        font-size: 13px;
+        margin-left: 10px;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        width: ~'calc(100% - 70px)';
+      }
+
+      .cancel-attachment{
+        float: right;
+        width: 7px;
+        height: 7px;
+        background-size: 7px 7px;
+        background-image: none;
+        margin: 0px;
+        padding: 5px 10px;
+        i{
+          float: left;
+          width: 7px;
+          height: 7px;
+          background-image: url('@static/cancel-attach@2x.png');
+          background-size: cover;
+        }
+
+      }
+
+      .aux-title{
+        float: right;
+        width: 95px;
+        font-size: 11px;
+        color: #217cfa;
+        padding-top: 3px;
+        padding-bottom: 2px;
+        display: none;
+      }
+
+    }
+
+    .attachment:last-child{
+      border-bottom: 1px solid #e5e9ea;
+    }
   }
 
 }

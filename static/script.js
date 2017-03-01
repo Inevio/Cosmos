@@ -980,7 +980,10 @@ app
 })
 
 .on( 'click' , '.close-new-post' , function(){
-  changeMobileView('worldContent');
+  if (isMobile()) {
+    $( '.attachment:not(.wz-prototype)').remove();
+    changeMobileView('worldContent');
+  }
 })
 
 .on( 'click' , '.post-new-card' , function(){
@@ -1098,7 +1101,11 @@ var initTexts = function(){
   $( '.no-posts .right-side span' ).text( lang.createNewPost );
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
-  $( '.explore-button-no-worlds span' ).text( lang.explore );
+  $( '.no-worlds .subtitle2' ).text( lang.intro2 );
+  $( '.no-worlds .chat-feature .description' ).html( lang.feature1 );
+  $( '.no-worlds .files-feature .description' ).html( lang.feature2 );
+  $( '.no-worlds .posts-feature .description' ).html( lang.feature3 );
+  $( '.start-button-no-worlds span' ).text( lang.start );
   $( '.new-world-button-no-worlds span, .new-world-button span' ).text( lang.createWorld );
   $( '.tend-text' ).text( lang.tend );
   $( '.follow-button span' ).text( lang.follow );
@@ -1121,8 +1128,8 @@ var initTexts = function(){
   $( '.cancel-new-card span' ).text( lang.cancel );
   $( '.save-new-card span' ).text( lang.save );
   $( '.attachments span' ).text( lang.addFiles );
-  $( '.attach-select .inevio span' ).text( lang.uploadInevio );
-  $( '.attach-select .pc span' ).text( lang.uploadPC );
+  $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
+  $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
 }
 
 var starsCanvas = function( stars ){
