@@ -32,10 +32,10 @@ var automaticPopupQueue = null
 var lastOperationSample = Date.now()
 
 // DOM Variables
-var closeNewCard        = $('.close-new-card');
+var closeNewCard        = $('.mobile-new-post .close-new-card');
 var attachNewPostButton = $('.mobile-new-post .attachments');
-var cancelNewCard       = $('.cancel-new-card');
-var attachmentPrototype = $('.attachment.wz-prototype');
+var cancelNewCard       = $('.mobile-new-post .cancel-new-card');
+var attachmentPrototype = $('.mobile-new-post .attachment.wz-prototype');
 var myContactID         = api.system.user().id;
 
 // Functions
@@ -64,17 +64,13 @@ var addAttachment = function( attach, useItem ){
     attachment.find('.icon').css( 'background-image', 'url(' + attach.fsnode.icons.micro + ')' );
   }
 
-  if ( params.operation === 'remove' ) {
-    attachment.find( '.cancel-attachment' ).hide();
-  }
-
   attachmentPrototype.after( attachment );
   attachment.data( 'attachment', attach );
 
   if ( attach.pending ) {
     attachment.data( 'mime', attach.type );
   }
-
+  /*
   var nAttachs = $( '.attachment:not(.wz-prototype)' ).length;
   switch (nAttachs) {
     case 0:
@@ -93,7 +89,7 @@ var addAttachment = function( attach, useItem ){
       app.css( 'height' ,  '490px' );
   }
 
-
+  */
   updateAttachmentCounter()
 
 }
@@ -101,10 +97,11 @@ var addAttachment = function( attach, useItem ){
 var attachFromInevio = function(){
 
   hideAttachSelect()
+  $( '.attachment:not(.wz-prototype)').remove();
 
   wz.app.openApp( 1 , [ 'select-source' , function( o ){
 
-    $( '.attach-select' ).removeClass( 'popup' );
+    $( '.attach-select-new-post' ).removeClass( 'popup' );
 
     o.forEach(function( fsnode ){
 
@@ -127,7 +124,7 @@ var postNewCardAsync = function(){
   }
 
   var attachments = $('.attach-list .attachment').not('.wz-prototype');
-  //var metadata = { operation: params.operation };
+  var metadata = {};
 
   var addPost = function( o ){
 
@@ -146,6 +143,7 @@ var postNewCardAsync = function(){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
+        $( '.attachment:not(.wz-prototype)').remove();
         updateLastPostRead( o , function(){
         });
 
@@ -155,10 +153,11 @@ var postNewCardAsync = function(){
 
       metadata.fileType = o.fileType;
       metadata.fsnode = attachment;
-      params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata }, function( e, o ){
+      worldSelected.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata }, function( e, o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
+        $( '.attachment:not(.wz-prototype)').remove();
         updateLastPostRead( o , function(){
         });
 
@@ -170,6 +169,7 @@ var postNewCardAsync = function(){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
+        $( '.attachment:not(.wz-prototype)').remove();
         updateLastPostRead( o , function(){
         });
 
@@ -202,7 +202,7 @@ var guessType = function( mime ){
 }
 
 var hideAttachSelect = function(){
-  $('.attach-select').removeClass('popup')
+  $('.attach-select-new-post').removeClass('popup')
 }
 
 var removeAttachment = function( options ){
@@ -240,7 +240,7 @@ var removeAttachment = function( options ){
 }
 
 var showAttachSelect = function(){
-  $('.attach-select').addClass('popup')
+  $('.attach-select-new-post').addClass('popup')
 }
 
 var updateAttachmentCounter = function(){
@@ -305,6 +305,7 @@ app
   }
 
 })
+.on( 'click', '.attach-select-new-post .inevio', attachFromInevio )
 .on( 'upload-prepared', function( e, uploader ){
 
   hideAttachSelect()
@@ -393,4 +394,10 @@ app
 
   }
 
+})
+.on( 'focus' , '.new-card-input,.new-card-textarea' , function(){
+  $('.mobile-new-post .attachments, .mobile-new-post .attach-list, .post-new-card').addClass('hide');
+})
+.on( 'blur' , '.new-card-input,.new-card-textarea' , function(){
+  $('.mobile-new-post .attachments, .mobile-new-post .attach-list, .post-new-card').removeClass('hide');
 })
