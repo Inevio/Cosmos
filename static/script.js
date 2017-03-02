@@ -22,7 +22,7 @@ var friendSearchBox       = $( '.invite-user-container .ui-input-search input' )
 var documentCardPrototype = $( '.doc-card.wz-prototype' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
-var exploreButton         = $( '.explore-button, .explore-button-no-worlds' );
+var exploreButton         = $( '.explore-button' );
 var unFollowButton        = $( '.stop-follow' );
 var commentPrototype      = $( '.comment.wz-prototype' );
 var openChatButton        = $( '.open-chat' );
@@ -42,7 +42,7 @@ var mobileWorldComments     = $( '.mobile-world-comments' );
 var mobileNewWorld          = $( '.mobile-new-world' );
 var mobileExplore           = $( '.mobile-explore' );
 var mobileNewPost           = $( '.mobile-new-post' );
-var newWorldButton  = $( '.new-world-button, .new-world-button-no-worlds, .new-world-button-mini' );
+var newWorldButton  = $( '.new-world-button, .start-button-no-worlds, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
@@ -297,6 +297,7 @@ api.cosmos.on( 'userAdded', function( userId , world ){
     checkNotifications();
 
     if ( noWorlds.css( 'display' ) != 'none' ) {
+
       noWorlds.transition({
 
         'opacity'         : 0
@@ -1057,6 +1058,22 @@ var initCosmos = function(){
   }
 
   initTexts();
+  wql.isFirstOpen( [ myContactID ] , function( e , o ){
+    if ( o.length === 0 ) {
+      noWorlds.show();
+      starsCanvasContainer.removeClass( 'no-visible' );
+      starsCanvasContainer.css({
+        'opacity' : 1
+      });
+      noWorlds.css({
+        'opacity'         : 1
+      });
+      wql.firstOpenDone( [ myContactID ] , function( e , o ){
+        if(e) console.log(e);
+      });
+    }
+  });
+
   getMyWorldsAsync();
 
   if ( params && params.action === 'selectPost') {
@@ -2023,16 +2040,20 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
   api.fs( post.fsnode[ 0 ], function( e , fsNode ){
 
-    if( fsNode.mime.indexOf( 'image' ) != -1 ){
-      card.find( '.doc-preview img' ).attr( 'src' , 'https://download.inevio.com/' + fsNode.id );
-    }else{
-      card.find( '.doc-preview img' ).attr( 'src' ,  fsNode.thumbnails.big );
-    }
+    if (!e) {
 
-    card.find( '.preview-title' ).text( fsNode.name );
-    card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
-    card.find( '.doc-preview' ).data( 'fsnode' , fsNode );
-    card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' );;
+      if( fsNode.mime.indexOf( 'image' ) != -1 ){
+        card.find( '.doc-preview img' ).attr( 'src' , 'https://download.inevio.com/' + fsNode.id );
+      }else{
+        card.find( '.doc-preview img' ).attr( 'src' ,  fsNode.thumbnails.big );
+      }
+
+      card.find( '.preview-title' ).text( fsNode.name );
+      card.find( '.preview-info' ).text( wz.tool.bytesToUnit( fsNode.size, 1 ) );
+      card.find( '.doc-preview' ).data( 'fsnode' , fsNode );
+      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' );
+
+    }
 
     if ( post.title === '' ) {
       card.find( '.title' ).hide();
