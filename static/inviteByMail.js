@@ -3,6 +3,7 @@ var addMailButton = $('.add-mail span');
 var mailPrototype = $('.mail.wz-prototype');
 var mailList      = $('.mail-list');
 var shareButton   = $('.share-button');
+var closeButton   = $('.close');
 
 addMailButton.on( 'click' , function(){
   addMail();
@@ -10,6 +11,10 @@ addMailButton.on( 'click' , function(){
 
 shareButton.on( 'click' , function(){
   share();
+});
+
+closeButton.on( 'click' , function(){
+  wz.app.removeView(app);
 });
 
 var initText = function(){

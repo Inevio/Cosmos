@@ -124,7 +124,7 @@
 
     "inviteByMail"        : "Invitar por correo",
     "selectFile"          : "Selecciona el archivo",
-    "inviteByMailDesc"    : "Introduce el email de todas las personas que quieras que reciban una invitación a este mundo.",
+    "inviteByMailDesc"    : "Introduce el email de todas las personas que quieras que se unan a horbito como tus amigos.",
     "addMail"             : "+ Añadir más correos",
     "share"               : "Compartir",
     "mailExample"         : "ejemplo@mail.com"
