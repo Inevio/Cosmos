@@ -122,6 +122,11 @@
 
     "yourWorlds"          : "Tus mundos",
 
-    "selectFile"          : "Selecciona el archivo"
+    "inviteByMail"        : "Invitar por correo",
+    "selectFile"          : "Selecciona el archivo",
+    "inviteByMailDesc"    : "Introduce el email de todas las personas que quieras que reciban una invitación a este mundo.",
+    "addMail"             : "+ Añadir más correos",
+    "share"               : "Compartir",
+    "mailExample"         : "ejemplo@mail.com"
 
-}
+  }
