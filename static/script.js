@@ -46,7 +46,7 @@ var newWorldButton  = $( '.new-world-button, .start-button-no-worlds, .new-world
 var closeNewWorld   = $( '.close-new-world' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
-
+var inviteByMail    = $( '.invite-by-mail' );
 
 var TYPES = {
 
@@ -581,6 +581,10 @@ closeNewWorld.on( 'click' , function(){
     });
   }
 
+});
+
+inviteByMail.on( 'click' , function(){
+  api.app.createView( {} , 'inviteByMail' );
 });
 
 app
@@ -1147,6 +1151,7 @@ var initTexts = function(){
   $( '.attachments span' ).text( lang.addFiles );
   $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
+  $('.invite-by-mail span').text(lang.inviteByMail);
 }
 
 var starsCanvas = function( stars ){

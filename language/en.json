@@ -122,6 +122,11 @@
 
     "yourWorlds"          : "Your worlds",
 
-    "selectFile"          : "Select the file"
+    "selectFile"          : "Select the file",
 
+    "inviteByMail"        : "Invite by mail",
+    "inviteByMailDesc"    : "Enter the email of all the people you want to receive an invitation to this world.",
+    "addMail"             : "+ Add more mails",
+    "share"               : "Share",
+    "mailExample"         : "example@mail.com"
 }
