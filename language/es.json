@@ -127,6 +127,9 @@
     "inviteByMailDesc"    : "Introduce el email de todas las personas que quieras que se unan a horbito para poder invitarles al mundo.",
     "addMail"             : "+ Añadir más correos",
     "share"               : "Enviar",
-    "mailExample"         : "ejemplo@mail.com"
+    "mailExample"         : "ejemplo@mail.com",
+
+    "invitationSentTitle"    : "Invitaciones enviadas",
+    "invitationSentSubtitle" : "Tus invitaciones están de camino!"
 
   }
