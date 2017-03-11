@@ -1550,7 +1550,7 @@ var newWorldAnimationOut = function(){
         'left'      : 'calc((50% - 236px) + 307px)'
 
 
-      } ).find( 'span' ).text( 'Crear mundo' );
+      } ).find( 'span' ).text( lang.createWorldShort );
     }
 
     exploreAnimationOut();
