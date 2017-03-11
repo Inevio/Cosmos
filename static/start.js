@@ -28,7 +28,11 @@ if( api.app.getViews('main').length === 1 || app.hasClass( 'wz-mobile-view' ) ){
 
 }else{
 
-  wz.view.remove( false );
-  api.app.getViews( 'main' ).trigger( 'selectPost' , [ params ]);
+  if (params[0] === 'focus') {
+    api.app.viewToFront( api.app.getViews('main')[0] );
+  }else{
+    wz.view.remove( false );
+    api.app.getViews( 'main' ).trigger( 'selectPost' , [ params ]);
+  }
 
 }
