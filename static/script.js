@@ -175,7 +175,7 @@ unFollowButton.on( 'click' , function(){
 });
 
 openChatButton.on( 'click' , function(){
-  wz.app.openApp( 14 , [ 'open-world-chat' , world , function( o ){
+  wz.app.openApp( 14 , [ 'open-world-chat' , worldSelected , function( o ){
     console.log(o);
   }]);
 });
@@ -376,6 +376,12 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
       }, 200, animationEffect );
 
     }
+
+    wz.app.openApp( 14 , [ 'remove-world-user-chat' , world , function( o ){
+
+      console.log(o);
+
+    }] , 'hidden' );
 
   }
 
@@ -1051,6 +1057,9 @@ app
 
 })
 
+.on( 'app-parm' , function(){
+  console.log('he vuelto');
+})
 //Functions
 var initCosmos = function(){
 
@@ -1432,6 +1441,9 @@ var selectWorld = function( world , callback ){
   searchPost( '' );
 
   var worldApi = world.data( 'world' );
+  if (!worldApi) {
+    return;
+  }
   worldSelected = worldApi;
   app.data( 'worldSelected' , worldSelected )
 
@@ -2626,6 +2638,7 @@ var createChat = function( world ){
     console.log(o);
 
   }] , 'hidden' );
+
 
 }
 
