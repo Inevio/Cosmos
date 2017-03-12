@@ -240,7 +240,7 @@ var removeAttachment = function( options ){
 }
 
 var showAttachSelect = function(){
-  $('.attach-select-new-post').addClass('popup')
+  attachFromInevio();
 }
 
 var updateAttachmentCounter = function(){

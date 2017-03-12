@@ -9,6 +9,7 @@ var searchPostQuery       = 0;
 var animationEffect       = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds              = [];
 var app                   = $( this );
+var desktop               = $( this ).parent().parent();
 var myContactID           = api.system.user().id;
 var worldPrototype        = $( '.sidebar .world.wz-prototype' );
 var worldTitle            = $( '.world-title' );
@@ -175,9 +176,15 @@ unFollowButton.on( 'click' , function(){
 });
 
 openChatButton.on( 'click' , function(){
-  wz.app.openApp( 14 , [ 'open-world-chat' , worldSelected , function( o ){
-    console.log(o);
-  }]);
+
+  if (desktop.find('.wz-app-14').length > 0) {
+    desktop.trigger( 'message' , [ 'open-world-chat' , { 'world' : worldSelected } ] );
+  }else{
+    wz.app.openApp( 14 , [ 'open-world-chat' , { 'world' : worldSelected } , function( o ){
+      console.log(o);
+    }]);
+  }
+
 });
 
 api.cosmos.on( 'worldCreated' , function( world ){
@@ -377,11 +384,13 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
     }
 
-    wz.app.openApp( 14 , [ 'remove-world-user-chat' , world , function( o ){
-
-      console.log(o);
-
-    }] , 'hidden' );
+    if (desktop.find('.wz-app-14').length > 0) {
+      desktop.trigger( 'message' , [ 'remove-world-user-chat' , { 'world' : world } ] );
+    }else{
+      wz.app.openApp( 14 , [ 'remove-world-user-chat' , { 'world' : world } , function( o ){
+        console.log(o);
+      }],'hidden');
+    }
 
   }
 
@@ -845,7 +854,11 @@ app
 })
 
 .on( 'click' , '.card-content.edit-mode .attachments, .card-content.edit-mode .attachments i, .card-content.edit-mode .attachments div' , function(){
-  $(this).closest( '.card' ).find( '.attach-select' ).addClass( 'popup' );
+  if (isMobile()) {
+    attachFromInevio();
+  }else{
+    $(this).closest( '.card' ).find( '.attach-select' ).addClass( 'popup' );
+  }
 })
 
 .on( 'click' , '.attach-select .inevio' , function(){
@@ -2633,12 +2646,13 @@ var exploreAnimationIn = function(){
 
 var createChat = function( world ){
 
-  wz.app.openApp( 14 , [ 'new-world-chat' , world , function( o ){
-
-    console.log(o);
-
-  }] , 'hidden' );
-
+  if (desktop.find('.wz-app-14').length > 0) {
+    desktop.trigger( 'message' , [ 'new-world-chat' , { 'world' : world } ] );
+  }else{
+    wz.app.openApp( 14 , [ 'new-world-chat' , { 'world' : world } , function( o ){
+      console.log(o);
+    }],'hidden');
+  }
 
 }
 

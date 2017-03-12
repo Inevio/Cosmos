@@ -2072,6 +2072,10 @@ to {background-position: -200% 0;}
 
 }
 
+.mobile-world-content .no-posts .left-side{
+  top: 35%;
+}
+
 .no-posts .right-side{
 
   left: ~'calc(50% + 1px)';
@@ -5356,6 +5360,7 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 130px)';
     padding-left: 65px;
     padding-right: 65px;
+    padding-bottom: 10px;
   }
 
 
