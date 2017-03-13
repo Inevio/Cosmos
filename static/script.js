@@ -43,11 +43,12 @@ var mobileWorldComments     = $( '.mobile-world-comments' );
 var mobileNewWorld          = $( '.mobile-new-world' );
 var mobileExplore           = $( '.mobile-explore' );
 var mobileNewPost           = $( '.mobile-new-post' );
-var newWorldButton  = $( '.new-world-button, .start-button-no-worlds, .new-world-button-mini' );
+var newWorldButton  = $( '.new-world-button, .new-world-button-mini' );
 var closeNewWorld   = $( '.close-new-world' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
 var inviteByMail    = $( '.invite-by-mail' );
+var startButton     = $('.start-button-no-worlds');
 
 var TYPES = {
 
@@ -600,6 +601,32 @@ closeNewWorld.on( 'click' , function(){
 
 inviteByMail.on( 'click' , function(){
   api.app.createView( {} , 'inviteByMail' );
+});
+
+startButton.on( 'click' , function(){
+
+  if (myWorlds.length > 1) {
+    $('.new-world-button').click();
+  }else{
+    noWorlds.transition({
+
+      'opacity'         : 0
+
+    }, 200, animationEffect , function(){
+
+      noWorlds.hide();
+      starsCanvasContainer.stop().clearQueue().transition({
+
+        'opacity' : 0
+
+      }, 300 , function(){
+
+        starsCanvasContainer.addClass( 'no-visible' );
+
+      });
+
+    });
+  }
 });
 
 app
