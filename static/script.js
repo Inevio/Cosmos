@@ -1428,7 +1428,12 @@ var createWorldAsync = function(){
 var editWorldAsync = function(){
 
   var worldApi = $( '.new-world-container' ).data( 'world' );
-  var isPrivate = $( '.private-option' ).hasClass( 'active' );
+  var isPrivate;
+  if ( api.system.user().user.indexOf('demo') === 0 ) {
+    isPrivate = true;
+  }else{
+    isPrivate = $( '.private-option' ).hasClass( 'active' );
+  }
   var editing = $( '.new-world-container' ).hasClass( 'editing' );
   var name = worldApi.name;
   $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , worldApi.id );
