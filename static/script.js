@@ -896,7 +896,7 @@ app
 
   uploader( worldSelected.volume , function( e , fsnode ){
 
-    appendAttachment( { fsnode: fsnode[0] , uploading: true , card: $('.card.editing') } );
+    appendAttachment( { fsnode: fsnode , uploading: true , card: $('.card.editing') } );
 
   });
 
@@ -1219,9 +1219,9 @@ var starsCanvas = function( stars ){
   var padding2 = 0;
   var padding3 = 0;
 
-  layer1.src = 'https://static.inevio.com/app/360/starlayer1.png';
-  layer2.src = 'https://static.inevio.com/app/360/starlayer2.png';
-  layer3.src = 'https://static.inevio.com/app/360/starlayer3.png';
+  layer1.src = 'https://static.horbito.com/app/360/starlayer1.png';
+  layer2.src = 'https://static.horbito.com/app/360/starlayer2.png';
+  layer3.src = 'https://static.horbito.com/app/360/starlayer3.png';
 
   var draw = function(){
 
@@ -1552,14 +1552,14 @@ var getWorldUsersAsync = function( worldApi ){
 
       if (o.length > 3) {
 
-        $( '.user-preview.d' ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.inevio.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
+        $( '.user-preview.d' ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.horbito.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
 
         $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
         inviteIndex = 3;
 
       }else{
 
-        $( '.user-preview' ).eq( 3 - o.length ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.inevio.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
+        $( '.user-preview' ).eq( 3 - o.length ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.horbito.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
 
         $( '.more-users-text' ).text( lang.seeAll );
         inviteIndex = o.length;
@@ -2105,7 +2105,7 @@ var appendDocumentCard = function( post , user , reason , callback ){
     if (!e) {
 
       if( fsNode.mime.indexOf( 'image' ) != -1 ){
-        card.find( '.doc-preview img' ).attr( 'src' , 'https://download.inevio.com/' + fsNode.id );
+        card.find( '.doc-preview img' ).attr( 'src' , 'https://download.horbito.com/' + fsNode.id );
       }else{
         card.find( '.doc-preview img' ).attr( 'src' ,  fsNode.thumbnails.big );
       }
