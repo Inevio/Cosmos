@@ -605,7 +605,7 @@ inviteByMail.on( 'click' , function(){
 
 startButton.on( 'click' , function(){
 
-  if (myWorlds.length > 1) {
+  if (myWorlds.length <= 1) {
     $('.new-world-button').click();
   }else{
     noWorlds.transition({
