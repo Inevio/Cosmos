@@ -1584,6 +1584,10 @@ var newWorldAnimationOut = function(){
 
 var checkNotifications = function(){
 
+  if ( api.system.user().user.indexOf('demo') === 0 ) {
+    return;
+  }
+
   nNotifications = 0;
   $( '.with-notification' ).removeClass( 'with-notification' );
 
