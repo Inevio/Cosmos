@@ -118,6 +118,10 @@ var sendBanner = function( info ){
 
 var checkNotifications = function(){
 
+  if ( api.system.user().user.indexOf('demo') === 0 ) {
+    return;
+  }
+
   nNotifications = 0;
 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){

@@ -2957,6 +2957,10 @@ var attachFromInevio = function( card ){
 
 var updateNotifications = function( world ){
 
+  if ( api.system.user().user.indexOf('demo') === 0 ) {
+    return;
+  }
+
   var lastPost = $( '.cardDom' );
   if ( lastPost ) {
     lastPost = lastPost.eq(0).data( 'post' );
@@ -2969,6 +2973,10 @@ var updateNotifications = function( world ){
 }
 
 var checkNotifications = function(){
+
+  if ( api.system.user().user.indexOf('demo') === 0 ) {
+    return;
+  }
 
   nNotifications = 0;
   $( '.with-notification' ).removeClass( 'with-notification' );
