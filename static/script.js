@@ -350,6 +350,10 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
   }else if( userId === myContactID ){
 
+    if (isMobile() && worldSelected.id === world.id ) {
+      changeMobileView('worldSidebar');
+    }
+
     var worldList = $( '.world-' + world.id ).parent();
 
     $( '.world-' + world.id ).parent().transition({
