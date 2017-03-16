@@ -1732,6 +1732,12 @@ var followWorldAsync = function( worldCard ){
     return;
   }
 
+  if ( api.system.user().user.indexOf('demo') === 0 && !world.isPrivate ) {
+    alert(lang.noPublicWorlds);
+    return;
+  }
+
+
   world.addUser( myContactID , function( e , o ){
 
     worldCard.find( 'span' ).text( lang.following );
