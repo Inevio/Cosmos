@@ -130,6 +130,8 @@
     "mailExample"         : "ejemplo@mail.com",
 
     "invitationSentTitle"    : "Invitaciones enviadas",
-    "invitationSentSubtitle" : "Tus invitaciones están de camino!"
+    "invitationSentSubtitle" : "Tus invitaciones están de camino!",
+
+    "noPublicWorlds"        : "¡Hola! Me temo que las cuentas de demo no pueden unirse a mundos públicos, crea ya tu cuenta para poder hacerlo."
 
   }
