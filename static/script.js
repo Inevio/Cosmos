@@ -2471,7 +2471,7 @@ var timeElapsed = function( lastTime ){
   var message;
   var calculated = false;
 
-  if( now.getFullYear() === last.getFullYear() ){
+  if( now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth() ){
 
     if( now.getDate() === last.getDate() ){
 
