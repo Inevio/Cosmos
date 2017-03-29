@@ -568,7 +568,7 @@ to {background-position: -200% 0;}
   background-color: #fff;
   z-index: 5;
   background-image: url('@static/selectWorld.png');
-  background-size: 727px 636px;
+  background-size: cover;
 
 }
 
