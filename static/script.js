@@ -33,7 +33,7 @@ var cleanPostSearch       = $( '.search-button .clean-search' );
 //var newPostButton       = $( '.new-post, .no-post-new-post-button' );
 //var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
-var starsCanvasContainer  = $( '.stars-canvas' );
+var starsCanvasHtml       = '<canvas class="stars-canvas wz-dragger" width="996" height="638"></canvas>'
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
 var mobileView              = 'worldSidebar'
@@ -313,14 +313,15 @@ api.cosmos.on( 'userAdded', function( userId , world ){
       }, 200, animationEffect , function(){
 
         noWorlds.hide();
-        starsCanvasContainer.stop().clearQueue().transition({
+        $('.stars-canvas').stop().clearQueue().transition({
 
           'opacity' : 0
 
 
         }, 300 , function(){
 
-          starsCanvasContainer.addClass( 'no-visible' );
+          $('.stars-canvas').remove();
+
           if ( $( '.world-' + world.id ).length ) {
             selectWorld( $( '.world-' + world.id ) , function(){});
           }
@@ -374,8 +375,9 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
     if( $( '.worldDom' ).length === 0 ){
 
       noWorlds.show();
-      starsCanvasContainer.removeClass( 'no-visible' );
-      starsCanvasContainer.stop().clearQueue().transition({
+      app.append(starsCanvasHtml);
+      starsCanvas( 'stars-canvas' );
+      $('.stars-canvas').stop().clearQueue().transition({
 
         'opacity' : 1
 
@@ -410,6 +412,10 @@ app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
   var name = worldTitle.data( 'name' );
   var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
   var textWidth = Math.floor( winWidth * 0.054 );
+
+  if(!name){
+    return;
+  }
 
   if ( name.length > textWidth ) {
 
@@ -619,13 +625,13 @@ startButton.on( 'click' , function(){
     }, 200, animationEffect , function(){
 
       noWorlds.hide();
-      starsCanvasContainer.stop().clearQueue().transition({
+      $('.stars-canvas').stop().clearQueue().transition({
 
         'opacity' : 0
 
       }, 300 , function(){
 
-        starsCanvasContainer.addClass( 'no-visible' );
+        $('.stars-canvas').remove();
 
       });
 
@@ -1109,7 +1115,6 @@ var initCosmos = function(){
 
   if (!isMobile()) {
     app.css({'border-radius'    : '6px', 'background-color' : '#2c3238'});
-    starsCanvas( 'stars-canvas' );
   }else{
     setMobile();
   }
@@ -1118,8 +1123,9 @@ var initCosmos = function(){
   wql.isFirstOpen( [ myContactID ] , function( e , o ){
     if ( o.length === 0 ) {
       noWorlds.show();
-      starsCanvasContainer.removeClass( 'no-visible' );
-      starsCanvasContainer.css({
+      app.append(starsCanvasHtml);
+      starsCanvas( 'stars-canvas' );
+      $('.stars-canvas').css({
         'opacity' : 1
       });
       noWorlds.css({
@@ -2168,7 +2174,7 @@ var appendYoutubeCard = function( post , user , reason ){
   var card = youtubeCardPrototype.clone();
   card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.id ).addClass( 'cardDom' );
 
-  var youtubeCode = post.content.match(/v=([A-z0-9-_]+)/)[1];
+  var youtubeCode = getYoutubeCode(post.content);
 
   if (isMobile()) {
     card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
@@ -2197,6 +2203,25 @@ var appendYoutubeCard = function( post , user , reason ){
     setRepliesAsyncWithoutAppendMobile( card , post );
   }
   appendCard( card , post );
+
+}
+
+var getYoutubeCode = function( text ){
+
+  var youtubeId = false;
+  text.split(' ').forEach( function( word ){
+
+    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
+
+      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+      var match = word.match(regExp);
+      youtubeId = (match&&match[7].length==11)? match[7] : false;
+
+    }
+
+  });
+
+  return youtubeId;
 
 }
 
@@ -2612,8 +2637,9 @@ var exploreAnimationIn = function(){
   var exploreSection = $( '.explore-section' );
 
   exploreSection.css( 'display' , 'block');
-  starsCanvasContainer.removeClass( 'no-visible' );
-  starsCanvasContainer.stop().clearQueue().transition({
+  app.append(starsCanvasHtml);
+  starsCanvas( 'stars-canvas' );
+  $('.stars-canvas').stop().clearQueue().transition({
 
     'opacity' : 1
 
