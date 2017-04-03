@@ -1,7 +1,7 @@
 var app             = $( this );
 var myContactID     = api.system.user().id;
 var noWorlds        = $( '.no-worlds' );
-var starsCanvasHtml       = '<canvas class="stars-canvas wz-dragger" width="996" height="638"></canvas>'
+var starsCanvasContainer  = $( '.stars-canvas' ); 
 var parameters;
 
 parameters = params
@@ -10,12 +10,12 @@ if( api.app.getViews('main').length === 1 || app.hasClass( 'wz-mobile-view' ) ){
 
   wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
 
-    if ( o.length === 0 ) {
+    if ( o.length === 0 && !isMobile()) {
 
       noWorlds.show();
-      app.append(starsCanvasHtml);
+      starsCanvasContainer.removeClass( 'no-visible' ); 
       starsCanvas( 'stars-canvas' );
-      $('.stars-canvas').css( 'opacity' , 1 );
+      starsCanvasContainer.css( 'opacity' , 1 ); 
       noWorlds.css({ 'opacity' : 1 });
 
     }else{
@@ -35,6 +35,10 @@ if( api.app.getViews('main').length === 1 || app.hasClass( 'wz-mobile-view' ) ){
 }
 
 var starsCanvas = function( stars ){
+
+  if (isMobile()) {
+    return;
+  }
 
   var canvas = $('.' + stars );
   var ctx = canvas[0].getContext('2d');
@@ -93,10 +97,16 @@ var starsCanvas = function( stars ){
       padding3 += layer3.height;
     }
 
-    requestAnimationFrame( draw );
+    if (!starsCanvasContainer.hasClass( 'no-visible' )) {
+      requestAnimationFrame( draw );
+    }
 
   }
 
   draw();
 
+}
+
+var isMobile = function(){
+  return app.hasClass( 'wz-mobile-view' );
 }
