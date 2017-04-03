@@ -560,14 +560,26 @@ api.upload.on( 'worldIconProgress', function( percent ){
   $( '.loading-animation-container' ).show();
 });
 
-api.upload.on( 'fsnodeEnd', function( fsnode ){
+api.upload.on( 'fsnodeProgress', function( fsnode, percent ){
+  var attachment = $( '.attachment-fsnode-' + fsnode )
+  attachment.find('.aux-title').text( lang.uploading + (percent.toFixed(2) * 100).toFixed() + ' %')
+});
 
-  var attachment = $( '.attach-list .attachment-' + fsnode.id );
-  if ( attachment.length != -1 ) {
-    attachment.find( '.icon' ).css( 'background-image' , 'url(' + fsnode.icons.micro + ')' );
-    attachment.find( '.aux-title' ).hide();
-    attachment.data( 'fsnode' , fsnode );
-    $('.new-card-section').removeClass( 'uploading' );
+api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
+
+  var attachment = $( '.editing .attachment-' + fileId + ',.editing .attachment-fsnode-' + fsnode.id )
+
+  if( attachment.length ){
+
+    attachment.find('.attachment-title').text( fsnode.name )
+    attachment.find('.icon').css( 'background-image', 'url(' + fsnode.icons.micro + ')' );
+    attachment.find('.aux-title').hide();
+    attachment.addClass('from-pc').addClass( 'attachment-' + fileId ).addClass( 'attachment-fsnode-' + fsnode.id );
+
+    if( $('.attachment.uploading').length ){
+      app.removeClass('uploading')
+    }
+
   }
 
 });
@@ -640,6 +652,23 @@ startButton.on( 'click' , function(){
 });
 
 app
+
+.on( 'requestPostCreate', function( e, newParams, callback ){
+
+if( newParams.queue ){
+
+    var found = $( '.attachment-' + newParams.queue.fsnode[ newParams.fsnode.id ].id + ', .attachment-fsnode-' + newParams.fsnode.id )
+
+    if( found.length ){
+      appendAttachment( { fsnode : newParams.fsnode, uploading : newParams.fsnode.fileId !== 'TO_UPDATE' }, found )
+    }
+
+    callback( found.length )
+
+  }
+
+
+})
 
 .on( 'keydown' , '.comment-text-edit' , function( e ){
 
@@ -2932,23 +2961,38 @@ var editPostAsync = function( card ){
   }
 }
 
-var appendAttachment = function( info ){
+var appendAttachment = function( info , useItem ){
 
-  if ( info.card.find( '.attach-list .attachment-' + info.fsnode.id ).length != 0 ) {
-    return;
+  var attachment = useItem || $( '.editing .attachment.wz-prototype' ).clone();
+
+  attachment.removeClass('wz-prototype')
+  attachment.find('.title').text( info.fsnode.name )
+
+  if( typeof info.fsnode.id !== 'undefined' ){
+    attachment.addClass( 'attachment-' + info.fsnode.id )
   }
 
-  var attachment = info.card.find( '.attachment.wz-prototype' ).clone();
-  attachment.removeClass( 'wz-prototype' ).addClass( 'attachment-' + info.fsnode.id );
-  attachment.find( '.attachment-title' ).text( info.fsnode.name );
-  if ( info.uploading ) {
-    attachment.find( '.aux-title' ).show().text( lang.uploading );
-    $('.new-card-section').addClass( 'uploading' );
+  if( info.fsnode && info.fsnode.id ){
+    attachment.addClass( 'attachment-fsnode-' + info.fsnode.id )
+  }
+
+  if( !info.fsnode.uploaded ){
+
+    attachment.addClass('from-pc uploading')
+    attachment.find('.aux-title').show().text( lang.uploading )
+    $('.editing').addClass('uploading')
+
   }else{
-    attachment.find( '.icon' ).css( 'background-image' , 'url(' + info.fsnode.icons.micro + ')' );
+    attachment.find('.icon').css( 'background-image', 'url(' + info.fsnode.icons.micro + ')' );
   }
-  info.card.find( '.attachment.wz-prototype' ).after( attachment );
-  attachment.data( 'fsnode' , info.fsnode );
+
+  $('.editing').find( '.attachment.wz-prototype' ).after( attachment );
+  attachment.data( 'fsnode', info.fsnode );
+
+  if ( info.fsnode.pending ) {
+    attachment.data( 'mime', info.fsnode.type );
+  }
+
 
 }
 
