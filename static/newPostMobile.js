@@ -188,7 +188,7 @@ var postNewCardAsync = function(){
       addPost( { fsnode : attachments, fileType : 'generic', multifile : true } );
     }
 
-  }else if( text.indexOf( 'www.youtube' ) !== -1 ){
+  }else if( isYoutubePost(text) ){
     addPost( { fsnode : null, linkType : 'youtube', multifile : false } );
 
   }else{
@@ -196,6 +196,16 @@ var postNewCardAsync = function(){
   }
 
 }
+
+var isYoutubePost = function( text ){ 
+  var isYoutube = false; 
+  text.split(' ').forEach( function( word ){ 
+    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) { 
+      isYoutube = true; 
+    } 
+  }); 
+  return isYoutube; 
+} 
 
 var guessType = function( mime ){
   return TYPES[ mime ] || 'generic';
