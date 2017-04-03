@@ -36,6 +36,7 @@ var unFollowButton   = $( '.stop-follow' );
 var selectWorld      = $( '.select-world' );
 var noWorlds         = $( '.no-worlds' );
 var scrollableContent = $('.scrollable-content');
+var starsCanvasContainer  = $( '.stars-canvas' ); 
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -1056,14 +1057,14 @@ var exploreAnimationOut = function(){
     }, 200, animationEffect , function(){
 
       noWorlds.hide();
-      $('.stars-canvas').stop().clearQueue().transition({
+      starsCanvasContainer.stop().clearQueue().transition({ 
 
         'opacity' : 0
 
 
       }, 300 , function(){
 
-        $('.stars-canvas').remove();
+        starsCanvasContainer.addClass( 'no-visible' ); 
 
       });
 

@@ -4961,7 +4961,6 @@ to {background-position: -200% 0;}
   background-image: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   opacity: 0;
   border-radius: 6px;
-  z-index: 5;
 
 }
 

@@ -33,7 +33,7 @@ var cleanPostSearch       = $( '.search-button .clean-search' );
 //var newPostButton       = $( '.new-post, .no-post-new-post-button' );
 //var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
-var starsCanvasHtml       = '<canvas class="stars-canvas wz-dragger" width="996" height="638"></canvas>'
+var starsCanvasContainer  = $( '.stars-canvas' ); 
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
 var mobileView              = 'worldSidebar'
@@ -313,14 +313,14 @@ api.cosmos.on( 'userAdded', function( userId , world ){
       }, 200, animationEffect , function(){
 
         noWorlds.hide();
-        $('.stars-canvas').stop().clearQueue().transition({
+        starsCanvasContainer.stop().clearQueue().transition({
 
           'opacity' : 0
 
 
         }, 300 , function(){
 
-          $('.stars-canvas').remove();
+          starsCanvasContainer.addClass( 'no-visible' ); 
 
           if ( $( '.world-' + world.id ).length ) {
             selectWorld( $( '.world-' + world.id ) , function(){});
@@ -372,12 +372,12 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
     $( '.select-world' ).show();
 
-    if( $( '.worldDom' ).length === 0 ){
+    if( $( '.worldDom' ).length === 0 && !isMobile()){
 
       noWorlds.show();
-      app.append(starsCanvasHtml);
+      starsCanvasContainer.removeClass( 'no-visible' ); 
       starsCanvas( 'stars-canvas' );
-      $('.stars-canvas').stop().clearQueue().transition({
+      starsCanvasContainer.stop().clearQueue().transition({ 
 
         'opacity' : 1
 
@@ -625,13 +625,13 @@ startButton.on( 'click' , function(){
     }, 200, animationEffect , function(){
 
       noWorlds.hide();
-      $('.stars-canvas').stop().clearQueue().transition({
+      starsCanvasContainer.stop().clearQueue().transition({ 
 
         'opacity' : 0
 
       }, 300 , function(){
 
-        $('.stars-canvas').remove();
+        starsCanvasContainer.addClass( 'no-visible' ); 
 
       });
 
@@ -1115,17 +1115,18 @@ var initCosmos = function(){
 
   if (!isMobile()) {
     app.css({'border-radius'    : '6px', 'background-color' : '#2c3238'});
+    starsCanvas( 'stars-canvas' ); 
   }else{
     setMobile();
   }
 
   initTexts();
   wql.isFirstOpen( [ myContactID ] , function( e , o ){
-    if ( o.length === 0 ) {
+    if ( o.length === 0 && !isMobile()) {
       noWorlds.show();
-      app.append(starsCanvasHtml);
+      starsCanvasContainer.removeClass( 'no-visible' ); 
       starsCanvas( 'stars-canvas' );
-      $('.stars-canvas').css({
+      starsCanvasContainer.css({ 
         'opacity' : 1
       });
       noWorlds.css({
@@ -1215,6 +1216,10 @@ var initTexts = function(){
 
 var starsCanvas = function( stars ){
 
+  if (isMobile()) {
+    return;
+  }
+
   var canvas = $('.' + stars );
   var ctx = canvas[0].getContext('2d');
   var initial = Date.now();
@@ -1272,7 +1277,9 @@ var starsCanvas = function( stars ){
       padding3 += layer3.height;
     }
 
-    requestAnimationFrame( draw );
+    if (!starsCanvasContainer.hasClass( 'no-visible' )) {
+      requestAnimationFrame( draw );
+    }
 
   }
 
@@ -2637,16 +2644,19 @@ var exploreAnimationIn = function(){
   var exploreSection = $( '.explore-section' );
 
   exploreSection.css( 'display' , 'block');
-  app.append(starsCanvasHtml);
-  starsCanvas( 'stars-canvas' );
-  $('.stars-canvas').stop().clearQueue().transition({
 
-    'opacity' : 1
+  if (!isMobile()) {
+    starsCanvasContainer.removeClass( 'no-visible' );
+    starsCanvas( 'stars-canvas' );
+    starsCanvasContainer.stop().clearQueue().transition({ 
+
+      'opacity' : 1
 
 
-  }, 300, function(){
-    $('.explore-container').scrollTop(0);
-  });
+    }, 300, function(){
+      $('.explore-container').scrollTop(0);
+    });
+  }
 
   // Fade in blue background
   exploreSection.stop().clearQueue().transition({
