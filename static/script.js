@@ -660,7 +660,7 @@ if( newParams.queue ){
     var found = $( '.attachment-' + newParams.queue.fsnode[ newParams.fsnode.id ].id + ', .attachment-fsnode-' + newParams.fsnode.id )
 
     if( found.length ){
-      appendAttachment( { fsnode : newParams.fsnode, uploading : newParams.fsnode.fileId !== 'TO_UPDATE' }, found )
+      appendAttachment( { fsnode : newParams.fsnode, uploaded : newParams.fsnode.fileId !== 'TO_UPDATE' }, found )
     }
 
     callback( found.length )
@@ -862,7 +862,6 @@ if( newParams.queue ){
 .on( 'click' , '.cancel-new-card' , function(){
   $( this ).closest( '.card' ).removeClass( 'editing' );
   $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' );
-
 })
 
 .on( 'click' , '.save-new-card' , function(){
@@ -935,7 +934,7 @@ if( newParams.queue ){
 
   uploader( worldSelected.volume , function( e , fsnode ){
 
-    appendAttachment( { fsnode: fsnode , uploading: true , card: $('.card.editing') } );
+    appendAttachment( { fsnode: fsnode , uploaded: false , card: $('.card.editing') } );
 
   });
 
@@ -2942,6 +2941,7 @@ var editPostAsync = function( card ){
   card.find( '.content-input' ).val( post.content );
   card.find( '.content-input' ).data( 'prev' , post.content );
   card.find( '.card-options' ).addClass( 'hide' );
+  card.find( '.attachment:not(.wz-prototype)' ).remove();
 
   card.find( '.attach-list' ).data( 'prev' , post.fsnode );
   if ( post.fsnode.length != 0 ) {
@@ -2954,7 +2954,7 @@ var editPostAsync = function( card ){
         fsnode = card.find( '.attachment-' + fsnodeId ).data( 'fsnode' );
       }
 
-      appendAttachment( { fsnode: fsnode , uploading: false , card: card  } );
+      appendAttachment( { fsnode: fsnode , uploaded: true , card: card  } );
 
     });
 
@@ -2966,7 +2966,7 @@ var appendAttachment = function( info , useItem ){
   var attachment = useItem || $( '.editing .attachment.wz-prototype' ).clone();
 
   attachment.removeClass('wz-prototype')
-  attachment.find('.title').text( info.fsnode.name )
+  attachment.find('.attachment-title').text( info.fsnode.name )
 
   if( typeof info.fsnode.id !== 'undefined' ){
     attachment.addClass( 'attachment-' + info.fsnode.id )
@@ -2976,7 +2976,7 @@ var appendAttachment = function( info , useItem ){
     attachment.addClass( 'attachment-fsnode-' + info.fsnode.id )
   }
 
-  if( !info.fsnode.uploaded ){
+  if( !info.uploaded ){
 
     attachment.addClass('from-pc uploading')
     attachment.find('.aux-title').show().text( lang.uploading )
@@ -3010,7 +3010,7 @@ var attachFromInevio = function( card ){
 
       o.forEach(function( fsnode ){
 
-        appendAttachment( { fsnode: fsnode , uploading: false , card: card } );
+        appendAttachment( { fsnode: fsnode , uploaded: true , card: card } );
 
       });
 
@@ -3033,7 +3033,7 @@ var attachFromInevio = function( card ){
           if (e) {
             console.log(e);
           }else{
-            appendAttachment( { fsnode: fsnode , uploading: false , card: card } );
+            appendAttachment( { fsnode: fsnode , uploaded: true , card: card } );
           }
 
         });
