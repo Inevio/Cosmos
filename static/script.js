@@ -665,6 +665,8 @@ if( newParams.queue ){
 
     callback( found.length )
 
+  }else{
+    callback(false);
   }
 
 
