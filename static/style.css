@@ -1850,6 +1850,13 @@ to {background-position: -200% 0;}
 
 }
 
+.uploading .save-new-card{
+
+  opacity: 0.3 !important;
+  background-color: @redHorbito !important;
+
+}
+
 .card .card-content.edit-mode{
 
   padding-left: 10px;
