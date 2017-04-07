@@ -577,7 +577,7 @@ api.upload.on( 'fsnodeEnd', function( fsnode , fileId ){
     attachment.addClass('from-pc').addClass( 'attachment-' + fileId ).addClass( 'attachment-fsnode-' + fsnode.id );
 
     if( $('.attachment.uploading').length ){
-      app.removeClass('uploading')
+      $('.uploading').removeClass('uploading')
     }
 
   }
@@ -862,11 +862,16 @@ if( newParams.queue ){
 })
 
 .on( 'click' , '.cancel-new-card' , function(){
+
   $( this ).closest( '.card' ).removeClass( 'editing' );
   $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' );
 })
 
 .on( 'click' , '.save-new-card' , function(){
+
+  if ($(this).closest('.card').hasClass('uploading')) {
+    return;
+  }
 
   var card = $( this ).closest( '.card' );
   var post = card.data( 'post' );
