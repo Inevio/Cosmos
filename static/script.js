@@ -250,8 +250,11 @@ api.cosmos.on( 'postAdded' , function( post ){
         var nCards = parseInt( $( '.world-event-number .subtitle' ).text() ) + 1;
         $( '.world-event-number .subtitle' ).text( nCards );
 
+        if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
 
-        if ( post.metadata && post.metadata.fileType ) {
+          appendGenericCard(post  , user , lang.postCreated , function(){});
+
+        }else if ( post.metadata && post.metadata.fileType ) {
 
           switch (post.metadata.fileType) {
 
@@ -263,7 +266,7 @@ api.cosmos.on( 'postAdded' , function( post ){
             case 'video':
             case 'music':*/
             default:
-            appendGenericCard( post , user , lang.postCreated , function(){});
+            appendGenericCard(post  , user , lang.postCreated , function(){});
             break;
 
           }
@@ -285,8 +288,18 @@ api.cosmos.on( 'postAdded' , function( post ){
 
       }else{
 
-        checkNotifications();
-        $( '.world-' + post.worldId ).addClass( 'with-notification' );
+        if ( post.author === myContactID ) {
+
+          wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
+            if (e) {
+              console.log(e);
+            }
+          });
+
+        }else{
+          checkNotifications();
+          $( '.world-' + post.worldId ).addClass( 'with-notification' );
+        }
 
       }
 
@@ -459,7 +472,11 @@ api.cosmos.on( 'postModified', function( post ){
 
       wz.user( post.author , function( e , user ){
 
-        if ( post.metadata && post.metadata.fileType ) {
+        if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
+
+          appendGenericCard( post  , user , lang.postCreated , function(){});
+          
+        }else if ( post.metadata && post.metadata.fileType ) {
 
           switch (post.metadata.fileType) {
 
@@ -2095,7 +2112,13 @@ var appendGenericCard = function( post , user , reason , callback ){
 
         var docPreview = card.find( '.doc-preview.wz-prototype' ).clone();
         docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id );
-        docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big );
+
+        if (post.metadata && post.metadata.operation === 'remove') {
+          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' );
+        }else{
+          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big );
+        }
+
 
         if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
           docPreview.find( '.doc-icon' ).addClass( 'office' );
@@ -3152,7 +3175,11 @@ var setPost = function( post ){
 
     wz.user( post.author , function( e , user ){
 
-      if ( post.metadata && post.metadata.fileType ) {
+      if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
+
+        appendGenericCard( post  , user , lang.postCreated , function(){});
+          
+      }else if ( post.metadata && post.metadata.fileType ) {
 
         switch (post.metadata.fileType) {
 
