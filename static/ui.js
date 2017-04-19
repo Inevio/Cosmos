@@ -159,7 +159,7 @@ cover.on( typeof cordova === 'undefined' ? 'mouseup' : 'touchend' , function(){
     console.log('click');
     decompressCover();
   }
-} );
+});
 
 cardList.on( 'mousewheel' , function( e ){
 
@@ -427,6 +427,9 @@ app
   if ( $( '.new-world-name input' ).val() ) {
 
     newWorldAnimationB();
+    if(uiContent.hasClass('compressed')){
+      decompressCover( { instant : true , world : $('.world.active') } );
+    }
 
   }
 
