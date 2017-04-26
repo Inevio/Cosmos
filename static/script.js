@@ -920,7 +920,7 @@ if( newParams.queue ){
         });
       });
     });
-  }else if ( newContent.indexOf( 'www.youtube' ) !== -1 ) {
+  }else if ( isYoutubePost(newContent) ) {
     newMetadata.linkType = 'youtube';
     post.setMetadata( newMetadata , function(){
       post.setTitle( newTitle , function(){
@@ -1420,6 +1420,18 @@ var appendWorld = function( worldApi ){
 
   world.data( 'world' , worldApi );
 
+}
+
+var isYoutubePost = function( text ){
+  var isYoutube = false;
+  text.split(' ').forEach( function( word ){
+    word.split('\n').forEach( function( word ){
+      if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
+        isYoutube = true;
+      }
+    });
+  });
+  return isYoutube;
 }
 
 var appendWorldInOrder = function( category , world , worldApi ){
