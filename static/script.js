@@ -33,7 +33,7 @@ var cleanPostSearch       = $( '.search-button .clean-search' );
 //var newPostButton       = $( '.new-post, .no-post-new-post-button' );
 //var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
-var starsCanvasContainer  = $( '.stars-canvas' ); 
+var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
 var mobileView              = 'worldSidebar'
@@ -333,7 +333,7 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
         }, 300 , function(){
 
-          starsCanvasContainer.addClass( 'no-visible' ); 
+          starsCanvasContainer.addClass( 'no-visible' );
 
           if ( $( '.world-' + world.id ).length ) {
             selectWorld( $( '.world-' + world.id ) , function(){});
@@ -388,9 +388,9 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
     if( $( '.worldDom' ).length === 0 && !isMobile()){
 
       noWorlds.show();
-      starsCanvasContainer.removeClass( 'no-visible' ); 
+      starsCanvasContainer.removeClass( 'no-visible' );
       starsCanvas( 'stars-canvas' );
-      starsCanvasContainer.stop().clearQueue().transition({ 
+      starsCanvasContainer.stop().clearQueue().transition({
 
         'opacity' : 1
 
@@ -475,7 +475,7 @@ api.cosmos.on( 'postModified', function( post ){
         if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
 
           appendGenericCard( post  , user , lang.postCreated , function(){});
-          
+
         }else if ( post.metadata && post.metadata.fileType ) {
 
           switch (post.metadata.fileType) {
@@ -654,13 +654,13 @@ startButton.on( 'click' , function(){
     }, 200, animationEffect , function(){
 
       noWorlds.hide();
-      starsCanvasContainer.stop().clearQueue().transition({ 
+      starsCanvasContainer.stop().clearQueue().transition({
 
         'opacity' : 0
 
       }, 300 , function(){
 
-        starsCanvasContainer.addClass( 'no-visible' ); 
+        starsCanvasContainer.addClass( 'no-visible' );
 
       });
 
@@ -1167,7 +1167,7 @@ var initCosmos = function(){
 
   if (!isMobile()) {
     app.css({'border-radius'    : '6px', 'background-color' : '#2c3238'});
-    starsCanvas( 'stars-canvas' ); 
+    starsCanvas( 'stars-canvas' );
   }else{
     setMobile();
   }
@@ -1176,9 +1176,9 @@ var initCosmos = function(){
   wql.isFirstOpen( [ myContactID ] , function( e , o ){
     if ( o.length === 0 && !isMobile()) {
       noWorlds.show();
-      starsCanvasContainer.removeClass( 'no-visible' ); 
+      starsCanvasContainer.removeClass( 'no-visible' );
       starsCanvas( 'stars-canvas' );
-      starsCanvasContainer.css({ 
+      starsCanvasContainer.css({
         'opacity' : 1
       });
       noWorlds.css({
@@ -2054,23 +2054,15 @@ var appendNoFileCard = function( post , user , reason ){
   card.find( '.doc-preview' ).hide();
 
   if ( post.title === '' ) {
-
     card.find( '.title' ).hide();
-
   }else{
-
     card.find( '.title' ).text( post.title );
-
   }
 
   if ( post.content === '' ) {
-
     card.find( '.desc' ).hide();
-
   }else{
-
     card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
-
   }
 
   card.find( '.desc' ).find('a').each( function(){
@@ -2135,6 +2127,7 @@ var appendGenericCard = function( post , user , reason , callback ){
         if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
           docPreview.find( '.doc-icon' ).addClass( 'office' );
         }
+
         docPreview.find( '.doc-title' ).text( fsnode.name );
         docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) );
         card.find( '.desc' ).after( docPreview );
@@ -2199,6 +2192,22 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
       if( fsNode.mime.indexOf( 'image' ) != -1 ){
         card.find( '.doc-preview img' ).attr( 'src' , 'https://download.horbito.com/' + fsNode.id );
+      }else if( fsNode.mime === 'application/pdf' ){
+
+        fsNode.getFormats( function( err, formats ){
+
+          if( err || !formats['image/jpeg'] ){
+            return card.find( '.doc-preview img' ).attr( 'src', fsNode.thumbnails.big );
+          }
+
+          if( formats['image/jpeg'] instanceof Array ){
+            card.find( '.doc-preview img' ).attr( 'src', formats['image/jpeg'][ 0 ].url );
+          }else{
+            card.find( '.doc-preview img' ).attr( 'src', formats['image/jpeg'].url );
+          }
+
+        })
+
       }else{
         card.find( '.doc-preview img' ).attr( 'src' ,  fsNode.thumbnails.big );
       }
@@ -2718,7 +2727,7 @@ var exploreAnimationIn = function(){
   if (!isMobile()) {
     starsCanvasContainer.removeClass( 'no-visible' );
     starsCanvas( 'stars-canvas' );
-    starsCanvasContainer.stop().clearQueue().transition({ 
+    starsCanvasContainer.stop().clearQueue().transition({
 
       'opacity' : 1
 
@@ -3190,7 +3199,7 @@ var setPost = function( post ){
       if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
 
         appendGenericCard( post  , user , lang.postCreated , function(){});
-          
+
       }else if ( post.metadata && post.metadata.fileType ) {
 
         switch (post.metadata.fileType) {
