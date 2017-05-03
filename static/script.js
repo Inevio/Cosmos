@@ -426,7 +426,7 @@ app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
   var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
   var textWidth = Math.floor( winWidth * 0.054 );
 
-  if(!name){
+  if( !name || $('.ui-content').hasClass('compressed') ){
     return;
   }
 
