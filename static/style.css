@@ -4818,10 +4818,6 @@ to {background-position: -200% 0;}
     color: #717171;
   }
 
-  .ui-input-search .search-icon i{
-    background-image: url('@static/sprite-white.png');
-  }
-
   .ui-input-search input{
     background-color: #f0f0f0;
   }
