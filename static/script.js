@@ -1492,6 +1492,13 @@ var createWorldAsync = function(){
   var worldName = $( '.new-world-name input' ).val();
 
   if (!worldName) {
+
+    var dialog = api.dialog();
+
+    dialog.setText( lang.worldTitleMandatory );
+    dialog.setButton( 0, lang.accept, 'red' );
+    dialog.render();
+
     return;
   }
 

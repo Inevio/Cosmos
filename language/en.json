@@ -133,6 +133,9 @@
     "invitationSentTitle"    : "Invitations sent",
     "invitationSentSubtitle" : "Your invitations are on their way!",
 
-    "noPublicWorlds"        : "Hello! I'm sorry but demo accounts can't join public worlds, create your account now to start joining worlds."
+    "noPublicWorlds"        : "Hello! I'm sorry but demo accounts can't join public worlds, create your account now to start joining worlds.",
+
+    "worldTitleMandatory"   : "Worlds must have name, please introduce one"
+
 
 }
