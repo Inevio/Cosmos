@@ -135,7 +135,9 @@
 
     "noPublicWorlds"        : "Hello! I'm sorry but demo accounts can't join public worlds, create your account now to start joining worlds.",
 
-    "worldTitleMandatory"   : "Worlds must have a name, please introduce one."
+    "worldTitleMandatory"   : "Worlds must have a name, please introduce one.",
+
+    "me"    : "Me"
 
 
 }

@@ -1718,6 +1718,10 @@ var appendUserCircle = function( i , user , inviteIndex ){
     return;
   }
 
+  if ( user.id === myContactID ) {
+    user.name = lang.me;
+  }
+
   switch (i) {
     case 0:
 
