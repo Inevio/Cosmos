@@ -137,7 +137,9 @@
 
     "worldTitleMandatory"   : "Worlds must have a name, please introduce one.",
 
-    "me"    : "Me"
+    "me"    : "Me",
+    "download" : "Download",
+    "openFolder" : "Open folder"
 
 
 }
