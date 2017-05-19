@@ -3636,11 +3636,14 @@ to {background-position: -200% 0;}
     margin-bottom: 22px;
     margin-right: 11px;
     margin-left: 11px;
-    cursor: pointer;
 
   }
 
-  .world-card *{
+  .world-card.followed{
+    cursor: pointer;
+  }
+
+  .world-card.followed *{
     cursor: pointer;
   }
 
