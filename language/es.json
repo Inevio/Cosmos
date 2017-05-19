@@ -136,6 +136,8 @@
 
     "worldTitleMandatory"   : "Los mundos deben llevar título, por favor introduce uno.",
 
-    "me"        : "Yo"
+    "me"        : "Yo",
+    "download" : "Descargar",
+    "openFolder" : "Abrir carpeta"
 
   }

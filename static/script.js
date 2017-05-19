@@ -861,6 +861,29 @@ if( newParams.queue ){
 
 })
 
+.on( 'contextmenu', '.doc-preview', function(){
+
+  var fsnode = $( this ).data( 'fsnode' );
+  var menu = api.menu();
+
+  menu.addOption( lang.openFolder , function(){
+
+    api.fs( fsnode.parent, function(error, node){
+      node.open();
+    })
+
+  })
+
+  menu.addOption( lang.download , function(){
+
+    fsnode.download();
+
+  })
+
+  menu.render();
+
+})
+
 .on( 'click' , '.friend-list .friend' , function(){
 
   $(this).find( '.ui-checkbox' ).toggleClass( 'active' );
