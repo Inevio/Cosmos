@@ -1185,6 +1185,16 @@ if( newParams.queue ){
 .on( 'app-parm' , function(){
   console.log('he vuelto');
 })
+
+$('.scrollable-content').on( 'scroll', function(){
+
+  if( isMobile() ){
+    app.find('.popup').removeClass('popup');
+  }
+
+})
+
+
 //Functions
 var initCosmos = function(){
 
