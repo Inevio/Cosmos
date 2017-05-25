@@ -1475,20 +1475,30 @@ to {background-position: -200% 0;}
 
   .arrow-up{
 
-    background-image: url('@static/sprite-flecha-arriba.png');
-    background-size: 55px 15px;
     width: 27px;
     height: 15px;
     margin: 0 auto;
     position: relative;
-    top: 50px;
+    top: 30px;
+    padding: 10px;
+
+  }
+
+  .arrow-up i{
+
+    width: 27px;
+    height: 15px;
+    float: left;
+    background-image: url('@static/sprite-flecha-arriba.png');
+    background-size: 55px 15px;
     background-position: 82px 0;
     opacity: 0.7;
     transition: all 0.2s ease;
 
   }
 
-  .arrow-up:hover{
+
+  .arrow-up:hover i{
 
     opacity: 1;
 
@@ -1499,7 +1509,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 100%;
     text-align: center;
-    top: 68px;
+    top: 48px;
     font-size: 17px;
     font-weight: bold;
     color: #fff;
@@ -1511,8 +1521,8 @@ to {background-position: -200% 0;}
 
     float: left;
     width: ~'calc(100% - 190px)';
-    height: ~'calc(100% - 122px)';
-    top: 90px;
+    height: ~'calc(100% - 130px)';
+    top: 70px;
     position: relative;
     padding: 0 95px;
     display: flex;
