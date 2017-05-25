@@ -2236,6 +2236,7 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
       if( fsNode.mime.indexOf( 'image' ) != -1 ){
         card.find( '.doc-preview img' ).attr( 'src' , 'https://download.horbito.com/' + fsNode.id );
+        card.find( '.doc-preview-bar' ).hide();
       }else if( fsNode.mime === 'application/pdf' ){
 
         fsNode.getFormats( function( err, formats ){

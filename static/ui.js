@@ -139,7 +139,7 @@ cover.on( 'mousewheel' , function( e , d , x , y ){
   if ( state == 1 && !onTransition && y < 0) {
 
     if ( showingUsers ) {
-      usersGoesDownNoAnimation();
+      return;
     }
 
     compressCover();
