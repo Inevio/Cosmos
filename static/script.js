@@ -2106,7 +2106,7 @@ var appendNoFileCard = function( post , user , reason ){
   if ( post.content === '' ) {
     card.find( '.desc' ).hide();
   }else{
-    card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+    card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
   }
 
   card.find( '.desc' ).find('a').each( function(){
@@ -2197,7 +2197,7 @@ var appendGenericCard = function( post , user , reason , callback ){
 
     }else{
 
-      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
     }
 
@@ -2273,7 +2273,7 @@ var appendDocumentCard = function( post , user , reason , callback ){
     if ( post.content === '' ) {
       card.find( '.desc' ).hide();
     }else{
-      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+      card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
     }
 
     card.find( '.desc' ).find('a').each( function(){
@@ -2316,7 +2316,7 @@ var appendYoutubeCard = function( post , user , reason ){
   card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
   card.find( '.card-user-name' ).text( user.fullName );
   card.find( '.time-text' ).text( timeElapsed( new Date( post.created ) ) );
-  card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+  card.find( '.desc' ).html( post.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
   card.find( '.title' ).text( post.title );
   card.find( '.activate-preview' ).text( lang.preview );
 
@@ -2473,7 +2473,7 @@ var appendReply = function( card , reply , callback ){
       comment.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
       comment.find( '.name' ).text( user.fullName );
       comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
-      comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+      comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
       comment.find( '.comment-text' ).find('a').each( function(){
 
@@ -2505,7 +2505,7 @@ var appendReply = function( card , reply , callback ){
     comment.find( '.avatar' ).css( 'background-image' , 'url(' + reply.authorObject.avatar.tiny + ')' );
     comment.find( '.name' ).text( reply.authorObject.fullName );
     comment.find( '.time' ).text( timeElapsed( new Date( reply.created ) ) );
-    comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+    comment.find( '.comment-text' ).html( reply.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
     comment.find( '.comment-text' ).find('a').each( function(){
 
@@ -2902,7 +2902,7 @@ var appendReplyComment = function( card , reply , response ){
       reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
       reply.find( '.name' ).text( user.fullName );
       reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-      reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+      reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
       reply.find( '.replay-text' ).find('a').each( function(){
 
@@ -2927,7 +2927,7 @@ var appendReplyComment = function( card , reply , response ){
     reply.find( '.avatar' ).css( 'background-image' , 'url(' + response.authorObject.avatar.tiny + ')' );
     reply.find( '.name' ).text( response.authorObject.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-    reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/ig, '<a href="$1" target="_blank">$1</a>' ) );
+    reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
     reply.find( '.replay-text' ).find('a').each( function(){
 
