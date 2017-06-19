@@ -3813,6 +3813,11 @@ to {background-position: -200% 0;}
 
 /* NEW WORLD CONTAINER */
 
+.new-world-dragger{
+  width: 100%;
+  height: 100%;
+}
+
 .new-world-container-wrap{
 
   position: absolute;
