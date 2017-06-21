@@ -3323,6 +3323,8 @@ var changeMobileView = function( view ){
 
       }
       mobileView = 'worldContent'
+      StatusBar.backgroundColorByHexString("#fff");
+      StatusBar.styleDefault();
       break;
 
     case 'worldSidebar':
@@ -3350,7 +3352,10 @@ var changeMobileView = function( view ){
           break;
 
       }
+
       StatusBar.backgroundColorByHexString("#272c34");
+      StatusBar.styleLightContent();
+
       $('.world.active').removeClass('active');
       mobileView = 'worldSidebar'
       break;
@@ -3374,11 +3379,18 @@ var changeMobileView = function( view ){
       }, 300);
       break;
 
+      StatusBar.backgroundColorByHexString("#fff");
+      StatusBar.styleDefault();
+
     case 'explore':
 
       mobileExplore.removeClass('hide');
+
       StatusBar.backgroundColorByHexString("#0f141c");
+      StatusBar.styleLightContent();
+
       mobileExplore.stop().clearQueue().transition({
+
         'transform' : 'translateY(0%)'
       }, 300, function(){
         mobileWorldSidebar.addClass('hide');
@@ -3402,7 +3414,10 @@ var changeMobileView = function( view ){
 }
 
 var setMobile = function(){
+    
   StatusBar.backgroundColorByHexString("#272c34");
+  StatusBar.styleLightContent();
+
   $('input, textarea').on('focus', function(){
     Keyboard.shrinkView(true);
   })
