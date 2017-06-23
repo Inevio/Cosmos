@@ -3967,7 +3967,7 @@ to {background-position: -200% 0;}
     font-size: 19px;
     transition: all 0.2s ease;
     border-radius: 6px;
-    background-color: #f0f0f0;
+    background-color: #e5e5e5;
     color: #252525;
     font-weight: bold;
     border: solid 2px transparent;
@@ -4130,7 +4130,7 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 48px)';
     height: 97px;
     border-radius: 6px;
-    background-color: #f0f0f0;
+    background-color: #e5e5e5;
     padding-left: 22px;
     padding-right: 22px;
     padding-top: 20px;
@@ -4837,12 +4837,12 @@ to {background-position: -200% 0;}
     margin-left: 20px;
     width: 375px;
     transition: all 0.2s ease;
-    background-color: #f0f0f0;
+    background-color: #e5e5e5;
     color: #717171;
   }
 
   .ui-input-search input{
-    background-color: #f0f0f0;
+    background-color: #e5e5e5;
   }
 
   .active.ui-input-search{
@@ -5288,7 +5288,7 @@ to {background-position: -200% 0;}
     }
 
     input{
-      background-color: #f0f0f0;
+      background-color: #e5e5e5;
       height: 35px;
       width: ~'calc(100% - 140px)';
       margin-left: 15px;
@@ -5756,7 +5756,7 @@ to {background-position: -200% 0;}
   .new-world-name input{
     border-radius: 6px;
     border: none;
-    background-color: #f0f0f0;
+    background-color: #e5e5e5;
     margin: 0 20px;
     width: ~'calc(100% - 62px)';
     color: #252525;
