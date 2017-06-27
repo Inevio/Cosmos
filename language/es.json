@@ -138,6 +138,13 @@
 
     "me"        : "Yo",
     "download" : "Descargar",
-    "openFolder" : "Abrir carpeta"
+    "openFolder" : "Abrir carpeta",
+
+    "onboarding" : {
+        "title"      : "Desde aquí puedes:",
+        "createPost" : "Crear nuevos posts",
+        "openFolder" : "Abrir la carpeta del mundo",
+        "openChat"   : "Abrir el chat grupal"
+    }
 
   }
