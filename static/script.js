@@ -1296,7 +1296,12 @@ var initTexts = function(){
   $( '.attachments span' ).text( lang.addFiles );
   $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
-  $('.invite-by-mail span').text(lang.inviteByMail);
+  $( '.invite-by-mail span' ).text( lang.inviteByMail );
+  $( '.onboarding-tip .title' ).text( lang.onboarding.title );
+  $( '.onboarding-tip .tip.create-post' ).text( lang.onboarding.createPost );
+  $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
+  $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
+
 }
 
 var starsCanvas = function( stars ){

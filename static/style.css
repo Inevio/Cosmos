@@ -6211,8 +6211,19 @@ to {background-position: -200% 0;}
 
   position: absolute;
   right: 7px;
-  top: 90px;
+  top: 56px;
   z-index: 1;
+  /*display: none;*/
+
+  .vertical-arrow{
+    width: 18px;
+    height: 28px;
+    background-image: url('@static/flecha-cosmos.png');
+    background-size: 18px 28px;
+    display: inline-block;
+    margin-left: 65px;
+    margin-bottom: 12px;
+  }
 
   .onboarding-window{
     width: 258px;
@@ -6234,7 +6245,7 @@ to {background-position: -200% 0;}
     font-size: 20px;
     font-weight: bold;
     color: #ff2153;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
   }
 
   .tip{
@@ -6244,6 +6255,7 @@ to {background-position: -200% 0;}
     font-weight: bold;
     color: #252525;
     position: relative;
+    display: inline-block;
   }
 
   .tip.used{
@@ -6253,10 +6265,10 @@ to {background-position: -200% 0;}
   .tip.used::after{
     content: '';
     height: 1px;
-    width: 70%;
+    width: ~'calc(100% + 12px)';
     background-color: #252525;
     position: absolute;
-    left: -7px;
+    left: -6px;
     top: 8px;
   }
 
