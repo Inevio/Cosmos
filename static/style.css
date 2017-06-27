@@ -6213,6 +6213,7 @@ to {background-position: -200% 0;}
   right: 7px;
   top: 56px;
   z-index: 1;
+  
   /*display: none;*/
 
   .vertical-arrow{
@@ -6265,7 +6266,7 @@ to {background-position: -200% 0;}
   .tip.used::after{
     content: '';
     height: 1px;
-    width: ~'calc(100% + 12px)';
+    width: ~'calc(100% + 16px)';
     background-color: #252525;
     position: absolute;
     left: -6px;
