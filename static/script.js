@@ -1211,20 +1211,28 @@ var initCosmos = function(){
 
   initTexts();
   wql.isFirstOpen( [ myContactID ] , function( e , o ){
+
     if ( o.length === 0 && !isMobile()) {
+
       noWorlds.show();
+      $( '.onboarding-tip' ).show();
       starsCanvasContainer.removeClass( 'no-visible' );
       starsCanvas( 'stars-canvas' );
+
       starsCanvasContainer.css({
         'opacity' : 1
       });
+
       noWorlds.css({
         'opacity'         : 1
       });
+
       wql.firstOpenDone( [ myContactID ] , function( e , o ){
         if(e) console.log(e);
       });
+
     }
+
   });
 
   getMyWorldsAsync();
