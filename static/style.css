@@ -6213,7 +6213,7 @@ to {background-position: -200% 0;}
   right: 7px;
   top: 49px;
   z-index: 1;
-  /*display: none;*/
+  display: none;
 
   .vertical-arrow{
     width: 26px;
