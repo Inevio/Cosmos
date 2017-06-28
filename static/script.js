@@ -178,6 +178,8 @@ unFollowButton.on( 'click' , function(){
 
 openChatButton.on( 'click' , function(){
 
+  $('.tip.open-chat').addClass('used');
+  checkOnboarding();
   if (desktop.find('.wz-app-14').length > 0) {
     desktop.trigger( 'message' , [ 'open-world-chat' , { 'world' : worldSelected } ] );
   }else{
@@ -565,6 +567,8 @@ cleanPostSearch.on( 'click' , function(){
 
 openFolder.on( 'click' , function(){
 
+  $('.tip.open-folder').addClass('used');
+  checkOnboarding();
   wz.fs( worldSelected.volume , function( e , o ){
 
     o.open();
@@ -3442,6 +3446,14 @@ var newPostMobile = function(){
   $( '.mobile-new-post .new-card-textarea' ).attr( 'placeholder', lang.description );
   $( '.mobile-new-post .new-card-input' ).val('');
   $( '.mobile-new-post .new-card-textarea' ).val('');
+}
+
+var checkOnboarding = function(){
+
+  if( $('.tip').not('.used').length === 0 ){
+    $( '.onboarding-tip' ).hide();
+  }
+
 }
 
 initCosmos();
