@@ -6211,19 +6211,19 @@ to {background-position: -200% 0;}
 
   position: absolute;
   right: 7px;
-  top: 56px;
+  top: 49px;
   z-index: 1;
-  
+
   /*display: none;*/
 
   .vertical-arrow{
-    width: 18px;
-    height: 28px;
+    width: 26px;
+    height: 36px;
     background-image: url('@static/flecha-cosmos.png');
-    background-size: 18px 28px;
+    background-size: 26px 36px;
     display: inline-block;
-    margin-left: 65px;
-    margin-bottom: 12px;
+    margin-left: 60px;
+    margin-bottom: 4px;
   }
 
   .onboarding-window{
@@ -6236,7 +6236,7 @@ to {background-position: -200% 0;}
     -webkit-box-shadow: 0 10px 20px rgba(34,31,26,.3);
     -moz-box-shadow: 0 10px 20px rgba(34,31,26,.3);
     box-shadow: 0 10px 20px rgba(34,31,26,.3);
-    padding-top: 22px;
+    padding-top: 19px;
     padding-left: 26px;
     box-sizing: border-box;
   }
@@ -6244,13 +6244,14 @@ to {background-position: -200% 0;}
   .title{
     font-family: Lato;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 900;
     color: #ff2153;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .tip{
-    margin-top: 10px;
+    margin-top: 11px;
+    /*margin-left: 11px;*/
     font-family: Lato;
     font-size: 15px;
     font-weight: bold;
