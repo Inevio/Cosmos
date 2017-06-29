@@ -6206,3 +6206,79 @@ to {background-position: -200% 0;}
   }
 
 }
+
+.ui-content .onboarding-tip{
+
+  position: absolute;
+  right: 7px;
+  top: 49px;
+  z-index: 1;
+  display: none;
+
+  .vertical-arrow{
+    width: 26px;
+    height: 36px;
+    background-image: url('@static/flecha-cosmos.png');
+    background-size: 26px 36px;
+    display: inline-block;
+    margin-left: 60px;
+    margin-bottom: 4px;
+  }
+
+  .onboarding-window{
+    width: 258px;
+    height: 149px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 10px 20px rgba(34,31,26,.3);
+    -moz-box-shadow: 0 10px 20px rgba(34,31,26,.3);
+    box-shadow: 0 10px 20px rgba(34,31,26,.3);
+    padding-top: 19px;
+    padding-left: 26px;
+    box-sizing: border-box;
+  }
+
+  .title{
+    font-family: Lato;
+    font-size: 20px;
+    font-weight: 900;
+    color: #ff2153;
+    margin-bottom: 5px;
+  }
+
+  .tip{
+    margin-top: 11px;
+    /*margin-left: 11px;*/
+    font-family: Lato;
+    font-size: 15px;
+    font-weight: bold;
+    color: #252525;
+    position: relative;
+    display: inline-block;
+  }
+
+  .tip.used{
+    color: #9a9aa2;
+  }
+
+  .tip.used::after{
+    content: '';
+    height: 1px;
+    width: ~'calc(100% + 16px)';
+    background-color: #252525;
+    position: absolute;
+    left: -6px;
+    top: 8px;
+  }
+
+}
+
+
+
+
+
+
+
+

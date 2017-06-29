@@ -178,6 +178,8 @@ unFollowButton.on( 'click' , function(){
 
 openChatButton.on( 'click' , function(){
 
+  $('.tip.open-chat').addClass('used');
+  checkOnboarding();
   if (desktop.find('.wz-app-14').length > 0) {
     desktop.trigger( 'message' , [ 'open-world-chat' , { 'world' : worldSelected } ] );
   }else{
@@ -565,6 +567,8 @@ cleanPostSearch.on( 'click' , function(){
 
 openFolder.on( 'click' , function(){
 
+  $('.tip.open-folder').addClass('used');
+  checkOnboarding();
   wz.fs( worldSelected.volume , function( e , o ){
 
     o.open();
@@ -1207,20 +1211,28 @@ var initCosmos = function(){
 
   initTexts();
   wql.isFirstOpen( [ myContactID ] , function( e , o ){
+
     if ( o.length === 0 && !isMobile()) {
+
       noWorlds.show();
+      $( '.onboarding-tip' ).show();
       starsCanvasContainer.removeClass( 'no-visible' );
       starsCanvas( 'stars-canvas' );
+
       starsCanvasContainer.css({
         'opacity' : 1
       });
+
       noWorlds.css({
         'opacity'         : 1
       });
+
       wql.firstOpenDone( [ myContactID ] , function( e , o ){
         if(e) console.log(e);
       });
+
     }
+
   });
 
   getMyWorldsAsync();
@@ -1296,7 +1308,12 @@ var initTexts = function(){
   $( '.attachments span' ).text( lang.addFiles );
   $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
-  $('.invite-by-mail span').text(lang.inviteByMail);
+  $( '.invite-by-mail span' ).text( lang.inviteByMail );
+  $( '.onboarding-tip .title' ).text( lang.onboarding.title );
+  $( '.onboarding-tip .tip.create-post' ).text( lang.onboarding.createPost );
+  $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
+  $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
+
 }
 
 var starsCanvas = function( stars ){
@@ -3437,6 +3454,14 @@ var newPostMobile = function(){
   $( '.mobile-new-post .new-card-textarea' ).attr( 'placeholder', lang.description );
   $( '.mobile-new-post .new-card-input' ).val('');
   $( '.mobile-new-post .new-card-textarea' ).val('');
+}
+
+var checkOnboarding = function(){
+
+  if( $('.tip').not('.used').length === 0 ){
+    $( '.onboarding-tip' ).hide();
+  }
+
 }
 
 initCosmos();
