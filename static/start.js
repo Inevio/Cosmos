@@ -3,6 +3,7 @@ var myContactID     = api.system.user().id;
 var noWorlds        = $( '.no-worlds' );
 var starsCanvasContainer  = $( '.stars-canvas' ); 
 var parameters;
+var window          = app.parents().slice( -1 )[ 0 ].parentNode.defaultView;
 
 parameters = params
 
@@ -110,3 +111,5 @@ var starsCanvas = function( stars ){
 var isMobile = function(){
   return app.hasClass( 'wz-mobile-view' );
 }
+
+$( '.onboarding-arrow.arrow-cosmos' , window.document ).remove();
