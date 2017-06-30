@@ -14,7 +14,7 @@
 *{
   font-family: 'Lato';
   letter-spacing: 0.02em;
-  line-height: -moz-block-height;
+  /*line-height: -moz-block-height;*/
 }
 
 input{
