@@ -6257,6 +6257,7 @@ to {background-position: -200% 0;}
     color: #252525;
     position: relative;
     display: inline-block;
+    line-height: 15px;
   }
 
   .tip.used{
