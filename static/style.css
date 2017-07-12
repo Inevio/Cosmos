@@ -30,7 +30,7 @@ textarea{
   display: block; /* For Firefox */
 }
 
-.no-worlds{
+.no-worlds, .no-worlds-mobile{
   position: absolute;
   width: 100%;
   height: 100%;
@@ -79,6 +79,16 @@ to {background-position: -200% 0;}
   letter-spacing: 0px;
 }
 
+.no-worlds-mobile .title{
+  font-size: 32.5px;
+  font-weight: 900;
+  color: #fff;
+  float: left;
+  margin-top: 53px;
+  letter-spacing: 0px;
+  margin-left: 1px;
+}
+
 .no-worlds .subtitle{
   font-size: 19px;
   color: #fff;
@@ -90,12 +100,34 @@ to {background-position: -200% 0;}
   text-align: center;
 }
 
+.no-worlds-mobile .subtitle{
+  font-size: 17.5px;
+  color: #fff;
+  width: ~'calc(100% - 40px)';
+  height: 60px;
+  margin: 28px 20px 11px 20px;
+  float: left;
+  line-height: 27px;
+  text-align: center;
+}
+
 .no-worlds .subtitle2{
   font-size: 19px;
   color: #fff;
   width: ~'calc(100% - 400px)';
   height: 60px;
   margin: 10px 200px;
+  float: left;
+  line-height: 27px;
+  text-align: center;
+}
+
+.no-worlds-mobile .subtitle2{
+  font-size: 17.5px;
+  color: #fff;
+  width: ~'calc(100% - 40px)';
+  height: 60px;
+  margin: 28px 20px 11px 20px;
   float: left;
   line-height: 27px;
   text-align: center;
@@ -164,6 +196,65 @@ to {background-position: -200% 0;}
   }
 }
 
+.no-worlds-mobile .cosmos-features {
+  float: left;
+  width: ~'calc(100% - 100px)';
+  margin: 0 50px;
+  margin-top: 36px;
+
+  .feature{
+    float: left;
+    height: 100%;
+    width: 100%;
+
+    .icon{
+      float: left;
+      width: 49px;
+      height: 49px;
+      border-radius: 50%;
+    }
+    .description{
+      float: left;
+      font-size: 16px;
+      color: #fff;
+      text-align: center;
+      width: 250px;
+      margin-top: 11px;
+      line-height: 23px;
+      height: 100%;
+      i{
+        font-weight: bold;
+      }
+    }
+
+  }
+
+  .chat-feature{
+    .icon{
+      background-image: url('@static/chat-feature-mobile.png');
+      background-size: 49px 49px;
+      width: 49px;
+      height: 49px;
+    }
+  }
+  .files-feature{
+    .icon{
+      background-image: url('@static/files-feature-mobile.png');
+      background-size: 49px 49px;
+      width: 49px;
+      height: 49px;
+    }
+  }
+  .posts-feature{
+    .icon{
+      background-image: url('@static/posts-feature-mobile.png');
+      background-size: 49px 49px;
+      width: 49px;
+      height: 49px;
+    }
+  }
+}
+
 .start-button-no-worlds{
   width: 220px;
   height: 58px;
@@ -174,6 +265,14 @@ to {background-position: -200% 0;}
   bottom: 36px;
 }
 
+.no-worlds-mobile a.start-button-no-worlds{
+  float: left;
+  width: 316px;
+  height: 59px;
+  border-radius: 9px;
+  margin-left: ~'calc(50% - 316           px/2)';
+  border: 3px solid #8c9197;
+}
 
 .start-button-no-worlds:hover{
 	background-color: @redHorbitoHover;
@@ -184,6 +283,16 @@ to {background-position: -200% 0;}
 }
 
 .start-button-no-worlds span{
+  width: 100%;
+  text-align: center;
+  font-size: 21px;
+  font-weight: bold;
+  color: #fff;
+  float: left;
+  margin-top: 15px;
+}
+
+.no-worlds-mobile .start-button-no-worlds span{
   width: 100%;
   text-align: center;
   font-size: 25px;

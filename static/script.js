@@ -1277,6 +1277,7 @@ var initTexts = function(){
   $( '.select-world span' ).text( lang.selectWorld );
   $( '.no-posts .left-side span' ).text( lang.noPosts );
   $( '.no-posts .right-side span' ).text( lang.createNewPost );
+
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
   $( '.no-worlds .subtitle2' ).text( lang.intro2 );
@@ -1285,6 +1286,14 @@ var initTexts = function(){
   $( '.no-worlds .posts-feature .description' ).html( lang.feature3 );
   $( '.start-button-no-worlds span' ).text( lang.start );
   $( '.new-world-button-no-worlds span, .new-world-button span' ).text( lang.createWorld );
+
+  $( '.no-worlds-mobile .title' ).text( lang.welcome );
+  $( '.no-worlds-mobile .subtitle' ).text( lang.intro );
+  $( '.no-worlds-mobile .subtitle2' ).text( lang.intro2 );
+  $( '.no-worlds-mobile .chat-feature .description' ).html( lang.feature1 );
+  $( '.no-worlds-mobile .files-feature .description' ).html( lang.feature2 );
+  $( '.no-worlds-mobile .posts-feature .description' ).html( lang.feature3 );
+
   $( '.tend-text' ).text( lang.tend );
   $( '.follow-button span' ).text( lang.follow );
   $( '.new-world-title .step-a' ).text( lang.stepa );
