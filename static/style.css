@@ -699,7 +699,7 @@ to {background-position: -200% 0;}
     letter-spacing: 0.02em;
     transition: all 0.2s ease;
     cursor: pointer;
-    width: 216px;
+    width: 197px;
     height: 15px;
 
   }
@@ -722,12 +722,38 @@ to {background-position: -200% 0;}
   }
 
   .active.world .world-name, .world:hover .world-name{
-
     color: #fff;
-
   }
 
   .active.world .world-notifications{
+    display: none;
+  }
+
+  .post-notifications{
+    float: right;
+    width: 14px;
+    height: 13px;
+    background-color: #ff2153;
+    margin-right: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+    display: none;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 3px 2px 2px;
+    text-align: center;
+  }
+
+  .world.with-post-notification.with-notification .post-notifications{
+    display: none;
+  }
+
+  .world.with-post-notification .post-notifications{
+    display: inline-block;
+  }
+
+  .active.world .post-notifications{
     display: none;
   }
 

@@ -147,6 +147,9 @@
         "openFolder" : "Abrir la carpeta del mundo",
         "openChat"   : "Abrir el chat grupal",
         "arrow"      : "Aquí colaboras con tus compañeros"
-    }
+    },
+
+    "activity"      : "Actividad",
+    "hasComment"    : "ha comentado en tu publicación"
 
   }
