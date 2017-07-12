@@ -148,7 +148,9 @@
         "openFolder" : "Open the world's folder",
         "openChat"   : "Open the group chat",
         "arrow"      : "Here you collaborate with your teams"
-    }
+    },
 
+    "activity"      : "Activity",
+    "hasComment"    : "commented on your post"
 
 }

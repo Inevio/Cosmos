@@ -52,6 +52,10 @@ var inviteByMail    = $( '.invite-by-mail' );
 var startButton     = $('.no-worlds .start-button-no-worlds');
 var startButtonMobile = $('.no-worlds-mobile .start-button-no-worlds');
 
+var worldNotifications = [];
+var postsNotifications = [];
+var commentsNotifications = []; 
+
 var TYPES = {
 
   "application/pdf"   : 'document',
@@ -702,19 +706,19 @@ startButton.on( 'click' , function(){
 
 startButtonMobile.on( 'click' , function(){
 
-  if (myWorlds.length <= 1) {
-    $('.new-world-button').click();
-  }else{
-    noWorldsMobile.transition({
+  noWorldsMobile.transition({
 
-      'opacity'         : 0
+    'opacity'         : 0
 
-    }, 200, animationEffect , function(){
+  }, 200, animationEffect , function(){
 
-      noWorldsMobile.hide();
+    noWorldsMobile.hide();
+    if (myWorlds.length <= 1) {
+      $('.new-world-button-mini').click();
+    }
 
-    });
-  }
+  });
+  
 });
 
 app
@@ -1381,6 +1385,8 @@ var initTexts = function(){
   $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
   $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
+  $( '.notifications-title span' ).text( lang.activity );
+
 }
 
 var starsCanvas = function( stars ){
@@ -1724,7 +1730,7 @@ var selectWorld = function( world , callback ){
   getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
 
     if ( $( '.world.active' ).hasClass( 'with-notification' ) ) {
-      updateNotifications( worldApi );
+      //updateNotifications( worldApi );
     }
 
     callback();
@@ -3225,25 +3231,60 @@ var attachFromInevio = function( card ){
 
 }
 
-var updateNotifications = function( world ){
+var updateBadges = function( world ){
 
-  if ( api.system.user().user.indexOf('demo') === 0 ) {
-    return;
-  }
+  //World notifications
+  worldNotifications.forEach(function( notification ){
+    $('.world-' + notification.data.world).addClass('with-notification');
+  });
 
-  var lastPost = $( '.cardDom' );
-  if ( lastPost ) {
-    lastPost = lastPost.eq(0).data( 'post' );
-    wql.upsertLastRead( [ world.id , myContactID , lastPost.id , lastPost.id ] , function( e , o ){
-      checkNotifications();
-      $( '.world-' + world.id ).removeClass( 'with-notification' );
+  //Post notifications
+  $('.worldDom').each(function( i , world ){
+    $(world).data('notifications', 0);
+  });
+  postsNotifications.forEach(function( notification ){
+    var domWorld = $('.world-' + notification.data.world);
+    var nNotifications = domWorld.data('notifications') ? domWorld.data('notifications') + 1 : 1;
+    domWorld.addClass('with-post-notification').find('.post-notifications').text( nNotifications );
+    domWorld.data('notifications', nNotifications);
+  });
+
+  //Comments notifications
+  commentsNotifications.forEach(function( notification ){
+    api.user( notification.sender , function( e , user ){
+      var notification = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
+      notification.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' );
+      notification.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment );
+      notification.find('.notification-time').html('<i></i>' +  timeElapsed( new Date() ) );
+      $('.notifications-list').append(notification);
     });
-  }
+  });
 
 }
 
 var checkNotifications = function(){
 
+  api.notification.list( 'cosmos' , function( e , notifications ){
+    notifications.forEach(function( notification ){
+      
+      if (notification.data.type === 'addedToWorld') {
+        worldNotifications.push(notification)
+      }else if (notification.data.type === 'post') {
+        postsNotifications.push(notification)
+      }else if (notification.data.type === 'reply') {
+        commentsNotifications.push(notification)
+      }
+
+    });
+
+    updateBadges();
+    console.log('WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)
+
+  });
+
+  
+
+  /*
   if ( api.system.user().user.indexOf('demo') === 0 ) {
     return;
   }
@@ -3283,6 +3324,7 @@ var checkNotifications = function(){
     });
 
   });
+  */
 
 }
 
