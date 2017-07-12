@@ -47,6 +47,7 @@
     "noPosts"       : "No posts to show",
     "welcome"       : "Welcome to Cosmos",
     "intro"         : "Cosmos is the perfect app to interact with all your worlds (your coworkers, your friends, your family...)",
+    "introMobile"   : "Cosmos is the perfect app to interact with all your worlds<br>(your coworkers, your friends, your family...)",
     "intro2"        : "Create a world and invite your contacts. Each world will have:",
     "feature1"      : "A group <i>chat</i> to talk with all members",
     "feature2"      : "A <i>folder</i> where you can share all the files",

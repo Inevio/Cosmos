@@ -46,6 +46,7 @@
     "noPosts"       : "No hay eventos que mostrar",
     "welcome"       : "Bienvenido a Cosmos",
     "intro"         : "Cosmos es la aplicación perfecta para relacionarte con todos tus mundos (tus compañeros, tus amigos, tu familia...)",
+    "introMobile"   : "Cosmos es la aplicación perfecta para relacionarte con todos tus mundos<br>(tus compañeros, tus amigos, tu familia...)",
     "intro2"        : "Crea un mundo e invita a tus contactos. Cada mundo tendrá:",
     "feature1"      : "Un <i>chat</i> grupal para hablar entre vosotros",
     "feature2"      : "Una <i>carpeta</i> donde compartir los archivos",
