@@ -33,6 +33,7 @@ var cleanPostSearch       = $( '.search-button .clean-search' );
 //var newPostButton       = $( '.new-post, .no-post-new-post-button' );
 //var closeExplore        = $( '.close-explore' );
 var noWorlds              = $( '.no-worlds' );
+var noWorldsMobile        = $( '.no-worlds-mobile' );
 var starsCanvasContainer  = $( '.stars-canvas' );
 var openFolder            = $( '.open-folder' );
 var cardsList             = $( '.cards-list' );
@@ -48,7 +49,8 @@ var closeNewWorld   = $( '.close-new-world' );
 var searchBar       = $( '.search-button' );
 var searchBarFigure = $( '.search-button i' );
 var inviteByMail    = $( '.invite-by-mail' );
-var startButton     = $('.start-button-no-worlds');
+var startButton     = $('.no-worlds .start-button-no-worlds');
+var startButtonMobile = $('.no-worlds-mobile .start-button-no-worlds');
 
 var TYPES = {
 
@@ -347,6 +349,20 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
     }
 
+    if ( noWorldsMobile.css( 'display' ) != 'none' ) {
+
+      noWorldsMobile.transition({
+
+        'opacity'         : 0
+
+      }, 200, animationEffect , function(){
+
+        noWorldsMobile.hide();
+
+      });
+
+    }
+
   }
 
   if( worldSelected && world.id === worldSelected.id ){
@@ -399,6 +415,18 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
       }, 300);
       noWorlds.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }
+
+    if( $( '.worldDom' ).length === 0 && isMobile()){
+
+      noWorldsMobile.show();
+
+      noWorldsMobile.transition({
 
         'opacity'         : 1
 
@@ -667,6 +695,23 @@ startButton.on( 'click' , function(){
         starsCanvasContainer.addClass( 'no-visible' );
 
       });
+
+    });
+  }
+});
+
+startButtonMobile.on( 'click' , function(){
+
+  if (myWorlds.length <= 1) {
+    $('.new-world-button').click();
+  }else{
+    noWorldsMobile.transition({
+
+      'opacity'         : 0
+
+    }, 200, animationEffect , function(){
+
+      noWorldsMobile.hide();
 
     });
   }
@@ -1233,6 +1278,19 @@ var initCosmos = function(){
 
     }
 
+    if ( o.length === 0 && isMobile()) {
+
+      noWorldsMobile.show();
+      noWorldsMobile.css({
+        'opacity'         : 1
+      });
+
+      wql.firstOpenDone( [ myContactID ] , function( e , o ){
+        if(e) console.log(e);
+      });
+
+    }
+
   });
 
   getMyWorldsAsync();
@@ -1288,7 +1346,7 @@ var initTexts = function(){
   $( '.new-world-button-no-worlds span, .new-world-button span' ).text( lang.createWorld );
 
   $( '.no-worlds-mobile .title' ).text( lang.welcome );
-  $( '.no-worlds-mobile .subtitle' ).text( lang.intro );
+  $( '.no-worlds-mobile .subtitle' ).html( lang.introMobile  );
   $( '.no-worlds-mobile .subtitle2' ).text( lang.intro2 );
   $( '.no-worlds-mobile .chat-feature .description' ).html( lang.feature1 );
   $( '.no-worlds-mobile .files-feature .description' ).html( lang.feature2 );
