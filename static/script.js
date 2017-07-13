@@ -3355,54 +3355,11 @@ var checkNotifications = function(){
     });
 
     updateBadges();
+    wz.app.setBadge( notifications.length );
     console.log('WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)
     console.log(notifications);
 
   });
-
-
-
-  /*
-  if ( api.system.user().user.indexOf('demo') === 0 ) {
-    return;
-  }
-
-  nNotifications = 0;
-  $( '.with-notification' ).removeClass( 'with-notification' );
-
-  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , worlds ){
-
-    worlds.forEach(function( world ){
-
-      world.getPosts( {from: 0 , to: 1 } , function( e , lastPost ){
-
-        if( lastPost.length === 0){
-          wz.app.setBadge( parseInt(nNotifications) );
-          return;
-        }
-
-        wql.selectLastRead( [ world.id , myContactID ] , function( e , lastPostReaded ){
-
-          var lastPostReadedTime = lastPostReaded[0] && lastPostReaded[0].time ? new Date( lastPostReaded[0].time ) : false;
-          var lastPostTime = new Date( lastPost[0].created );
-          if ( ( lastPostReaded.length === 0 || lastPost[0].id != lastPostReaded[0].post ) && ( !lastPostReadedTime || lastPostReadedTime < lastPostTime ) ) {
-
-            $( '.world-' + world.id ).addClass( 'with-notification' );
-            nNotifications = nNotifications + 1;
-            wz.app.setBadge( parseInt(nNotifications) );
-
-          }else{
-            wz.app.setBadge( parseInt(nNotifications) );
-          }
-
-        });
-
-      });
-
-    });
-
-  });
-  */
 
 }
 
