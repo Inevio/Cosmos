@@ -304,9 +304,6 @@ api.cosmos.on( 'postAdded' , function( post ){
             }
           });
 
-        }else{
-          checkNotifications();
-          $( '.world-' + post.worldId ).addClass( 'with-notification' );
         }
 
       }
@@ -323,7 +320,6 @@ api.cosmos.on( 'userAdded', function( userId , world ){
 
     myWorlds.push( world.id );
     appendWorld( world );
-    checkNotifications();
 
     if ( noWorlds.css( 'display' ) != 'none' ) {
 
@@ -653,6 +649,14 @@ api.cosmos.on( 'worldIconSetted' , function( world ){
   }
 
 });
+
+api.notification.on( 'new', function( notification ){
+  checkNotifications();
+})
+
+api.notification.on( 'attended', function( list ){
+  checkNotifications();
+})
 
 newWorldButton.on( 'click' , function(){
 
@@ -1144,6 +1148,8 @@ if( newParams.queue ){
     setRepliesAsyncOnlyAppendMobile( card , post );
     mobileWorldComments.data( 'post' , post );
   }
+  attendCommentNotification($(this).parent().parent().data('post'));
+
 })
 
 .on( 'click' , '.close-comments' , function(){
@@ -1239,6 +1245,18 @@ if( newParams.queue ){
   console.log('he vuelto');
 })
 
+.on( 'click' , '.notification' , function(){
+
+  var notification = $(this).data('notification');
+
+  selectWorld( $( '.world-' + notification.data.world ) , function(){
+    $( '.search-button' ).addClass( 'popup' );
+    $( '.search-button input' ).val( notification.data.parent );
+    searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.parent } );
+  });
+
+})
+
 $('.scrollable-content').on( 'scroll', function(){
 
   if( isMobile() ){
@@ -1298,6 +1316,7 @@ var initCosmos = function(){
   });
 
   getMyWorldsAsync();
+  checkNotifications();
 
   if ( params && params.action === 'selectPost') {
     selectWorld( $( '.world-' + params.world ) , function(){
@@ -1306,8 +1325,6 @@ var initCosmos = function(){
       searchPost( params.title );
     });
   }
-
-  checkNotifications();
 
   wz.user( myContactID , function( e , user ){
     me = user;
@@ -1728,11 +1745,7 @@ var selectWorld = function( world , callback ){
 
   getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
-
-    if ( $( '.world.active' ).hasClass( 'with-notification' ) ) {
-      //updateNotifications( worldApi );
-    }
-
+    attendWorldNotification( worldApi.id );
     callback();
     app.removeClass( 'selectingWorld' );
   });
@@ -3075,6 +3088,62 @@ var sortByName = function( nameA , nameB ){
 
 }
 
+var searchPostForComment = function( info ){
+
+  $( '.world-' + info.world ).data('world').getPost( info.post , function( e, post ){
+    
+    $('.card').hide();
+    
+    wz.user( post.author , function( e , user ){
+
+      if ( worldSelected && worldSelected.id === post.worldId ) {
+
+        if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
+
+          appendGenericCard(post  , user , lang.postCreated , function(){});
+
+        }else if ( post.metadata && post.metadata.fileType ) {
+
+          switch (post.metadata.fileType) {
+
+            case 'document':
+            case 'image':
+            appendDocumentCard( post , user , lang.postCreated , function(){});
+            break;
+            /*case 'generic':
+            case 'video':
+            case 'music':*/
+            default:
+            appendGenericCard(post  , user , lang.postCreated , function(){});
+            break;
+
+          }
+
+        }else if( post.metadata && post.metadata.linkType ){
+
+          switch (post.metadata.linkType) {
+
+            case 'youtube':
+            appendYoutubeCard( post , user , lang.postCreated );
+            break;
+
+          }
+
+        }else{
+          appendNoFileCard( post , user , lang.postCreated );
+        }
+
+
+      }
+
+      $('.post-' + info.post).show();
+
+    });
+
+  });
+
+}
+
 var searchPost = function( filter ){
 
   searchPostQuery = searchPostQuery + 1;
@@ -3250,13 +3319,18 @@ var updateBadges = function( world ){
   });
 
   //Comments notifications
+  $('.notification:not(.wz-prototype)').remove();
   commentsNotifications.forEach(function( notification ){
     api.user( notification.sender , function( e , user ){
-      var notification = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
-      notification.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' );
-      notification.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment );
-      notification.find('.notification-time').html('<i></i>' +  timeElapsed( new Date() ) );
-      $('.notifications-list').append(notification);
+      var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
+      notificationDom.addClass('notification-' + notification.id);
+      notificationDom.data('notification', notification)
+      notificationDom.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' );
+      notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment );
+      notificationDom.find('.notification-time').html('<i></i>' +  timeElapsed( new Date( notification.time ) ) );
+      if ( $('.notification-' + notification.id ).length === 0 ) {
+        $('.notifications-list').append(notificationDom);
+      }
     });
   });
 
@@ -3265,6 +3339,9 @@ var updateBadges = function( world ){
 var checkNotifications = function(){
 
   api.notification.list( 'cosmos' , function( e , notifications ){
+    worldNotifications = [];
+    postsNotifications = [];
+    commentsNotifications = [];
     notifications.forEach(function( notification ){
       
       if (notification.data.type === 'addedToWorld') {
@@ -3279,10 +3356,11 @@ var checkNotifications = function(){
 
     updateBadges();
     console.log('WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)
+    console.log(notifications);
 
   });
 
-  
+
 
   /*
   if ( api.system.user().user.indexOf('demo') === 0 ) {
@@ -3326,6 +3404,41 @@ var checkNotifications = function(){
   });
   */
 
+}
+
+var attendWorldNotification = function( worldId ){
+
+  worldNotifications.forEach(function( notification ){
+    if ( notification.data.world === worldId ) {
+      api.notification.markAsAttended('cosmos' , notification.id, function(e){
+        $('.world-' + worldId).removeClass('with-notification');
+        $('.world-' + worldId).removeClass('with-post-notification');
+        checkNotifications();
+      });
+    }
+  });
+
+  postsNotifications.forEach(function( notification ){
+    if ( notification.data.world === worldId ) {
+      api.notification.markAsAttended('cosmos' , notification.id, function(e){
+        $('.world-' + worldId).removeClass('with-notification');
+        $('.world-' + worldId).removeClass('with-post-notification');
+        checkNotifications();
+      });
+    }
+  });
+}
+
+var attendCommentNotification = function( post ){
+
+  commentsNotifications.forEach(function( notification ){
+    if ( notification.data.parent === post.id ) {
+      api.notification.markAsAttended('cosmos' , notification.id, function(e){
+        $('.notification-' + notification.id).remove();
+        checkNotifications();
+      });
+    }
+  });
 }
 
 var checkMetadata = function( content , fsnode ){
