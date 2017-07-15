@@ -574,6 +574,7 @@ to {background-position: -200% 0;}
     background-size: 312px 27px;
     background-position: 278px 0;
     margin-left: 8px;
+    position: relative;
 
   }
 
@@ -581,6 +582,17 @@ to {background-position: -200% 0;}
 
     background-position: 261px 0;
 
+  }
+
+  .notifications.with-notification:before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: #ff2153;
+    position: absolute;
+    border-radius: 50%;
+    bottom: -1px;
+    right: -3px;  
   }
 
   .category-list{

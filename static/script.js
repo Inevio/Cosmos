@@ -3320,6 +3320,11 @@ var updateBadges = function( world ){
 
   //Comments notifications
   $('.notification:not(.wz-prototype)').remove();
+  if (commentsNotifications.length > 0) {
+    $('.notifications').addClass('with-notification');
+  }else{
+    $('.notifications').removeClass('with-notification');
+  }
   commentsNotifications.forEach(function( notification ){
     api.user( notification.sender , function( e , user ){
       var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
