@@ -669,6 +669,16 @@ newWorldButton.on( 'click' , function(){
 closeNewWorld.on( 'click' , function(){
 
   if (isMobile()) {
+
+    if ( $('.worldDom').length === 0 ) {
+      noWorldsMobile.show();
+      noWorldsMobile.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+    }
+
     mobileNewWorld.stop().clearQueue().transition({
       'transform' : 'translateY(-100%)'
     }, 300, function(){
@@ -1300,7 +1310,7 @@ var initCosmos = function(){
 
     }
 
-    if ( o.length === 0 && isMobile()) {
+    if ( ( o.length === 0 || $('.worldDom').length === 0 ) && isMobile()) {
 
       noWorldsMobile.show();
       noWorldsMobile.css({
@@ -1367,7 +1377,11 @@ var initTexts = function(){
   $( '.new-world-button-no-worlds span, .new-world-button span' ).text( lang.createWorld );
 
   $( '.no-worlds-mobile .title' ).text( lang.welcome );
-  $( '.no-worlds-mobile .subtitle' ).html( lang.introMobile  );
+  if (app.width() < 360) {
+    $( '.no-worlds-mobile .subtitle' ).html( lang.intro  );
+  }else{
+    $( '.no-worlds-mobile .subtitle' ).html( lang.introMobile  );
+  }
   $( '.no-worlds-mobile .subtitle2' ).text( lang.intro2 );
   $( '.no-worlds-mobile .chat-feature .description' ).html( lang.feature1 );
   $( '.no-worlds-mobile .files-feature .description' ).html( lang.feature2 );
