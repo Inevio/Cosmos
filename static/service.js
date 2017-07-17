@@ -1,6 +1,7 @@
 var myContactID    = api.system.user().id;
 var nNotifications = 0;
 var window = $(this)[0];
+var mobile = $(this).hasClass('wz-mobile-view');
 
 if( !api.app.storage('ignoreRemoveEvent') ){
   api.app.storage( 'ignoreRemoveEvent', [] )
@@ -158,14 +159,19 @@ var addArrow = function( appName, text, position ){
 
 }
 
-wql.isFirstOpen( [ api.system.user().id ] , function( e , o ){
 
-  if ( o.length === 0 ){
+if( !mobile ){
 
-    addArrow( 'cosmos', lang.onboarding.arrow ,3 )
+  wql.isFirstOpen( [ api.system.user().id ] , function( e , o ){
 
-  }
+    if ( o.length === 0 ){
 
-});
+      addArrow( 'cosmos', lang.onboarding.arrow ,3 )
+
+    }
+
+  });
+
+}
 
 checkNotifications();
