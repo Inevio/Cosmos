@@ -151,6 +151,9 @@
     },
 
     "activity"      : "Activity",
-    "hasComment"    : "commented on your post"
+    "hasComment"    : "commented on your post",
+    "hasComment2"   : "commented on a post of",
+    "hasComment3"   : "has replied to your comment"
+
 
 }

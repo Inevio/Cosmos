@@ -3106,53 +3106,65 @@ var searchPostForComment = function( info ){
 
   $( '.world-' + info.world ).data('world').getPost( info.post , function( e, post ){
     
-    $('.card').hide();
-    
-    wz.user( post.author , function( e , user ){
-
-      if ( worldSelected && worldSelected.id === post.worldId ) {
-
-        if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
-
-          appendGenericCard(post  , user , lang.postCreated , function(){});
-
-        }else if ( post.metadata && post.metadata.fileType ) {
-
-          switch (post.metadata.fileType) {
-
-            case 'document':
-            case 'image':
-            appendDocumentCard( post , user , lang.postCreated , function(){});
-            break;
-            /*case 'generic':
-            case 'video':
-            case 'music':*/
-            default:
-            appendGenericCard(post  , user , lang.postCreated , function(){});
-            break;
-
-          }
-
-        }else if( post.metadata && post.metadata.linkType ){
-
-          switch (post.metadata.linkType) {
-
-            case 'youtube':
-            appendYoutubeCard( post , user , lang.postCreated );
-            break;
-
-          }
-
-        }else{
-          appendNoFileCard( post , user , lang.postCreated );
-        }
-
-
+      if ( post.isReply) {
+        $( '.world-' + info.world ).data('world').getPost( post.parent , function( e, post ){
+          hideAndShowPost( post );
+        });
+      }else{
+        hideAndShowPost( post );
       }
 
-      $('.post-' + info.post).show();
+  });
 
-    });
+}
+
+var hideAndShowPost = function( post ){
+
+  $('.card').hide();
+  
+  wz.user( post.author , function( e , user ){
+
+    if ( worldSelected && worldSelected.id === post.worldId ) {
+
+      if( post.metadata && post.metadata.operation && post.metadata.operation === 'remove'){
+
+        appendGenericCard(post  , user , lang.postCreated , function(){});
+
+      }else if ( post.metadata && post.metadata.fileType ) {
+
+        switch (post.metadata.fileType) {
+
+          case 'document':
+          case 'image':
+          appendDocumentCard( post , user , lang.postCreated , function(){});
+          break;
+          /*case 'generic':
+          case 'video':
+          case 'music':*/
+          default:
+          appendGenericCard(post  , user , lang.postCreated , function(){});
+          break;
+
+        }
+
+      }else if( post.metadata && post.metadata.linkType ){
+
+        switch (post.metadata.linkType) {
+
+          case 'youtube':
+          appendYoutubeCard( post , user , lang.postCreated );
+          break;
+
+        }
+
+      }else{
+        appendNoFileCard( post , user , lang.postCreated );
+      }
+
+
+    }
+
+    $('.post-' + post.id).show();
 
   });
 
@@ -3261,8 +3273,6 @@ var appendAttachment = function( info , useItem ){
   if ( info.fsnode.pending ) {
     attachment.data( 'mime', info.fsnode.type );
   }
-
-
 }
 
 var isMobile = function(){
@@ -3311,7 +3321,6 @@ var attachFromInevio = function( card ){
 
     })
   }
-
 }
 
 var updateBadges = function( world ){
@@ -3340,19 +3349,29 @@ var updateBadges = function( world ){
     $('.notifications').removeClass('with-notification');
   }
   commentsNotifications.forEach(function( notification ){
-    api.user( notification.sender , function( e , user ){
-      var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
-      notificationDom.addClass('notification-' + notification.id);
-      notificationDom.data('notification', notification)
-      notificationDom.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' );
-      notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment );
-      notificationDom.find('.notification-time').html('<i></i>' +  timeElapsed( new Date( notification.time ) ) );
-      if ( $('.notification-' + notification.id ).length === 0 ) {
-        $('.notifications-list').append(notificationDom);
-      }
+    var world = $( '.world-' + notification.data.world ).data('world');
+    world.getPost( notification.data.parent , function( e , post ){
+      api.user( notification.sender , function( e , user ){
+        var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
+        notificationDom.addClass('notification-' + notification.id);
+        notificationDom.data('notification', notification)
+        notificationDom.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' );
+        if (post.author === myContactID) {
+          if ( !post.isReply ) {
+            notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment );
+          }else{
+            notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment3 );
+          }
+        }else{
+          notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + world.name );
+        }
+        notificationDom.find('.notification-time').html('<i></i>' +  timeElapsed( new Date( notification.time ) ) );
+        if ( $('.notification-' + notification.id ).length === 0 ) {
+          $('.notifications-list').append(notificationDom);
+        }
+      });
     });
   });
-
 }
 
 var checkNotifications = function(){
@@ -3405,16 +3424,31 @@ var attendWorldNotification = function( worldId ){
   });
 }
 
-var attendCommentNotification = function( post ){
+var attendCommentNotification = function( postClicked ){
 
   commentsNotifications.forEach(function( notification ){
-    if ( notification.data.parent === post.id ) {
-      api.notification.markAsAttended('cosmos' , notification.id, function(e){
-        $('.notification-' + notification.id).remove();
-        checkNotifications();
-      });
-    }
+    var world = $( '.world-' + notification.data.world ).data('world');
+    world.getPost( notification.data.parent , function( e , post ){
+      if ( post.isReply ) {
+        world.getPost( post.parent , function( e , post ){
+          if ( postClicked.id === post.id ) {
+            api.notification.markAsAttended('cosmos' , notification.id, function(e){
+              $('.notification-' + notification.id).remove();
+              checkNotifications();
+            });
+          }
+        });
+      }else{
+        if ( postClicked.id === post.id ) {
+          api.notification.markAsAttended('cosmos' , notification.id, function(e){
+            $('.notification-' + notification.id).remove();
+            checkNotifications();
+          });
+        }
+      }
+    });
   });
+  
 }
 
 var checkMetadata = function( content , fsnode ){

@@ -95,7 +95,13 @@ api.cosmos.on( 'postAdded', function( post ){
 
 });
 
+api.notification.on( 'new', function( notification ){
+  checkNotifications();
+})
 
+api.notification.on( 'attended', function( list ){
+  checkNotifications();
+})
 
 var sendBanner = function( info ){
   api.banner()

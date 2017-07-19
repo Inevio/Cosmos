@@ -150,6 +150,8 @@
     },
 
     "activity"      : "Actividad",
-    "hasComment"    : "ha comentado en tu publicación"
+    "hasComment"    : "ha comentado en tu publicación",
+    "hasComment2"   : "ha comentado una publicación del mundo",
+    "hasComment3"   : "ha respondido a tu comentario"
 
   }
