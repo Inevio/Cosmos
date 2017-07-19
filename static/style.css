@@ -4855,7 +4855,7 @@ to {background-position: -200% 0;}
     float: left;
     margin: 0 10px;
     width: ~'calc( 100% - 20px )';
-    height: 78px;
+    position: relative;
     border-bottom: 1px solid #e5e9ea;
 
   }
@@ -4880,6 +4880,7 @@ to {background-position: -200% 0;}
     line-height: 18px;
     margin-left: 13px;
     width: 227px;
+    margin-bottom: 25px;
 
   }
 
@@ -4893,12 +4894,13 @@ to {background-position: -200% 0;}
 
   .notification-time{
 
-    float: left;
     font-size: 13px;
     color: #889399;
-    margin-left: 13px;
     width: 227px;
     margin-top: 2px;
+    position: absolute;
+    left: 50px;
+    bottom: 6px;
 
   }
 
