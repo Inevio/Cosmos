@@ -920,8 +920,12 @@ if( newParams.queue ){
   fsnode.open( fsnodeList.filter(function( item ){ return item.type === fsnode.type; }).map( function( item ){ return item.id; }), function( error ){
 
     if( error ){
+      if (isMobile()) {
+        navigator.notification.alert( '', function(){}, lang.fileCanNotOpen );
+      }else{
+        fsnode.openLocal();
+      }
       console.log( error );
-      fsnode.openLocal();
     }
 
   });
