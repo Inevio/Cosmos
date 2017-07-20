@@ -29,6 +29,7 @@
     "editWorld"     : "Editar mundo",
     "unfollowWorld" : "Salir del mundo",
     "exit"          : "Salir",
+    "confirmExit"   : "¿Seguro que desea salir del mundo?",
     "users"         : "Usuarios",
     "posts"         : "Eventos",
     "files"         : "Ficheros",

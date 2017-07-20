@@ -30,6 +30,7 @@
     "editWorld"     : "Edit world",
     "unfollowWorld" : "Unfollow world",
     "exit"          : "Exit world",
+    "confirmExit"   : "Are you sure you want to leave this world?",    
     "users"         : "Users",
     "posts"         : "Posts",
     "files"         : "Files",

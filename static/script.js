@@ -2839,16 +2839,28 @@ var removePostAsync = function( post ){
 
 var unFollowWorld = function( world ){
 
-  world.removeUser( myContactID , function( e , o ){
-    if (e) {
-      console.log(e);
-    }else{
-      wql.deleteLastRead( [ world.id , myContactID ] , function( e ){
-        if (e) {
-          console.log(e);
-        }
-      });
-    }
+  var dialog = api.dialog();
+
+  dialog.setTitle( lang.unfollowWorld );
+  dialog.setText( lang.confirmExit );
+
+  dialog.setButton( 0, wzLang.core.dialogCancel, 'black' );
+  dialog.setButton( 1, wzLang.core.dialogAccept, 'red' );
+
+  dialog.render(function( doIt ){
+
+    world.removeUser( myContactID , function( e , o ){
+      if (e) {
+        console.log(e);
+      }else{
+        wql.deleteLastRead( [ world.id , myContactID ] , function( e ){
+          if (e) {
+            console.log(e);
+          }
+        });
+      }
+    });
+
   });
 
 }
