@@ -153,7 +153,7 @@ var postNewCardAsync = function(){
     if ( o.linkType ) {
 
       metadata.linkType = o.linkType;
-      params.world.addPost( { content: text, title: title, metadata: metadata }, function( e, o ){
+      params.world.addPost( { content: text, title: title, metadata: metadata, notification : {} }, function( e, o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
@@ -167,7 +167,7 @@ var postNewCardAsync = function(){
 
       metadata.fileType = o.fileType;
       metadata.fsnode = attachment;
-      params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata }, function( e, o ){
+      params.world.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata, notification : {} }, function( e, o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
@@ -179,7 +179,7 @@ var postNewCardAsync = function(){
 
     }else{
 
-      params.world.addPost( { content: text, title: title }, function( e, o ){
+      params.world.addPost( { content: text, title: title, notification : {} }, function( e, o ){
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
