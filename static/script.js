@@ -1267,7 +1267,12 @@ if( newParams.queue ){
   selectWorld( $( '.world-' + notification.data.world ) , function(){
     //$( '.search-button' ).addClass( 'popup' );
     //$( '.search-button input' ).val( notification.data.parent );
-    searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.post } );
+    if( notification.data.type === 'reply' ){
+      searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.parent, 'isReply' : true } );
+    }else{
+      searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.post, 'isReply' : false } );
+    }
+    
   });
 
 })
@@ -3145,10 +3150,10 @@ var searchPostForComment = function( info ){
     console.log( post );
     if ( post.isReply ){
       $( '.world-' + info.world ).data('world').getPost( post.parent , function( e, post ){
-        hideAndShowPost( post, true );
+        hideAndShowPost( post, info.isReply );
       });
     }else{
-      hideAndShowPost( post );
+      hideAndShowPost( post, info.isReply );
     }
 
   });
@@ -3158,8 +3163,7 @@ var searchPostForComment = function( info ){
 var hideAndShowPost = function( post, showReply ){
 
   $('.card').hide();
-  console.log( arguments );
-  
+
   wz.user( post.author , function( e , user ){
 
     if ( worldSelected && worldSelected.id === post.worldId ) {
