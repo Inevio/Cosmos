@@ -1262,6 +1262,7 @@ if( newParams.queue ){
 .on( 'click' , '.notification' , function(){
 
   var notification = $(this).data('notification');
+  console.log( notification );
 
   selectWorld( $( '.world-' + notification.data.world ) , function(){
     //$( '.search-button' ).addClass( 'popup' );
@@ -3138,8 +3139,10 @@ var sortByName = function( nameA , nameB ){
 
 var searchPostForComment = function( info ){
 
+  console.log( info );
   $( '.world-' + info.world ).data('world').getPost( info.post , function( e, post ){
 
+    console.log( post );
     if ( post.isReply ){
       $( '.world-' + info.world ).data('world').getPost( post.parent , function( e, post ){
         hideAndShowPost( post, true );
@@ -3155,7 +3158,8 @@ var searchPostForComment = function( info ){
 var hideAndShowPost = function( post, showReply ){
 
   $('.card').hide();
-
+  console.log( arguments );
+  
   wz.user( post.author , function( e , user ){
 
     if ( worldSelected && worldSelected.id === post.worldId ) {
