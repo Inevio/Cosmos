@@ -1264,9 +1264,9 @@ if( newParams.queue ){
   var notification = $(this).data('notification');
 
   selectWorld( $( '.world-' + notification.data.world ) , function(){
-    $( '.search-button' ).addClass( 'popup' );
-    $( '.search-button input' ).val( notification.data.parent );
-    searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.parent } );
+    //$( '.search-button' ).addClass( 'popup' );
+    //$( '.search-button input' ).val( notification.data.parent );
+    searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.post } );
   });
 
 })
@@ -3121,23 +3121,23 @@ var sortByName = function( nameA , nameB ){
 var searchPostForComment = function( info ){
 
   $( '.world-' + info.world ).data('world').getPost( info.post , function( e, post ){
-    
-      if ( post.isReply) {
-        $( '.world-' + info.world ).data('world').getPost( post.parent , function( e, post ){
-          hideAndShowPost( post );
-        });
-      }else{
-        hideAndShowPost( post );
-      }
+
+    if ( post.isReply ){
+      $( '.world-' + info.world ).data('world').getPost( post.parent , function( e, post ){
+        hideAndShowPost( post, true );
+      });
+    }else{
+      hideAndShowPost( post );
+    }
 
   });
 
 }
 
-var hideAndShowPost = function( post ){
+var hideAndShowPost = function( post, showReply ){
 
   $('.card').hide();
-  
+
   wz.user( post.author , function( e , user ){
 
     if ( worldSelected && worldSelected.id === post.worldId ) {
@@ -3181,6 +3181,9 @@ var hideAndShowPost = function( post ){
     }
 
     $('.post-' + post.id).show();
+    if( showReply ){
+      $('.post-' + post.id + ' .comments-opener').click();
+    }
 
   });
 
