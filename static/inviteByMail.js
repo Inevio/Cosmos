@@ -7,6 +7,8 @@ var closeButton   = $('.close');
 var validMails    = [];
 var MAIL_REGEXP = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,4}))$/
 
+console.log( params )
+
 addMailButton.on( 'click' , function(){
   addMail();
 });
@@ -40,7 +42,7 @@ var addMail = function(){
 
 var share = function(){
   if (shareButton.hasClass('valid')) {
-    api.user.inviteByMail(validMails);
+    api.cosmos.inviteByMail( params, validMails, function(){ console.log( arguments )} );
     api.banner()
       .setTitle( lang.invitationSentTitle )
       .setText( lang.invitationSentSubtitle )
