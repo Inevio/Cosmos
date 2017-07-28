@@ -689,7 +689,7 @@ closeNewWorld.on( 'click' , function(){
 });
 
 inviteByMail.on( 'click' , function(){
-  api.app.createView( {} , 'inviteByMail' );
+  api.app.createView( worldSelected.id, 'inviteByMail' );
 });
 
 startButton.on( 'click' , function(){
