@@ -54,7 +54,7 @@ var startButtonMobile = $('.no-worlds-mobile .start-button-no-worlds');
 
 var worldNotifications = [];
 var postsNotifications = [];
-var commentsNotifications = []; 
+var commentsNotifications = [];
 
 var TYPES = {
 
@@ -694,45 +694,33 @@ inviteByMail.on( 'click' , function(){
 
 startButton.on( 'click' , function(){
 
-  if (myWorlds.length <= 1) {
-    $('.new-world-button').click();
-  }else{
-    noWorlds.transition({
-
-      'opacity'         : 0
-
-    }, 200, animationEffect , function(){
-
-      noWorlds.hide();
-      starsCanvasContainer.stop().clearQueue().transition({
-
-        'opacity' : 0
-
-      }, 300 , function(){
-
-        starsCanvasContainer.addClass( 'no-visible' );
-
-      });
-
-    });
+  if (myWorlds.length < 1) {
+    return $('.new-world-button').click();
   }
+
+  noWorlds.transition({ 'opacity' : 0 }, 200, animationEffect , function(){
+
+    noWorlds.hide();
+    starsCanvasContainer.stop().clearQueue().transition({ 'opacity' : 0 }, 300 , function(){
+      starsCanvasContainer.addClass( 'no-visible' );
+    });
+
+  });
+
 });
 
 startButtonMobile.on( 'click' , function(){
 
-  noWorldsMobile.transition({
-
-    'opacity'         : 0
-
-  }, 200, animationEffect , function(){
+  noWorldsMobile.transition({ 'opacity' : 0 }, 200, animationEffect , function(){
 
     noWorldsMobile.hide();
-    if (myWorlds.length <= 1) {
+
+    if (myWorlds.length < 1) {
       $('.new-world-button-mini').click();
     }
 
   });
-  
+
 });
 
 app
@@ -1272,7 +1260,7 @@ if( newParams.queue ){
     }else{
       searchPostForComment( { 'world' : notification.data.world , 'post' : notification.data.post, 'isReply' : false } );
     }
-    
+
   });
 
 })
@@ -3426,7 +3414,7 @@ var checkNotifications = function(){
     postsNotifications = [];
     commentsNotifications = [];
     notifications.forEach(function( notification ){
-      
+
       if (notification.data.type === 'addedToWorld') {
         worldNotifications.push(notification)
       }else if (notification.data.type === 'post') {
@@ -3493,7 +3481,7 @@ var attendCommentNotification = function( postClicked ){
       }
     });
   });
-  
+
 }
 
 var checkMetadata = function( content , fsnode ){
@@ -3708,7 +3696,7 @@ var changeMobileView = function( view ){
 }
 
 var setMobile = function(){
-    
+
   StatusBar.backgroundColorByHexString("#272c34");
   StatusBar.styleLightContent();
 
