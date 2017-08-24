@@ -1277,6 +1277,8 @@ $('.scrollable-content').on( 'scroll', function(){
 //Functions
 var initCosmos = function(){
 
+  console.log(api.cosmos);
+
   if (!isMobile()) {
     app.css({'border-radius'    : '6px', 'background-color' : '#2c3238'});
     starsCanvas( 'stars-canvas' );
@@ -1523,7 +1525,7 @@ var getMyWorldsAsync = function( options ){
 
 var getPublicWorldsAsync = function(){
 
-  wz.cosmos.list( null , null , {from:0 , to:1000} , function( e , o ){
+  wz.cosmos.list( null , null , {from:0 , to:100} , function( e , o ){
 
     console.log( 'todos los worlds:' , o );
 
@@ -2974,8 +2976,9 @@ var exploreAnimationIn = function(){
   }, 450, animationEffect);
 
   // World cards appears and goes up
-  var cards = $( '.tend-list .world-card' );
-  $.each( cards , function( i , card ){
+  var firstCards = $( '.tend-list .world-card' );
+  var restOfCards = firstCards.splice(10, firstCards.length - 10);
+  firstCards.each( function( i , card ){
 
     var d = i * 150;
 
@@ -2985,7 +2988,16 @@ var exploreAnimationIn = function(){
       'opacity'   : 1,
       'transform' : 'translateY(0px)'
 
-    }, 1000);
+    }, 1000, function(){
+
+      restOfCards.forEach(function(card){
+        $(card).css({
+          'opacity'   : 1,
+          'transform' : 'translateY(0px)'
+        });
+      });
+
+    });
 
   });
 
