@@ -155,7 +155,9 @@
     "hasComment2"   : "ha comentado una publicación del mundo",
     "hasComment3"   : "ha respondido a tu comentario",
 
-    "fileCanNotOpen"  : "horbito no puede abrir este fichero en el dispositivo"
+    "fileCanNotOpen"  : "horbito no puede abrir este fichero en el dispositivo",
+
+    "next"  : "Siguiente"
 
 
   }

@@ -106,6 +106,8 @@ var TYPES = {
 var URL_REGEX = /^http(s)?:\/\//i;
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
+var showingWorlds;
+
 //Events
 cardsList.on( 'scroll' , function(){
 
@@ -161,7 +163,7 @@ exploreButton.on( 'click' , function(){
   $('.explore-container').scrollTop(0);
   $( '.world-card-dom' ).remove();
   cleanFilterWorldCards();
-  getPublicWorldsAsync();
+  getPublicWorldsAsync(0, 20);
 
 });
 
@@ -1417,6 +1419,7 @@ var initTexts = function(){
   $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
   $( '.notifications-title span' ).text( lang.activity );
+  $( '.next-page .next-text' ).text( lang.next );
 
 }
 
@@ -1523,11 +1526,11 @@ var getMyWorldsAsync = function( options ){
 
 };
 
-var getPublicWorldsAsync = function(){
+var getPublicWorldsAsync = function(fromWorld, toWorld){
 
-  wz.cosmos.list( null , null , {from:0 , to:100} , function( e , o ){
+  wz.cosmos.list( null , null , {'from': fromWorld , 'to': toWorld} , function( e , o ){
 
-    console.log( 'todos los worlds:' , o );
+    showingWorlds = {'from': fromWorld , 'to': toWorld}
 
     $.each( o , function( i , world ){
 
@@ -1635,7 +1638,7 @@ var appendWorldCard = function( worldApi ){
 
   }
 
-  $( '.tend-grid' ).append( world );
+  $( '.world-card.wz-prototype' ).after( world );
 
   world.data( 'world' , worldApi );
 
