@@ -1844,9 +1844,14 @@ var getWorldUsersAsync = function( worldApi ){
         $( '.stop-follow span' ).text( lang.editWorld );
       }
 
-      wz.user( user.userId , function( e , usr ){
+      wz.user( user.userId , function( err , usr ){
 
-        appendUserCircle( i , usr , inviteIndex );
+        if ( err ) {
+          console.log('Err:', err, user, usr);
+        }else{
+          appendUserCircle( i , usr , inviteIndex );
+        }
+
 
       })
 
@@ -2528,7 +2533,11 @@ var setRepliesAsyncOnlyAppendMobile = function( card , post ){
 
 var setRepliesAsync = function( card , post ){
 
-  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( e , replies ){
+  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( err , replies ){
+
+    if( err ){
+      console.log('Err: ', err, replies);
+    }
 
     replies = replies.reverse();
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
