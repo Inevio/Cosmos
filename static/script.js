@@ -2361,7 +2361,7 @@ var appendGenericCard = function( post , user , reason , callback ){
         return console.error(err);
       }
 
-      promise.resolve( e ? null: fsnode );
+      promise.resolve( err ? null: fsnode );
     });
 
   });
