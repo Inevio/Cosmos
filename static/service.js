@@ -13,19 +13,27 @@ api.cosmos.on( 'postAdded', function( post ){
     return;
   }
 
-  api.cosmos( post.worldId , function( e , world ){
+  api.cosmos( post.worldId , function( err , world ){
 
-    if (e) {console.log(e);return;}
+    if (err) {
+      return console.error(err);
+    }
 
-    api.user( post.author , function( e , user ){
+    api.user( post.author , function( err , user ){
 
-      if (e) {console.log(e);return;}
+      if (err) {
+        return console.error(err);
+      }
 
       var title;
       var text;
       if ( post.isReply ) {
 
-        world.getPost( post.parent , function( e , postParent ){
+        world.getPost( post.parent , function( err , postParent ){
+
+          if (err) {
+            return console.error(err);
+          }
 
           var onclick;
           // Reply lvl 1
@@ -54,7 +62,11 @@ api.cosmos.on( 'postAdded', function( post ){
 
             // Reply to MY comment
             if ( postParent.author === myContactID ) {
-              world.getPost( postParent.parent , function( e , grandparent ){
+              world.getPost( postParent.parent , function( err , grandparent ){
+
+                if (err) {
+                  return console.error(err);
+                }
 
                 title = user.name + ' ' + lang.bannerReplyComment;
                 text = post.content;
@@ -114,7 +126,10 @@ var sendBanner = function( info ){
 
 var checkNotifications = function(){
 
-  api.notification.list( 'cosmos' , function( e , notifications ){
+  api.notification.list( 'cosmos' , function( err , notifications ){
+    if (err) {
+      return console.error(err);
+    }
     wz.app.setBadge( notifications.length );
   });
 
@@ -170,7 +185,11 @@ var addArrow = function( appName, text, position ){
 console.log('cosmos',typeof cordova == 'undefined')
 if( typeof cordova == 'undefined' ){
 
-  wql.isFirstOpen( [ api.system.user().id ] , function( e , o ){
+  wql.isFirstOpen( [ api.system.user().id ] , function( err , o ){
+
+    if (err) {
+      return console.error(err);
+    }
 
     if ( o.length === 0 ){
 
