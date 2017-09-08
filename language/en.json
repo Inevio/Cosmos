@@ -156,8 +156,6 @@
     "hasComment2"   : "commented on a post of",
     "hasComment3"   : "has replied to your comment",
 
-    "fileCanNotOpen"   : "horbito can't open this file currently in the device",
-
-    "next"  : "Next"
+    "fileCanNotOpen"   : "horbito can't open this file currently in the device"
 
 }
