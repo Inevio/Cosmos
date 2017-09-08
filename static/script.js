@@ -106,8 +106,6 @@ var TYPES = {
 var URL_REGEX = /^http(s)?:\/\//i;
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
-var showingWorlds;
-
 //Events
 cardsList.on( 'scroll' , function(){
 
@@ -163,7 +161,7 @@ exploreButton.on( 'click' , function(){
   $('.explore-container').scrollTop(0);
   $( '.world-card-dom' ).remove();
   cleanFilterWorldCards();
-  getPublicWorldsAsync(0, 20);
+  getPublicWorldsAsync();
 
 });
 
@@ -1419,7 +1417,6 @@ var initTexts = function(){
   $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
   $( '.notifications-title span' ).text( lang.activity );
-  $( '.next-page .next-text' ).text( lang.next );
 
 }
 
@@ -1526,11 +1523,11 @@ var getMyWorldsAsync = function( options ){
 
 };
 
-var getPublicWorldsAsync = function(fromWorld, toWorld){
+var getPublicWorldsAsync = function(){
 
-  wz.cosmos.list( null , null , {'from': fromWorld , 'to': toWorld} , function( e , o ){
+  wz.cosmos.list( null , null , {from:0 , to:100} , function( e , o ){
 
-    showingWorlds = {'from': fromWorld , 'to': toWorld}
+    console.log( 'todos los worlds:' , o );
 
     $.each( o , function( i , world ){
 
@@ -1638,7 +1635,7 @@ var appendWorldCard = function( worldApi ){
 
   }
 
-  $( '.world-card.wz-prototype' ).after( world );
+  $( '.tend-grid' ).append( world );
 
   world.data( 'world' , worldApi );
 
@@ -1844,14 +1841,9 @@ var getWorldUsersAsync = function( worldApi ){
         $( '.stop-follow span' ).text( lang.editWorld );
       }
 
-      wz.user( user.userId , function( err , usr ){
+      wz.user( user.userId , function( e , usr ){
 
-        if ( err ) {
-          console.log('Err:', err, user, usr);
-        }else{
-          appendUserCircle( i , usr , inviteIndex );
-        }
-
+        appendUserCircle( i , usr , inviteIndex );
 
       })
 
@@ -2533,11 +2525,7 @@ var setRepliesAsyncOnlyAppendMobile = function( card , post ){
 
 var setRepliesAsync = function( card , post ){
 
-  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( err , replies ){
-
-    if( err ){
-      console.log('Err: ', err, replies);
-    }
+  post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( e , replies ){
 
     replies = replies.reverse();
     card.find( '.comments-text' ).text( replies.length + ' ' + lang.comments );
