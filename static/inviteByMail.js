@@ -42,7 +42,11 @@ var addMail = function(){
 
 var share = function(){
   if (shareButton.hasClass('valid')) {
-    api.cosmos.inviteByMail( params, validMails, function(){ console.log( arguments )} );
+    api.cosmos.inviteByMail( params, validMails, function( err ){
+      if (err) {
+        return console.error(err);
+      }
+    });
     api.banner()
       .setTitle( lang.invitationSentTitle )
       .setText( lang.invitationSentSubtitle )
