@@ -2454,7 +2454,7 @@ var appendDocumentCard = function( post , user , reason , callback ){
       return console.error(err);
     }
 
-    if (!e) {
+    if (!err) {
 
       if( fsNode.mime.indexOf( 'image' ) != -1 ){
         card.find( '.doc-preview img' ).attr( 'src' , 'https://download.horbito.com/' + fsNode.id );
