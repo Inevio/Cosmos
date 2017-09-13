@@ -107,6 +107,7 @@ var URL_REGEX = /^http(s)?:\/\//i;
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
 var showingWorlds;
+var paginationLimit = 20;
 
 //Events
 cardsList.on( 'scroll' , function(){
@@ -163,7 +164,7 @@ exploreButton.on( 'click' , function(){
   $('.explore-container').scrollTop(0);
   $( '.world-card-dom' ).remove();
   cleanFilterWorldCards();
-  getPublicWorldsAsync(0, 20);
+  getPublicWorldsAsync(0, paginationLimit);
 
 });
 
@@ -1914,11 +1915,13 @@ var filterWorldCards = function( filter , searchWorldQueryCopy ){
   var worldCards = $( '.world-card' );
 
   if ( filter === '' ) {
-
     worldCards.show();
     return;
-
   }
+
+  api.cosmos.searchWorld( filter, null, {from:0, to:paginationLimit}, function( err, worlds ){
+    console.log(err, worlds);
+  });
 
   wz.cosmos.list( filter , null , {from:0 , to:1000} , function( e , worlds ){
 
