@@ -108,6 +108,10 @@ var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab
 
 var showingWorlds;
 var paginationLimit = 20;
+var filterActive;
+
+var totalPages;
+var actualPageInterval;
 
 //Events
 cardsList.on( 'scroll' , function(){
@@ -129,7 +133,12 @@ searchWorldCard.on( 'input' , function(){
 
   searchWorldQuery = searchWorldQuery + 1;
   var searchWorldQueryCopy = searchWorldQuery;
-  filterWorldCards( $( this ).val() , searchWorldQueryCopy );
+  filterWorldCards({
+    filter:                 $(this).val(),
+    searchWorldQueryCopy:   searchWorldQueryCopy,
+    'fromWorld':            0,
+    'toWorld':              paginationLimit
+  });
 
 });
 
@@ -162,9 +171,21 @@ exploreButton.on( 'click' , function(){
     changeMobileView('explore');
   }
   $('.explore-container').scrollTop(0);
-  $( '.world-card-dom' ).remove();
-  cleanFilterWorldCards();
-  getPublicWorldsAsync(0, paginationLimit);
+  
+  wz.cosmos.stats(function( err, stats ){
+    if (err) {
+      console.error(err);
+    }
+
+    totalPages = Math.ceil( stats.publicWorlds / paginationLimit );
+    actualPageInterval = 1;
+    addPages();
+  });
+
+  cleanWorldCards();
+  getPublicWorldsAsync({
+    page: 1
+  });
 
 });
 
@@ -1527,16 +1548,24 @@ var getMyWorldsAsync = function( options ){
 
 };
 
-var getPublicWorldsAsync = function(fromWorld, toWorld){
+var getPublicWorldsAsync = function( options ){
 
-  wz.cosmos.list( null , null , {'from': fromWorld , 'to': toWorld} , function( e , o ){
+  var interval = {
+    from: (options.page - 1) * paginationLimit,
+    to: options.page * paginationLimit
+  }
 
-    showingWorlds = {'from': fromWorld , 'to': toWorld}
+  wz.cosmos.list( null , null , {'from': interval.from , 'to': interval.to} , function( err , worlds ){
 
-    $.each( o , function( i , world ){
+    if(err){
+      console.error(err);
+    }
 
+    showingWorlds = {'from': interval.from, 'to': interval.to}
+    filterActive = null;
+
+    worlds.reverse().forEach( function( world ){
       appendWorldCard( world );
-
     });
 
     exploreAnimationIn();
@@ -1910,32 +1939,24 @@ var appendUserCircle = function( i , user , inviteIndex ){
 
 }
 
-var filterWorldCards = function( filter , searchWorldQueryCopy ){
+var filterWorldCards = function( options ){
 
-  var worldCards = $( '.world-card' );
+  var worldCards = $( '.world-card:not(.wz-prototype)' );
 
-  if ( filter === '' ) {
-    worldCards.show();
-    return;
-  }
+  options.filter = options.filter === '' ? null : options.filter;
+  wz.cosmos.list( options.filter , null , {from:options.fromWorld, to:options.toWorld} , function( e , worlds ){
 
-  api.cosmos.searchWorld( filter, null, {from:0, to:paginationLimit}, function( err, worlds ){
-    console.log(err, worlds);
-  });
-
-  wz.cosmos.list( filter , null , {from:0 , to:1000} , function( e , worlds ){
+    showingWorlds = {'from': options.fromWorld , 'to': options.toWorld}
+    filterActive = options.filter;
 
     // Query desfasada
-    if ( searchWorldQuery != searchWorldQueryCopy ) {
+    if ( searchWorldQuery != options.searchWorldQueryCopy ) {
       return;
     }
 
-    worldCards.hide();
-
-    $.each( worlds , function( i , world ){
-
-      $( '.world-card-' + world.id ).show();
-
+    worldCards.remove();
+    worlds.reverse().forEach( function( world ){
+      appendWorldCard( world );
     });
 
 
@@ -3120,11 +3141,9 @@ var appendReplyComment = function( card , reply , response ){
 
 }
 
-var cleanFilterWorldCards = function(){
-
+var cleanWorldCards = function(){
   searchWorldCard.val( '' );
-  filterWorldCards( '' );
-
+  $('.world-card-dom').remove();
 }
 
 var sortByName = function( nameA , nameB ){
@@ -3755,5 +3774,19 @@ var checkOnboarding = function(){
   }
 
 }
+
+var nextPage = function(){
+  
+}
+
+var addPages = function(){
+  $('.page:not(.wz-prototype)').remove();
+  for (var i = actualPageInterval; i < totalPages; i++) {
+    var page = $('.page.wz-prototype').clone().removeClass('.wz-prototype').find('span').text(i);
+    $('.pages').append(page);
+  }
+}
+
+
 
 initCosmos();
