@@ -4013,10 +4013,46 @@ to {background-position: -200% 0;}
     background: rgba(255,255,255, 0.7);
   }
 
+  .back-page{
+    padding: 5px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: none;
+
+    .back-text{
+      float: left;
+      color: #fff;
+      font-size: 17px;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+
+    i{
+      width: 7px;
+      height: 13px;
+      background-image: url('@static/nextArrow.png');
+      background-size: 7px 13px;
+      float: left;
+      margin-left: 7px;
+      margin-top: 7px;
+      margin-right: 5px;
+      transform: rotate(180deg);
+    }
+  }
+
+  .back-page:hover{
+    background: rgba(255,255,255, 0.7);
+  }
+
+  .back-page.active{
+    display: block;
+  }
+
   .next-page{
     padding: 5px;
     border-radius: 6px;
     transition: all 0.2s ease;
+    display: none;
 
     .next-text{
       float: left;
@@ -4040,6 +4076,10 @@ to {background-position: -200% 0;}
 
   .next-page:hover{
     background: rgba(255,255,255, 0.7);
+  }
+
+  .next-page.active{
+    display: block;
   }
 
   .world-card .world-background{
