@@ -158,6 +158,7 @@
 
     "fileCanNotOpen"   : "horbito can't open this file currently in the device",
 
-    "next"  : "Next"
+    "next"      : "Next",
+    "previous"  : "Previous"
 
 }
