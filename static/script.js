@@ -174,6 +174,7 @@ exploreButton.on( 'click' , function(){
   }
   $('.explore-container').scrollTop(0);
   
+  //waka
   wz.cosmos.stats(function( err, stats ){
     if (err) {
       console.error(err);
@@ -184,6 +185,7 @@ exploreButton.on( 'click' , function(){
     addPages();
   });
 
+  filterActive = null;
   cleanWorldCards();
   getPublicWorldsAsync({
     page: 1
@@ -1576,14 +1578,13 @@ var getPublicWorldsAsync = function( options ){
     to: options.page * paginationLimit
   }
 
-  wz.cosmos.list( null , null , {'from': interval.from , 'to': interval.to} , function( err , worlds ){
+  wz.cosmos.list( filterActive , null , {'from': interval.from , 'to': interval.to} , function( err , worlds ){
 
     if(err){
       console.error(err);
     }
 
     showingWorlds = {'from': interval.from, 'to': interval.to}
-    filterActive = null;
 
     worlds.reverse().forEach( function( world ){
       appendWorldCard( world );
@@ -1965,6 +1966,7 @@ var filterWorldCards = function( options ){
   var worldCards = $( '.world-card:not(.wz-prototype)' );
 
   options.filter = options.filter === '' ? null : options.filter;
+
   wz.cosmos.list( options.filter , null , {from:options.fromWorld, to:options.toWorld} , function( e , worlds ){
 
     showingWorlds = {'from': options.fromWorld , 'to': options.toWorld}
@@ -3163,7 +3165,6 @@ var appendReplyComment = function( card , reply , response ){
 }
 
 var cleanWorldCards = function(){
-  searchWorldCard.val( '' );
   $('.world-card-dom').remove();
 }
 
