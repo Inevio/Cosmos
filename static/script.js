@@ -1583,7 +1583,7 @@ var getPublicWorldsAsync = function( options ){
       actualPageInterval = 1;
       addPages();
     }
-    
+
     showingWorlds = {'from': interval.from, 'to': interval.to}
 
     worlds.reverse().forEach( function( world ){
@@ -3167,8 +3167,8 @@ var sortByName = function( nameA , nameB ){
 
   if( nameA === nameB ) return 0;
 
-  nameA = nameA.toLowerCase().match(rx);
-  nameB = nameB.toLowerCase().match(rx);
+  nameA = nameA.toLowerCase().match(rx) || [];
+  nameB = nameB.toLowerCase().match(rx) || [];
 
   L= nameA.length;
 
@@ -3549,7 +3549,7 @@ var attendCommentNotification = function( postClicked ){
             if (err) {
               console.error(err);
             }
-            
+
             $('.notification-' + notification.id).remove();
             checkNotifications();
           });
@@ -3849,7 +3849,7 @@ var addPages = function(){
       page.addClass('active');
     }
 
-    //He llegado al final 
+    //He llegado al final
     if(i === totalPages){
       return;
     }
