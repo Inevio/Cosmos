@@ -3168,7 +3168,7 @@ var sortByName = function( nameA , nameB ){
   if( nameA === nameB ) return 0;
 
   nameA = nameA.toLowerCase().match(rx) || [];
-  nameB = nameB.toLowerCase().match(rx) || [];
+  nameB = nameB.toLowerCase().match(rx) || [];
 
   L= nameA.length;
 
