@@ -111,7 +111,6 @@ var showingWorlds;
 var paginationLimit = 20;
 var filterActive;
 var nPagesShowed = 4;
-
 var totalPages;
 var actualPageInterval;
 
@@ -267,9 +266,9 @@ api.cosmos.on( 'postAdded' , function( post ){
 
       if ( worldSelected && worldSelected.id === post.worldId ) {
 
-        wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
-          if (e) {
-            console.log(e);
+        wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( err , o ){
+          if (err) {
+            return console.error(err);
           }
         });
 
@@ -288,9 +287,7 @@ api.cosmos.on( 'postAdded' , function( post ){
             case 'image':
             appendDocumentCard( post , user , lang.postCreated , function(){});
             break;
-            /*case 'generic':
-            case 'video':
-            case 'music':*/
+
             default:
             appendGenericCard(post  , user , lang.postCreated , function(){});
             break;
@@ -316,9 +313,9 @@ api.cosmos.on( 'postAdded' , function( post ){
 
         if ( post.author === myContactID ) {
 
-          wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
-            if (e) {
-              console.log(e);
+          wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( err, o ){
+            if (err) {
+              console.error(err);
             }
           });
 
@@ -1340,8 +1337,8 @@ var initCosmos = function(){
         'opacity'         : 1
       });
 
-      wql.firstOpenDone( [ myContactID ] , function( e , o ){
-        if(e) console.log(e);
+      wql.firstOpenDone( [ myContactID ] , function( err, o ){
+        if(err) console.error(err);
       });
 
     }
@@ -1353,8 +1350,8 @@ var initCosmos = function(){
         'opacity'         : 1
       });
 
-      wql.firstOpenDone( [ myContactID ] , function( e , o ){
-        if(e) console.log(e);
+      wql.firstOpenDone( [ myContactID ] , function( err, o ){
+        if(err) console.error(err);
       });
 
     }
@@ -1752,10 +1749,10 @@ var editWorldAsync = function(){
   worldApi.description = $( '.new-world-desc textarea' ).val();
   worldApi.name = name;
 
-  worldApi.set( worldApi , function( e , o ){
+  worldApi.set( worldApi , function( err, o ){
 
-    if(e){
-      console.log( e );
+    if(err){
+      return console.error(err);
     }
     /* COMENTAR LUEGO
     $( '.world-' + worldApi.id ).remove();
@@ -2862,8 +2859,8 @@ var removePostAsync = function( post ){
 
   if (isMobile()) {
 
-    worldSelected.removePost( post.id , function( e , o ){
-      if (e) {
+    worldSelected.removePost( post.id , function( err, o ){
+      if (err) {
         navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
       }
     });
@@ -2873,9 +2870,9 @@ var removePostAsync = function( post ){
     confirm( confirmText , function(o){
       if(o){
 
-        worldSelected.removePost( post.id , function( e , o ){
+        worldSelected.removePost( post.id , function( err, o ){
 
-          if (e) {
+          if (err) {
             alert( lang.notAllowedDeletePost );
           }
 
@@ -2901,13 +2898,13 @@ var unFollowWorld = function( world ){
 
     dialog.render(function( doIt ){
 
-      world.removeUser( myContactID , function( e , o ){
-        if (e) {
-          console.log(e);
+      world.removeUser( myContactID , function( err, o ){
+        if (err) {
+          console.error(err);
         }else{
-          wql.deleteLastRead( [ world.id , myContactID ] , function( e ){
-            if (e) {
-              console.log(e);
+          wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
+            if (err) {
+              console.error(err);
             }
           });
         }
@@ -2917,13 +2914,13 @@ var unFollowWorld = function( world ){
 
   }else{
 
-    world.removeUser( myContactID , function( e , o ){
-      if (e) {
-        console.log(e);
+    world.removeUser( myContactID , function( err , o ){
+      if (err) {
+        console.error(err);
       }else{
-        wql.deleteLastRead( [ world.id , myContactID ] , function( e ){
-          if (e) {
-            console.log(e);
+        wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
+          if (err) {
+            console.error(err);
           }
         });
       }
@@ -3388,10 +3385,10 @@ var attachFromInevio = function( card ){
     }] , 'selectSource');
 
   }else{
-    api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( e , s ){
+    api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( err , s ){
 
-      if (e) {
-        console.log( e );
+      if (err) {
+        console.error(err);
         return;
       }
 
@@ -3399,10 +3396,10 @@ var attachFromInevio = function( card ){
 
       s.forEach(function( attach ){
 
-        api.fs( attach , function( e , fsnode ){
+        api.fs( attach , function( err , fsnode ){
 
-          if (e) {
-            console.log(e);
+          if (err) {
+            console.error(err);
           }else{
             appendAttachment( { fsnode: fsnode , uploaded: true , card: card } );
           }
@@ -3497,7 +3494,12 @@ var attendWorldNotification = function( worldId ){
 
   worldNotifications.forEach(function( notification ){
     if ( notification.data.world === worldId ) {
-      api.notification.markAsAttended('cosmos' , notification.id, function(e){
+      api.notification.markAsAttended('cosmos' , notification.id, function(err){
+
+        if (err) {
+          console.error(err);
+        }
+
         $('.world-' + worldId).removeClass('with-notification');
         $('.world-' + worldId).removeClass('with-post-notification');
         checkNotifications();
@@ -3507,7 +3509,12 @@ var attendWorldNotification = function( worldId ){
 
   postsNotifications.forEach(function( notification ){
     if ( notification.data.world === worldId ) {
-      api.notification.markAsAttended('cosmos' , notification.id, function(e){
+      api.notification.markAsAttended('cosmos' , notification.id, function(err){
+
+        if (err) {
+          console.error(err);
+        }
+
         $('.world-' + worldId).removeClass('with-notification');
         $('.world-' + worldId).removeClass('with-post-notification');
         checkNotifications();
@@ -3524,7 +3531,12 @@ var attendCommentNotification = function( postClicked ){
       if ( post.isReply ) {
         world.getPost( post.parent , function( e , post ){
           if ( postClicked.id === post.id ) {
-            api.notification.markAsAttended('cosmos' , notification.id, function(e){
+            api.notification.markAsAttended('cosmos' , notification.id, function(err){
+
+              if (err) {
+                console.error(err);
+              }
+
               $('.notification-' + notification.id).remove();
               checkNotifications();
             });
@@ -3532,7 +3544,12 @@ var attendCommentNotification = function( postClicked ){
         });
       }else{
         if ( postClicked.id === post.id ) {
-          api.notification.markAsAttended('cosmos' , notification.id, function(e){
+          api.notification.markAsAttended('cosmos' , notification.id, function(err){
+
+            if (err) {
+              console.error(err);
+            }
+            
             $('.notification-' + notification.id).remove();
             checkNotifications();
           });
