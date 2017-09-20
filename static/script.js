@@ -106,18 +106,6 @@ var TYPES = {
 var URL_REGEX = /^http(s)?:\/\//i;
 var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
-<<<<<<< HEAD
-=======
-//Pagination
-var showingWorlds;
-var paginationLimit = 20;
-var filterActive;
-var nPagesShowed = 4;
-
-var totalPages;
-var actualPageInterval;
-
->>>>>>> pagination-update
 //Events
 cardsList.on( 'scroll' , function(){
 
@@ -138,12 +126,7 @@ searchWorldCard.on( 'input' , function(){
 
   searchWorldQuery = searchWorldQuery + 1;
   var searchWorldQueryCopy = searchWorldQuery;
-  filterWorldCards({
-    filter:                 $(this).val(),
-    searchWorldQueryCopy:   searchWorldQueryCopy,
-    'fromWorld':            0,
-    'toWorld':              paginationLimit
-  });
+  filterWorldCards( $( this ).val() , searchWorldQueryCopy );
 
 });
 
@@ -176,19 +159,9 @@ exploreButton.on( 'click' , function(){
     changeMobileView('explore');
   }
   $('.explore-container').scrollTop(0);
-<<<<<<< HEAD
   $( '.world-card-dom' ).remove();
   cleanFilterWorldCards();
   getPublicWorldsAsync();
-=======
-
-  filterActive = null;
-  cleanWorldCards();
-  getPublicWorldsAsync({
-    page: 1,
-    withAnimation: true
-  });
->>>>>>> pagination-update
 
 });
 
@@ -1343,24 +1316,6 @@ if( newParams.queue ){
 
 })
 
-.on( 'click', '.page', function(){
-  $('.page.active').removeClass('active');
-  $(this).addClass('active');
-  cleanWorldCards();
-  getPublicWorldsAsync({
-    page: $(this).find('span').text(),
-    withAnimation: true
-  });
-})
-
-.on( 'click', '.next-page', function(){
-  nextPage();
-})
-
-.on( 'click', '.back-page', function(){
-  prevPage();
-})
-
 $('.scrollable-content').on( 'scroll', function(){
 
   if( isMobile() ){
@@ -1524,12 +1479,6 @@ var initTexts = function(){
   $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
   $( '.notifications-title span' ).text( lang.activity );
-<<<<<<< HEAD
-=======
-  $( '.next-page .next-text' ).text( lang.next );
-  $( '.back-page .back-text' ).text( lang.previous );
-
->>>>>>> pagination-update
 
 }
 
@@ -1636,7 +1585,6 @@ var getMyWorldsAsync = function( options ){
 
 };
 
-<<<<<<< HEAD
 var getPublicWorldsAsync = function(){
 
   wz.cosmos.list( null , null , {from:0 , to:100} , function( err , o ){
@@ -1645,42 +1593,14 @@ var getPublicWorldsAsync = function(){
       return console.error(err);
     }
     console.log( 'todos los worlds:' , o );
-=======
-var getPublicWorldsAsync = function( options ){
 
-  var interval = {
-    from: (options.page - 1) * paginationLimit,
-    to: options.page * paginationLimit
-  }
+    $.each( o , function( i , world ){
 
-  wz.cosmos.list( filterActive , null , {'from': interval.from , 'to': interval.to} , function( err, worlds, nResults ){
->>>>>>> pagination-update
-
-    if(err){
-      console.error(err);
-      return;
-    }
-
-    // Query desfasada
-    if ( options.filtering && searchWorldQuery != options.searchWorldQueryCopy ) {
-      return;
-    }
-
-    if ( options.page === 1 ) {
-      totalPages = Math.ceil( nResults / paginationLimit );
-      actualPageInterval = 1;
-      addPages();
-    }
-    
-    showingWorlds = {'from': interval.from, 'to': interval.to}
-
-    worlds.reverse().forEach( function( world ){
       appendWorldCard( world );
+
     });
 
-    if ( options.withAnimation ) {
-      exploreAnimationIn();
-    }
+    exploreAnimationIn();
 
   });
 
@@ -2054,7 +1974,6 @@ var appendUserCircle = function( i , user , inviteIndex ){
 
 }
 
-<<<<<<< HEAD
 var filterWorldCards = function( filter , searchWorldQueryCopy ){
 
   var worldCards = $( '.world-card' );
@@ -2085,16 +2004,7 @@ var filterWorldCards = function( filter , searchWorldQueryCopy ){
 
     });
 
-=======
-var filterWorldCards = function( options ){
->>>>>>> pagination-update
 
-  cleanWorldCards();
-  filterActive = options.filter === '' ? null : options.filter;
-  getPublicWorldsAsync({
-    page: 1,
-    filtering: true,
-    searchWorldQueryCopy: options.searchWorldQueryCopy
   });
 
 }
@@ -3325,8 +3235,11 @@ var appendReplyComment = function( card , reply , response ){
 
 }
 
-var cleanWorldCards = function(){
-  $('.world-card-dom').remove();
+var cleanFilterWorldCards = function(){
+
+  searchWorldCard.val( '' );
+  filterWorldCards( '' );
+
 }
 
 var sortByName = function( nameA , nameB ){
@@ -4013,63 +3926,5 @@ var checkOnboarding = function(){
   }
 
 }
-
-var nextPage = function(){
-  actualPageInterval = actualPageInterval + nPagesShowed;
-  addPages();
-  cleanWorldCards();
-  getPublicWorldsAsync({
-    page: actualPageInterval,
-    withAnimation: true
-  });
-}
-
-var prevPage = function(){
-  actualPageInterval = actualPageInterval - nPagesShowed;
-  addPages();
-  cleanWorldCards();
-  getPublicWorldsAsync({
-    page: actualPageInterval,
-    withAnimation: true
-  });
-}
-
-var addPages = function(){
-
-  //Borro las paginas actuales
-  $('.page:not(.wz-prototype)').remove();
-  $('.back-page').removeClass('active');
-  $('.next-page').removeClass('active');
-
-  //Necesito boton de back
-  if (actualPageInterval > 1) {
-    $('.back-page').addClass('active');
-  }
-
-  for (var i = actualPageInterval; i < totalPages+1; i++) {
-
-    //Añado la pagina
-    var page = $('.page.wz-prototype').clone();
-    page.removeClass('wz-prototype').find('span').text(i);
-    $('.next-page').before(page);
-
-    //Marco activa la primera pagina
-    if(i === actualPageInterval){
-      page.addClass('active');
-    }
-
-    //He llegado al final 
-    if(i === totalPages){
-      return;
-    }
-
-    //He pintado 4 paginas pero no he terminado, pinto siguiente y termino
-    if (i === actualPageInterval + ( nPagesShowed - 1 ) && i < totalPages) {
-      $('.next-page').addClass('active');
-      return;
-    }
-  }
-}
-
 
 initCosmos();
