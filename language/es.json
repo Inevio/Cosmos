@@ -155,14 +155,7 @@
     "hasComment2"   : "ha comentado una publicación del mundo",
     "hasComment3"   : "ha respondido a tu comentario",
 
-<<<<<<< HEAD
     "fileCanNotOpen"  : "horbito no puede abrir este fichero en el dispositivo"
-=======
-    "fileCanNotOpen"  : "horbito no puede abrir este fichero en el dispositivo",
-
-    "next"  : "Siguiente",
-    "previous"  : "Anterior"
->>>>>>> pagination-update
 
 
   }

@@ -156,13 +156,6 @@
     "hasComment2"   : "commented on a post of",
     "hasComment3"   : "has replied to your comment",
 
-<<<<<<< HEAD
     "fileCanNotOpen"   : "horbito can't open this file currently in the device"
-=======
-    "fileCanNotOpen"   : "horbito can't open this file currently in the device",
-
-    "next"      : "Next",
-    "previous"  : "Previous"
->>>>>>> pagination-update
 
 }
