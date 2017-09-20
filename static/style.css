@@ -3965,7 +3965,6 @@ to {background-position: -200% 0;}
 
   .tend-grid{
 
-    position: relative;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
