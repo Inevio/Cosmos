@@ -253,8 +253,8 @@ var removeAttachment = function( options ){
       api.app.storage('ignoreRemoveEvent').push( fsnode.id )
       fsnode.remove( function( err ){
 
-        if (err) {
-          return console.error(err);
+        if( err ){
+          console.error( err );
         }
 
       })

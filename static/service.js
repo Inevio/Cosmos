@@ -13,27 +13,19 @@ api.cosmos.on( 'postAdded', function( post ){
     return;
   }
 
-  api.cosmos( post.worldId , function( err , world ){
+  api.cosmos( post.worldId , function( e , world ){
 
-    if (err) {
-      return console.error(err);
-    }
+    if (e) {console.log(e);return;}
 
-    api.user( post.author , function( err , user ){
+    api.user( post.author , function( e , user ){
 
-      if (err) {
-        return console.error(err);
-      }
+      if (e) {console.log(e);return;}
 
       var title;
       var text;
       if ( post.isReply ) {
 
-        world.getPost( post.parent , function( err , postParent ){
-
-          if (err) {
-            return console.error(err);
-          }
+        world.getPost( post.parent , function( e , postParent ){
 
           var onclick;
           // Reply lvl 1
@@ -62,11 +54,7 @@ api.cosmos.on( 'postAdded', function( post ){
 
             // Reply to MY comment
             if ( postParent.author === myContactID ) {
-              world.getPost( postParent.parent , function( err , grandparent ){
-
-                if (err) {
-                  return console.error(err);
-                }
+              world.getPost( postParent.parent , function( e , grandparent ){
 
                 title = user.name + ' ' + lang.bannerReplyComment;
                 text = post.content;
@@ -126,10 +114,7 @@ var sendBanner = function( info ){
 
 var checkNotifications = function(){
 
-  api.notification.list( 'cosmos' , function( err , notifications ){
-    if (err) {
-      return console.error(err);
-    }
+  api.notification.list( 'cosmos' , function( e , notifications ){
     wz.app.setBadge( notifications.length );
   });
 
@@ -150,8 +135,7 @@ var addArrow = function( appName, text, position ){
     'left': $( '#wz-taskbar', window.document ).width(),
     'margin-left' : '10px',
     'box-sizing' : 'border-box',
-    'z-index' : -1,
-    'display' : 'none'
+    'z-index' : -1
 
   });
 
@@ -186,11 +170,7 @@ var addArrow = function( appName, text, position ){
 console.log('cosmos',typeof cordova == 'undefined')
 if( typeof cordova == 'undefined' ){
 
-  wql.isFirstOpen( [ api.system.user().id ] , function( err , o ){
-
-    if (err) {
-      return console.error(err);
-    }
+  wql.isFirstOpen( [ api.system.user().id ] , function( e , o ){
 
     if ( o.length === 0 ){
 

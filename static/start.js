@@ -9,11 +9,7 @@ parameters = params
 
 if( api.app.getViews('main').length === 1 || app.hasClass( 'wz-mobile-view' ) || !parameters ){
 
-  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( err, o ){
-
-    if (err) {
-      return console.error(err);
-    }
+  wz.cosmos.getUserWorlds( myContactID , {from:0 , to:1000} , function( e , o ){
 
     if ( o.length === 0 && !isMobile()) {
 
