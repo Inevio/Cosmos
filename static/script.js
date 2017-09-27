@@ -1568,6 +1568,7 @@ var getPublicWorldsAsync = function( options ){
 
   wz.cosmos.list( filterActive , null , {'from': interval.from , 'to': interval.to} , function( err, worlds, nResults ){
 
+    console.log('Mundos!: ', worlds)
     if(err){
       console.error(err);
       return;
@@ -1684,6 +1685,10 @@ var appendWorldCard = function( worldApi ){
   }
   world.find( '.world-title-min' ).text( worldTitle );
   world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+
+  if( worldApi.users ){
+    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers );
+  }
 
   if ( myWorlds.indexOf( worldApi.id ) != -1 ) {
 
