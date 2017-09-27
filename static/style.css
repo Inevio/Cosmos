@@ -3916,11 +3916,12 @@ to {background-position: -200% 0;}
 
   }
 
+
   .world-card{
 
     float: left;
     width: 204px;
-  	height: 239px;
+  	height: 258px;
   	-webkit-border-radius: 6px;
   	-moz-border-radius: 6px;
   	border-radius: 6px;
@@ -4137,7 +4138,7 @@ to {background-position: -200% 0;}
     width: 100%;
     text-align: center;
     font-weight: bold;
-    margin-top: 168px;
+    margin-top: 187px;
     font-size: 13px;
     color: #889399;
     top: 0;
@@ -4153,7 +4154,7 @@ to {background-position: -200% 0;}
   	background-color: @redHorbito;
     position: relative;
     margin: 0 auto;
-    top: 150px;
+    top: 167px;
     transition: all 0.2s ease;
 
   }
