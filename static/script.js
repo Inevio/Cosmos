@@ -131,6 +131,7 @@ cardsList.on( 'scroll' , function(){
 
 searchWorldCard.on( 'input' , function(){
 
+  $('.explore-top-bar .search-bar input').val($(this).val());
   searchWorldQuery = searchWorldQuery + 1;
   var searchWorldQueryCopy = searchWorldQuery;
   filterWorldCards({
@@ -1275,13 +1276,25 @@ if( newParams.queue ){
 })
 
 $('.scrollable-content').on( 'scroll', function(){
-
   if( isMobile() ){
     app.find('.popup').removeClass('popup');
   }
-
 })
 
+$('.explore-container').on('scroll', function(){
+  if ( $(this).scrollTop() > 200 ) {
+    $('.explore-top-bar').addClass('active');
+  }else{
+    $('.explore-top-bar').removeClass('active');
+  }
+});
+
+$('.explore-top-bar .search-bar input').on('input', function(){
+
+  searchWorldCard.val($(this).val());
+  searchWorldCard.trigger('input');
+
+});
 
 //Functions
 var initCosmos = function(){
