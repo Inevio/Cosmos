@@ -3665,26 +3665,29 @@ to {background-position: -200% 0;}
   background-color: #f9f9fb;                  
 }
 
+
 .explore-top-bar{
   position: fixed;
   width: 100%;
-  height: 100px;
-  background: linear-gradient(to bottom, #f9f9fb 80%, rgba(0,0,0,0) 100%);
+  height: 115px;
+  background: transparent;
   z-index: 6;
   transition: all 0.2s ease;
   .search-bar{
     width: 330px;
     height: 40px;
     margin-left: ~'calc(50% - 165px)';
-    font-size: 15px;
+    top: 30px;
+    opacity: 0 !important;
     figure{
-      margin-left: 18px;
-      margin-top: 10px;
-      transform: scale(0.9);
+      margin-left: 14px;
+      margin-top: 11px;
+      transform: scale(0.8);
     }
     input{
-      margin-top: 11px;
-      margin-left: 15px;
+      margin-top: 12px;
+      margin-left: 10px;
+      font-size: 15px;
     }
   }
 }
@@ -3693,7 +3696,7 @@ to {background-position: -200% 0;}
 .explore-top-bar.active{
   background: linear-gradient(to bottom, #f9f9fb 80%, rgba(0,0,0,0) 100%);
   .search-bar{
-    display: inline-block;
+    opacity: 1 !important;
   }
 }
 
@@ -3758,8 +3761,8 @@ to {background-position: -200% 0;}
   .new-world-button{
 
     float: left;
-    margin-left: 42px;
-    margin-top: 30px;
+    margin-left: 46px;
+    margin-top: 41px;
     opacity: 0;
     transform: translateY(10px);
 
@@ -3821,7 +3824,7 @@ to {background-position: -200% 0;}
   .search-title{
 
     position: absolute;
-    top: 124px;
+    top: 117px;
     font-size: 55px;
     color: @darkHorbito;
     text-align: center;
@@ -3844,8 +3847,8 @@ to {background-position: -200% 0;}
     transform: translateY(10px);
     padding: 10px;
     border-radius: 6px;
-    margin-right: 10px;
-    margin-top: 10px;
+    margin-right: 28px;
+    margin-top: 34px;
     background-color: transparent;
     transition: all 0.2s ease;
     z-index: 10;
@@ -3895,7 +3898,7 @@ to {background-position: -200% 0;}
   .tend-text{
 
     position: absolute;
-    top: 298px;
+    top: 295px;
     font-size: 21px;
     color: @gray1;
     text-align: center;
@@ -3911,14 +3914,12 @@ to {background-position: -200% 0;}
 
     float: left;
     width: 204px;
-  	height: 258px;
-  	-webkit-border-radius: 6px;
-  	-moz-border-radius: 6px;
-  	border-radius: 6px;
+  	height: 239px;
+  	-webkit-border-radius: 12px;
+  	-moz-border-radius: 12px;
+  	border-radius: 12px;
   	background-color: #fff;
-  	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
-  	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
-  	box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  	box-shadow: 0 15px 20px rgba(84,95,101,.2);
     position: relative;
     opacity: 0;
     transform: translateY(40px);
@@ -3950,7 +3951,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 100%;
     position: relative;
-    top: 297px;
+    top: 345px;
 
   }
 
@@ -4095,28 +4096,31 @@ to {background-position: -200% 0;}
 
   }
 
+
   .world-card .world-avatar-min{
 
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     border: 1px solid #fff;
     background-size: cover;
     margin: 0 auto;
-    top: 85px;
+    top: 17px;
 
   }
 
   .world-card .world-title-min{
 
     float: left;
-    width: 100%;
     text-align: center;
     font-size: 19px;
     font-weight: bold;
     color: #545f65;
-    margin-top: 137px;
+    margin-top: 93px;
+    margin-left: 15px;
+    margin-right: 15px;
+    width: ~'calc(100% - 30px)';
     top: 0;
     position: absolute;
     word-wrap: break-word;
@@ -4130,7 +4134,7 @@ to {background-position: -200% 0;}
     width: 100%;
     text-align: center;
     font-weight: bold;
-    margin-top: 187px;
+    margin-top: 155px;
     font-size: 13px;
     color: #889399;
     top: 0;
@@ -4140,13 +4144,13 @@ to {background-position: -200% 0;}
 
   .follow-button{
 
-    width: 127px;
-  	height: 32px;
+    width: 180px;
+  	height: 39px;
   	border-radius: 6px;
   	background-color: @redHorbito;
     position: relative;
     margin: 0 auto;
-    top: 167px;
+    top: 120px;
     transition: all 0.2s ease;
 
   }
@@ -4184,11 +4188,12 @@ to {background-position: -200% 0;}
   .follow-button span{
 
     float: left;
-    margin-top: 10px;
+    margin-top: 12px;
     width: 100%;
     text-align: center;
     color: #fff;
-    font-size: 13px;
+    font-size: 15px;
+    font-weight: bold;
 
   }
 
