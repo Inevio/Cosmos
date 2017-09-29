@@ -36,7 +36,6 @@ var unFollowButton   = $( '.stop-follow' );
 var selectWorld      = $( '.select-world' );
 var noWorlds         = $( '.no-worlds' );
 var scrollableContent = $('.scrollable-content');
-var starsCanvasContainer  = $( '.stars-canvas' ); 
 
 // --- EVENTS ---
 // SERVER EVENTS
@@ -1061,16 +1060,6 @@ var exploreAnimationOut = function(){
     }, 200, animationEffect , function(){
 
       noWorlds.hide();
-      starsCanvasContainer.stop().clearQueue().transition({ 
-
-        'opacity' : 0
-
-
-      }, 300 , function(){
-
-        starsCanvasContainer.addClass( 'no-visible' ); 
-
-      });
 
     });
   }
@@ -1091,15 +1080,10 @@ var exploreAnimationOut = function(){
       'opacity'   : 0
     });
 
-    $( '.planet' ).css({
-      'transform' : 'translate( 120px , 100px )',
-      'opacity'   : 0
-    });
-
   });
 
   // Stars goes down
-  $( '.stars, .search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
+  $( '.search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
 
     'opacity'   : 0,
     'transform' : 'translateY(20px)'

@@ -2,10 +2,16 @@
 @redHorbito: #ff2153;
 @redHorbitoHover: #f81d4e;
 @redHorbitoActive: #e51846;
+
 @grayHorbito: #51575f;
 @grayHorbitoHover: #474d54;
 @grayHorbitoActive: #42464d;
 
+@darkHorbito: #252525;
+@gray1: #717171;
+@gray2: #9a9aa2;
+@gray3: #bbbbc1;
+@lightGray: #f9f9fe;
 
 .hide{
   display: none !important;
@@ -3662,40 +3668,99 @@ to {background-position: -200% 0;}
   z-index: 7;
   opacity: 0;
   display: none;
+  background-color: #f9f9fb;
+  overflow: hidden;                  
+}
 
+
+.explore-top-bar{
+  position: fixed;
+  width: 100%;
+  height: 115px;
+  background: transparent;
+  z-index: 6;
+  transition: all 0.2s ease;
+  .search-bar{
+    width: 330px;
+    height: 40px;
+    margin-left: ~'calc(50% - 165px)';
+    top: 30px;
+    display: none;
+    figure{
+      margin-left: 14px;
+      margin-top: 11px;
+      transform: scale(0.8);
+    }
+    input{
+      margin-top: 12px;
+      margin-left: 10px;
+      font-size: 15px;
+    }
+  }
+  .search-bar:hover{
+    box-shadow: 0 7px 14px rgba(84,95,101,.4);
+  }
+}
+
+
+.explore-top-bar.active{
+  background: linear-gradient(to bottom, #f9f9fb 80%, rgba(0,0,0,0) 100%);
+  .search-bar{
+    display: block;
+  }
+}
+
+.search-bar{
+  width: 474px;
+  height: 50px;
+  border-radius: 6px;
+  background-color: #fff;
+  position: absolute;
+  margin-left: ~'calc(50% - 237px)';
+  top: 209px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.2s ease;
+  box-shadow: 0 7px 14px rgba(84,95,101,.2);
+}
+
+.search-bar:hover{
+  box-shadow: 0 7px 14px rgba(84,95,101,.4);
+}
+
+.search-bar figure{
+  float: left;
+  background-image: url('@static/sprite-lupa-explore.png');
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+  margin-left: 22px;
+  margin-top: 15px;
+  background-position: 20px 0;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.search-bar.popup figure{
+  opacity: 1;
+}
+
+.search-bar:hover figure{
+  opacity: 1;
+}
+
+.search-bar input{
+  float: left;
+  background-color: transparent;
+  width: ~'calc(100% - 62px)';
+  margin-top: 14px;
+  margin-left: 20px;
+  color: #717171;
+  font-size: 19px;
+  font-weight: bold;
 }
 
 .explore-section{
-
-  .stars{
-
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 4;
-    transform: translateY(20px);
-    opacity: 0;
-    background-size: 1536px 710px;
-    background-position: -145px -79px;
-    border-radius: 6px;
-
-  }
-
-  .planet{
-
-    position: absolute;
-    z-index: 4;
-    background-image: url('@static/planet.png');
-    opacity: 0;
-    background-size: 516px 462px;
-    width: 516px;
-    height: 462px;
-    right: -181px;
-    bottom: -195px;
-    transform: translate( 120px , 100px );
-    border-radius: 6px;
-
-  }
 
   .explore-container{
 
@@ -3710,40 +3775,47 @@ to {background-position: -200% 0;}
   .new-world-button{
 
     float: left;
-    margin-left: 42px;
-    margin-top: 30px;
+    margin-left: 36px;
+    margin-top: 31px;
+    padding: 10px;
     opacity: 0;
     transform: translateY(10px);
+    border-radius: 6px;
+    transition: all 0.2s ease;
 
   }
+
+  .new-world-button:hover{
+
+    background-color: rgba(0, 0, 0, 0.05);
+
+  }  
 
   .new-world-button figure{
 
     float: left;
     background-image: url('@static/newWorld.png');
-    background-size: 27px 20px;
+    background-size: 55px 22px;
     width: 27px;
-    height: 20px;
+    height: 22px;
     margin-right: 10px;
-    background-position: 27px 0;
     opacity: 0.7;
-    transition: all 0.2s ease;
-
+    background-position: 0 0;
   }
 
   .new-world-button:hover figure{
-
-    opacity: 1;
-
+    background-position: 28px 0;
   }
 
   .new-world-button span{
 
     float: left;
-    color: #fff;
+    color: @darkHorbito;
     font-size: 17px;
     opacity: 0.7;
     transition: all 0.2s ease;
+    margin-top: 2px;
+    font-weight: bold;
 
   }
 
@@ -3753,95 +3825,18 @@ to {background-position: -200% 0;}
 
   }
 
-  .new-world-button:hover span::after {
-
-    width: 100%;
-
-  }
-
-  .new-world-button span::after {
-    content: "";
-    display: block;
-    width: 0;
-    height: 1px;
-    background: #fff;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-
-  }
-
   .search-title{
 
     position: absolute;
-    top: 124px;
+    top: 117px;
     font-size: 55px;
-    color: #fff;
+    color: @darkHorbito;
     text-align: center;
     width: 100%;
     left: 0;
-    font-weight: bold;
+    font-weight: 900;
     opacity: 0;
     transform: translateY(20px);
-
-  }
-
-  .search-bar{
-
-    width: 474px;
-  	height: 50px;
-  	border-radius: 6px;
-  	background-color: #fff;
-    position: relative;
-    top: 209px;
-    margin: 0 auto;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.2s ease;
-
-
-  }
-
-  .search-bar.popup{
-
-    box-shadow: 0px 0px 0px 2px @redHorbito;
-
-  }
-
-  .search-bar figure{
-
-    float: left;
-    background-image: url('@static/sprite-lupa-explore.png');
-    background-size: 20px 20px;
-    width: 20px;
-    height: 20px;
-    margin-left: 22px;
-    margin-top: 15px;
-    background-position: 20px 0;
-    opacity: 0.7;
-    transition: all 0.2s ease;
-  }
-
-  .search-bar.popup figure{
-
-    opacity: 1;
-
-  }
-
-  .search-bar:hover figure{
-
-    opacity: 1;
-
-  }
-
-  .search-bar input{
-
-    float: left;
-    background-color: transparent;
-    width: 390px;
-    margin-top: 15px;
-    margin-left: 20px;
-    color: #717171;
-    font-size: 19px;
 
   }
 
@@ -3855,9 +3850,9 @@ to {background-position: -200% 0;}
     opacity: 0;
     transform: translateY(10px);
     padding: 10px;
-    border-radius: 50%;
-    margin-right: 10px;
-    margin-top: 10px;
+    border-radius: 6px;
+    margin-right: 28px;
+    margin-top: 34px;
     background-color: transparent;
     transition: all 0.2s ease;
     z-index: 10;
@@ -3865,9 +3860,7 @@ to {background-position: -200% 0;}
   }
 
   .close-explore:hover{
-
-    background-color: rgba(0,0,0,0.3);
-
+    background-color: rgba(0,0,0,0.05);
   }
 
   .close-explore figure{
@@ -3876,8 +3869,7 @@ to {background-position: -200% 0;}
     width: 14px;
     height: 14px;
     background-image: url('@static/close-explore.png');
-    background-size: 29px 14px;
-    background-position: 14px 0;
+    background-size: 14px 14px;
     opacity: 0.7;
     transition: all 0.2s ease;
 
@@ -3910,9 +3902,9 @@ to {background-position: -200% 0;}
   .tend-text{
 
     position: absolute;
-    top: 298px;
+    top: 295px;
     font-size: 21px;
-    color: #fff;
+    color: @gray1;
     text-align: center;
     width: 100%;
     left: 0;
@@ -3922,19 +3914,16 @@ to {background-position: -200% 0;}
 
   }
 
-
   .world-card{
 
     float: left;
     width: 204px;
-  	height: 258px;
-  	-webkit-border-radius: 6px;
-  	-moz-border-radius: 6px;
-  	border-radius: 6px;
+  	height: 239px;
+  	-webkit-border-radius: 12px;
+  	-moz-border-radius: 12px;
+  	border-radius: 12px;
   	background-color: #fff;
-  	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
-  	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
-  	box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  	box-shadow: 0 15px 20px rgba(84,95,101,.2);
     position: relative;
     opacity: 0;
     transform: translateY(40px);
@@ -3955,9 +3944,7 @@ to {background-position: -200% 0;}
 
   .world-card:hover{
 
-    -webkit-box-shadow: 0 3px 12px rgba(0,0,0,.4);
-  	-moz-box-shadow: 0 3px 12px rgba(0,0,0,.4);
-  	box-shadow: 0 3px 12px rgba(0,0,0,.4);
+    box-shadow: 0 15px 20px rgba(84, 95, 101, 0.4);
 
   }
 
@@ -3966,7 +3953,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 100%;
     position: relative;
-    top: 297px;
+    top: 345px;
 
   }
 
@@ -4003,20 +3990,22 @@ to {background-position: -200% 0;}
       float: left;
       width: 100%;
       text-align: center;
-      color: #fff;
+      color: @gray1;
       font-size: 17px;
       margin-top: 9px;
       font-weight: bold;
     }
-
   }
 
   .page.active{
     background: #ff2153 !important;
+    .num-page{
+      color: #fff;
+    }
   }
 
   .page:hover{
-    background: rgba(255,255,255, 0.7);
+    background: rgba(0,0,0, 0.05);
   }
 
   .back-page{
@@ -4027,7 +4016,7 @@ to {background-position: -200% 0;}
 
     .back-text{
       float: left;
-      color: #fff;
+      color: @gray1;
       font-size: 17px;
       font-weight: bold;
       margin-top: 4px;
@@ -4047,7 +4036,7 @@ to {background-position: -200% 0;}
   }
 
   .back-page:hover{
-    background: rgba(255,255,255, 0.7);
+    background: rgba(0,0,0, 0.05);
   }
 
   .back-page.active{
@@ -4062,7 +4051,7 @@ to {background-position: -200% 0;}
 
     .next-text{
       float: left;
-      color: #fff;
+      color: @gray1;
       font-size: 17px;
       font-weight: bold;
       margin-top: 4px;
@@ -4081,7 +4070,7 @@ to {background-position: -200% 0;}
   }
 
   .next-page:hover{
-    background: rgba(255,255,255, 0.7);
+    background: rgba(0,0,0, 0.05);
   }
 
   .next-page.active{
@@ -4109,28 +4098,31 @@ to {background-position: -200% 0;}
 
   }
 
+
   .world-card .world-avatar-min{
 
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     border: 1px solid #fff;
     background-size: cover;
     margin: 0 auto;
-    top: 85px;
+    top: 17px;
 
   }
 
   .world-card .world-title-min{
 
     float: left;
-    width: 100%;
     text-align: center;
-    font-size: 19px;
-    font-weight: bold;
-    color: #545f65;
-    margin-top: 137px;
+    font-size: 21px;
+    font-weight: 900;
+    color: @darkHorbito;
+    margin-top: 93px;
+    margin-left: 15px;
+    margin-right: 15px;
+    width: ~'calc(100% - 30px)';
     top: 0;
     position: absolute;
     word-wrap: break-word;
@@ -4144,9 +4136,9 @@ to {background-position: -200% 0;}
     width: 100%;
     text-align: center;
     font-weight: bold;
-    margin-top: 187px;
+    margin-top: 155px;
     font-size: 13px;
-    color: #889399;
+    color: @gray1;
     top: 0;
     position: absolute;
 
@@ -4154,20 +4146,41 @@ to {background-position: -200% 0;}
 
   .follow-button{
 
-    width: 127px;
-  	height: 32px;
+    width: 180px;
+  	height: 39px;
   	border-radius: 6px;
   	background-color: @redHorbito;
     position: relative;
     margin: 0 auto;
-    top: 167px;
+    top: 122px;
     transition: all 0.2s ease;
+
+    i{
+      float: left;
+      width: 17px;
+      height: 13px;
+      background-image: url('@static/checkmark.png');
+      background-size: 17px 13px;
+      margin-left: 37px;
+      margin-top: 13px;
+      display: none;
+    }
 
   }
 
   .followed .follow-button{
 
     background-color: #f7f8fa;
+
+    i{
+      display: inline-block;
+    }
+
+    span{
+      float: left;
+      width: auto;
+      margin-left: 16px;
+    }
 
   }
 
@@ -4198,11 +4211,12 @@ to {background-position: -200% 0;}
   .follow-button span{
 
     float: left;
-    margin-top: 10px;
+    margin-top: 12px;
     width: 100%;
     text-align: center;
     color: #fff;
-    font-size: 13px;
+    font-size: 15px;
+    font-weight: bold;
 
   }
 
@@ -5349,62 +5363,6 @@ to {background-position: -200% 0;}
 
 }
 
-/* STARS PARALLAX */
-
-.stars1{
-
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: url( '@static/starlayer1.png' );
-  animation: stars-movement 75s infinite;
-
-}
-
-.stars2{
-
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: url( '@static/starlayer2.png' );
-  animation: stars-movement 125s infinite;
-
-}
-
-.stars3{
-
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: url( '@static/starlayer3.png' );
-  animation: stars-movement 175s infinite;
-
-}
-
-@keyframes stars-movement{
-    0%{ background-position: 0 0 ; }
-    100%{ background-position: 0 -2000px ; }
-}
-
-.stars-canvas{
-
-  left: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 6;
-  background-image: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-  opacity: 0;
-  border-radius: 6px;
-
-}
-
-.stars-canvas.no-visible{
-
-  display: none;
-
-}
-
 /* LOADING ANIMATION */
 .loading-animation-container{
   position: absolute;
@@ -5449,6 +5407,7 @@ to {background-position: -200% 0;}
     margin: 0px;
     padding-top: 20px;
     padding-bottom: 8px;
+    position: fixed;
   }
 
   .new-world-button-mini i{
