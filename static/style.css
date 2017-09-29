@@ -4127,7 +4127,8 @@ to {background-position: -200% 0;}
     position: absolute;
     word-wrap: break-word;
     line-height: 22px;
-
+    height: 46px;
+    overflow: hidden;
   }
 
   .world-followers{
