@@ -8,6 +8,7 @@
     "send"    : "Send",
     "lastDay" : "Yesterday",
 
+
     "publics"       : "Public worlds",
     "privates"      : "Private worlds",
     "explore"       : "Explore",
@@ -25,7 +26,7 @@
     "comfirmDeletePost" : "Are you sure you want to delete this post?",
     "comfirmDeleteComment" : "Are you sure you want to delete this comment?",
     "deletePost"    : "Delete post",
-    "following"     : "following",
+    "following"     : "Following",
     "writeComment"  : "Write your comment here...",
     "editWorld"     : "Edit world",
     "unfollowWorld" : "Unfollow world",
