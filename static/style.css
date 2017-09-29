@@ -620,10 +620,8 @@ to {background-position: -200% 0;}
   .category .opener{
 
     float: right;
-    width: 11px;
+    width: 10px;
     height: 6px;
-    background-image: url('@static/flecha-sidebar.png');
-    background-size: 11px 6px;
     margin-right: 9px;
     margin-top: 5px;
     margin-bottom: 3px;
@@ -631,6 +629,14 @@ to {background-position: -200% 0;}
     -webkit-transition: all 0.2s;
     transition: all 0.2s;
     cursor: pointer;
+
+    i{
+      float: left;
+      width: 10px;
+      height: 6px;
+      background-image: url('@static/flecha-sidebar.png');
+      background-size: 10px 6px;
+    }
 
   }
 
