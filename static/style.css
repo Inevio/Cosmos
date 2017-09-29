@@ -3662,7 +3662,8 @@ to {background-position: -200% 0;}
   z-index: 7;
   opacity: 0;
   display: none;
-  background-color: #f9f9fb;                  
+  background-color: #f9f9fb;
+  overflow: hidden;                  
 }
 
 
@@ -3678,7 +3679,7 @@ to {background-position: -200% 0;}
     height: 40px;
     margin-left: ~'calc(50% - 165px)';
     top: 30px;
-    opacity: 0 !important;
+    display: none;
     figure{
       margin-left: 14px;
       margin-top: 11px;
@@ -3690,13 +3691,16 @@ to {background-position: -200% 0;}
       font-size: 15px;
     }
   }
+  .search-bar:hover{
+    box-shadow: 0 7px 14px rgba(84,95,101,.4);
+  }
 }
 
 
 .explore-top-bar.active{
   background: linear-gradient(to bottom, #f9f9fb 80%, rgba(0,0,0,0) 100%);
   .search-bar{
-    opacity: 1 !important;
+    display: block;
   }
 }
 
@@ -3712,6 +3716,10 @@ to {background-position: -200% 0;}
   transform: translateY(20px);
   transition: all 0.2s ease;
   box-shadow: 0 7px 14px rgba(84,95,101,.2);
+}
+
+.search-bar:hover{
+  box-shadow: 0 7px 14px rgba(84,95,101,.4);
 }
 
 .search-bar figure{
@@ -3761,29 +3769,36 @@ to {background-position: -200% 0;}
   .new-world-button{
 
     float: left;
-    margin-left: 46px;
-    margin-top: 41px;
+    margin-left: 36px;
+    margin-top: 31px;
+    padding: 10px;
     opacity: 0;
     transform: translateY(10px);
+    border-radius: 6px;
+    transition: all 0.2s ease;
 
   }
+
+  .new-world-button:hover{
+
+    background-color: rgba(0, 0, 0, 0.05);
+
+  }  
 
   .new-world-button figure{
 
     float: left;
     background-image: url('@static/newWorld.png');
-    background-size: 28px 22px;
-    width: 28px;
+    background-size: 55px 22px;
+    width: 27px;
     height: 22px;
     margin-right: 10px;
-    background-position: 27px 0;
     opacity: 0.7;
-    transition: all 0.2s ease;
-
+    background-position: 0 0;
   }
 
   .new-world-button:hover figure{
-    opacity: 1;
+    background-position: 28px 0;
   }
 
   .new-world-button span{
@@ -3801,23 +3816,6 @@ to {background-position: -200% 0;}
   .new-world-button:hover span{
 
     opacity: 1;
-
-  }
-
-  .new-world-button:hover span::after {
-
-    width: 100%;
-
-  }
-
-  .new-world-button span::after {
-    content: "";
-    display: block;
-    width: 0;
-    height: 1px;
-    background: @darkHorbito;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
 
   }
 
@@ -3940,9 +3938,7 @@ to {background-position: -200% 0;}
 
   .world-card:hover{
 
-    -webkit-box-shadow: 0 3px 12px rgba(0,0,0,.4);
-  	-moz-box-shadow: 0 3px 12px rgba(0,0,0,.4);
-  	box-shadow: 0 3px 12px rgba(0,0,0,.4);
+    box-shadow: 0 15px 20px rgba(84, 95, 101, 0.4);
 
   }
 
@@ -4114,9 +4110,9 @@ to {background-position: -200% 0;}
 
     float: left;
     text-align: center;
-    font-size: 19px;
-    font-weight: bold;
-    color: #545f65;
+    font-size: 21px;
+    font-weight: 900;
+    color: @darkHorbito;
     margin-top: 93px;
     margin-left: 15px;
     margin-right: 15px;
@@ -4136,7 +4132,7 @@ to {background-position: -200% 0;}
     font-weight: bold;
     margin-top: 155px;
     font-size: 13px;
-    color: #889399;
+    color: @gray1;
     top: 0;
     position: absolute;
 
@@ -4150,14 +4146,35 @@ to {background-position: -200% 0;}
   	background-color: @redHorbito;
     position: relative;
     margin: 0 auto;
-    top: 120px;
+    top: 122px;
     transition: all 0.2s ease;
+
+    i{
+      float: left;
+      width: 17px;
+      height: 13px;
+      background-image: url('@static/checkmark.png');
+      background-size: 17px 13px;
+      margin-left: 37px;
+      margin-top: 13px;
+      display: none;
+    }
 
   }
 
   .followed .follow-button{
 
     background-color: #f7f8fa;
+
+    i{
+      display: inline-block;
+    }
+
+    span{
+      float: left;
+      width: auto;
+      margin-left: 16px;
+    }
 
   }
 
