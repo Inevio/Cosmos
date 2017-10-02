@@ -44,6 +44,7 @@ textarea{
   opacity: 0;
   display: none;
   top: 0;
+  background-color: #f9f9fb;
 }
 
 .no-worlds-mobile{
@@ -89,7 +90,7 @@ to {background-position: -200% 0;}
 .no-worlds .title{
   font-size: 51px;
   font-weight: 900;
-  color: #fff;
+  color: @darkHorbito;
   width: 100%;
   text-align: center;
   float: left;
@@ -117,7 +118,7 @@ to {background-position: -200% 0;}
 
 .no-worlds .subtitle{
   font-size: 19px;
-  color: #fff;
+  color: @gray1;
   width: ~'calc(100% - 400px)';
   height: 60px;
   margin: 28px 200px 11px 200px;
@@ -154,7 +155,7 @@ to {background-position: -200% 0;}
 
 .no-worlds .subtitle2{
   font-size: 19px;
-  color: #fff;
+  color: @gray1;
   width: ~'calc(100% - 400px)';
   height: 60px;
   margin: 10px 200px;
@@ -213,7 +214,7 @@ to {background-position: -200% 0;}
     .description{
       float: left;
       font-size: 17px;
-      color: #fff;
+      color: @gray1;
       text-align: center;
       width: 250px;
       margin-top: 11px;
