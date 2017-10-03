@@ -11,49 +11,13 @@ var myWorlds              = [];
 var app                   = $( this );
 var desktop               = $( this ).parent().parent();
 var myContactID           = api.system.user().id;
-var worldPrototype        = $( '.sidebar .world.wz-prototype' );
-var worldTitle            = $( '.world-title' );
-var worldCardPrototype    = $( '.world-card.wz-prototype' );
-var searchWorldCard       = $( '.explore-container .search-bar input' );
-var userCirclePrototype   = $( '.user-circle.wz-prototype' );
-var closeInviteUser       = $( '.close-invite-user, .cancel-invite-user' );
-var aceptInviteUser       = $( '.invite-user-container .invite-user' );
-var friendPrototype       = $( '.friend.wz-prototype' );
-var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
-var documentCardPrototype = $( '.doc-card.wz-prototype' );
-var genericCardPrototype  = $( '.gen-card.wz-prototype' );
-var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
-var exploreButton         = $( '.explore-button' );
-var unFollowButton        = $( '.stop-follow' );
-var commentPrototype      = $( '.comment.wz-prototype' );
-var openChatButton        = $( '.open-chat' );
-var worldDescription      = $( '.world-desc' );
-var searchPostInput       = $( '.pre-cover .search-button input, .mobile-world-content .search-bar input' );
-var cleanPostSearch       = $( '.search-button .clean-search' );
-//var newPostButton       = $( '.new-post, .no-post-new-post-button' );
-//var closeExplore        = $( '.close-explore' );
-var noWorlds              = $( '.no-worlds' );
-var noWorldsMobile        = $( '.no-worlds-mobile' );
-var openFolder            = $( '.open-folder' );
-var cardsList             = $( '.cards-list' );
-var mobileView              = 'worldSidebar'
-var mobileWorldContent      = $( '.mobile-world-content' );
-var mobileWorldSidebar      = $( '.mobile-world-list' );
-var mobileWorldComments     = $( '.mobile-world-comments' );
-var mobileNewWorld          = $( '.mobile-new-world' );
-var mobileExplore           = $( '.mobile-explore' );
-var mobileNewPost           = $( '.mobile-new-post' );
-var newWorldButton  = $( '.new-world-button, .new-world-button-mini' );
-var closeNewWorld   = $( '.close-new-world' );
-var searchBar       = $( '.search-button' );
-var searchBarFigure = $( '.search-button i' );
-var inviteByMail    = $( '.invite-by-mail' );
-var startButton     = $('.no-worlds .start-button-no-worlds');
-var startButtonMobile = $('.no-worlds-mobile .start-button-no-worlds');
-
+var mobileView            = 'worldSidebar'
 var worldNotifications = [];
 var postsNotifications = [];
 var commentsNotifications = [];
+
+var URL_REGEX = /^http(s)?:\/\//i;
+var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
 var TYPES = {
 
@@ -102,9 +66,6 @@ var TYPES = {
 
 }
 
-var URL_REGEX = /^http(s)?:\/\//i;
-var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
-
 //Pagination
 var showingWorlds;
 var paginationLimit = 20;
@@ -112,6 +73,66 @@ var filterActive;
 var nPagesShowed = 4;
 var totalPages;
 var actualPageInterval;
+
+// Prototypes
+var worldPrototype        = $( '.sidebar .world.wz-prototype' );
+var worldCardPrototype    = $( '.world-card.wz-prototype' );
+var userCirclePrototype   = $( '.user-circle.wz-prototype' );
+var documentCardPrototype = $( '.doc-card.wz-prototype' );
+var genericCardPrototype  = $( '.gen-card.wz-prototype' );
+var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
+var friendPrototype       = $( '.friend.wz-prototype' );
+var commentPrototype      = $( '.comment.wz-prototype' );
+
+// DOM CACHE ---
+
+// Start
+var startButton           = $('.no-worlds .start-button-no-worlds');
+var startButtonMobile     = $('.no-worlds-mobile .start-button-no-worlds');
+
+// Sidebar
+var exploreButton         = $( '.explore-button' );
+var mobileWorldSidebar    = $( '.mobile-world-list' );
+
+// World selected
+var noWorlds              = $( '.no-worlds' );
+var noWorldsMobile        = $( '.no-worlds-mobile' );
+var mobileWorldContent    = $( '.mobile-world-content' );
+
+// World header
+var worldAvatar           = $( '.world-avatar' );
+var worldTitle            = $( '.world-title' );
+var worldMembers          = $( '.world-members');
+var inviteUserButton      = $( '.invite-user-button' );
+var openChatButton        = $( '.open-chat-button' );
+var openFolderButton      = $( '.open-folder-button' );
+var searchPostInput       = $( '.search-post input, .mobile-world-content .search-bar input' );
+var cleanPostSearch       = $( '.search-post .delete-content' );
+
+// Posts
+var cardsList             = $( '.cards-list' );
+var mobileWorldComments   = $( '.mobile-world-comments' );
+
+// World users
+var closeInviteUser       = $( '.close-invite-user, .cancel-invite-user' );
+var aceptInviteUser       = $( '.invite-user-container .invite-user' );
+var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
+var inviteByMail          = $( '.invite-by-mail' );
+
+// Explore
+var searchWorldCard       = $( '.explore-container .search-bar input' );
+var unFollowButton        = $( '.stop-follow' );
+var mobileExplore         = $( '.mobile-explore' );
+var searchBar             = $( '.search-button' );
+var searchBarFigure       = $( '.search-button i' );
+
+// New world
+var mobileNewWorld        = $( '.mobile-new-world' );
+var newWorldButton        = $( '.new-world-button, .new-world-button-mini' );
+var closeNewWorld         = $( '.close-new-world' );
+
+// New post
+var mobileNewPost         = $( '.mobile-new-post' );
 
 //Events
 cardsList.on( 'scroll' , function(){
@@ -443,36 +464,6 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
 });
 
-app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
-
-  if(isMobile()){
-    return;
-  }
-
-  var name = worldTitle.data( 'name' );
-  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
-  var textWidth = Math.floor( winWidth * 0.054 );
-
-  if( !name || $('.ui-content').hasClass('compressed') ){
-    return;
-  }
-
-  if ( name.length > textWidth ) {
-
-    worldTitle.css('font-size' , '27px');
-    textWidth = Math.floor( winWidth * 0.07 );
-    if ( !isMobile() && name.length > textWidth ) {
-      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-    }else{
-      worldTitle.text( name );
-    }
-  }else{
-    worldTitle.css('font-size' , '37px');
-    worldTitle.text( name );
-  }
-
-});
-
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
 api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
@@ -590,7 +581,7 @@ cleanPostSearch.on( 'click' , function(){
   searchPost('');
 });
 
-openFolder.on( 'click' , function(){
+openFolderButton.on( 'click' , function(){
 
   $('.tip.open-folder').addClass('used');
   checkOnboarding();
@@ -1359,29 +1350,7 @@ var initCosmos = function(){
 
 var initTexts = function(){
 
-  $( '.category .public' ).text( lang.publics );
-  $( '.category .private' ).text( lang.privates );
-  $( '.explore-text, .search-title' ).text( lang.explore );
-  $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
-  $( '.card-options-section .delete span' ).text( lang.deletePost );
-  $( '.card-options-section .edit span' ).text( lang.editPost );
-  $( '.card-content.edit-mode .title-input' ).attr( 'placeholder' , lang.writeTitle );
-  $( '.card-content.edit-mode .content-input' ).attr( 'placeholder' , lang.writeDescription );
-  $( '.send-button span' ).text( lang.send );
-  $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
-  $( '.world-users-number .title' ).text( lang.users );
-  $( '.world-event-number .title' ).text( lang.posts );
-  $( '.world-files-number .title' ).text( lang.files );
-  $( '.new-world-title .title' ).text( lang.worldCreation );
-  if (isMobile()) {
-    $( '.stop-follow span' ).text( lang.exit );
-  }else{
-    $( '.stop-follow span' ).text( lang.unfollowWorld );
-  }
-  $( '.select-world span' ).text( lang.selectWorld );
-  $( '.no-posts .left-side span' ).text( lang.noPosts );
-  $( '.no-posts .right-side span' ).text( lang.createNewPost );
-
+  //Start
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
   $( '.no-worlds .subtitle2' ).text( lang.intro2 );
@@ -1401,9 +1370,62 @@ var initTexts = function(){
   $( '.no-worlds-mobile .chat-feature .description' ).html( lang.feature1 );
   $( '.no-worlds-mobile .files-feature .description' ).html( lang.feature2 );
   $( '.no-worlds-mobile .posts-feature .description' ).html( lang.feature3 );
+  $( '.onboarding-tip .title' ).text( lang.onboarding.title );
+  $( '.onboarding-tip .tip.create-post' ).text( lang.onboarding.createPost );
+  $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
+  $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
+  //Sidebar
+  $( '.notifications-title span' ).text( lang.activity );
+
+  //World selected
+  $( '.select-world span' ).text( lang.selectWorld );
+
+  //World header
+  $( '.invite-user-button' ).text( lang.worldHeader.invite );
+  $( '.open-chat-button span' ).text( lang.worldHeader.chatButton );
+  $( '.open-folder-button span' ).text( lang.worldHeader.folderButton );
+  $( '.search-post input' ).attr( 'placeholder', lang.worldHeader.searchPost );
+
+  if (isMobile()) {
+    $( '.stop-follow span' ).text( lang.exit );
+  }else{
+    $( '.stop-follow span' ).text( lang.unfollowWorld );
+  }
+
+  //Posts
+  $( '.no-posts .left-side span' ).text( lang.noPosts );
+  $( '.no-posts .right-side span' ).text( lang.createNewPost );
+  $( '.card-options-section .delete span' ).text( lang.deletePost );
+  $( '.card-options-section .edit span' ).text( lang.editPost );
+  $( '.card-content.edit-mode .title-input' ).attr( 'placeholder' , lang.writeTitle );
+  $( '.card-content.edit-mode .content-input' ).attr( 'placeholder' , lang.writeDescription );
+  $( '.send-button span' ).text( lang.send );
+  $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
+  $( '.cancel-new-card span' ).text( lang.cancel );
+  $( '.save-new-card span' ).text( lang.save );
+  $( '.attachments span' ).text( lang.addFiles );
+  $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
+  $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
+
+  //World users
+  $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
+  $( '.cancel-invite-user span' ).text( lang.cancel );
+  $( '.invite-user span' ).text( lang.invite );
+  $( '.invite-by-mail span' ).text( lang.inviteByMail );
+
+  //Explore
+  $( '.explore-text, .search-title' ).text( lang.explore );
   $( '.tend-text' ).text( lang.tend );
   $( '.follow-button span' ).text( lang.follow );
+  $( '.search-bar input' ).attr('placeholder', lang.search);
+  $( '.next-page .next-text' ).text( lang.next );
+  $( '.back-page .back-text' ).text( lang.previous );
+
+  //New world
+  $( '.new-world-title .title' ).text( lang.worldCreation );
+  $( '.category .public' ).text( lang.publics );
+  $( '.category .private' ).text( lang.privates );
   $( '.new-world-title .step-a' ).text( lang.stepa );
   $( '.new-world-title .step-b' ).text( lang.stepb );
   $( '.new-world-name span' ).text( lang.worldName );
@@ -1418,24 +1440,7 @@ var initTexts = function(){
   $( '.option.public > span' ).text( lang.public );
   $( '.option.hidden > span' ).text( lang.private );
   $( '.create-world-button.step-a span' ).text( lang.createWorldShort );
-  $( '.cancel-invite-user span' ).text( lang.cancel );
-  $( '.invite-user span' ).text( lang.invite );
-  $( '.cancel-new-card span' ).text( lang.cancel );
-  $( '.save-new-card span' ).text( lang.save );
-  $( '.attachments span' ).text( lang.addFiles );
-  $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
-  $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
-  $( '.invite-by-mail span' ).text( lang.inviteByMail );
-  $( '.onboarding-tip .title' ).text( lang.onboarding.title );
-  $( '.onboarding-tip .tip.create-post' ).text( lang.onboarding.createPost );
-  $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
-  $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
-  $( '.notifications-title span' ).text( lang.activity );
-  $( '.next-page .next-text' ).text( lang.next );
-  $( '.back-page .back-text' ).text( lang.previous );
-
-  $( '.search-bar input' ).attr('placeholder', lang.search);
 }
 
 var getMyWorldsAsync = function( options ){
@@ -1691,6 +1696,7 @@ var selectWorld = function( world , callback ){
     changeMobileView('worldContent');
   }
 
+  // Set initial status
   app.addClass( 'selectingWorld' );
   $( '.clean' ).remove();
   $( '.category-list .world' ).removeClass( 'active' );
@@ -1702,130 +1708,22 @@ var selectWorld = function( world , callback ){
   if (!worldApi) {
     return;
   }
+
   worldSelected = worldApi;
   app.data( 'worldSelected' , worldSelected )
 
-  var name = worldApi.name;
-  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
-  var textWidth = Math.floor( winWidth * 0.054 );
+  // Set info
+  worldTitle.text( worldApi.name );
+  worldMembers.text( worldApi.users + ' ' + lang.worldHeader.members );
+  worldAvatar.css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
 
-  if ( name.length > textWidth ) {
-    worldTitle.css('font-size' , '27px');
-    textWidth = Math.floor( winWidth * 0.07 );
-    if ( !isMobile() && name.length > textWidth ) {
-      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-    }else{
-      worldTitle.text( name );
-    }
-  }else{
-    worldTitle.css('font-size' , '37px');
-    worldTitle.text( name );
-  }
-
-  $( '.world-avatar' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
-
-  worldTitle.data( 'name' , name );
-
-  worldDescription.text( worldApi.description );
-
-  getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
     attendWorldNotification( worldApi.id );
     callback();
     app.removeClass( 'selectingWorld' );
   });
+
   $( '.select-world' ).hide();
-
-}
-
-var getWorldUsersAsync = function( worldApi ){
-
-  worldApi.getUsers(function( e , o ){
-
-    worldSelectedUsrs = o;
-
-    $( '.user-preview.invite-user' ).removeClass( 'invite-user' );
-    $( '.user-preview' ).show();
-
-    $( '.followers-number' ).text( o.length + ' ' + lang.followers );
-
-    if ( worldSelected.isPrivate ) {
-
-      var inviteIndex = -1;
-
-      for (var i = o.length + 1; i < 4 ; i++) {
-
-        $( '.user-preview' ).eq( 3 - i ).hide();
-
-      }
-
-      if (o.length > 3) {
-
-        $( '.user-preview.d' ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.horbito.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
-
-        $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
-        inviteIndex = 3;
-
-      }else{
-
-        $( '.user-preview' ).eq( 3 - o.length ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.horbito.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
-
-        $( '.more-users-text' ).text( lang.seeAll );
-        inviteIndex = o.length;
-
-      }
-
-    }else{
-
-      for (var i = o.length ; i < 4 ; i++) {
-
-        $( '.user-preview' ).eq( 3 - i ).hide();
-
-      }
-
-      if ( o.length > 4 ) {
-
-        $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
-
-      }else{
-
-        $( '.more-users-text' ).text( lang.seeAll );
-
-      }
-
-    }
-
-
-    $( '.world-users-number .subtitle' ).text( o.length );
-    $( '.stop-follow' ).removeClass( 'editable' );
-    if (isMobile()) {
-      $( '.stop-follow span' ).text( lang.exit );
-    }else{
-      $( '.stop-follow span' ).text( lang.unfollowWorld );
-    }
-    $( '.user-circle.clean' ).remove();
-
-    $.each( o , function( i , user ){
-
-      if ( user.isAdmin && user.userId === myContactID ) {
-        $( '.stop-follow' ).addClass( 'editable' );
-        $( '.stop-follow span' ).text( lang.editWorld );
-      }
-
-      wz.user( user.userId , function( err , usr ){
-
-        if ( err ) {
-          console.log('Err:', err, user, usr);
-        }else{
-          appendUserCircle( i , usr , inviteIndex );
-        }
-
-
-      })
-
-    });
-
-  });
 
 }
 
