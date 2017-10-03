@@ -1,6 +1,14 @@
 
 {
 
+    "worldHeader"  : {
+        "members"       : "miembros -",
+        "invite"        : "Invitar",
+        "chatButton"   : "Chat grupal",
+        "folderButton" : "Carpeta del mundo",
+        "searchPost"  : "Buscar post..."
+    },
+
     "search"  : "Busca aquí...",
     "cancel"  : "Cancelar",
     "save"    : "Guardar",

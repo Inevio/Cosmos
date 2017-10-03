@@ -1,5 +1,13 @@
 
-{
+{   
+
+    "worldHeader"  : {
+        "members"       : "members -",
+        "invite"        : "Invite",
+        "chatButton"   : "Group chat",
+        "folderButton" : "World's folder",
+        "searchPost"  : "Search post..."
+    },
 
     "search"  : "Search here...",
     "cancel"  : "Cancel",
