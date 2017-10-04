@@ -960,6 +960,11 @@ to {background-position: -200% 0;}
     color: #a4a4ab;
     margin-left: 83px;
     margin-top: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .world-members:hover{
+    color: @gray1;
   }
 
   .invite-user-button{
@@ -969,7 +974,12 @@ to {background-position: -200% 0;}
     color: @gray1;
     margin-left: 4px;
     margin-top: 8px;
-    margin-right: ~'calc(100% - 224px)';
+    margin-right: ~'calc(100% - 355px)';
+    transition: all 0.2s ease;
+  }
+
+  .invite-user-button:hover{
+    color: @darkHorbito;
   }
 
   .open-chat-button{
@@ -979,6 +989,7 @@ to {background-position: -200% 0;}
     padding: 10px;
     border-radius: 6px;
     margin-right: 38px;
+    transition: all 0.2s ease;
 
     i{
       float: left;
@@ -1008,6 +1019,7 @@ to {background-position: -200% 0;}
     padding: 10px;
     max-width: 220px;
     border-radius: 6px;
+    transition: all 0.2s ease;
 
     i{
       float: left;
@@ -1069,12 +1081,24 @@ to {background-position: -200% 0;}
     border-color: transparent;
     input{
       font-weight: bold;
+      color: transparent;
     }
   }
 
   .search-post:hover{
     width: 200px;
     background-color: #e5e5e5;
+    input{
+      color: @darkHorbito;
+    }
+  }
+
+  .search-post.active{
+    width: 200px;
+    background-color: #e5e5e5;
+    input{
+      color: @darkHorbito;
+    }
   }
 
   .world-avatar{
@@ -1094,66 +1118,76 @@ to {background-position: -200% 0;}
     color: @darkHorbito;
     margin-left: 16px;
     margin-top: 20px;
-    width: 355px;
     margin-bottom: 3px;
   }
 
-  .open-chat-button{
-    float: right;
-    margin-left: 6px;
-    margin-top: 14px;
-    padding: 5px;
-    border-radius: 6px;
-    margin-right: 20px;
+  .header-buttons{
+    height: 100%;
+    width: 253px;
+    background: #fff;
+    position: absolute;
+    right: 0;
 
-    i{
-      float: left;
-      width: 29px;
-      height: 23px;
-      background-image: url('@static/open-chat-button.png');
-      background-size: 29px 23px;
+      .open-chat-button{
+      float: right;
+      margin-left: 6px;
+      margin-top: 14px;
+      padding: 5px;
+      border-radius: 6px;
+      margin-right: 20px;
+      transition: all 0.2s ease;
+
+      i{
+        float: left;
+        width: 29px;
+        height: 23px;
+        background-image: url('@static/open-chat-button.png');
+        background-size: 29px 23px;
+      }
     }
-  }
 
-  .open-chat-button:hover{
-    background-color: rgba(0,0,0,0.05);
-  }
-
-
-  .open-folder-button{
-    float: right;
-    margin-top: 12px;
-    margin-left: 18px;
-    padding: 8px;
-    max-width: 220px;
-    border-radius: 6px;
-
-    i{
-      float: left;
-      width: 24px;
-      height: 19px;
-      background-image: url('@static/open-folder-button.png');
-      background-size: 24px 19px;
+    .open-chat-button:hover{
+      background-color: rgba(0,0,0,0.05);
     }
-  }
 
-  .open-folder-button:hover{
-    background-color: rgba(0,0,0,0.05);
-  }
 
-  .divider{
-    float: right;
-    width: 1px;
-    height: 33px;
-    background-color: #dddde0;
-    margin-top: 14px;
-  }
+    .open-folder-button{
+      float: right;
+      margin-top: 12px;
+      margin-left: 18px;
+      padding: 8px;
+      max-width: 220px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
 
-  .ui-header-buttons{
-    float: right;
-    margin-left: 15px;
-    margin-top: 4px;
-    margin-bottom: 7px;
+      i{
+        float: left;
+        width: 24px;
+        height: 19px;
+        background-image: url('@static/open-folder-button.png');
+        background-size: 24px 19px;
+      }
+    }
+
+    .open-folder-button:hover{
+      background-color: rgba(0,0,0,0.05);
+    }
+
+    .divider{
+      float: right;
+      width: 1px;
+      height: 33px;
+      background-color: #dddde0;
+      margin-top: 14px;
+    }
+
+    .ui-header-buttons{
+      float: right;
+      margin-left: 15px;
+      margin-top: 4px;
+      margin-bottom: 7px;
+    }
+
   }
 }
 
