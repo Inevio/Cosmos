@@ -795,7 +795,7 @@ if( newParams.queue ){
 
 })
 
-.on( 'click' , '.user-preview.invite-user' , function(){
+.on( 'click' , '.invite-user-button' , function(){
 
   $( '.invite-user-container' ).toggleClass( 'popup' );
   $( '.invite-user-container *' ).toggleClass( 'popup' );
