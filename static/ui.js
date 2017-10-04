@@ -379,43 +379,7 @@ app
   newWorldAnimationOut();
 
 })
-/*
-.on( 'ui-view-resize', function(){
 
-  $('.cards-grid').isotope({
-    itemSelector: '.card',
-    masonry: {
-      columnWidth: 551,
-      fitWidth: true
-    }
-  });
-
-})
-
-.on( 'ui-view-maximize', function(){
-
-  $('.cards-grid').isotope({
-    itemSelector: '.card',
-    masonry: {
-      columnWidth: 551,
-      fitWidth: true
-    }
-  });
-
-})
-
-.on( 'ui-view-unmaximize', function(){
-
-  $('.cards-grid').isotope({
-    itemSelector: '.card',
-    masonry: {
-      columnWidth: 551,
-      fitWidth: true
-    }
-  });
-
-})
-*/
 .on( 'mouseenter' , '.user-circle' , function(){
 
   var position = $(this).position();

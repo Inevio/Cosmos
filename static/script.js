@@ -138,7 +138,7 @@ var mobileNewPost         = $( '.mobile-new-post' );
 cardsList.on( 'scroll' , function(){
 
   var scrollDiv = $( this );
-  var scrollFinish = $( '.cards-grid' )[0].scrollHeight - scrollDiv.height();
+  var scrollFinish = $( '.ui-content' )[0].scrollHeight - scrollDiv.height();
 
   if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
 
@@ -1277,6 +1277,14 @@ $('.explore-container').on('scroll', function(){
     $('.explore-top-bar').addClass('active');
   }else{
     $('.explore-top-bar').removeClass('active');
+  }
+});
+
+$('.world-selected').on('scroll', function(){
+  if ( $(this).scrollTop() > 60 ) {
+    $('.world-header-min').addClass('active');
+  }else{
+    $('.world-header-min').removeClass('active');
   }
 });
 
@@ -2566,7 +2574,7 @@ var appendCard = function( card , post ){
 
   if ( !cardsAppended.length ) {
 
-    $( '.cards-grid' ).append( card );
+    $( '.cards-list' ).append( card );
 
   }else{
 
