@@ -1,7 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
-var me;
+var me                    = api.system.user();
 var nNotifications        = 0;
 var loadingPost           = false;
 var searchWorldQuery      = 0;
@@ -82,6 +82,7 @@ var documentCardPrototype = $( '.doc-card.wz-prototype' );
 var genericCardPrototype  = $( '.gen-card.wz-prototype' );
 var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
 var friendPrototype       = $( '.friend.wz-prototype' );
+var memberPrototype       = $( '.member.wz-prototype' );
 var commentPrototype      = $( '.comment.wz-prototype' );
 
 // DOM CACHE ---
@@ -102,7 +103,7 @@ var mobileWorldContent    = $( '.mobile-world-content' );
 // World header
 var worldAvatar           = $( '.world-avatar' );
 var worldTitle            = $( '.world-title' );
-var worldMembers          = $( '.world-members');
+var worldMembersButton    = $( '.world-members-button' );
 var inviteUserButton      = $( '.invite-user-button' );
 var openChatButton        = $( '.open-chat-button' );
 var openFolderButton      = $( '.open-folder-button' );
@@ -115,8 +116,10 @@ var mobileWorldComments   = $( '.mobile-world-comments' );
 
 // World users
 var closeInviteUser       = $( '.close-invite-user, .cancel-invite-user' );
+var closeKickUsers        = $( '.close-kick-user' );
 var aceptInviteUser       = $( '.invite-user-container .invite-user' );
 var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
+var membersSearchBox      = $( '.kick-user-container .ui-input-search input' );
 var inviteByMail          = $( '.invite-by-mail' );
 
 // Explore
@@ -174,6 +177,15 @@ closeInviteUser.on( 'click' , function(){
 
 });
 
+closeKickUsers.on( 'click' , function(){
+
+  $( '.kick-user-container' ).toggleClass( 'popup' );
+  $( '.kick-user-container *' ).toggleClass( 'popup' );
+  friendSearchBox.val('');
+  filterFriends('');
+
+});
+
 aceptInviteUser.on( 'click' , function(){
 
   inviteUsers();
@@ -185,6 +197,10 @@ aceptInviteUser.on( 'click' , function(){
 
 friendSearchBox.on( 'input' , function(){
   filterFriends( $( this ).val() );
+});
+
+membersSearchBox.on( 'input' , function(){
+  filterMembers( $( this ).val() );
 });
 
 exploreButton.on( 'click' , function(){
@@ -803,6 +819,20 @@ if( newParams.queue ){
 
 })
 
+.on( 'click' , '.world-members-button' , function(){
+
+  $( '.kick-user-container' ).toggleClass( 'popup' );
+  $( '.kick-user-container *' ).toggleClass( 'popup' );
+  if ( worldSelected.owner === myContactID ) {
+    $('.kick-user-section').addClass('admin');
+  }else{
+    $('.kick-user-section').removeClass('admin');
+  }
+
+  getMembersAsync();
+
+})
+
 .on( 'click' , '.card-options-section .delete' , function(){
 
   var post = $(this).closest('.card').data('post');
@@ -1350,10 +1380,6 @@ var initCosmos = function(){
     });
   }
 
-  wz.user( myContactID , function( e , user ){
-    me = user;
-  });
-
 }
 
 var initTexts = function(){
@@ -1402,6 +1428,9 @@ var initTexts = function(){
   }
 
   //Posts
+  $( '.new-post-button .my-avatar' ).css( 'background-image', 'url(' + me.avatar.tiny + ')' );
+  $( '.new-post-button .something-to-say' ).text( lang.cardsList.somethingToSay );
+  $( '.no-posts .no-post-to-show' ).text( lang.cardsList.noPostToShow );
   $( '.no-posts .left-side span' ).text( lang.noPosts );
   $( '.no-posts .right-side span' ).text( lang.createNewPost );
   $( '.card-options-section .delete span' ).text( lang.deletePost );
@@ -1417,10 +1446,11 @@ var initTexts = function(){
   $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
 
   //World users
-  $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
+  $( '.invite-user-container .ui-input-search input, .kick-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
   $( '.cancel-invite-user span' ).text( lang.cancel );
   $( '.invite-user span' ).text( lang.invite );
   $( '.invite-by-mail span' ).text( lang.inviteByMail );
+  $( '.kick-out-button span' ).text( lang.worldUsers.kickOut );
 
   //Explore
   $( '.explore-text, .search-title' ).text( lang.explore );
@@ -1722,7 +1752,7 @@ var selectWorld = function( world , callback ){
 
   // Set info
   worldTitle.text( worldApi.name );
-  worldMembers.text( worldApi.users + ' ' + lang.worldHeader.members );
+  worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members );
   worldAvatar.css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
 
   getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
@@ -1815,6 +1845,16 @@ var filterFriends = function( filter ){
 
 }
 
+var filterMembers = function( filter ){
+
+  var members = $( '.member' );
+  members.show();
+  var membersToShow = members.filter( startsWithFriends( filter ) );
+  var membersToHide = members.not( membersToShow );
+  membersToHide.hide();
+
+}
+
 var startsWithFriends = function( wordToCompare ){
 
   return function( index , element ) {
@@ -1850,7 +1890,7 @@ var followWorldAsync = function( worldCard ){
 
 var getFriendsAsync = function(){
 
-  $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure>' + worldSelected.name + '</figure>' );
+  $( '.invite-user-title' ).html( '<i>' + lang.worldUsers.invitePeople + '</i>' + lang.worldUsers.to + '<figure>' + worldSelected.name + '</figure>' );
 
   $( '.friendDom' ).remove();
   friendSearchBox.val('');
@@ -1867,6 +1907,51 @@ var getFriendsAsync = function(){
     $.each( friends , function( i , user ){
 
       appendFriend( user );
+
+    });
+
+  });
+
+}
+
+var getMembersAsync = function(){
+
+  $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.kickPeople + '</i>' + lang.worldUsers.from + '<figure>' + worldSelected.name + '</figure>' );
+
+  $( '.memberDom' ).remove();
+  membersSearchBox.val('');
+  filterMembers('');
+
+  var membersList = [];
+
+  worldSelected.getUsers( function( error, members ){
+
+    asyncEach( members, function( member, finish ){
+
+      api.user( member.userId, function( err, user ){
+
+        if ( member.isAdmin ) {
+          user.isAdmin = true;
+        }
+
+        membersList.push( user );
+        finish();
+
+      });
+
+    }, function(){
+
+      membersList.sort(function(a , b){
+        if(a.fullName < b.fullName) return -1;
+        if(a.fullName > b.fullName) return 1;
+        return 0;
+      });
+
+      $.each( membersList , function( i , member ){
+
+        appendMember( member );
+
+      });
 
     });
 
@@ -1900,6 +1985,23 @@ var appendFriend = function( user ){
   }
 
   friend.data( 'user' , user );
+
+}
+
+var appendMember = function( user ){
+
+  var member = memberPrototype.clone();
+  member.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'memberDom' );
+
+  if ( user.isAdmin ) {
+    member.addClass('isAdmin');
+  }
+
+  member.find( '.member-name' ).text( user.fullName );
+  member.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+
+  $( '.members-list' ).append( member );
+  member.data( 'user' , user );
 
 }
 
