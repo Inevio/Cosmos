@@ -164,10 +164,6 @@
     "openFolder" : "Open folder",
 
     "onboarding" : {
-        "title"      : "From here you can:",
-        "createPost" : "Create new posts",
-        "openFolder" : "Open the world's folder",
-        "openChat"   : "Open the group chat",
         "arrow"      : "Here you collaborate with your teams"
     },
 

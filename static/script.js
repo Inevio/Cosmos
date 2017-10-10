@@ -238,8 +238,6 @@ unFollowButton.on( 'click' , function(){
 
 openChatButton.on( 'click' , function(){
 
-  $('.tip.open-chat').addClass('used');
-  checkOnboarding();
   if (desktop.find('.wz-app-14').length > 0) {
     desktop.trigger( 'message' , [ 'open-world-chat' , { 'world' : worldSelected } ] );
   }else{
@@ -599,8 +597,6 @@ cleanPostSearch.on( 'click' , function(){
 
 openFolderButton.on( 'click' , function(){
 
-  $('.tip.open-folder').addClass('used');
-  checkOnboarding();
   wz.fs( worldSelected.volume , function( e , o ){
 
     o.open();
@@ -1342,7 +1338,6 @@ var initCosmos = function(){
     if ( o.length === 0 && !isMobile()) {
 
       noWorlds.show();
-      $( '.onboarding-tip' ).show();
 
       noWorlds.css({
         'opacity'         : 1
@@ -1404,10 +1399,6 @@ var initTexts = function(){
   $( '.no-worlds-mobile .chat-feature .description' ).html( lang.feature1 );
   $( '.no-worlds-mobile .files-feature .description' ).html( lang.feature2 );
   $( '.no-worlds-mobile .posts-feature .description' ).html( lang.feature3 );
-  $( '.onboarding-tip .title' ).text( lang.onboarding.title );
-  $( '.onboarding-tip .tip.create-post' ).text( lang.onboarding.createPost );
-  $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
-  $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
   //Sidebar
   $( '.notifications-title span' ).text( lang.activity );
@@ -3696,14 +3687,6 @@ var newPostMobile = function(){
   $( '.mobile-new-post .new-card-textarea' ).attr( 'placeholder', lang.description );
   $( '.mobile-new-post .new-card-input' ).val('');
   $( '.mobile-new-post .new-card-textarea' ).val('');
-}
-
-var checkOnboarding = function(){
-
-  if( $('.tip').not('.used').length === 0 ){
-    $( '.onboarding-tip' ).hide();
-  }
-
 }
 
 var nextPage = function(){
