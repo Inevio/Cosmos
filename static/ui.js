@@ -181,8 +181,6 @@ notifications.on( 'click' , function(){
 
 newPostButton.on( 'click' , function(){
 
-  $('.tip.create-post').addClass('used');
-  checkOnboarding();
   api.app.createView( { type: 'manual' , world: app.data( 'worldSelected' ) } , 'newPost' );
 
 });
@@ -944,12 +942,4 @@ var newWorldAnimationOut = function(){
 
 var isMobile = function(){
   return app.hasClass( 'wz-mobile-view' );
-}
-
-var checkOnboarding = function(){
-
-  if( $('.tip').not('.used').length === 0 ){
-    $( '.onboarding-tip' ).hide();
-  }
-
 }
