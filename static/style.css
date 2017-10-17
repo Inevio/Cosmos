@@ -3089,6 +3089,7 @@ to {background-position: -200% 0;}
     flex-wrap: wrap;
     justify-content: center;
     padding-bottom: 154px;
+    position: relative;
 
   }
 
@@ -4815,35 +4816,6 @@ to {background-position: -200% 0;}
 
 }
 
-.mobile-world-content.compressed{
-  .go-back i{
-    background-image: url('@static/backMobileBlack.png');
-  }
-}
-
-.searching.mobile-world-content{
-  .go-back{
-    display: none;
-  }
-  .search-bar{
-    display: block;
-  }
-}
-
-.compressed.mobile-world-content{
-
-  .search-button i{
-    background-image: url('@static/searchMobileBlack.png');
-  }
-
-  .world-context-menu{
-    display: inline-block;
-    i{
-      background-image: url('@static/moreOptionsBlackMobile.png');
-    }
-  }
-}
-
 .mobile-world-content{
 
   position: absolute;
@@ -4854,30 +4826,44 @@ to {background-position: -200% 0;}
   z-index: 1;
   transform: translateX(100%);
 
-  .scrollable-content{
-    overflow-x: hidden;
-    overflow-y: auto;
+  .wz-scroll{
     -webkit-overflow-scrolling: touch;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 1;
   }
 
-  .compressed-cover{
-    width: 100%;
-    height: 0px;
+  .world-header-min{
+  }
+
+  .world-search-bar{
     position: absolute;
-    top: 0;
-    transition: all 0.2s ease;
+    top: 0px;
+    width: 100%;
+    height: 58px;
+    transform: translate(0, -60px);
     background-color: #fff;
-    z-index: 5;
-    overflow: hidden;
-    box-shadow: #e2e6e8 1px 1px;
+    box-shadow: 0 1px #eee;
+  }
+
+  .world-selected{
+
+    .go-back{
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      z-index: 8;
+      padding: 20px;
+    }
+
+    .go-back i{
+      position: absolute;
+      background-image: url('@static/backMobileBlack.png');
+      background-size: 15px 15px;
+      width: 15px;
+      height: 15px;
+    }
 
     .world-avatar{
-      width: 40px;
-      height: 40px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       position: absolute;
       left: 51px;
@@ -4885,135 +4871,39 @@ to {background-position: -200% 0;}
       background-size: cover;
     }
 
-
     .world-title{
-      font-size: 15px !important;
-      color: #353b43;
-      font-weight: bold;
+      font-size: 30px !important;
+      color: #000;
+      font-weight: 900;
       position: absolute;
-      left: 106px;
       top: 21px;
-      width: ~'calc(100% - 190px)';
+      width: 100%;
       margin: 0px;
-      text-align: left;
-      line-height: 16px;
-    }
-
-  }
-
-  .compressed-cover.active{
-    height: 57px;
-  }
-
-  .wz-scroll{
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .cosmos-buttons{
-    right: 0px;
-  }
-
-  .world-title{
-    margin: 0 30px;
-    width: ~'calc(100% - 60px)';
-    text-align: center;
-    display: block;
-    max-height: 70px;
-    overflow: hidden;
-    height: auto;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-height: 35px;
-    max-height: 70px;
-  }
-
-
-  .search-bar{
-    position: absolute;
-    width: 100%;
-    height: 57px;
-    z-index: 7;
-    background-color: #fff;
-    display: none;
-
-    i{
-      width: 16px;
-      position: absolute;
-      height: 16px;
-      z-index: 4;
-      top: 18px;
-      left: 25px;
-      background-image: url('@static/sprite.png');
-      background-size: 312px 27px;
-    }
-
-    input{
-      background-color: #e5e5e5;
-      height: 35px;
-      width: ~'calc(100% - 140px)';
-      margin-left: 15px;
-      margin-top: 10px;
-      color: #252525;
-      font-weight: bold;
-      padding-left: 40px;
-      float: left;
-    }
-
-    .cancel-search{
-      float: left;
-      padding-top: 19px;
-      padding-bottom: 10px;
-      width: 85px;
       text-align: center;
-      color: @redHorbito;
     }
-  }
 
-  .cover{
-    height: 247px;
-  }
-
-  .pre-cover{
-    border-radius: 0px;
-  }
-
-  .go-back{
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    z-index: 8;
-    padding: 20px;
-  }
-
-  .go-back i{
-    position: absolute;
-    background-image: url('@static/backMobileWhite.png');
-    background-size: 15px 15px;
-    width: 15px;
-    height: 15px;
-  }
-
-  .search-button{
-    left: auto;
-    margin: 0px;
-    right: 45px;
-    padding: 17px 12px 10px 10px;
-    width: 18px;
-    height: 18px;
-    background-color: transparent !important;
-
-    i{
-      opacity: 1;
-      background-image: url('@static/searchMobileWhite.png');
-      background-size: 18px 18px;
+    .search-button{
+      left: auto;
+      margin: 0px;
+      right: 45px;
+      padding: 17px 12px 10px 10px;
       width: 18px;
       height: 18px;
-      background-position: 0px 0px;
-      top: auto;
-      left: auto;
+      background-color: transparent !important;
+
+      i{
+        opacity: 1;
+        background-image: url('@static/searchMobileBlack.png');
+        background-size: 18px 18px;
+        width: 18px;
+        height: 18px;
+        background-position: 0px 0px;
+        top: auto;
+        left: auto;
+      }
     }
+
+
   }
 
   .world-context-menu{
@@ -5054,7 +4944,6 @@ to {background-position: -200% 0;}
     padding-right: 65px;
     padding-bottom: 10px;
   }
-
 
   .open-folder{
     float: left;
@@ -5556,21 +5445,21 @@ to {background-position: -200% 0;}
   float: left;
   z-index: 3;
   transform: translateY(100%);
-	background-image: url('@static/exploreBackMobile.png');
-  background-size: cover;
+	background-color: #f9f9fb;
   border-radius: 0px;
 
   .search-title{
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-    top: 20px;
+    font-size: 40px;
+    font-weight: 900;
+    color: @darkHorbito;
+    top: 27px;
   }
+
 
   .search-bar{
     width: ~'calc(100% - 40px)';
     margin: 0 20px;
-    top: 60px;
+    top: 90px;
 
     input{
       width: ~'calc(100% - 70px)';
@@ -5578,15 +5467,51 @@ to {background-position: -200% 0;}
   }
 
   .tend-list{
-    top: 87px;
-    height: ~'calc(100% - 137px)';
+    top: 160px;
+    height: ~'calc(100% - 160px)';
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
   .world-card{
-    width: ~'calc(50% - 10px)';
+    width: ~'calc(50% - 15px)';
     margin: 0 5px 10px 5px;
+    height: 211px;
+
+    .world-avatar-min{
+      width: 56px;
+      height: 56px;
+      top: 10px;
+    }
+
+    .world-title-min{
+      font-size: 19px;
+      margin-top: 79px;
+      overflow: hidden;
+      height: 45px
+    }
+
+    .world-followers{
+      font-size: 11px;
+      margin-top: 135px;
+    }
+
+    .follow-button{
+      width: ~'calc(100% - 20px)';
+      top: 108px;
+      height: 35.5px;
+
+      i{
+        width: 13px;
+        height: 9px;
+        background-size: 13px 9px;
+      }
+
+      span{
+        font-size: 13px;
+        margin-left: 8px;
+      }
+    }
   }
 
   .go-back{
@@ -5595,11 +5520,13 @@ to {background-position: -200% 0;}
     height: 15px;
     z-index: 8;
     padding: 20px;
+    margin-top: 22px
   }
+
 
   .go-back i{
     position: absolute;
-    background-image: url('@static/backMobileWhite.png');
+    background-image: url('@static/backMobileBlack.png');
     background-size: 15px 15px;
     width: 15px;
     height: 15px;
