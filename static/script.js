@@ -1307,6 +1307,7 @@ $('.explore-container').on('scroll', function(){
 });
 
 $('.world-selected').on('scroll', function(){
+  console.log('scrolling', $(this).scrollTop());
   if ( $(this).scrollTop() > 60 ) {
     $('.world-header-min').addClass('active');
   }else{
