@@ -4845,30 +4845,56 @@ to {background-position: -200% 0;}
 
   .world-selected{
 
+    .world-header{
+      height: 247px;
+    }
+
     .go-back{
       position: absolute;
       width: 15px;
       height: 15px;
       z-index: 8;
       padding: 20px;
+      margin-top: 4px;
+
+      i{
+        position: absolute;
+        background-image: url('@static/backMobileBlack.png');
+        background-size: 15px 15px;
+        width: 15px;
+        height: 15px;
+      }
     }
 
-    .go-back i{
+    .search-button{
       position: absolute;
-      background-image: url('@static/backMobileBlack.png');
-      background-size: 15px 15px;
-      width: 15px;
-      height: 15px;
+      width: 19px;
+      height: 19px;
+      z-index: 8;
+      padding: 17px;
+      right: 0;
+      margin-top: 5px;
+      margin-right: 4px;
+
+      i{
+        position: absolute;
+        background-image: url('@static/searchMobileBlack.png');
+        background-size: 19px 19px;
+        width: 19px;
+        height: 19px;
+      }
     }
+
 
     .world-avatar{
       width: 55px;
       height: 55px;
       border-radius: 50%;
       position: absolute;
-      left: 51px;
-      top: 8px;
+      left: ~'calc(50% - 27.5px)';
+      top: 43px;
       background-size: cover;
+      margin: 0px;
     }
 
     .world-title{
@@ -4876,33 +4902,48 @@ to {background-position: -200% 0;}
       color: #000;
       font-weight: 900;
       position: absolute;
-      top: 21px;
+      top: 116px;
       width: 100%;
       margin: 0px;
       text-align: center;
     }
 
-    .search-button{
-      left: auto;
+    .world-members-button{
+      position: absolute;
+      width: 100%;
+      text-align: center;
       margin: 0px;
-      right: 45px;
-      padding: 17px 12px 10px 10px;
-      width: 18px;
-      height: 18px;
-      background-color: transparent !important;
-
-      i{
-        opacity: 1;
-        background-image: url('@static/searchMobileBlack.png');
-        background-size: 18px 18px;
-        width: 18px;
-        height: 18px;
-        background-position: 0px 0px;
-        top: auto;
-        left: auto;
-      }
+      top: 155px;
     }
 
+    .open-chat-button{
+      position: absolute;
+      margin: 0px;
+      top: 198px;
+      left: 20px
+    }
+
+    .divider{
+      position: absolute;
+      top: 205px;
+      left: 187px;
+      height: 25px;
+      width: 1px;
+      background-color: #eeeeee;
+    }
+
+    .open-folder-button{
+      position: absolute;
+      margin: 0px;
+      top: 199px;
+      left: 200px
+    }
+
+    .new-post-button{
+      width: 100%;
+      margin: 0px;
+      margin-top: 10px;
+    }
 
   }
 
