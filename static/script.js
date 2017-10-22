@@ -2308,27 +2308,12 @@ var appendDocumentCard = function( post , user , reason , callback ){
 
     if (!e) {
 
-      if( fsNode.mime.indexOf( 'image' ) != -1 ){
-        card.find( '.doc-preview img' ).attr( 'src' , 'https://download.horbito.com/' + fsNode.id );
+      if( fsNode.mime.indexOf( 'image' ) === 0 || fsNode.mime === 'application/pdf' ){
+        card.find( '.doc-preview img' ).attr( 'src' , fsNode.thumbnails['1024'] );
         card.find( '.doc-preview-bar' ).hide();
-      }else if( fsNode.mime === 'application/pdf' ){
-
-        fsNode.getFormats( function( err, formats ){
-
-          if( err || !formats['image/jpeg'] ){
-            return card.find( '.doc-preview img' ).attr( 'src', fsNode.thumbnails.big );
-          }
-
-          if( formats['image/jpeg'] instanceof Array ){
-            card.find( '.doc-preview img' ).attr( 'src', formats['image/jpeg'][ 0 ].url );
-          }else{
-            card.find( '.doc-preview img' ).attr( 'src', formats['image/jpeg'].url );
-          }
-
-        })
-
       }else{
-        card.find( '.doc-preview img' ).attr( 'src' ,  fsNode.thumbnails.big );
+        // To Do -> Is this really neccesary? background with a micro thumb is added a few lines after this
+        card.find( '.doc-preview img' ).attr( 'src',  fsNode.thumbnails.big );
       }
 
       card.find( '.preview-title' ).text( fsNode.name );
