@@ -1307,8 +1307,16 @@ $('.explore-container').on('scroll', function(){
 });
 
 $('.world-selected').on('scroll', function(){
-  console.log('scrolling', $(this).scrollTop());
   if ( $(this).scrollTop() > 60 ) {
+    $('.world-header-min').addClass('active');
+  }else{
+    $('.world-header-min').removeClass('active');
+  }
+});
+
+$('.world-selected').on('touchmove', function(){
+  console.log( $(this).offset().top );
+  if ( $(this).offset().top < -60 ) {
     $('.world-header-min').addClass('active');
   }else{
     $('.world-header-min').removeClass('active');
