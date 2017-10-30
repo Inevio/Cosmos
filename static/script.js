@@ -1316,9 +1316,9 @@ $('.world-selected').on('scroll', function(){
 
 $('.world-selected').on('touchmove', function(){
   console.log( $(this).offset().top );
-  if ( $(this).offset().top < -60 ) {
+  if ( $(this).offset().top < -60 && !$(this).hasClass('active')) {
     $('.world-header-min').addClass('active');
-  }else{
+  }else if($(this).hasClass('active')){
     $('.world-header-min').removeClass('active');
   }
 });
