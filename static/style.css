@@ -4830,13 +4830,15 @@ to {background-position: -200% 0;}
 
   .world-header-min{
 
+    height: 56px;
+
     .go-back{
       position: absolute;
       width: 15px;
       height: 15px;
       z-index: 8;
       padding: 20px;
-      margin-top: 4px;
+      margin-top: 1px;
 
       i{
         position: absolute;
@@ -4847,9 +4849,40 @@ to {background-position: -200% 0;}
       }
     }
 
-    
+    .world-avatar{
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      margin: 0px;
+      left: 51px;
+      top: 6px;
+    }
 
+    .world-title{
+      position: absolute;
+      margin: 0px;
+      left: 105px;
+      top: 17px;
+    }
 
+    .search-button{
+      position: absolute;
+      width: 19px;
+      height: 19px;
+      z-index: 8;
+      padding: 17px;
+      right: 0;
+      margin-top: 3px;
+      margin-right: 10px;
+
+      i{
+        position: absolute;
+        background-image: url('@static/searchMobileBlack.png');
+        background-size: 19px 19px;
+        width: 19px;
+        height: 19px;
+      }
+    }
   }
 
   .world-search-bar{
