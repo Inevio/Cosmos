@@ -126,8 +126,6 @@ var inviteByMail          = $( '.invite-by-mail' );
 var searchWorldCard       = $( '.explore-container .search-bar input' );
 var unFollowButton        = $( '.stop-follow' );
 var mobileExplore         = $( '.mobile-explore' );
-var searchBar             = $( '.search-button' );
-var searchBarFigure       = $( '.search-button i' );
 
 // New world
 var mobileNewWorld        = $( '.mobile-new-world' );
@@ -1328,6 +1326,18 @@ $('.explore-top-bar .search-bar input').on('input', function(){
   searchWorldCard.val($(this).val());
   searchWorldCard.trigger('input');
 
+});
+
+$('.activate-search-bar').on( 'click', function(){
+  if (isMobile()) {
+    $('.world-search-bar').addClass('active');
+  }
+});
+
+$('.cancel-search').on( 'click', function(){
+  if (isMobile()) {
+    $('.world-search-bar').removeClass('active');
+  }
 });
 
 //Functions
