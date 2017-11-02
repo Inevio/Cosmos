@@ -1118,14 +1118,18 @@ if( newParams.queue ){
 
 })
 
-.on( 'click' , '.world-context-menu' , function(){
+.on( 'click' , '.world-context-menu' , function(e){
 
-  $('.world-option:not(.wz-prototype)').remove();
-  $('.world-options, .world-options *').addClass('popup');
-  var option = $('.world-option.wz-prototype').clone();
+  e.preventDefault();
+  e.stopPropagation();
+  var world = $(this).parent();
+  world.find('.world-option:not(.wz-prototype)').remove();
+  $('.world-options, .world-options *').removeClass('popup');
+  world.find('.world-options, .world-options *').addClass('popup');
+  var option = world.find('.world-option.wz-prototype').clone();
   option.removeClass('wz-prototype').addClass('popup');
 
-  var isMine = worldSelected.owner === myContactID ? true : false;
+  var isMine = $(this).parent().data('world').owner === myContactID ? true : false;
   if ( isMine ) {
     option.addClass('editWorldOption').find('span').text( lang.editWorld );
   }else{
@@ -1135,8 +1139,12 @@ if( newParams.queue ){
   $('.world-options').append(option);
 })
 
-.on( 'click' , '.editWorldOption' , function(){
+.on( 'click' , '.editWorldOption' , function(e){
+
+  e.preventDefault();
+  e.stopPropagation();
   unFollowButton.click();
+
 })
 
 .on( 'click' , '.removeWorldOption' , function(){
@@ -1566,6 +1574,11 @@ var appendWorld = function( worldApi ){
   var world = worldPrototype.clone();
   world.removeClass( 'wz-prototype' ).addClass( 'world-' + worldApi.id ).addClass( 'worldDom' );
   world.find( '.world-name' ).text( worldApi.name );
+
+  if (worldApi.owner === myContactID) {
+    world.addClass('editable')
+  }
+
   if (isMobile()) {
     world.find( '.world-icon' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
   }else{
@@ -1575,13 +1588,9 @@ var appendWorld = function( worldApi ){
   var category;
 
   if ( worldApi.isPrivate ) {
-
     category = $( '.private-list' );
-
   }else{
-
     category = $( '.public-list' );
-
   }
 
   appendWorldInOrder( category , world , worldApi );

@@ -108,30 +108,6 @@ api.cosmos.on( 'postRemoved', function( postId , world ){
 // END SERVER EVENTS
 
 // UI EVENTS
-spotDesc.on( 'click' ,function(){
-
-  moveToDesc();
-
-});
-
-spotCover.on( 'click' , function(){
-
-  moveToCover();
-
-});
-
-moreInfo.on( 'click' ,function(){
-
-  moveToDesc();
-
-});
-
-goBack.on( 'click' , function(){
-
-  moveToCover();
-
-});
-
 cover.on( typeof cordova === 'undefined' ? 'mouseup' : 'touchend' , function(){
   if(app.hasClass('wz-view-dragging')) return;
   if(uiContent.hasClass('compressed')){
@@ -461,25 +437,6 @@ app
   }
 
 })
-
-.on( 'click' , '.world' , function(){
-
-  //Not select allowed while animations
-  if (app.hasClass('animated')) {
-    return;
-  }
-
-  if ( app.hasClass( 'user-animation' ) ) {
-    usersGoesDown();
-  }else if( app.hasClass( 'desc-animation' ) ){
-    moveToCover();
-  }else if( app.hasClass( 'cover-animation' ) ){
-    decompressCover( { instant : true , world : $(this) } );
-  }
-
-
-})
-
 
 // END UI EVENTS
 
