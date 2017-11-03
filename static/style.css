@@ -3556,7 +3556,7 @@ to {background-position: -200% 0;}
     cursor: pointer;
     background-size: cover;
     border: 2px solid #dbdbde;
-    margin-left: calc(50% - 46px);
+    margin-left: ~'calc(50% - 46px)';
 
   }
 
