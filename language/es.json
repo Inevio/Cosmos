@@ -1,6 +1,27 @@
 
 {
 
+    "worldHeader"  : {
+        "members"       : "miembros -",
+        "invite"        : "Invitar",
+        "chatButton"   : "Chat grupal",
+        "folderButton" : "Carpeta mundo",
+        "searchPost"  : "Buscar post..."
+    },
+
+    "cardsList" : {
+        "somethingToSay" : "Cuentanos algo...",
+        "noPostToShow"  : "No hay posts para mostrar"
+    },
+
+    "worldUsers" : {
+        "invitePeople"  : "Invitar gente",
+        "kickPeople"    : "Administrar miembros",
+        "to"            : "a",
+        "from"          : "de",
+        "kickOut"       : "Expulsar"
+    },
+
     "search"  : "Busca aquí...",
     "cancel"  : "Cancelar",
     "save"    : "Guardar",
@@ -17,8 +38,7 @@
     "more"          : "más",
     "seeAll"        : "ver todos",
     "followers"     : "seguidores",
-    "invitePeople"  : "Invitar gente",
-    "to"            : "a",
+    
     "search"        : "Buscar...",
     "updatedFile"   : "ha actualizado un arhivo",
     "comments"      : "comentarios",
@@ -58,7 +78,7 @@
     "reply"         : "Responder",
     "preview"       : "Vista previa",
     "tend"          : "Tendencias",
-    "follow"        : "Seguir",
+    "follow"        : "Entrar",
     "stepa"         : "Paso 1 de 2",
     "stepb"         : "Paso 2 de 2 - (Opcional) Añade alguna información adicional acerca del mundo",
     "worldName"     : "Nombre del mundo",
@@ -144,10 +164,6 @@
     "openFolder" : "Abrir carpeta",
 
     "onboarding" : {
-        "title"      : "Desde aquí puedes:",
-        "createPost" : "Crear nuevos posts",
-        "openFolder" : "Abrir la carpeta del mundo",
-        "openChat"   : "Abrir el chat grupal",
         "arrow"      : "Aquí colaboras con tus compañeros"
     },
 

@@ -1,5 +1,26 @@
 
-{
+{   
+
+    "worldHeader"  : {
+        "members"       : "members -",
+        "invite"        : "Invite",
+        "chatButton"   : "Group chat",
+        "folderButton" : "World's folder",
+        "searchPost"  : "Search post..."
+    },
+
+    "cardsList" : {
+        "somethingToSay" : "Something to say...",
+        "noPostToShow"  : "No posts to show"
+    },
+
+    "worldUsers" : {
+        "invitePeople"  : "Invite people",
+        "kickPeople"    : "Admin members",
+        "to"            : "to",
+        "from"          : "from",
+        "kickOut"       : "Kick out"
+    },
 
     "search"  : "Search here...",
     "cancel"  : "Cancel",
@@ -17,8 +38,6 @@
     "more"          : "more",
     "seeAll"        : "see all",
     "followers"     : "followers",
-    "invitePeople"  : "Invite people",
-    "to"            : "to",
     "search"        : "Search...",
     "updatedFile"   : "updated a file",
     "postCreated"   : "created a file",
@@ -59,7 +78,7 @@
     "reply"         : "Reply",
     "preview"       : "Preview",
     "tend"          : "Trends",
-    "follow"        : "Follow",
+    "follow"        : "Enter",
     "stepa"         : "Step 1 of 2",
     "stepb"         : "Step 2 of 2 - (Optional) Add some additional info about the world",
     "worldName"     : "World name",
@@ -145,10 +164,6 @@
     "openFolder" : "Open folder",
 
     "onboarding" : {
-        "title"      : "From here you can:",
-        "createPost" : "Create new posts",
-        "openFolder" : "Open the world's folder",
-        "openChat"   : "Open the group chat",
         "arrow"      : "Here you collaborate with your teams"
     },
 
