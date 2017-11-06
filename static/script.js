@@ -1,7 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
-var me;
+var me                    = api.system.user();
 var nNotifications        = 0;
 var loadingPost           = false;
 var searchWorldQuery      = 0;
@@ -11,49 +11,13 @@ var myWorlds              = [];
 var app                   = $( this );
 var desktop               = $( this ).parent().parent();
 var myContactID           = api.system.user().id;
-var worldPrototype        = $( '.sidebar .world.wz-prototype' );
-var worldTitle            = $( '.world-title' );
-var worldCardPrototype    = $( '.world-card.wz-prototype' );
-var searchWorldCard       = $( '.explore-container .search-bar input' );
-var userCirclePrototype   = $( '.user-circle.wz-prototype' );
-var closeInviteUser       = $( '.close-invite-user, .cancel-invite-user' );
-var aceptInviteUser       = $( '.invite-user-container .invite-user' );
-var friendPrototype       = $( '.friend.wz-prototype' );
-var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
-var documentCardPrototype = $( '.doc-card.wz-prototype' );
-var genericCardPrototype  = $( '.gen-card.wz-prototype' );
-var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
-var exploreButton         = $( '.explore-button' );
-var unFollowButton        = $( '.stop-follow' );
-var commentPrototype      = $( '.comment.wz-prototype' );
-var openChatButton        = $( '.open-chat' );
-var worldDescription      = $( '.world-desc' );
-var searchPostInput       = $( '.pre-cover .search-button input, .mobile-world-content .search-bar input' );
-var cleanPostSearch       = $( '.search-button .clean-search' );
-//var newPostButton       = $( '.new-post, .no-post-new-post-button' );
-//var closeExplore        = $( '.close-explore' );
-var noWorlds              = $( '.no-worlds' );
-var noWorldsMobile        = $( '.no-worlds-mobile' );
-var openFolder            = $( '.open-folder' );
-var cardsList             = $( '.cards-list' );
-var mobileView              = 'worldSidebar'
-var mobileWorldContent      = $( '.mobile-world-content' );
-var mobileWorldSidebar      = $( '.mobile-world-list' );
-var mobileWorldComments     = $( '.mobile-world-comments' );
-var mobileNewWorld          = $( '.mobile-new-world' );
-var mobileExplore           = $( '.mobile-explore' );
-var mobileNewPost           = $( '.mobile-new-post' );
-var newWorldButton  = $( '.new-world-button, .new-world-button-mini' );
-var closeNewWorld   = $( '.close-new-world' );
-var searchBar       = $( '.search-button' );
-var searchBarFigure = $( '.search-button i' );
-var inviteByMail    = $( '.invite-by-mail' );
-var startButton     = $('.no-worlds .start-button-no-worlds');
-var startButtonMobile = $('.no-worlds-mobile .start-button-no-worlds');
-
+var mobileView            = 'worldSidebar'
 var worldNotifications = [];
 var postsNotifications = [];
 var commentsNotifications = [];
+
+var URL_REGEX = /^http(s)?:\/\//i;
+var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
 
 var TYPES = {
 
@@ -102,9 +66,6 @@ var TYPES = {
 
 }
 
-var URL_REGEX = /^http(s)?:\/\//i;
-var colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
-
 //Pagination
 var showingWorlds;
 var paginationLimit = 20;
@@ -113,11 +74,356 @@ var nPagesShowed = 4;
 var totalPages;
 var actualPageInterval;
 
+// Prototypes
+var worldPrototype        = $( '.sidebar .world.wz-prototype' );
+var worldCardPrototype    = $( '.world-card.wz-prototype' );
+var userCirclePrototype   = $( '.user-circle.wz-prototype' );
+var documentCardPrototype = $( '.doc-card.wz-prototype' );
+var genericCardPrototype  = $( '.gen-card.wz-prototype' );
+var youtubeCardPrototype  = $( '.you-card.wz-prototype' );
+var friendPrototype       = $( '.friend.wz-prototype' );
+var memberPrototype       = $( '.member.wz-prototype' );
+var commentPrototype      = $( '.comment.wz-prototype' );
+
+// DOM CACHE ---
+
+// Start
+var startButton           = $('.no-worlds .start-button-no-worlds');
+var startButtonMobile     = $('.no-worlds-mobile .start-button-no-worlds');
+
+// Sidebar
+var exploreButton         = $( '.explore-button' );
+var mobileWorldSidebar    = $( '.mobile-world-list' );
+var newWorldButton        = $( '.new-world-button, .new-world-button-mini' );
+var notifications         = $( '.notifications' );
+var worldCategory         = $( '.category .opener, .category .category-name' );
+
+// World selected
+var noWorlds              = $( '.no-worlds' );
+var noWorldsMobile        = $( '.no-worlds-mobile' );
+var mobileWorldContent    = $( '.mobile-world-content' );
+var searchBar             = $( '.search-button' );
+var searchBarFigure       = $( '.search-button i' );
+var uiContent             = $( '.ui-content' );
+
+// World header
+var worldAvatar           = $( '.world-avatar' );
+var worldTitle            = $( '.world-title' );
+var worldMembersButton    = $( '.world-members-button' );
+var inviteUserButton      = $( '.invite-user-button' );
+var openChatButton        = $( '.open-chat-button' );
+var openFolderButton      = $( '.open-folder-button' );
+var searchPostInput       = $( '.search-post input, .mobile-world-content .search-bar input' );
+var cleanPostSearch       = $( '.search-post .delete-content' );
+
+// Posts
+var newPostButton         = $( '.new-post-button, .no-post-new-post-button' );
+var cardsList             = $( '.cards-list' );
+var mobileWorldComments   = $( '.mobile-world-comments' );
+var attachCommentBut      = $( '.comments-footer .attachments, .comments-footer .attachments i, .comments-footer .attachments div' );
+
+// World users
+var closeInviteUser       = $( '.close-invite-user, .cancel-invite-user' );
+var closeKickUsers        = $( '.close-kick-user' );
+var aceptInviteUser       = $( '.invite-user-container .invite-user' );
+var friendSearchBox       = $( '.invite-user-container .ui-input-search input' );
+var membersSearchBox      = $( '.kick-user-container .ui-input-search input' );
+var inviteByMail          = $( '.invite-by-mail' );
+
+// Explore
+var searchWorldCard       = $( '.explore-container .search-bar input' );
+var mobileExplore         = $( '.mobile-explore' );
+var closeExplore          = $( '.close-explore' );
+var searchExplore         = $( '.explore-container .search-bar' );
+
+// New world
+var mobileNewWorld        = $( '.mobile-new-world' );
+var newWorldButton        = $( '.new-world-button, .new-world-button-mini' );
+var closeNewWorld         = $( '.close-new-world' );
+var worldOptionsHelp      = $( '.privacy-options .option i' );
+var privacyOption         = $( '.privacy-options .option' );
+
+// New post
+var mobileNewPost         = $( '.mobile-new-post' );
+
+// UI EVENTS
+closeExplore.on( 'click' , function(){
+
+  exploreAnimationOut();
+
+});
+
+newWorldButton.on( 'click' , function(){
+
+  newWorldAnimationA();
+
+});
+
+closeNewWorld.on( 'click' , function(){
+
+  newWorldAnimationOut();
+  $( '.new-world-container' ).removeClass( 'editing' );
+
+});
+
+notifications.on( 'click' , function(){
+
+  $( '.notifications-container' ).toggleClass( 'popup' );
+  $( '.notifications-container *' ).toggleClass( 'popup' );
+
+
+});
+
+newPostButton.on( 'click' , function(){
+
+  if (isMobile()) {
+    newPostMobile();
+  }else{
+    api.app.createView( { type: 'manual' , world: app.data( 'worldSelected' ) } , 'newPost' );
+  }
+
+});
+
+worldCategory.on( 'click' , function(){
+
+  var category = $(this).parent();
+  category.toggleClass('closed');
+  if ( category.hasClass( 'closed' ) ) {
+    category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) );
+    category.find( '.world-list' ).transition({
+      'height'         : '0px'
+    }, 200);
+  }else{
+    var height = category.find( '.world' ).length * $( '.world.wz-prototype' ).outerHeight();
+    category.find( '.world-list' ).transition({
+      'height'         : height
+    }, 200);
+
+  }
+
+});
+
+searchBar.on( 'click' , function(){
+
+  if (!isMobile()) {
+    $( this ).addClass( 'popup' );
+    $( this ).find( 'input' ).focus();
+  }else{
+    if ( scrollableContent.scrollTop() <= 190 ) {
+      $('.scrollable-content').animate( {scrollTop:191} , '200', 'swing', function() {
+        uiContent.addClass('searching');
+        $('.search-bar input').focus();
+      });
+    }else{
+      uiContent.addClass('searching');
+      $('.search-bar input').focus();
+    }
+  }
+
+});
+
+searchBarFigure.on( 'click' , function(){
+
+  if (!isMobile()) {
+    $( this ).parent().addClass( 'popup' );
+  }else{
+    uiContent.addClass('searching');
+    $('.search-bar input').focus();
+  }
+});
+
+searchExplore.on( 'click' , function(){
+
+  $(this).addClass('popup');
+
+});
+
+worldOptionsHelp.on( 'mouseenter' , function(){
+
+  var popup = $( this ).parent().find( '.info-section' );
+
+  popup.show();
+  popup.transition({
+
+    'opacity'         : 1
+
+  }, 200, animationEffect);
+
+});
+
+worldOptionsHelp.on( 'mouseleave' , function(){
+
+  var popup = $( this ).parent().find( '.info-section' );
+
+  popup.transition({
+
+    'opacity'         : 0
+
+  }, 200, animationEffect, function(){
+
+    popup.hide();
+
+  });
+
+});
+
+attachCommentBut.on( 'click' , function(){
+
+  $( this ).parent().find( '.attach-select' ).show();
+  $( this ).parent().find( '.attach-select' ).addClass( 'popup' );
+  $( this ).parent().find( '.attach-select *' ).addClass( 'popup' );
+
+});
+
+privacyOption.on( 'click' , function(){
+
+  $( '.privacy-options .option' ).removeClass( 'active' );
+  $( this ).addClass( 'active' );
+
+});
+
+cardsList.on( 'mousewheel' , '.comments-list' , function( e ){
+
+  if ( $(this).scrollTop() ) {
+    e.stopPropagation();
+  }
+
+});
+
+app
+
+.on( 'click' , function( e ){
+
+  if ( ! $( e.target ).hasClass( 'popup' ) && ! $( e.target ).hasClass( 'popup-launcher' ) ) {
+
+    $( '.popup' ).removeClass( 'popup' );
+    $( this ).parent().find( '.comments-footer .attach-select' ).hide();
+
+
+  }
+
+  var commentOnEditMode = $( '.comment.editing' );
+  if ( commentOnEditMode.length > 0 && ! $( e.target ).hasClass( 'comment-text-edit' ) && ! $( e.target ).hasClass( 'edit-button' )) {
+    commentOnEditMode.removeClass( 'editing' );
+    commentOnEditMode.data( 'reply' ).setContent( commentOnEditMode.find( '.comment-text-edit' ).val() );
+    commentOnEditMode.find('.edit-button').removeClass( 'save' );
+    commentOnEditMode.find('.edit-button').text( lang.edit );
+  }
+
+})
+
+.on( 'click' , '.create-world-button.step-a' , function(){
+
+  if ( $( '.new-world-name input' ).val() ) {
+
+    newWorldAnimationB();
+    if(uiContent.hasClass('compressed')){
+      decompressCover( { instant : true , world : $('.world.active') } );
+    }
+
+  }
+
+})
+
+.on( 'keyup' , '.new-world-name input' , function( e ){
+
+  if (e.keyCode == 13 && $( '.new-world-name input' ).val() ) {
+
+    $( this ).blur();
+    $( this ).parent().parent().find( '.create-world-button' ).click();
+
+  }
+
+})
+
+.on( 'click' , '.create-world-button.step-b , .delete-world-button' , function(){
+
+  newWorldAnimationOut();
+
+})
+
+.on( 'mouseenter' , '.user-circle' , function(){
+
+  var position = $(this).position();
+
+  $( '.users-circles-container .user-hover span' ).text( $( this ).data( 'user' ).name );
+
+  $( '.users-circles-container .user-hover' ).css({
+    'top'     : ( 89 + position.top ),
+    'left'    : ( position.left - 29 ),
+    'opacity' : 0.9
+  });
+
+})
+
+.on( 'click' , '.card-options' , function(){
+
+  var post = $( this ).closest( '.card' ).data( 'post' );
+
+  $( this ).parent().find( '.card-options-section' ).addClass( 'popup' );
+  $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' );
+
+})
+
+.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
+
+  $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' );
+
+})
+
+.on( 'click' , '.comments-opener' , function(){
+
+  var card = $(this).parent().parent();
+  var height = parseInt(card.find('.comments-list').css('height')) + 50;
+  var commentsSection = card.find( '.comments-section' );
+
+  if (isMobile()) {
+    return;
+  }
+
+  if (commentsSection.hasClass('opened')) {
+
+    commentsSection.css('height', height);
+    card.removeClass( 'comments-open' );
+    commentsSection.transition({
+
+      'height'         : 0
+
+    }, 200, function(){
+
+      commentsSection.removeClass('opened');
+
+    });
+
+  }else{
+
+    card.addClass( 'comments-open' );
+    commentsSection.find( '.comments-list' ).scrollTop(9999999);
+    commentsSection.transition({
+
+      'height'         : height
+
+    }, 200, function(){
+
+      commentsSection.addClass('opened');
+      commentsSection.css('height', 'auto');
+      commentsSection.find( 'textarea' ).focus();
+
+    });
+
+
+  }
+
+})
+
+// END UI EVENTS
+
+
 //Events
 cardsList.on( 'scroll' , function(){
 
   var scrollDiv = $( this );
-  var scrollFinish = $( '.cards-grid' )[0].scrollHeight - scrollDiv.height();
+  var scrollFinish = $( '.ui-content' )[0].scrollHeight - scrollDiv.height();
 
   if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
 
@@ -153,6 +459,15 @@ closeInviteUser.on( 'click' , function(){
 
 });
 
+closeKickUsers.on( 'click' , function(){
+
+  $( '.kick-user-container' ).toggleClass( 'popup' );
+  $( '.kick-user-container *' ).toggleClass( 'popup' );
+  friendSearchBox.val('');
+  filterFriends('');
+
+});
+
 aceptInviteUser.on( 'click' , function(){
 
   inviteUsers();
@@ -164,6 +479,10 @@ aceptInviteUser.on( 'click' , function(){
 
 friendSearchBox.on( 'input' , function(){
   filterFriends( $( this ).val() );
+});
+
+membersSearchBox.on( 'input' , function(){
+  filterMembers( $( this ).val() );
 });
 
 exploreButton.on( 'click' , function(){
@@ -182,27 +501,8 @@ exploreButton.on( 'click' , function(){
 
 });
 
-unFollowButton.on( 'click' , function(){
-
-  if ( ! $( this ).hasClass( 'editable' ) ) {
-
-    unFollowWorld( worldSelected );
-
-  }else{
-
-    $( '.new-world-container' ).data( 'world' , worldSelected );
-    if (isMobile()) {
-      changeMobileView('newWorld');
-    }
-
-  }
-
-});
-
 openChatButton.on( 'click' , function(){
 
-  $('.tip.open-chat').addClass('used');
-  checkOnboarding();
   if (desktop.find('.wz-app-14').length > 0) {
     desktop.trigger( 'message' , [ 'open-world-chat' , { 'world' : worldSelected } ] );
   }else{
@@ -443,36 +743,6 @@ api.cosmos.on( 'userRemoved', function( userId , world ){
 
 });
 
-app.on( 'ui-view-resize ui-view-maximize ui-view-unmaximize' , function(){
-
-  if(isMobile()){
-    return;
-  }
-
-  var name = worldTitle.data( 'name' );
-  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
-  var textWidth = Math.floor( winWidth * 0.054 );
-
-  if( !name || $('.ui-content').hasClass('compressed') ){
-    return;
-  }
-
-  if ( name.length > textWidth ) {
-
-    worldTitle.css('font-size' , '27px');
-    textWidth = Math.floor( winWidth * 0.07 );
-    if ( !isMobile() && name.length > textWidth ) {
-      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-    }else{
-      worldTitle.text( name );
-    }
-  }else{
-    worldTitle.css('font-size' , '37px');
-    worldTitle.text( name );
-  }
-
-});
-
 api.cosmos.on( 'nameSetted', function(){console.log('nameSetted');})
 api.cosmos.on( 'pictureSetted', function(){console.log('pictureSetted');})
 api.cosmos.on( 'postReplied', function(){console.log('postReplied');})
@@ -590,10 +860,8 @@ cleanPostSearch.on( 'click' , function(){
   searchPost('');
 });
 
-openFolder.on( 'click' , function(){
+openFolderButton.on( 'click' , function(){
 
-  $('.tip.open-folder').addClass('used');
-  checkOnboarding();
   wz.fs( worldSelected.volume , function( e , o ){
 
     o.open();
@@ -804,11 +1072,25 @@ if( newParams.queue ){
 
 })
 
-.on( 'click' , '.user-preview.invite-user' , function(){
+.on( 'click' , '.invite-user-button' , function(){
 
   $( '.invite-user-container' ).toggleClass( 'popup' );
   $( '.invite-user-container *' ).toggleClass( 'popup' );
   getFriendsAsync();
+
+})
+
+.on( 'click' , '.world-members-button' , function(){
+
+  $( '.kick-user-container' ).toggleClass( 'popup' );
+  $( '.kick-user-container *' ).toggleClass( 'popup' );
+  if ( worldSelected.owner === myContactID ) {
+    $('.kick-user-section').addClass('admin');
+  }else{
+    $('.kick-user-section').removeClass('admin');
+  }
+
+  getMembersAsync();
 
 })
 
@@ -1077,12 +1359,12 @@ if( newParams.queue ){
 
       if ( worldDom.hasClass( 'active' ) ) {
 
-        unFollowButton.click();
+        editWorld( world );
 
       }else{
 
         selectWorld( worldDom , function(){
-          unFollowButton.click();
+          editWorld( world );
         });
 
       }
@@ -1103,14 +1385,18 @@ if( newParams.queue ){
 
 })
 
-.on( 'click' , '.world-context-menu' , function(){
+.on( 'click' , '.world-context-menu' , function(e){
 
-  $('.world-option:not(.wz-prototype)').remove();
-  $('.world-options, .world-options *').addClass('popup');
-  var option = $('.world-option.wz-prototype').clone();
+  e.preventDefault();
+  e.stopPropagation();
+  var world = $(this).parent();
+  world.find('.world-option:not(.wz-prototype)').remove();
+  $('.world-options, .world-options *').removeClass('popup');
+  world.find('.world-options, .world-options *').addClass('popup');
+  var option = world.find('.world-option.wz-prototype').clone();
   option.removeClass('wz-prototype').addClass('popup');
 
-  var isMine = worldSelected.owner === myContactID ? true : false;
+  var isMine = $(this).parent().data('world').owner === myContactID ? true : false;
   if ( isMine ) {
     option.addClass('editWorldOption').find('span').text( lang.editWorld );
   }else{
@@ -1121,7 +1407,12 @@ if( newParams.queue ){
 })
 
 .on( 'click' , '.editWorldOption' , function(){
-  unFollowButton.click();
+
+  var world = $(this).closest('.worldDom').data('world');
+  editWorld( world );
+  $( '.new-world-container' ).data( 'world' , world );
+  changeMobileView('newWorld');
+  
 })
 
 .on( 'click' , '.removeWorldOption' , function(){
@@ -1160,12 +1451,6 @@ if( newParams.queue ){
 
 .on( 'click' , '.cancel-search' , function(){
   $('.mobile-world-content').removeClass('searching');
-})
-
-.on( 'click' , '.new-post-mobile' , function(){
-  if (isMobile()) {
-    newPostMobile();
-  }
 })
 
 .on( 'click' , '.close-new-post' , function(){
@@ -1289,11 +1574,40 @@ $('.explore-container').on('scroll', function(){
   }
 });
 
+$('.world-selected').on('scroll', function(){
+  if ( $(this).scrollTop() > 60 ) {
+    $('.world-header-min').addClass('active');
+  }else{
+    $('.world-header-min').removeClass('active');
+  }
+});
+
+$('.world-selected').on('touchmove', function(){
+  console.log( $(this).offset().top );
+  if ( $(this).offset().top < -60 && !$(this).hasClass('active')) {
+    $('.world-header-min').addClass('active');
+  }else if($(this).hasClass('active')){
+    $('.world-header-min').removeClass('active');
+  }
+});
+
 $('.explore-top-bar .search-bar input').on('input', function(){
 
   searchWorldCard.val($(this).val());
   searchWorldCard.trigger('input');
 
+});
+
+$('.activate-search-bar').on( 'click', function(){
+  if (isMobile()) {
+    $('.world-search-bar').addClass('active');
+  }
+});
+
+$('.cancel-search').on( 'click', function(){
+  if (isMobile()) {
+    $('.world-search-bar').removeClass('active');
+  }
 });
 
 //Functions
@@ -1313,7 +1627,6 @@ var initCosmos = function(){
     if ( o.length === 0 && !isMobile()) {
 
       noWorlds.show();
-      $( '.onboarding-tip' ).show();
 
       noWorlds.css({
         'opacity'         : 1
@@ -1351,37 +1664,11 @@ var initCosmos = function(){
     });
   }
 
-  wz.user( myContactID , function( e , user ){
-    me = user;
-  });
-
 }
 
 var initTexts = function(){
 
-  $( '.category .public' ).text( lang.publics );
-  $( '.category .private' ).text( lang.privates );
-  $( '.explore-text, .search-title' ).text( lang.explore );
-  $( '.invite-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
-  $( '.card-options-section .delete span' ).text( lang.deletePost );
-  $( '.card-options-section .edit span' ).text( lang.editPost );
-  $( '.card-content.edit-mode .title-input' ).attr( 'placeholder' , lang.writeTitle );
-  $( '.card-content.edit-mode .content-input' ).attr( 'placeholder' , lang.writeDescription );
-  $( '.send-button span' ).text( lang.send );
-  $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
-  $( '.world-users-number .title' ).text( lang.users );
-  $( '.world-event-number .title' ).text( lang.posts );
-  $( '.world-files-number .title' ).text( lang.files );
-  $( '.new-world-title .title' ).text( lang.worldCreation );
-  if (isMobile()) {
-    $( '.stop-follow span' ).text( lang.exit );
-  }else{
-    $( '.stop-follow span' ).text( lang.unfollowWorld );
-  }
-  $( '.select-world span' ).text( lang.selectWorld );
-  $( '.no-posts .left-side span' ).text( lang.noPosts );
-  $( '.no-posts .right-side span' ).text( lang.createNewPost );
-
+  //Start
   $( '.no-worlds .title' ).text( lang.welcome );
   $( '.no-worlds .subtitle' ).text( lang.intro );
   $( '.no-worlds .subtitle2' ).text( lang.intro2 );
@@ -1402,8 +1689,61 @@ var initTexts = function(){
   $( '.no-worlds-mobile .files-feature .description' ).html( lang.feature2 );
   $( '.no-worlds-mobile .posts-feature .description' ).html( lang.feature3 );
 
+  //Sidebar
+  $( '.notifications-title span' ).text( lang.activity );
+
+  //World selected
+  $( '.select-world span' ).text( lang.selectWorld );
+
+  //World header
+  $( '.invite-user-button' ).text( lang.worldHeader.invite );
+  $( '.open-chat-button span' ).text( lang.worldHeader.chatButton );
+  $( '.open-folder-button span' ).text( lang.worldHeader.folderButton );
+  $( '.search-post input' ).attr( 'placeholder', lang.worldHeader.searchPost );
+
+  if (isMobile()) {
+    $( '.stop-follow span' ).text( lang.exit );
+  }else{
+    $( '.stop-follow span' ).text( lang.unfollowWorld );
+  }
+
+  //Posts
+  $( '.new-post-button .my-avatar' ).css( 'background-image', 'url(' + me.avatar.tiny + ')' );
+  $( '.new-post-button .something-to-say' ).text( lang.cardsList.somethingToSay );
+  $( '.no-posts .no-post-to-show' ).text( lang.cardsList.noPostToShow );
+  $( '.no-posts .left-side span' ).text( lang.noPosts );
+  $( '.no-posts .right-side span' ).text( lang.createNewPost );
+  $( '.card-options-section .delete span' ).text( lang.deletePost );
+  $( '.card-options-section .edit span' ).text( lang.editPost );
+  $( '.card-content.edit-mode .title-input' ).attr( 'placeholder' , lang.writeTitle );
+  $( '.card-content.edit-mode .content-input' ).attr( 'placeholder' , lang.writeDescription );
+  $( '.send-button span' ).text( lang.send );
+  $( '.comments-footer .comment-input' ).attr(  'placeholder' , lang.writeComment );
+  $( '.cancel-new-card span' ).text( lang.cancel );
+  $( '.save-new-card span' ).text( lang.save );
+  $( '.attachments span' ).text( lang.addFiles );
+  $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
+  $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
+
+  //World users
+  $( '.invite-user-container .ui-input-search input, .kick-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
+  $( '.cancel-invite-user span' ).text( lang.cancel );
+  $( '.invite-user span' ).text( lang.invite );
+  $( '.invite-by-mail span' ).text( lang.inviteByMail );
+  $( '.kick-out-button span' ).text( lang.worldUsers.kickOut );
+
+  //Explore
+  $( '.explore-text, .search-title' ).text( lang.explore );
   $( '.tend-text' ).text( lang.tend );
   $( '.follow-button span' ).text( lang.follow );
+  $( '.search-bar input' ).attr('placeholder', lang.search);
+  $( '.next-page .next-text' ).text( lang.next );
+  $( '.back-page .back-text' ).text( lang.previous );
+
+  //New world
+  $( '.new-world-title .title' ).text( lang.worldCreation );
+  $( '.category .public' ).text( lang.publics );
+  $( '.category .private' ).text( lang.privates );
   $( '.new-world-title .step-a' ).text( lang.stepa );
   $( '.new-world-title .step-b' ).text( lang.stepb );
   $( '.new-world-name span' ).text( lang.worldName );
@@ -1418,24 +1758,7 @@ var initTexts = function(){
   $( '.option.public > span' ).text( lang.public );
   $( '.option.hidden > span' ).text( lang.private );
   $( '.create-world-button.step-a span' ).text( lang.createWorldShort );
-  $( '.cancel-invite-user span' ).text( lang.cancel );
-  $( '.invite-user span' ).text( lang.invite );
-  $( '.cancel-new-card span' ).text( lang.cancel );
-  $( '.save-new-card span' ).text( lang.save );
-  $( '.attachments span' ).text( lang.addFiles );
-  $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
-  $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
-  $( '.invite-by-mail span' ).text( lang.inviteByMail );
-  $( '.onboarding-tip .title' ).text( lang.onboarding.title );
-  $( '.onboarding-tip .tip.create-post' ).text( lang.onboarding.createPost );
-  $( '.onboarding-tip .tip.open-folder' ).text( lang.onboarding.openFolder );
-  $( '.onboarding-tip .tip.open-chat' ).text( lang.onboarding.openChat );
 
-  $( '.notifications-title span' ).text( lang.activity );
-  $( '.next-page .next-text' ).text( lang.next );
-  $( '.back-page .back-text' ).text( lang.previous );
-
-  $( '.search-bar input' ).attr('placeholder', lang.search);
 }
 
 var getMyWorldsAsync = function( options ){
@@ -1513,6 +1836,11 @@ var appendWorld = function( worldApi ){
   var world = worldPrototype.clone();
   world.removeClass( 'wz-prototype' ).addClass( 'world-' + worldApi.id ).addClass( 'worldDom' );
   world.find( '.world-name' ).text( worldApi.name );
+
+  if (worldApi.owner === myContactID) {
+    world.addClass('editable')
+  }
+
   if (isMobile()) {
     world.find( '.world-icon' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
   }else{
@@ -1522,13 +1850,9 @@ var appendWorld = function( worldApi ){
   var category;
 
   if ( worldApi.isPrivate ) {
-
     category = $( '.private-list' );
-
   }else{
-
     category = $( '.public-list' );
-
   }
 
   appendWorldInOrder( category , world , worldApi );
@@ -1691,6 +2015,7 @@ var selectWorld = function( world , callback ){
     changeMobileView('worldContent');
   }
 
+  // Set initial status
   app.addClass( 'selectingWorld' );
   $( '.clean' ).remove();
   $( '.category-list .world' ).removeClass( 'active' );
@@ -1702,130 +2027,22 @@ var selectWorld = function( world , callback ){
   if (!worldApi) {
     return;
   }
+
   worldSelected = worldApi;
   app.data( 'worldSelected' , worldSelected )
 
-  var name = worldApi.name;
-  var winWidth = parseInt(app.find('.cover-first').css( 'width' )) - 50;
-  var textWidth = Math.floor( winWidth * 0.054 );
+  // Set info
+  worldTitle.text( worldApi.name );
+  worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members );
+  worldAvatar.css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
 
-  if ( name.length > textWidth ) {
-    worldTitle.css('font-size' , '27px');
-    textWidth = Math.floor( winWidth * 0.07 );
-    if ( !isMobile() && name.length > textWidth ) {
-      worldTitle.text( name.substr(0 , textWidth - 3) + '...' );
-    }else{
-      worldTitle.text( name );
-    }
-  }else{
-    worldTitle.css('font-size' , '37px');
-    worldTitle.text( name );
-  }
-
-  $( '.world-avatar' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
-
-  worldTitle.data( 'name' , name );
-
-  worldDescription.text( worldApi.description );
-
-  getWorldUsersAsync( worldApi );
   getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
     attendWorldNotification( worldApi.id );
     callback();
     app.removeClass( 'selectingWorld' );
   });
+
   $( '.select-world' ).hide();
-
-}
-
-var getWorldUsersAsync = function( worldApi ){
-
-  worldApi.getUsers(function( e , o ){
-
-    worldSelectedUsrs = o;
-
-    $( '.user-preview.invite-user' ).removeClass( 'invite-user' );
-    $( '.user-preview' ).show();
-
-    $( '.followers-number' ).text( o.length + ' ' + lang.followers );
-
-    if ( worldSelected.isPrivate ) {
-
-      var inviteIndex = -1;
-
-      for (var i = o.length + 1; i < 4 ; i++) {
-
-        $( '.user-preview' ).eq( 3 - i ).hide();
-
-      }
-
-      if (o.length > 3) {
-
-        $( '.user-preview.d' ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.horbito.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
-
-        $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
-        inviteIndex = 3;
-
-      }else{
-
-        $( '.user-preview' ).eq( 3 - o.length ).addClass( 'invite-user popup-launcher' ).css( 'background-image' , 'url(https://static.horbito.com/app/360/bola-invitar.png)' ).find( '.user-hover span' ).text( lang.inviteUser );
-
-        $( '.more-users-text' ).text( lang.seeAll );
-        inviteIndex = o.length;
-
-      }
-
-    }else{
-
-      for (var i = o.length ; i < 4 ; i++) {
-
-        $( '.user-preview' ).eq( 3 - i ).hide();
-
-      }
-
-      if ( o.length > 4 ) {
-
-        $( '.more-users-text' ).text( '+ ' + ( o.length - 3 ) + ' '  + lang.more );
-
-      }else{
-
-        $( '.more-users-text' ).text( lang.seeAll );
-
-      }
-
-    }
-
-
-    $( '.world-users-number .subtitle' ).text( o.length );
-    $( '.stop-follow' ).removeClass( 'editable' );
-    if (isMobile()) {
-      $( '.stop-follow span' ).text( lang.exit );
-    }else{
-      $( '.stop-follow span' ).text( lang.unfollowWorld );
-    }
-    $( '.user-circle.clean' ).remove();
-
-    $.each( o , function( i , user ){
-
-      if ( user.isAdmin && user.userId === myContactID ) {
-        $( '.stop-follow' ).addClass( 'editable' );
-        $( '.stop-follow span' ).text( lang.editWorld );
-      }
-
-      wz.user( user.userId , function( err , usr ){
-
-        if ( err ) {
-          console.log('Err:', err, user, usr);
-        }else{
-          appendUserCircle( i , usr , inviteIndex );
-        }
-
-
-      })
-
-    });
-
-  });
 
 }
 
@@ -1909,6 +2126,16 @@ var filterFriends = function( filter ){
 
 }
 
+var filterMembers = function( filter ){
+
+  var members = $( '.member' );
+  members.show();
+  var membersToShow = members.filter( startsWithFriends( filter ) );
+  var membersToHide = members.not( membersToShow );
+  membersToHide.hide();
+
+}
+
 var startsWithFriends = function( wordToCompare ){
 
   return function( index , element ) {
@@ -1944,7 +2171,7 @@ var followWorldAsync = function( worldCard ){
 
 var getFriendsAsync = function(){
 
-  $( '.invite-user-title' ).html( '<i>' + lang.invitePeople + '</i>' + lang.to + '<figure>' + worldSelected.name + '</figure>' );
+  $( '.invite-user-title' ).html( '<i>' + lang.worldUsers.invitePeople + '</i>' + lang.worldUsers.to + '<figure>' + worldSelected.name + '</figure>' );
 
   $( '.friendDom' ).remove();
   friendSearchBox.val('');
@@ -1961,6 +2188,51 @@ var getFriendsAsync = function(){
     $.each( friends , function( i , user ){
 
       appendFriend( user );
+
+    });
+
+  });
+
+}
+
+var getMembersAsync = function(){
+
+  $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.kickPeople + '</i>' + lang.worldUsers.from + '<figure>' + worldSelected.name + '</figure>' );
+
+  $( '.memberDom' ).remove();
+  membersSearchBox.val('');
+  filterMembers('');
+
+  var membersList = [];
+
+  worldSelected.getUsers( function( error, members ){
+
+    asyncEach( members, function( member, finish ){
+
+      api.user( member.userId, function( err, user ){
+
+        if ( member.isAdmin ) {
+          user.isAdmin = true;
+        }
+
+        membersList.push( user );
+        finish();
+
+      });
+
+    }, function(){
+
+      membersList.sort(function(a , b){
+        if(a.fullName < b.fullName) return -1;
+        if(a.fullName > b.fullName) return 1;
+        return 0;
+      });
+
+      $.each( membersList , function( i , member ){
+
+        appendMember( member );
+
+      });
 
     });
 
@@ -1994,6 +2266,23 @@ var appendFriend = function( user ){
   }
 
   friend.data( 'user' , user );
+
+}
+
+var appendMember = function( user ){
+
+  var member = memberPrototype.clone();
+  member.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'memberDom' );
+
+  if ( user.isAdmin ) {
+    member.addClass('isAdmin');
+  }
+
+  member.find( '.member-name' ).text( user.fullName );
+  member.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+
+  $( '.members-list' ).append( member );
+  member.data( 'user' , user );
 
 }
 
@@ -2653,7 +2942,7 @@ var appendCard = function( card , post ){
 
   if ( !cardsAppended.length ) {
 
-    $( '.cards-grid' ).append( card );
+    $( '.cards-list' ).append( card );
 
   }else{
 
@@ -3675,14 +3964,6 @@ var newPostMobile = function(){
   $( '.mobile-new-post .new-card-textarea' ).val('');
 }
 
-var checkOnboarding = function(){
-
-  if( $('.tip').not('.used').length === 0 ){
-    $( '.onboarding-tip' ).hide();
-  }
-
-}
-
 var nextPage = function(){
   actualPageInterval = actualPageInterval + nPagesShowed;
   addPages();
@@ -3740,5 +4021,485 @@ var addPages = function(){
   }
 }
 
+var exploreAnimationOut = function(){
+
+  if ( $( '.worldDom' ).length === 0 ) {
+
+    noWorlds.show();
+    noWorlds.transition({
+
+      'opacity'         : 1
+
+    }, 200, animationEffect );
+
+  }else{
+
+    noWorlds.transition({
+
+      'opacity'         : 0
+
+    }, 200, animationEffect , function(){
+
+      noWorlds.hide();
+
+    });
+  }
+
+  var exploreSection = $( '.explore-section' );
+
+  // Fade out blue background
+  exploreSection.stop().clearQueue().transition({
+
+    'opacity' : 0
+
+  }, 300, function(){
+
+    exploreSection.css( 'display' , 'none' );
+
+    $( '.new-world-button, .close-explore' ).css({
+      'transform' : 'translateY(10px)',
+      'opacity'   : 0
+    });
+
+  });
+
+  // Stars goes down
+  $( '.search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateY(20px)'
+
+  }, 300);
+
+  // New world button goes down
+  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateY(10px)'
+
+  }, 300);
+
+  // World cards button goes down
+  $( '.world-card' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateY(40px)'
+
+  }, 300);
+
+}
+
+var newWorldAnimationA = function(){
+
+  var newWorldContainer = $( '.new-world-container-wrap' );
+
+  $( '.new-world-name input' ).val( '' );
+
+  newWorldContainer.css( 'display' , 'block');
+
+  // Fade in White background (animation)
+  newWorldContainer.stop().clearQueue().transition({
+
+    'opacity' : 1
+
+  }, 300);
+
+  // Fade in and goes up title (animation)
+  $( '.new-world-title' ).stop().clearQueue().transition({
+
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 300);
+
+  // Fade in and goes up esc (animation)
+  $( '.close-new-world' ).stop().clearQueue().transition({
+
+    delay       : 250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 300);
+
+  // Fade in and goes up name (animation)
+  $( '.new-world-name' ).stop().clearQueue().transition({
+
+    delay       : 250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 300);
+
+  // Fade in and goes up button (animation)
+  $( '.create-world-button' ).stop().clearQueue().transition({
+
+    delay       : 250,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 300);
+  $( '.delete-world-button' ).stop().clearQueue().transition({
+
+    delay       : 250,
+    'opacity'   : 0.5,
+    'transform' : 'translateY(0px)'
+
+  }, 300);
+
+
+}
+
+var newWorldAnimationB = function(){
+
+  var editing = $( '.new-world-container' ).hasClass( 'editing' );
+
+  if ( editing ) {
+
+    var height = isMobile() ? '800px' : '770px';
+    $( '.new-world-container' ).css( 'height' , height );
+    newWorldAnimationBEditing();
+
+  }else{
+    var height = isMobile() ? '720px' : '770px';
+    $( '.new-world-container' ).css( 'height' , height );
+    newWorldAnimationBNormal();
+  }
+
+}
+
+var newWorldAnimationBNormal = function(){
+
+  $( '.new-world-avatar' ).show();
+  $( '.new-world-desc' ).show();
+  $( '.new-world-privacy' ).show();
+  $( '.new-world-title' ).addClass( 'second' );
+  $( '.create-world-button' ).addClass( 'step-b' );
+  $( '.create-world-button' ).removeClass( 'step-a' );
+  $( '.option.private-option' ).addClass( 'active' );
+  $( '.option.public' ).removeClass( 'active' );
+
+
+  $( '.new-world-desc textarea' ).val('');
+
+  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'none' );
+
+  // Fade in and goes up title (animation)
+  var translate = isMobile() ? '0px' : '-67px';
+  $( '.new-world-title' ).stop().clearQueue().transition({
+
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000, animationEffect);
+
+  // Fade in and goes up name (animation)
+  $( '.new-world-name' ).stop().clearQueue().transition({
+
+    'opacity'   : 0,
+    'transform' : 'translateX(-200px)'
+
+  }, 1000, animationEffect);
+
+
+  // Fade in and goes up button (animation)
+  if (!isMobile()) {
+    $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
+
+      'opacity'   : 0
+
+    }, 800, animationEffect, function(){
+
+      $( this ).css( {
+
+        'top'       : '640px',
+        'transform' : 'translateY(20px)',
+        'right'     : '0',
+        'left'      : 'calc(50% - 472px/2 + 150px)'
+
+      } ).find( 'span' ).text( lang.accept );
+
+
+    });
+  }
+
+  // Fade in and goes up avatar (animation)
+  $( '.new-world-avatar' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up desc (animation)
+  $( '.new-world-desc' ).stop().clearQueue().transition({
+
+    delay       : 650,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  $( '.new-world-privacy' ).stop().clearQueue().transition({
+
+    delay       : 800,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  $( '.create-world-button' ).transition({
+
+    delay       : 950,
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+  $( '.delete-world-button' ).transition({
+
+    delay       : 950,
+    'opacity'   : 0.5,
+    'transform' : 'translateY(0px)'
+
+  }, 1000);
+
+}
+
+var newWorldAnimationBEditing = function(){
+
+  bypassNewWorldAnimationA();
+
+  $( '.new-world-avatar' ).show();
+  $( '.new-world-desc' ).show();
+  $( '.new-world-privacy' ).show();
+  $( '.new-world-title' ).addClass( 'second' );
+  $( '.create-world-button' ).addClass( 'step-b' );
+  $( '.create-world-button' ).removeClass( 'step-a' );
+
+  $('.new-world-container-wrap').scrollTop(0);
+
+  // Fade in and goes up title (animation)
+  var translate = isMobile() ? '0px' : '-67px';
+  $( '.new-world-title' ).stop().clearQueue().transition({
+
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+
+
+  // Fade in and goes up name (animation)
+  var translate = isMobile() ? '-15px' : '-58px';
+  $( '.new-world-name' ).stop().clearQueue().transition({
+
+    delay       : 100,
+    'opacity'   : 1,
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+
+  // Fade in and goes up avatar (animation)
+  var translate = isMobile() ? '50px' : '120px';
+  $( '.new-world-avatar' ).css( 'transform' , 'translateY(158px)' );
+  $( '.new-world-avatar' ).stop().clearQueue().transition({
+
+    delay       : 300,
+    'opacity'   : 1,
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+
+  // Fade in and goes up desc (animation)
+  var translate = isMobile() ? '50px' : '120px';
+  $( '.new-world-desc' ).css( 'transform' , 'translateY(158px)' );
+  $( '.new-world-desc' ).stop().clearQueue().transition({
+
+    delay       : 500,
+    'opacity'   : 1,
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+
+  // Fade in and goes up privacy (animation)
+  var translate = isMobile() ? '50px' : '120px';
+  $( '.new-world-privacy' ).css( 'transform' , 'translateY(158px)' );
+  $( '.new-world-privacy' ).stop().clearQueue().transition({
+
+    delay       : 700,
+    'opacity'   : 1,
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+
+
+  // Fade in and goes up privacy (animation)
+  var translate = isMobile() ? '80px' : '120px';
+  $( '.create-world-button, .delete-world-button' ).css( 'transform' , 'translateY(158px)' );
+  $( '.create-world-button' ).transition({
+
+    delay       : 900,
+    'opacity'   : 1,
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+  $( '.delete-world-button' ).transition({
+
+    delay       : 900,
+    'opacity'   : 0.5,
+    'transform' : 'translateY('+translate+')'
+
+  }, 1000);
+
+}
+
+var bypassNewWorldAnimationA = function(){
+
+  $( '.new-world-container-wrap' ).css({
+
+    'display' : 'block',
+
+  });  $( '.new-world-container-wrap' ).transition({
+
+    'opacity' : 1
+
+  }, 300);
+  $( '.new-world-title' ).css({
+
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  });
+  $( '.close-new-world' ).css({
+
+    'opacity'   : 1,
+    'transform' : 'translateY(0px)'
+
+  });
+  $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept );
+  var text = isMobile() ? lang.exit : lang.unfollowWorld;
+  $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' ).find( 'span' ).text( text );
+  $( '.create-world-button , .delete-world-button' ).css( {
+
+    'top'       : '640px',
+    'transform' : 'translateY(20px)',
+    'right'     : '0',
+    'opacity'   : '0'
+
+  });
+  $( '.new-world-name' ).css({
+
+    'opacity'   : '0'
+
+  });
+  $( '.new-world-title .title' ).text( lang.worldEdit );
+  $( '.new-world-title .step-b' ).addClass( 'hide' );
+
+}
+
+
+var newWorldAnimationOut = function(){
+
+  var newWorldContainer = $( '.new-world-container-wrap' );
+
+  $( '.new-world-container' ).css( 'height' , '100%' );
+
+  // Fade out White background
+  newWorldContainer.stop().clearQueue().transition({
+
+    'opacity' : 0
+
+  }, 200, function(){
+
+    newWorldContainer.css( 'display' , 'none' );
+    $( '.new-world-avatar' ).hide();
+    $( '.new-world-desc' ).hide();
+    $( '.new-world-privacy' ).hide();
+    $( '.new-world-title' ).removeClass( 'second' );
+    $( '.create-world-button' ).removeClass( 'step-b' );
+    $( '.create-world-button' ).addClass( 'step-a' );
+    $( '.new-world-title .step-b' ).removeClass( 'hide' );
+    $( '.new-world-title .title' ).text( lang.worldCreation );
+    $( '.delete-world-button' ).addClass( 'hide' );
+
+
+    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button' ).css({
+      'transform' : 'translateY(20px)',
+      'opacity'   : 0
+    });
+
+    $( '.close-new-world' ).css({
+      'transform' : 'translateY(10px)',
+      'opacity'   : 0
+    });
+
+    if (!isMobile()) {
+      $( '.create-world-button' ).css( {
+
+
+        'top'       : '400px',
+        'transform' : 'translateY(20px)',
+        'left'      : 'calc((50% - 236px) + 307px)'
+
+
+      } ).find( 'span' ).text( lang.createWorldShort );
+    }
+
+    exploreAnimationOut();
+
+    if ( $( '.worldDom' ).length === 0 ) {
+
+      noWorlds.show();
+      noWorlds.transition({
+
+        'opacity'         : 1
+
+      }, 200, animationEffect );
+
+    }else{
+
+      noWorlds.transition({
+
+        'opacity'         : 0
+
+      }, 200, animationEffect , function(){
+
+        noWorlds.hide();
+
+      });
+
+    }
+
+  });
+
+}
+
+var editWorld = function( world ){
+
+  $( '.new-world-title input' ).val('');
+  $( '.new-world-container' ).addClass( 'editing' );
+  $( '.delete-world-button' ).removeClass( 'hide' );
+
+  newWorldAnimationB();
+
+  if (world.hasCustomIcon) {
+    $( '.wz-groupicon-uploader-start' ).removeClass('non-icon');
+    $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
+  }else{
+    $( '.wz-groupicon-uploader-start' ).removeClass('custom-icon');
+    $( '.wz-groupicon-uploader-start' ).addClass('non-icon');
+  }
+
+  $( '.new-world-desc textarea' ).val( world.description );
+  $( '.new-world-name input' ).val( world.name );
+  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
+  $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+  $( '.privacy-options .option' ).removeClass( 'active' );
+  if ( world.isPrivate ) {
+    $( '.privacy-options .hidden' ).addClass( 'active' );
+  }else{
+    $( '.privacy-options .public' ).addClass( 'active' );
+  }
+
+}
 
 initCosmos();
