@@ -1560,6 +1560,21 @@ if( newParams.queue ){
   prevPage();
 })
 
+.on( 'click', '.kick-out-button', function(){
+  worldSelected.removeUser( $(this).parent().data('user').id, function( err ){
+    if (err) {
+      console.error(err);
+    }
+    api.cosmos( worldSelected.id, function(err, worldApi){
+      closeKickUsers.click();
+      $('.world-' + worldSelected.id).data('world', worldApi);
+      worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members );
+      worldSelected = worldApi;
+    });
+
+  });
+})
+
 $('.scrollable-content').on( 'scroll', function(){
   if( isMobile() ){
     app.find('.popup').removeClass('popup');
@@ -2302,6 +2317,11 @@ var inviteUsers = function(){
 
   } , function(){
 
+    api.cosmos( worldSelected.id, function(err, worldApi){
+      $('.world-' + worldSelected.id).data('world', worldApi);
+      worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members );
+      worldSelected = worldApi;
+    });
 
   });
 
@@ -3086,6 +3106,10 @@ var unFollowWorld = function( world ){
 
     dialog.render(function( doIt ){
 
+      if (!doIt) {
+        return;
+      }
+
       world.removeUser( myContactID , function( err, o ){
         if (err) {
           console.error(err);
@@ -3373,7 +3397,7 @@ var searchPostForComment = function( info ){
 
 var hideAndShowPost = function( post, showReply ){
 
-  $('.card').hide();
+  $('.cardDom').remove();
 
   wz.user( post.author , function( e , user ){
 
@@ -3605,7 +3629,18 @@ var updateBadges = function( world ){
     $('.notifications').removeClass('with-notification');
   }
   commentsNotifications.forEach(function( notification ){
+    
     var world = $( '.world-' + notification.data.world ).data('world');
+    if ( !world ) {
+      api.notification.markAsAttended('cosmos' , notification.id, function(err){
+        if (err) {
+          console.error(err);
+        }
+        checkNotifications();
+      });
+      return;
+    }
+
     world.getPost( notification.data.parent , function( e , post ){
       api.user( notification.sender , function( e , user ){
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype');
