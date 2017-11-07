@@ -105,6 +105,7 @@ var mobileWorldContent    = $( '.mobile-world-content' );
 var searchBar             = $( '.search-button' );
 var searchBarFigure       = $( '.search-button i' );
 var uiContent             = $( '.ui-content' );
+var worldSelectedDom      = $( '.world-selected' );
 
 // World header
 var worldAvatar           = $( '.world-avatar' );
@@ -420,7 +421,7 @@ app
 
 
 //Events
-cardsList.on( 'scroll' , function(){
+worldSelectedDom.on( 'scroll' , function(){
 
   var scrollDiv = $( this );
   var scrollFinish = $( '.ui-content' )[0].scrollHeight - scrollDiv.height();
@@ -1848,6 +1849,10 @@ var getPublicWorldsAsync = function( options ){
 
 var appendWorld = function( worldApi ){
 
+  if ( $('.world-' + worldApi.id ).length > 0 ) {
+    return;
+  }
+
   var world = worldPrototype.clone();
   world.removeClass( 'wz-prototype' ).addClass( 'world-' + worldApi.id ).addClass( 'worldDom' );
   world.find( '.world-name' ).text( worldApi.name );
@@ -2394,7 +2399,7 @@ var getWorldPostsAsync = function( world , interval , callback ){
 
     }
 
-    $( '.cards-list' ).data( 'lastCard' , interval.final );
+    worldSelectedDom.data( 'lastCard' , interval.final );
 
     var postPromises = [];
 
