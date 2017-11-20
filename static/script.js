@@ -1360,8 +1360,9 @@ if( newParams.queue ){
 
       if ( worldDom.hasClass( 'active' ) ) {
 
+        $( '.new-world-container' ).data( 'world' , world );
         editWorld( world );
-
+        
       }else{
 
         selectWorld( worldDom , function(){
