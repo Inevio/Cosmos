@@ -424,7 +424,7 @@ app
 worldSelectedDom.on( 'scroll' , function(){
 
   var scrollDiv = $( this );
-  var scrollFinish = $( '.ui-content' )[0].scrollHeight - scrollDiv.height();
+  var scrollFinish = $( '.world-selected' )[0].scrollHeight - scrollDiv.height();
 
   if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
 
