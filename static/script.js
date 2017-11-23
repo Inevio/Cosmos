@@ -494,6 +494,8 @@ exploreButton.on( 'click' , function(){
   $('.explore-container').scrollTop(0);
 
   filterActive = null;
+  searchWorldCard.val('');
+
   cleanWorldCards();
   getPublicWorldsAsync({
     page: 1,
