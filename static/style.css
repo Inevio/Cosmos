@@ -2035,7 +2035,7 @@ to {background-position: -200% 0;}
 
     float: left;
     width: 100%;
-    height: 283px;
+    max-height: 283px;
     position: relative;
     background-size: cover;
     margin-top: 17px;
