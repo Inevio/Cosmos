@@ -3666,7 +3666,7 @@ var updateBadges = function( world ){
         }
         notificationDom.find('.notification-time').html('<i></i>' +  timeElapsed( new Date( notification.time ) ) );
         if ( $('.notification-' + notification.id ).length === 0 ) {
-          $('.notifications-list').append(notificationDom);
+          $('.notifications-list').prepend(notificationDom);
         }
       });
     });
