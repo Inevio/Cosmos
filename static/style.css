@@ -1062,7 +1062,7 @@ to {background-position: -200% 0;}
   }
 
   .search-post.active{
-    border: 2px solid @redHorbito;
+    border: 2px solid #161719;
   }
 }
 
@@ -4984,7 +4984,7 @@ to {background-position: -200% 0;}
     }
 
     .ui-input-search.active{
-      border: 2px solid @redHorbito;
+      border: 2px solid #161719;
     }
 
     .cancel-search{
