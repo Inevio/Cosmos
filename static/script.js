@@ -851,6 +851,73 @@ api.cosmos.on( 'worldPrivateSetted' , function( world ){
 
 api.cosmos.on( 'worldRemoved', function(){console.log('worldRemoved');})
 
+api.cosmos.on( 'postRemoved', function( postId , world ){
+
+  var worldSelected = $( '.world.active' ).data( 'world' );
+  if ( worldSelected.id === world.id ) {
+
+    if ( $( '.post-' + postId ) ) {
+
+      $( '.post-' + postId ).remove();
+      if ( $( '.cardDom' ).length === 0 ) {
+
+        $( '.no-posts' ).css( 'opacity' , '1' );
+        $( '.no-posts' ).show();
+        app.addClass( 'no-post' );
+        decompressCover();
+
+      }
+
+    }
+
+    if ( $( '.comment-' + postId ) ) {
+
+      var card;
+      if (isMobile()) {
+        card = $( '.mobile-world-comments' ).data( 'card' );
+      }else{
+        card = $( '.comment-' + postId ).closest('.card');
+      }
+      var commentsText = card.find( '.comments-text' );
+      var ncomments = commentsText.data( 'num' ) - 1;
+      if ( ncomments === 1 ) {
+        commentsText.text( ncomments + ' ' + lang.comment );
+      }else{
+        commentsText.text( ncomments + ' ' + lang.comments );
+      }
+      commentsText.data( 'num' , ncomments );
+
+      if ( ncomments === 0 ) {
+
+        var commentsSection = card.find( '.comments-section' );
+
+        card.removeClass( 'comments-open' );
+        commentsSection.transition({
+
+          'height'         : 0
+
+        }, 200, function(){
+
+          commentsSection.removeClass('opened');
+
+        });
+
+      }
+
+      $( '.comment-' + postId ).remove();
+
+    }
+
+    if ( $( '.reply-' + postId ) ) {
+
+      $( '.reply-' + postId ).remove();
+
+    }
+
+  }
+
+});
+
 searchPostInput.on( 'input' , function(){
 
   searchPost( $( this ).val() );
