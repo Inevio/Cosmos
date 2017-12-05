@@ -1598,6 +1598,12 @@ if( newParams.queue ){
 .on( 'click' , '.notification' , function(){
 
   var notification = $(this).data('notification');
+  var world = $( '.world-' + notification.data.world );
+
+  world.data( 'world' ).getPost( notification.data.post, function(err, post ){
+    console.log( err, post );
+  })
+
   console.log( notification );
 
   selectWorld( $( '.world-' + notification.data.world ) , function(){
@@ -2613,6 +2619,10 @@ var appendGenericCard = function( post , user , reason , callback ){
     for (var i = 0; i < fsnodes.length; i++) {
 
       var fsnode = fsnodes[i];
+
+      if (!fsnode) {
+        break
+      }
 
       if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
 
