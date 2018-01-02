@@ -55,7 +55,7 @@ textarea{
   opacity: 0;
   display: none;
   top: 0;
-  background-image: url('@static/exploreBackMobile.png');
+  background-image: url('@static/images/exploreBackMobile.png');
   background-size: cover;
 }
 
@@ -229,7 +229,7 @@ to {background-position: -200% 0;}
 
   .chat-feature{
     .icon{
-      background-image: url('@static/chat-feature.png');
+      background-image: url('@static/images/chat-feature.png');
       background-size: 98px 98px;
       width: 98px;
       height: 98px;
@@ -237,7 +237,7 @@ to {background-position: -200% 0;}
   }
   .files-feature{
     .icon{
-      background-image: url('@static/files-feature.png');
+      background-image: url('@static/images/files-feature.png');
       background-size: 98px 98px;
       width: 98px;
       height: 98px;
@@ -245,7 +245,7 @@ to {background-position: -200% 0;}
   }
   .posts-feature{
     .icon{
-      background-image: url('@static/posts-feature.png');
+      background-image: url('@static/images/posts-feature.png');
       background-size: 98px 98px;
       width: 98px;
       height: 98px;
@@ -290,7 +290,7 @@ to {background-position: -200% 0;}
 
   .chat-feature{
     .icon{
-      background-image: url('@static/chat-feature-mobile.png');
+      background-image: url('@static/images/chat-feature-mobile.png');
       background-size: 49px 49px;
       width: 49px;
       height: 49px;
@@ -298,7 +298,7 @@ to {background-position: -200% 0;}
   }
   .files-feature{
     .icon{
-      background-image: url('@static/files-feature-mobile.png');
+      background-image: url('@static/images/files-feature-mobile.png');
       background-size: 49px 49px;
       width: 49px;
       height: 49px;
@@ -306,7 +306,7 @@ to {background-position: -200% 0;}
   }
   .posts-feature{
     .icon{
-      background-image: url('@static/posts-feature-mobile.png');
+      background-image: url('@static/images/posts-feature-mobile.png');
       background-size: 49px 49px;
       width: 49px;
       height: 49px;
@@ -352,7 +352,7 @@ to {background-position: -200% 0;}
 
     .chat-feature{
       .icon{
-        background-image: url('@static/chat-feature-mobile.png');
+        background-image: url('@static/images/chat-feature-mobile.png');
         background-size: 49px 49px;
         width: 49px;
         height: 49px;
@@ -360,7 +360,7 @@ to {background-position: -200% 0;}
     }
     .files-feature{
       .icon{
-        background-image: url('@static/files-feature-mobile.png');
+        background-image: url('@static/images/files-feature-mobile.png');
         background-size: 49px 49px;
         width: 49px;
         height: 49px;
@@ -368,7 +368,7 @@ to {background-position: -200% 0;}
     }
     .posts-feature{
       .icon{
-        background-image: url('@static/posts-feature-mobile.png');
+        background-image: url('@static/images/posts-feature-mobile.png');
         background-size: 49px 49px;
         width: 49px;
         height: 49px;
@@ -529,7 +529,7 @@ to {background-position: -200% 0;}
   	margin-left: 14px;
     margin-right: 8px;
     margin-bottom: 13px;
-    background-image: url('@static/favicon.png');
+    background-image: url('@static/images/favicon.png');
     background-size: 27px 20px;
 
   }
@@ -554,7 +554,7 @@ to {background-position: -200% 0;}
     height: 20px;
     margin-right: 14px;
     margin-bottom: 7px;
-    background-image: url('@static/sprite.png');
+    background-image: url('@static/images/sprite.png');
     background-size: 321px 27px;
     background-position: 346px 0;
     opacity: 0.7;
@@ -577,7 +577,7 @@ to {background-position: -200% 0;}
     height: 17px;
     margin-right: 14px;
     margin-top: 3px;
-    background-image: url('@static/sprite.png');
+    background-image: url('@static/images/sprite.png');
     background-size: 312px 27px;
     background-position: 278px 0;
     margin-left: 8px;
@@ -641,7 +641,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 10px;
       height: 6px;
-      background-image: url('@static/flecha-sidebar.png');
+      background-image: url('@static/images/flecha-sidebar.png');
       background-size: 10px 6px;
     }
 
@@ -823,7 +823,7 @@ to {background-position: -200% 0;}
     position: absolute;
     width: 18px;
     height: 24px;
-    background-image: url('@static/rocket-normal.png');
+    background-image: url('@static/images/rocket-normal.png');
     background-size: 18px 24px;
     left: 73px;
     margin-top: 24px;
@@ -834,7 +834,7 @@ to {background-position: -200% 0;}
   .spaceship-gif{
 
     position: absolute;
-    background-image: url('@static/rocket-hover.gif');
+    background-image: url('@static/images/rocket-hover.gif');
     background-size: 51px 48px;
     width: 51px;
     height: 48px;
@@ -869,7 +869,7 @@ to {background-position: -200% 0;}
   height: 100%;
   background-color: #fff;
   z-index: 5;
-  background-image: url('@static/selectWorld.png');
+  background-image: url('@static/images/selectWorld.png');
   background-size: cover;
 
 }
@@ -1002,7 +1002,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 29px;
       height: 23px;
-      background-image: url('@static/open-chat-button.png');
+      background-image: url('@static/images/open-chat-button.png');
       background-size: 29px 23px;
     }
 
@@ -1032,7 +1032,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 24px;
       height: 19px;
-      background-image: url('@static/open-folder-button.png');
+      background-image: url('@static/images/open-folder-button.png');
       background-size: 24px 19px;
     }
 
@@ -1148,7 +1148,7 @@ to {background-position: -200% 0;}
         float: left;
         width: 29px;
         height: 23px;
-        background-image: url('@static/open-chat-button.png');
+        background-image: url('@static/images/open-chat-button.png');
         background-size: 29px 23px;
       }
     }
@@ -1171,7 +1171,7 @@ to {background-position: -200% 0;}
         float: left;
         width: 24px;
         height: 19px;
-        background-image: url('@static/open-folder-button.png');
+        background-image: url('@static/images/open-folder-button.png');
         background-size: 24px 19px;
       }
     }
@@ -1240,7 +1240,7 @@ to {background-position: -200% 0;}
   float: left;
   width: 3px;
   height: 15px;
-  background-image: url('@static/moreOptions.png');
+  background-image: url('@static/images/moreOptions.png');
   background-size: 3px 15px;
 }
 
@@ -1282,7 +1282,7 @@ to {background-position: -200% 0;}
     float: right;
     width: 17px;
     height: 19px;
-    background-image: url('@static/attach.png');
+    background-image: url('@static/images/attach.png');
     background-size: 17px 19px;
     margin-top: 30px;
     margin-right: 25px;
@@ -1300,7 +1300,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 232px;
     height: 232px;
-    background-image: url('@static/noPost.png');
+    background-image: url('@static/images/noPost.png');
     background-size: 232px 232px;
     margin-left: ~'calc(50% - 116px)';
     margin-top: 51px;
@@ -1379,7 +1379,7 @@ to {background-position: -200% 0;}
       margin-right: 10px;
       width: 7px;
       height: 7px;
-      background-image: url('@static/cancel-attach.png');
+      background-image: url('@static/images/cancel-attach.png');
       background-size: 7px 7px;
 
     }
@@ -1415,7 +1415,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 17px;
     height: 19px;
-    background-image: url('@static/attach.png');
+    background-image: url('@static/images/attach.png');
     background-size: 17px 19px;
     margin-left: 9px;
     margin-top: 8px;
@@ -1760,7 +1760,7 @@ to {background-position: -200% 0;}
     float: right;
     width: 3px;
     height: 17px;
-    background-image: url( '@static/more.png' );
+    background-image: url( '@static/images/more.png' );
     background-size: 3px 17px;
     opacity: 0.7;
     transition: all 0.2s ease;
@@ -1887,7 +1887,7 @@ to {background-position: -200% 0;}
   .comments-icon{
 
     float: left;
-    background-image: url('@static/comment.png');
+    background-image: url('@static/images/comment.png');
     width: 17px;
     height: 17px;
     background-size: 17px 17px;
@@ -1925,7 +1925,7 @@ to {background-position: -200% 0;}
     height: 206px;
     border-right: 2px solid #fff;
     border-bottom: 2px solid #fff;
-    background-image: url('@static/cover.png');
+    background-image: url('@static/images/cover.png');
     background-size: cover;
 
   }
@@ -1936,7 +1936,7 @@ to {background-position: -200% 0;}
     width: 252px;
     height: 137px;
     border-bottom: 2px solid #fff;
-    background-image: url('@static/cover.png');
+    background-image: url('@static/images/cover.png');
     background-size: cover;
 
   }
@@ -1947,7 +1947,7 @@ to {background-position: -200% 0;}
     width: 252px;
     height: 135px;
     border-bottom: 2px solid #fff;
-    background-image: url('@static/cover.png');
+    background-image: url('@static/images/cover.png');
     background-size: cover;
 
   }
@@ -1957,7 +1957,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 275px;
     height: 203px;
-    background-image: url('@static/cover.png');
+    background-image: url('@static/images/cover.png');
     background-size: cover;
     border-right: 2px solid #fff;
     margin-top: -68px;
@@ -1969,7 +1969,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 252px;
     height: 135px;
-    background-image: url('@static/cover.png');
+    background-image: url('@static/images/cover.png');
     background-size: cover;
 
   }
@@ -2075,7 +2075,7 @@ to {background-position: -200% 0;}
     left: 31px;
     width: 16px;
     height: 16px;
-    background-image: url('@static/iconPreview.png');
+    background-image: url('@static/images/iconPreview.png');
     background-size: 16px 16px;
     cursor: pointer;
 
@@ -2261,7 +2261,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 41px;
     height: 17px;
-    background-image: url('@static/youtubelogo.png');
+    background-image: url('@static/images/youtubelogo.png');
     background-size: 41px 17px;
     margin-left: 31px;
     margin-right: 345px;
@@ -2285,7 +2285,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 9px;
     height: 5px;
-    background-image: url('@static/triangleDown.png');
+    background-image: url('@static/images/triangleDown.png');
     background-size: 9px 5px;
     margin-left: 7px;
     margin-top: 23px;
@@ -2545,7 +2545,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 12px;
     height: 13px;
-    background-image: url('@static/trash.png');
+    background-image: url('@static/images/trash.png');
     background-size: 12px 13px;
     margin-left: 5px;
     margin-top: 4px;
@@ -2581,7 +2581,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 11px;
     height: 7px;
-    background-image: url('@static/replay.png');
+    background-image: url('@static/images/replay.png');
     background-size: 11px 7px;
     margin-right: 3px;
     margin-top: 13px;
@@ -2652,7 +2652,7 @@ to {background-position: -200% 0;}
     margin-left: 8px;
     width: 16px;
     height: 18px;
-    background-image: url('@static/attach.png');
+    background-image: url('@static/images/attach.png');
     background-size: 32px 18px;
     cursor: pointer;
 
@@ -2862,7 +2862,7 @@ to {background-position: -200% 0;}
 
 .search-bar figure{
   float: left;
-  background-image: url('@static/sprite-lupa-explore.png');
+  background-image: url('@static/images/sprite-lupa-explore.png');
   background-size: 20px 20px;
   width: 20px;
   height: 20px;
@@ -2926,7 +2926,7 @@ to {background-position: -200% 0;}
   .new-world-button figure{
 
     float: left;
-    background-image: url('@static/newWorld.png');
+    background-image: url('@static/images/newWorld.png');
     background-size: 55px 22px;
     width: 27px;
     height: 22px;
@@ -3000,7 +3000,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 14px;
     height: 14px;
-    background-image: url('@static/close-explore.png');
+    background-image: url('@static/images/close-explore.png');
     background-size: 14px 14px;
     opacity: 0.7;
     transition: all 0.2s ease;
@@ -3159,7 +3159,7 @@ to {background-position: -200% 0;}
     i{
       width: 7px;
       height: 13px;
-      background-image: url('@static/nextArrow.png');
+      background-image: url('@static/images/nextArrow.png');
       background-size: 7px 13px;
       float: left;
       margin-left: 7px;
@@ -3194,7 +3194,7 @@ to {background-position: -200% 0;}
     i{
       width: 7px;
       height: 13px;
-      background-image: url('@static/nextArrow.png');
+      background-image: url('@static/images/nextArrow.png');
       background-size: 7px 13px;
       float: left;
       margin-left: 7px;
@@ -3215,7 +3215,7 @@ to {background-position: -200% 0;}
 
     width: 100%;
     height: 115px;
-    background-image: url( '@static/cover.png' );
+    background-image: url( '@static/images/cover.png' );
     background-size: cover;
     border-radius: 6px 6px 0 0;
 
@@ -3226,7 +3226,7 @@ to {background-position: -200% 0;}
     position: absolute;
     width: 100%;
     height: 115px;
-    background-image: url( '@static/cover.png' );
+    background-image: url( '@static/images/cover.png' );
     background-size: cover;
     border-radius: 6px 6px 0 0;
 
@@ -3294,7 +3294,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 17px;
       height: 13px;
-      background-image: url('@static/checkmark.png');
+      background-image: url('@static/images/checkmark.png');
       background-size: 17px 13px;
       margin-left: 37px;
       margin-top: 13px;
@@ -3440,7 +3440,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 54px;
     height: 34px;
-    background-image: url('@static/planetIcon.png');
+    background-image: url('@static/images/planetIcon.png');
     background-size: 54px 34px;
     margin-right: 10px;
     margin-left: 57px;
@@ -3574,7 +3574,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 34px;
     height: 28px;
-    background-image: url('@static/sprite-camara.png');
+    background-image: url('@static/images/sprite-camara.png');
     background-size: 68px 28px;
     margin-left: 29px;
     margin-top: 32px;
@@ -3768,7 +3768,7 @@ to {background-position: -200% 0;}
 
   .new-world-privacy .privacy-options .public figure{
 
-    background-image: url('@static/miniPlanet.png');
+    background-image: url('@static/images/miniPlanet.png');
     background-size: 45px 45px;
 
   }
@@ -3777,7 +3777,7 @@ to {background-position: -200% 0;}
 
     width: 30px;
     height: 43px;
-    background-image: url('@static/lock.png');
+    background-image: url('@static/images/lock.png');
     background-size: 30px 43px;
 
   }
@@ -3786,7 +3786,7 @@ to {background-position: -200% 0;}
 
     width: 41px;
     height: 38px;
-    background-image: url('@static/noeye.png');
+    background-image: url('@static/images/noeye.png');
     background-size: 41px 38px;
     top: 26px;
 
@@ -3831,7 +3831,7 @@ to {background-position: -200% 0;}
     right: 10px;
     width: 16px;
     height: 16px;
-    background-image: url('@static/info-privacidad.png');
+    background-image: url('@static/images/info-privacidad.png');
     background-size: 16px 16px;
 
   }
@@ -3995,7 +3995,7 @@ to {background-position: -200% 0;}
   float: left;
   width: 14px;
   height: 14px;
-  background-image: url('@static/close-icons.png');
+  background-image: url('@static/images/close-icons.png');
   background-size: 25px 14px;
   background-position: 25px 0;
   opacity: 0.7;
@@ -4161,7 +4161,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 14px;
     height: 14px;
-    background-image: url('@static/commentsMini.png');
+    background-image: url('@static/images/commentsMini.png');
     background-size: 14px 14px;
     margin-right: 5px;
 
@@ -4340,7 +4340,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 10px;
     height: 10px;
-    background-image: url('@static/close-icons.png');
+    background-image: url('@static/images/close-icons.png');
     background-size: 25px 14px;
     background-position: 10px -4px;
     opacity: 0.7;
@@ -4423,7 +4423,7 @@ to {background-position: -200% 0;}
     background-size: cover;
     left: -57px;
     bottom: 8px;
-    background-image: url('@static/inviteByMail.png');
+    background-image: url('@static/images/inviteByMail.png');
     background-size: 48px 48px;
     opacity: 0.7;
   }
@@ -4624,7 +4624,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 10px;
     height: 10px;
-    background-image: url('@static/close-icons.png');
+    background-image: url('@static/images/close-icons.png');
     background-size: 25px 14px;
     background-position: 10px -4px;
     opacity: 0.7;
@@ -4698,7 +4698,7 @@ to {background-position: -200% 0;}
     i{
       width: 4px;
       height: 18px;
-      background-image: url('@static/worldOptionsMobile.png');
+      background-image: url('@static/images/worldOptionsMobile.png');
       background-size: 4px 18px;
     }
   }
@@ -4759,7 +4759,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 24px;
     height: 20px;
-    background-image: url('@static/sprite@2x.png');
+    background-image: url('@static/images/sprite@2x.png');
     background-size: 321px 27px;
     background-position: 346px 0;
   }
@@ -4794,7 +4794,7 @@ to {background-position: -200% 0;}
     float: right;
     width: 18px;
     height: 24px;
-    background-image: url('@static/rocket-normal@2x.png');
+    background-image: url('@static/images/rocket-normal@2x.png');
     background-size: 18px 24px;
   }
 
@@ -4819,7 +4819,7 @@ to {background-position: -200% 0;}
   }
 
   .category .opener{
-    background-image: url('@static/flecha-sidebar@2x.png');
+    background-image: url('@static/images/flecha-sidebar@2x.png');
     margin-top: 25px;
   }
 
@@ -4895,7 +4895,7 @@ to {background-position: -200% 0;}
 
       i{
         position: absolute;
-        background-image: url('@static/backMobileBlack.png');
+        background-image: url('@static/images/backMobileBlack.png');
         background-size: 15px 15px;
         width: 15px;
         height: 15px;
@@ -4930,7 +4930,7 @@ to {background-position: -200% 0;}
 
       i{
         position: absolute;
-        background-image: url('@static/searchMobileBlack.png');
+        background-image: url('@static/images/searchMobileBlack.png');
         background-size: 19px 19px;
         width: 19px;
         height: 19px;
@@ -4965,7 +4965,7 @@ to {background-position: -200% 0;}
         margin-right: 0px;
 
         i{
-          background-image: url('@static/magnifierSearchMobile.png');
+          background-image: url('@static/images/magnifierSearchMobile.png');
           width: 19px;
           height: 19px;
           background-size:19px 19px;
@@ -5020,7 +5020,7 @@ to {background-position: -200% 0;}
 
       i{
         position: absolute;
-        background-image: url('@static/backMobileBlack.png');
+        background-image: url('@static/images/backMobileBlack.png');
         background-size: 15px 15px;
         width: 15px;
         height: 15px;
@@ -5039,7 +5039,7 @@ to {background-position: -200% 0;}
 
       i{
         position: absolute;
-        background-image: url('@static/searchMobileBlack.png');
+        background-image: url('@static/images/searchMobileBlack.png');
         background-size: 19px 19px;
         width: 19px;
         height: 19px;
@@ -5122,7 +5122,7 @@ to {background-position: -200% 0;}
 
   .back-image{
     border-radius: 0px;
-    background-image: url('@static/coverMobile.png');
+    background-image: url('@static/images/coverMobile.png');
   }
 
   .mobile-buttons{
@@ -5152,7 +5152,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 24px;
       height: 19px;
-      background-image: url('@static/openFolderMobile.png');
+      background-image: url('@static/images/openFolderMobile.png');
       background-size: 24px 19px;
       cursor: pointer;
     }
@@ -5174,7 +5174,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 35px;
       height: 25px;
-      background-image: url('@static/newPostMobile.png');
+      background-image: url('@static/images/newPostMobile.png');
       background-size: 35px 25px;
       cursor: pointer;
     }
@@ -5196,7 +5196,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 27px;
       height: 23px;
-      background-image: url('@static/openChatMobile.png');
+      background-image: url('@static/images/openChatMobile.png');
       background-size: 27px 23px;
       cursor: pointer;
     }
@@ -5227,7 +5227,7 @@ to {background-position: -200% 0;}
     .card-options{
       margin: 0px;
       i{
-        background-image: url('@static/more@2x.png');
+        background-image: url('@static/images/more@2x.png');
       }
     }
 
@@ -5258,7 +5258,7 @@ to {background-position: -200% 0;}
     }
 
     .comments-icon{
-      background-image: url('@static/comment@2x.png');
+      background-image: url('@static/images/comment@2x.png');
     }
 
   }
@@ -5287,7 +5287,7 @@ to {background-position: -200% 0;}
   }
 
   .attachments i{
-    background-image: url('@static/attach@2x.png');
+    background-image: url('@static/images/attach@2x.png');
   }
 
   .attach-list .attachment .attachment-title{
@@ -5302,7 +5302,7 @@ to {background-position: -200% 0;}
       float: left;
       width: 7px;
       height: 7px;
-      background-image: url('@static/cancel-attach@2x.png');
+      background-image: url('@static/images/cancel-attach@2x.png');
       background-size: cover;
     }
   }
@@ -5366,7 +5366,7 @@ to {background-position: -200% 0;}
     float: left;
     width: 100%;
     height: 100%;
-    background-image: url('@static/closeMobile.png');
+    background-image: url('@static/images/closeMobile.png');
     background-size: cover;
   }
 
@@ -5454,7 +5454,7 @@ to {background-position: -200% 0;}
       width: 13px;
       height: 13px;
       background-size: cover;
-      background-image: url('@static/closeMobile.png');
+      background-image: url('@static/images/closeMobile.png');
       background-position: 0;
       opacity: 1;
     }
@@ -5541,7 +5541,7 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 36px)';
     top: 242px;
     figure i{
-      background-image: url('@static/sprite-camara@2x.png');
+      background-image: url('@static/images/sprite-camara@2x.png');
     }
     span{
       color: #252525;
@@ -5583,20 +5583,20 @@ to {background-position: -200% 0;}
       justify-content: space-around;
 
       .option i{
-        background-image: url('@static/info-privacidad@2x.png');
+        background-image: url('@static/images/info-privacidad@2x.png');
       }
 
       .public{
         margin-left: 0px;
         figure{
-          background-image: url('@static/miniPlanet@2x.png');
+          background-image: url('@static/images/miniPlanet@2x.png');
         }
       }
 
       .private-option{
         margin-left: 0px;
         figure{
-          background-image: url('@static/noeye@2x.png');
+          background-image: url('@static/images/noeye@2x.png');
         }
       }
 
@@ -5717,7 +5717,7 @@ to {background-position: -200% 0;}
 
   .go-back i{
     position: absolute;
-    background-image: url('@static/backMobileBlack.png');
+    background-image: url('@static/images/backMobileBlack.png');
     background-size: 15px 15px;
     width: 15px;
     height: 15px;
@@ -5747,7 +5747,7 @@ to {background-position: -200% 0;}
       width: 13px;
       height: 13px;
       background-size: cover;
-      background-image: url('@static/closeMobile.png');
+      background-image: url('@static/images/closeMobile.png');
       background-position: 0;
       opacity: 1;
     }
@@ -5848,7 +5848,7 @@ to {background-position: -200% 0;}
 
     i{
       margin: 0px;
-      background-image: url('@static/attach@2x.png');
+      background-image: url('@static/images/attach@2x.png');
     }
   }
 
@@ -5962,7 +5962,7 @@ to {background-position: -200% 0;}
           float: left;
           width: 7px;
           height: 7px;
-          background-image: url('@static/cancel-attach@2x.png');
+          background-image: url('@static/images/cancel-attach@2x.png');
           background-size: cover;
         }
 
@@ -5998,7 +5998,7 @@ to {background-position: -200% 0;}
   .vertical-arrow{
     width: 26px;
     height: 36px;
-    background-image: url('@static/flecha-cosmos.png');
+    background-image: url('@static/images/flecha-cosmos.png');
     background-size: 26px 36px;
     display: inline-block;
     margin-left: 60px;
