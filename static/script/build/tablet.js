@@ -92,7 +92,7 @@ var model = ( function( view ){
 
   		this.isMobile = this.view.dom.hasClass( 'wz-mobile-view' )
 
-		  this.changeMainAreaMode( MAINAREA_NULL )
+		  //this.changeMainAreaMode( MAINAREA_NULL )
   		this.fullLoad()
 
   	}
@@ -158,7 +158,7 @@ var model = ( function( view ){
 		  }
 
 		  this.worlds[ world.id ] = new World( this, world )
-		  this.updateWorldsListUI()
+		  //this.updateWorldsListUI()
 
 		  return this
 
@@ -180,9 +180,11 @@ var model = ( function( view ){
 		    if( !res.worlds.length ){
 
 		    	//Show no worlds
-		      this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
+		      //this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
 
 		    }
+
+		    console.log(this.worlds)
 
 		  }.bind( this ))
 
@@ -199,25 +201,82 @@ var model = ( function( view ){
 
   		this.app = app
 		  this.posts = {}
-		  this.members = [] //Miembros que son contactos
-		  this.moreMembers = [] //Miembros que no son contactos
-		  this.admins = []
+		  this.members = []//Javi: array u objeto?
+		  this.owners = []
 		  this.folder
 		  this.conversation
+		  this.tags = []
 
   		if( world ){
 
   			this.worldId = world.id
 			  this.name = world.name
-			  this.icon = world.icon
+			  this.icon = world.icons.big
+			  this.isPrivate = world.isPrivate
+			  this.worldApi = world
 
   		}else{
-
   			this._createWorld( info )
-
   		}
 
-  		this.loadMoreInfo()
+  		this._loadMembers()
+
+  	}
+
+  	_addMember( member, test ){
+
+  		if( !member ){
+  			console.log('error', test)
+  		}
+
+  		this.members.push( member )
+
+  		/*this.members.sort(function(a , b){
+
+        if(a.fullName < b.fullName) return -1;
+        if(a.fullName > b.fullName) return 1;
+        return 0;
+
+      }.bind(this));*/
+
+  	}
+
+  	_loadMembers(){
+
+  		if( !this.worldApi ){
+  			return
+  		}
+
+		  this.worldApi.getUsers( function( error, members ){
+
+		  	if( error ){
+		  		//return this.app.view.launchAlert( error )
+		  	}
+
+		  	members.forEach( function( member ){
+
+					if( member.isAdmin ){
+		    		this.owners.push( member.userId )
+		    	}
+
+		    	if( this.app.contacts[ member.userId ] ){
+		    		this._addMember( this.app.contacts[ member.userId ] )
+		    	}else{
+
+			      api.user( member.userId, function( err, user ){
+
+			      	if( error ){
+			      		return console.error( error )
+			      	}
+			        this._addMember( user, member.userId )
+
+			      }.bind(this));
+
+		    	}
+
+		  	}.bind(this))
+
+		  }.bind(this));
 
   	}
 
@@ -235,8 +294,9 @@ var model = ( function( view ){
   		this.creator
   		this.date 
   		this.attachments = []
+  		this.world
 
-  		this.loadMoreInfo()
+  		//this.loadMoreInfo()
 
   	}
 
@@ -254,7 +314,7 @@ var model = ( function( view ){
   		this.parent
   		this.isReply
 
-  		this.loadMoreInfo()
+  		//this.loadMoreInfo()
 
   	}
 
