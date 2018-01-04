@@ -1,3 +1,4 @@
+var view = ()
 var model = ( function( view ){
 
 	var async = {
