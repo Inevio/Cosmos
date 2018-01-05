@@ -215,63 +215,78 @@ var model = ( function( view ){
 
   		this.app = app
 		  this.posts = {}
-		  this.members = []//Javi: array u objeto?
-		  this.owners = []
+		  this.members = []
 		  this.folder
 		  this.conversation
-		  this.tags = []
 
   		if( world ){
 
-  			this.worldId = world.id
-			  this.name = world.name
 			  this.icon = world.icons.big
-			  this.isPrivate = world.isPrivate
-			  this.worldApi = world
+			  this.apiWorld = world
 
   		}else{
   			this._createWorld( info )
   		}
 
   		this._loadMembers()
+  		this._getPosts()
 
   	}
 
-  	_addMember( member, test ){
+  	_addMember( member ){
 
   		if( !member ){
-  			console.log('error', test)
+  			return
   		}
 
   		this.members.push( member )
 
-  		/*this.members.sort(function(a , b){
+  		if( this.members.length === this.apiWorld.users ){
+  			this._sortMembers()
+  		}
 
-        if(a.fullName < b.fullName) return -1;
-        if(a.fullName > b.fullName) return 1;
-        return 0;
+  	}
 
-      }.bind(this));*/
+  	_getPosts(){
+
+  		 this.apiWorld.getPosts( {from: 0 , to: 10 , withFullUsers: true } , function( error , posts ){
+
+  		 	if( error ){
+  		 		return console.error( error )
+  		 	}
+
+				posts.forEach( function( post ){
+
+					if( post.worldId === 956409 ){
+
+						console.log(post)
+						post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
+
+							console.log(replies)
+
+						})
+
+					}
+
+				})
+
+  		 }.bind(this))
 
   	}
 
   	_loadMembers(){
 
-  		if( !this.worldApi ){
+  		if( !this.apiWorld ){
   			return
   		}
 
-		  this.worldApi.getUsers( function( error, members ){
+		  this.apiWorld.getUsers( function( error, members ){
 
 		  	if( error ){
 		  		//return this.app.view.launchAlert( error )
 		  	}
 
 		  	members.forEach( function( member ){
-
-					if( member.isAdmin ){
-		    		this.owners.push( member.userId )
-		    	}
 
 		    	if( this.app.contacts[ member.userId ] ){
 		    		this._addMember( this.app.contacts[ member.userId ] )
@@ -294,6 +309,18 @@ var model = ( function( view ){
 
   	}
 
+  	_sortMembers(){
+
+  		this.members.sort(function(a , b){
+
+        if(a.fullName < b.fullName) return -1
+        if(a.fullName > b.fullName) return 1
+        return 0
+
+      }.bind(this))
+
+  	}
+
   }
 
   class Post{
@@ -302,13 +329,7 @@ var model = ( function( view ){
   	constructor( app, apiPost, info ){
 
   		this.app = app
-
-  		this.title
-  		this.description
-  		this.creator
-  		this.date 
-  		this.attachments = []
-  		this.world
+  		this.apiPost = apiPost
 
   		//this.loadMoreInfo()
 
@@ -318,18 +339,17 @@ var model = ( function( view ){
 
   class Comment{
 
-  	constructor( app, apiPost, info ){
+  	constructor( app, apiComment, info ){
 
   		this.app = app
 
-  		this.text
-  		this.date
-  		this.creator
-  		this.parent
-  		this.isReply
+  		this.apiComment
+  		this.replies = {}
 
-  		//this.loadMoreInfo()
+  	}
 
+  	_loadReplies(){
+  		
   	}
 
   }
