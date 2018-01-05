@@ -191,6 +191,12 @@ var model = ( function( view ){
 
 		}
 
+		leaveWorld( worldId ){
+
+			
+
+		}
+
   }
 
   class World{
@@ -242,16 +248,6 @@ var model = ( function( view ){
 
 				posts.forEach( function( post ){
 
-					if( post.worldId === 956409 ){
-
-						console.log(post)
-						post.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
-
-							console.log(replies)
-
-						})
-
-					}
 
 				})
 
@@ -316,7 +312,24 @@ var model = ( function( view ){
   		this.app = app
   		this.apiPost = apiPost
 
-  		//this.loadMoreInfo()
+  		this.comments = {}
+  		this._loadComments()
+
+  	}
+
+  	_loadComments(){
+
+			this.apiPost.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+				replies.forEach( function( element ){
+					this.comments[ element.id ] = new Comment( this.app, element )
+				}.bind(this))
+
+			}.bind(this))
 
   	}
 
@@ -331,9 +344,23 @@ var model = ( function( view ){
   		this.apiComment
   		this.replies = {}
 
+  		this._loadReplies()
+
   	}
 
   	_loadReplies(){
+
+  		this.apiComment.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+				replies.forEach( function( element ){
+					this.replies[ element.id ] = element
+				}.bind(this))
+
+			}.bind(this))
   		
   	}
 
