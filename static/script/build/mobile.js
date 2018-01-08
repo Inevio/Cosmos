@@ -200,37 +200,125 @@ var model = ( function( view ){
 
 		openWorld( worldId ){
 
-		  app.addClass( 'selectingWorld' );
-		  $( '.clean' ).remove();
-		  $( '.category-list .world' ).removeClass( 'active' );
-		  world.addClass( 'active' );
-		  searchPostInput.val('');
-		  searchPost( '' );
-
-		  var worldApi = world.data( 'world' );
-		  if (!worldApi) {
-		    return;
-		  }
+		  //app.addClass( 'selectingWorld' );
 
 		  if( !this.worlds[worldId] ){
 		  	return console.error('Error al abrir mundo')
 		  }
 
-		  this.openedWorld = worldId;
+		  this.openedWorld = this.worlds[worldId];
 		  this.view.openWorld( this.worlds[worldId] )
 
-		  // Set info
-		  worldTitle.text( worldApi.name );
-		  worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members );
-		  worldAvatar.css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
-
-		  getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
+		  getWorldPostsAsync(  , { init: 0 , final: 10 } , function(){
 		    attendWorldNotification( worldApi.id );
 		    callback();
 		    app.removeClass( 'selectingWorld' );
 		  });
 
-		  $( '.select-world' ).hide();
+		}
+
+		getWorldPostsAsync( world , interval , callback ){
+
+		  if ( interval.init === 0 ) {
+		    world.getPosts( {from: 0 , to: 100000 } , function( e , posts ){
+		      $( '.world-event-number .subtitle' ).text( posts.length );
+		    });
+		  }
+
+		  world.getPosts( {from: interval.init , to: interval.final , withFullUsers: true } , function( e , posts ){
+
+		    if ( interval.init === 0 ) {
+
+		      $( '.cardDom' ).remove();
+
+		      if ( posts.length > 0 ) {
+		        $( '.no-posts' ).css( 'opacity' , '0' );
+		        $( '.no-posts' ).hide();
+		        app.removeClass( 'no-post' );
+		      }else{
+		        $( '.no-posts' ).css( 'opacity' , '1' );
+		        $( '.no-posts' ).show();
+		        app.addClass( 'no-post' );
+		      }
+
+		    }
+
+		    worldSelectedDom.data( 'lastCard' , interval.final );
+
+		    var postPromises = [];
+
+		    $.each( posts , function( i , post ){
+
+		      var promise = $.Deferred();
+		      postPromises.push( promise );
+
+		      if( post.metadata && post.metadata.operation === 'remove' ){
+
+		        appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+		          promise.resolve();
+		        });
+
+		      }else if ( post.metadata && post.metadata.fileType ) {
+
+		        switch (post.metadata.fileType) {
+
+		          case 'generic':
+		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+		            promise.resolve();
+		          });
+		          break;
+
+		          case 'document':
+		          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
+		            promise.resolve();
+		          });
+		          break;
+
+		          case 'image':
+		          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
+		            promise.resolve();
+		          });
+		          break;
+
+		          case 'video':
+		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+		            promise.resolve();
+		          });
+		          break;
+
+		          case 'music':
+		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
+		            promise.resolve();
+		          });
+		          break;
+
+		        }
+
+		      }else if( post.metadata && post.metadata.linkType ){
+
+		        switch (post.metadata.linkType) {
+
+		          case 'youtube':
+		          appendYoutubeCard( post , post.authorObject , lang.postCreated );
+		          promise.resolve();
+		          break;
+
+		        }
+
+		      }else{
+		        appendNoFileCard( post , post.authorObject , lang.postCreated );
+		        promise.resolve();
+		      }
+
+		    });
+
+		    loadingPost = false;
+
+		    $.when.apply( null, postPromises ).done( function(){
+		      callback();
+		    });
+
+		  });
 
 		}
 
