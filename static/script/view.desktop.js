@@ -25,7 +25,7 @@ var view = ( function(){
 			this.myContactID = api.system.user().id
 			this._domWorldsPrivateList = $( '.private-list' )
 			this._domWorldsPublicList = $( '.public-list' )
-			this._worldPrototype      = $( '.sidebar .world.wz-prototype' );
+			this._worldPrototype      = $( '.sidebar .world.wz-prototype' )
 			this._translateInterface()
 
 		}
@@ -122,6 +122,19 @@ var view = ( function(){
 		  $( '.option.public > span' ).text( lang.public )
 		  $( '.option.hidden > span' ).text( lang.private )
 		  $( '.create-world-button.step-a span' ).text( lang.createWorldShort )
+
+		}
+
+		openWorld( world ){
+
+			$( '.clean' ).remove()
+		  $( '.category-list .world' ).removeClass( 'active' )
+		  $( '.world-' + world.apiWorld.id ).addClass( 'active' )
+		  $( '.search-post input, .mobile-world-content .search-bar input' ).val('')
+		  $( '.world-title' ).text( world.apiWorld.name );
+		  $( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members );
+		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' );
+		  $( '.select-world' ).hide();
 
 		}
 
