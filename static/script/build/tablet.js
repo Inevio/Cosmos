@@ -158,7 +158,7 @@ var model = ( function( view ){
 		  }
 
 		  this.worlds[ world.id ] = new World( this, world )
-		  //this.updateWorldsListUI()
+		  this.updateWorldsListUI()
 
 		  return this
 
@@ -195,6 +195,59 @@ var model = ( function( view ){
 		leaveWorld( worldId ){
 
 			
+
+		}
+
+		openWorld( worldId ){
+
+		  app.addClass( 'selectingWorld' );
+		  $( '.clean' ).remove();
+		  $( '.category-list .world' ).removeClass( 'active' );
+		  world.addClass( 'active' );
+		  searchPostInput.val('');
+		  searchPost( '' );
+
+		  var worldApi = world.data( 'world' );
+		  if (!worldApi) {
+		    return;
+		  }
+
+		  if( !this.worlds[worldId] ){
+		  	return console.error('Error al abrir mundo')
+		  }
+
+		  this.openedWorld = worldId;
+		  this.view.openWorld( this.worlds[worldId] )
+
+		  // Set info
+		  worldTitle.text( worldApi.name );
+		  worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members );
+		  worldAvatar.css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+
+		  getWorldPostsAsync( worldApi , { init: 0 , final: 6 } , function(){
+		    attendWorldNotification( worldApi.id );
+		    callback();
+		    app.removeClass( 'selectingWorld' );
+		  });
+
+		  $( '.select-world' ).hide();
+
+		}
+
+		updateWorldsListUI(){
+
+			var list = []
+		  var id = null
+
+		  for( var i in this.worlds ){
+		    list.push( this.worlds[ i ] )
+		  }
+
+		  if( this.openedWorld ){
+		  	id = this.openedWorld.apiWorld.id
+		  }
+
+			this.view.updateWorldsListUI( list, id )
 
 		}
 

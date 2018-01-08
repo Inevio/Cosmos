@@ -115,7 +115,7 @@ var sendBanner = function( info ){
 var checkNotifications = function(){
 
   api.notification.list( 'cosmos' , function( e , notifications ){
-    wz.app.setBadge( notifications.length );
+    api.app.setBadge( notifications.length );
   });
 
 }

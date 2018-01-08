@@ -12,6 +12,8 @@ const GROUP_EDIT = 2
 
 var view = ( function(){
 
+	const colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
+
 	class View{
 
 		constructor(){
@@ -20,6 +22,10 @@ var view = ( function(){
 
 			this.isMobile = this.dom.hasClass( 'wz-mobile-view' )
 
+			this.myContactID = api.system.user().id
+			this._domWorldsPrivateList = $( '.private-list' )
+			this._domWorldsPublicList = $( '.public-list' )
+			this._worldPrototype      = $( '.sidebar .world.wz-prototype' );
 			this._translateInterface()
 
 		}
@@ -119,6 +125,65 @@ var view = ( function(){
 
 		}
 
+		updateWorldsListUI( worldList ){
+
+			worldList = worldList.sort( function( a, b ){
+		    return a.apiWorld.name.localeCompare( b.apiWorld.name )
+		  })
+
+			var publicWorlds = []
+
+			function isPrivate( world ){
+
+				if( !world.apiWorld.isPrivate ){
+					publicWorlds.push( world )
+				}
+
+				return world.apiWorld.isPrivate
+
+			}
+
+			worldList = worldList.filter( isPrivate )
+
+			//console.log( publicWorlds, worldList )
+
+		  this._domWorldsPrivateList.empty().append( worldList.map( function( item ){ 
+
+		  	var world = this._worldPrototype.clone();
+				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' );
+				world.find( '.world-name' ).text( item.apiWorld.name );
+
+				if( item.apiWorld.owner === this.myContactID ){
+				  world.addClass( 'editable' )
+				}
+
+				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
+				world.attr( 'data-id', item.apiWorld.id )
+
+		  	return world
+
+		  }.bind(this)))
+
+
+		  this._domWorldsPublicList.empty().append( publicWorlds.map( function( item ){ 
+
+		  	var world = this._worldPrototype.clone();
+				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' );
+				world.find( '.world-name' ).text( item.apiWorld.name );
+
+				if( item.apiWorld.owner === this.myContactID ){
+				  world.addClass('editable')
+				}
+
+				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
+				world.attr( 'data-id', item.apiWorld.id )
+
+		  	return world
+
+		  }.bind(this)))
+
+
+		}
 	}
 
 	return new View()
