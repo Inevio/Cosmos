@@ -38,6 +38,44 @@ var model = ( function( view ){
 
 	  },
 
+	  map : function( list, step, callback ){
+
+	    var position = 0
+	    var closed   = false
+	    var result   = []
+	    var checkEnd = function( index, error, data ){
+
+	      if( closed ){
+	        return
+	      }
+
+	      position++
+
+	      result[ index ] = data
+
+	      if( position === list.length || error ){
+
+	        closed = true
+
+	        callback( error, result )
+
+	        // Nullify
+	        result = list = step = callback = position = checkEnd = closed = null
+
+	      }
+
+	    }
+
+	    if( !list.length ){
+	      return callback()
+	    }
+
+	    list.forEach( function( item, index ){
+	      step( item, checkEnd.bind( null, index ) )
+	    })
+
+	  },
+
 	  parallel : function( fns, callback ){
 
 	    var list     = Object.keys( fns )
@@ -209,116 +247,28 @@ var model = ( function( view ){
 		  this.openedWorld = this.worlds[worldId];
 		  this.view.openWorld( this.worlds[worldId] )
 
-		  getWorldPostsAsync(  , { init: 0 , final: 10 } , function(){
-		    attendWorldNotification( worldApi.id );
-		    callback();
-		    app.removeClass( 'selectingWorld' );
-		  });
+			var list = []
+		  var id = null
 
-		}
-
-		getWorldPostsAsync( world , interval , callback ){
-
-		  if ( interval.init === 0 ) {
-		    world.getPosts( {from: 0 , to: 100000 } , function( e , posts ){
-		      $( '.world-event-number .subtitle' ).text( posts.length );
-		    });
+		  for( var i in this.worlds[ worldId ].posts ){
+		  	list.push( this.worlds[ worldId ].posts[ i ] )
 		  }
 
-		  world.getPosts( {from: interval.init , to: interval.final , withFullUsers: true } , function( e , posts ){
+		  var i = 0
+		  async.map( list, function( post, callback ){
 
-		    if ( interval.init === 0 ) {
+		  	post.getPostReadyToInsert( function( post ){
+		  		console.log( i++ )
+		  		return callback( null, post )
+		  	})
 
-		      $( '.cardDom' ).remove();
+		  }, function( error, finishedList ){
 
-		      if ( posts.length > 0 ) {
-		        $( '.no-posts' ).css( 'opacity' , '0' );
-		        $( '.no-posts' ).hide();
-		        app.removeClass( 'no-post' );
-		      }else{
-		        $( '.no-posts' ).css( 'opacity' , '1' );
-		        $( '.no-posts' ).show();
-		        app.addClass( 'no-post' );
-		      }
+		  	this.view.appendPostList( finishedList )
 
-		    }
+		  }.bind(this))
 
-		    worldSelectedDom.data( 'lastCard' , interval.final );
-
-		    var postPromises = [];
-
-		    $.each( posts , function( i , post ){
-
-		      var promise = $.Deferred();
-		      postPromises.push( promise );
-
-		      if( post.metadata && post.metadata.operation === 'remove' ){
-
-		        appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		          promise.resolve();
-		        });
-
-		      }else if ( post.metadata && post.metadata.fileType ) {
-
-		        switch (post.metadata.fileType) {
-
-		          case 'generic':
-		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'document':
-		          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'image':
-		          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'video':
-		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'music':
-		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		        }
-
-		      }else if( post.metadata && post.metadata.linkType ){
-
-		        switch (post.metadata.linkType) {
-
-		          case 'youtube':
-		          appendYoutubeCard( post , post.authorObject , lang.postCreated );
-		          promise.resolve();
-		          break;
-
-		        }
-
-		      }else{
-		        appendNoFileCard( post , post.authorObject , lang.postCreated );
-		        promise.resolve();
-		      }
-
-		    });
-
-		    loadingPost = false;
-
-		    $.when.apply( null, postPromises ).done( function(){
-		      callback();
-		    });
-
-		  });
+		    
 
 		}
 
@@ -382,18 +332,17 @@ var model = ( function( view ){
 
   	_getPosts(){
 
-  		 this.apiWorld.getPosts( {from: 0 , to: 10 , withFullUsers: true } , function( error , posts ){
+  		this.apiWorld.getPosts( {from: 0 , to: 10 , withFullUsers: true } , function( error , posts ){
 
   		 	if( error ){
   		 		return console.error( error )
   		 	}
 
 				posts.forEach( function( post ){
+					this.posts[ post.id ] = new Post( this.app, post )
+				}.bind(this))
 
-
-				})
-
-  		 }.bind(this))
+  		}.bind(this))
 
   	}
 
@@ -455,7 +404,13 @@ var model = ( function( view ){
   		this.apiPost = apiPost
 
   		this.comments = {}
+  		this.fsnodes = []
+  		this.promise 
+
+  		this.readyToInsert = false
+
   		this._loadComments()
+  		this._loadFsnodes()
 
   	}
 
@@ -467,11 +422,52 @@ var model = ( function( view ){
 					return console.error( error )
 				}
 
-				replies.forEach( function( element ){
-					this.comments[ element.id ] = new Comment( this.app, element )
+				replies.forEach( function( reply ){
+					this.comments[ reply.id ] = new Comment( this.app, reply )
 				}.bind(this))
 
 			}.bind(this))
+
+  	}
+
+  	_loadFsnodes(){
+
+  		this.promise = $.Deferred()
+
+		  this.apiPost.fsnode.forEach(function( fsnode ){
+
+		    api.fs( fsnode , function( error , fsnode ){
+
+		    	if( error ){
+		    		return console.error( error );
+		    	}
+
+		      this.fsnodes.push( fsnode );
+
+		      if( this.fsnodes.length == this.apiPost.fsnode.length ){
+
+						this.readyToInsert = true
+						this.promise.resolve( null )
+
+		      }
+
+		    }.bind(this));
+
+		  }.bind(this));
+
+  	}
+
+  	getPostReadyToInsert( callback ){
+
+  		if( this.readyToInsert ){
+  			callback(this)
+  		}else{
+
+  			$.when( this.promise ).done( function( message ){
+  				callback(this)
+  			}.bind(this))
+
+  		}
 
   	}
 
@@ -483,7 +479,7 @@ var model = ( function( view ){
 
   		this.app = app
 
-  		this.apiComment
+  		this.apiComment = apiComment
   		this.replies = {}
 
   		this._loadReplies()
@@ -498,8 +494,8 @@ var model = ( function( view ){
 					return console.error( error )
 				}
 
-				replies.forEach( function( element ){
-					this.replies[ element.id ] = element
+				replies.forEach( function( reply ){
+					this.replies[ reply.id ] = reply
 				}.bind(this))
 
 			}.bind(this))

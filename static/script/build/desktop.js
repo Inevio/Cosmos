@@ -23,9 +23,14 @@ var view = ( function(){
 			this.isMobile = this.dom.hasClass( 'wz-mobile-view' )
 
 			this.myContactID = api.system.user().id
-			this._domWorldsPrivateList = $( '.private-list' )
-			this._domWorldsPublicList = $( '.public-list' )
-			this._worldPrototype      = $( '.sidebar .world.wz-prototype' )
+			this._domWorldsPrivateList 		= $( '.private-list' )
+			this._domWorldsPublicList 		= $( '.public-list' )
+			this._domPostContainer 				= $( '.cards-list' )
+			this._worldPrototype      		= $( '.sidebar .world.wz-prototype' )
+			this._noPosts									= $( '.cards-list .no-posts' )
+
+			this._genericCardPrototype 		= $( '.gen-card.wz-prototype' )
+
 			this._translateInterface()
 
 		}
@@ -125,16 +130,282 @@ var view = ( function(){
 
 		}
 
+		appendGenericCard( post , reason , callback ){
+
+		  var card = this._genericCardPrototype.clone()
+		  var user = post.apiPost.authorObject
+		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
+
+		  /*var fsnodes = [];
+		  post.fsnode.forEach(function( fsnode ){
+
+		    var promise = $.Deferred();
+		    fsnodes.push( promise );
+
+		    api.fs( fsnode , function( e , fsnode ){
+		      promise.resolve( e ? null: fsnode );
+		    });
+
+		  });*/
+
+		  //$.when.apply( null, fsnodes ).done( function(){
+
+		    //var fsnodes = arguments;
+
+		    for (var i = 0; i < post.fsnodes.length; i++) {
+
+		      var fsnode = post.fsnodes[i]
+
+		      if (!fsnode) {
+		        break
+		      }
+
+		      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
+
+		        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
+		        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id )
+
+		        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+		          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
+		        }else{
+		          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
+		        }
+
+
+		        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
+		          docPreview.find( '.doc-icon' ).addClass( 'office' )
+		        }
+
+		        docPreview.find( '.doc-title' ).text( fsnode.name )
+		        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )
+		        card.find( '.desc' ).after( docPreview )
+		        docPreview.data( 'fsnode' , fsnode )
+
+		      }
+
+		    }
+
+		    if ( post.apiPost.title === '' ) {
+		      card.find( '.title' ).hide()
+		    }else{
+		      card.find( '.title' ).text( post.apiPost.title )
+		    }
+
+		    if ( post.apiPost.content === '' ) {
+		      card.find( '.desc' ).hide()
+		    }else{
+		      card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+		    }
+
+		    card.find( '.desc' ).find('a').each( function(){
+
+		      if( !URL_REGEX.test( $(this).attr('href') ) ){
+		        $(this).attr( 'href', 'http://' + $(this).attr('href') );
+		      }
+
+		    });
+
+		    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+		    card.find( '.card-user-name' ).text( user.fullName );
+		    card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) );
+		    card.data( 'time' , post.apiPost.created );
+
+		    /*if (!isMobile()) {
+		      setRepliesAsync( card , post )
+		    }else{
+		      setRepliesAsyncWithoutAppendMobile( card , post );
+		    }
+		    appendCard( card , post );*/
+		    callback( card );
+
+		  //}.bind(this));
+
+		}
+
+		appendPostList( list, interval ){
+
+			var domList = []
+			var postPromises = []
+
+			if( list.length == 0 ){
+				this._noPosts.css( 'opacity' , '1' );
+				this._noPosts.show()
+			}
+
+  		list.forEach( function( post ){
+
+  			if( post.apiPost && post.apiPost.metadata && post.apiPost.metadata.fileType == 'generic' ){
+
+	  			var promise = $.Deferred()
+	      	postPromises.push( promise )
+
+  			}
+
+  			this.appendPost( post, promise , function( postDom, promise ){
+
+					domList.push( postDom )
+  				promise.resolve()
+
+  			})
+		    
+	    }.bind(this) )
+
+	    $.when.apply( null, postPromises ).done( function(){
+
+	    	if( domList.length ){
+
+	 	    	this._noPosts.css( 'opacity' , '0' );
+					this._noPosts.hide()
+	      	this._domPostContainer.append( domList )
+	      	//this._domPostContainer.scrollTop( this._domPostContainer[ 0 ].scrollHeight )
+
+	    	}
+
+    	}.bind(this));
+
+		}
+
+		appendPost( post, promise, callback ){
+
+			//callback = api.tool.secureCallback()
+
+      if( post.apiPost.metadata && post.apiPost.metadata.operation === 'remove' ){
+
+        this.appendGenericCard( post , lang.postCreated , function( postDom ){
+          return callback( postDom, promise )
+        });
+
+      }else if ( post.apiPost.metadata && post.apiPost.metadata.fileType ) {
+
+        switch (post.apiPost.metadata.fileType) {
+
+          case 'generic':
+          this.appendGenericCard( post , lang.postCreated , function( postDom ){
+            return callback( postDom, promise )
+          });
+          break;
+
+          case 'document':
+          /*this.appendDocumentCard( post , lang.postCreated , function( postDom ){
+            return callback( postDom, promise )
+          });*/
+          break;
+
+          case 'image':
+          /*this.appendDocumentCard( post , lang.postCreated , function( postDom ){
+            return callback( postDom, promise )
+          });*/
+          break;
+
+          case 'video':
+          this.appendGenericCard( post , lang.postCreated , function( postDom ){
+            return callback( postDom, promise )
+          });
+          break;
+
+          case 'music':
+          this.appendGenericCard( post , lang.postCreated , function( postDom ){
+            return callback( postDom, promise )
+          });
+          break;
+
+        }
+
+      }else if( post.apiPost.metadata && post.apiPost.metadata.linkType ){
+
+        switch (post.apiPost.metadata.linkType) {
+
+          case 'youtube':
+          /*this.appendYoutubeCard( post , lang.postCreated );
+          return callback( postDom, promise )*/
+          break;
+
+        }
+
+      }else{
+        /*this.appendNoFileCard( post , lang.postCreated );
+        return callback( postDom, promise )*/
+      }
+
+		}
+
 		openWorld( world ){
 
 			$( '.clean' ).remove()
 		  $( '.category-list .world' ).removeClass( 'active' )
 		  $( '.world-' + world.apiWorld.id ).addClass( 'active' )
 		  $( '.search-post input, .mobile-world-content .search-bar input' ).val('')
-		  $( '.world-title' ).text( world.apiWorld.name );
-		  $( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members );
-		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' );
-		  $( '.select-world' ).hide();
+		  $( '.world-title' ).text( world.apiWorld.name )
+		  $( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members )
+		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
+		  $( '.select-world' ).hide()
+		  $( '.cardDom' ).remove()
+
+		}
+
+		//Date functions
+
+		getStringHour( date ){
+
+		  var now = new Date();
+
+		  var hh = date.getHours();
+		  var mm = date.getMinutes();
+
+		  if(hh<10) {
+		    hh='0'+hh
+		  }
+
+		  if(mm<10) {
+		    mm='0'+mm
+		  }
+
+		  return hh + ':' + mm;
+
+		}
+
+		timeElapsed( lastTime ){
+
+		  var now = new Date();
+		  var last = new Date( lastTime );
+		  var message;
+		  var calculated = false;
+
+		  if( now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth() ){
+
+		    if( now.getDate() === last.getDate() ){
+
+		      message = this.getStringHour( lastTime );
+		      calculated = true;
+
+		    }else if( new Date ( now.setDate( now.getDate() - 1 ) ).getDate() === last.getDate() ){
+
+		      message = lang.lastDay + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
+		      calculated = true;
+
+		    }
+
+		  }
+
+		  if ( !calculated ) {
+
+		    var day = last.getDate();
+		    var month = last.getMonth()+1;
+
+		    if(day<10) {
+		      day='0'+day
+		    }
+
+		    if(month<10) {
+		      month='0'+month
+		    }
+
+		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
+		    calculated = true;
+
+		  }
+
+		  return message;
 
 		}
 
@@ -238,6 +509,44 @@ var model = ( function( view ){
 
 	    list.forEach( function( item ){
 	      step( item, checkEnd )
+	    })
+
+	  },
+
+	  map : function( list, step, callback ){
+
+	    var position = 0
+	    var closed   = false
+	    var result   = []
+	    var checkEnd = function( index, error, data ){
+
+	      if( closed ){
+	        return
+	      }
+
+	      position++
+
+	      result[ index ] = data
+
+	      if( position === list.length || error ){
+
+	        closed = true
+
+	        callback( error, result )
+
+	        // Nullify
+	        result = list = step = callback = position = checkEnd = closed = null
+
+	      }
+
+	    }
+
+	    if( !list.length ){
+	      return callback()
+	    }
+
+	    list.forEach( function( item, index ){
+	      step( item, checkEnd.bind( null, index ) )
 	    })
 
 	  },
@@ -413,116 +722,28 @@ var model = ( function( view ){
 		  this.openedWorld = this.worlds[worldId];
 		  this.view.openWorld( this.worlds[worldId] )
 
-		  getWorldPostsAsync(  , { init: 0 , final: 10 } , function(){
-		    attendWorldNotification( worldApi.id );
-		    callback();
-		    app.removeClass( 'selectingWorld' );
-		  });
+			var list = []
+		  var id = null
 
-		}
-
-		getWorldPostsAsync( world , interval , callback ){
-
-		  if ( interval.init === 0 ) {
-		    world.getPosts( {from: 0 , to: 100000 } , function( e , posts ){
-		      $( '.world-event-number .subtitle' ).text( posts.length );
-		    });
+		  for( var i in this.worlds[ worldId ].posts ){
+		  	list.push( this.worlds[ worldId ].posts[ i ] )
 		  }
 
-		  world.getPosts( {from: interval.init , to: interval.final , withFullUsers: true } , function( e , posts ){
+		  var i = 0
+		  async.map( list, function( post, callback ){
 
-		    if ( interval.init === 0 ) {
+		  	post.getPostReadyToInsert( function( post ){
+		  		console.log( i++ )
+		  		return callback( null, post )
+		  	})
 
-		      $( '.cardDom' ).remove();
+		  }, function( error, finishedList ){
 
-		      if ( posts.length > 0 ) {
-		        $( '.no-posts' ).css( 'opacity' , '0' );
-		        $( '.no-posts' ).hide();
-		        app.removeClass( 'no-post' );
-		      }else{
-		        $( '.no-posts' ).css( 'opacity' , '1' );
-		        $( '.no-posts' ).show();
-		        app.addClass( 'no-post' );
-		      }
+		  	this.view.appendPostList( finishedList )
 
-		    }
+		  }.bind(this))
 
-		    worldSelectedDom.data( 'lastCard' , interval.final );
-
-		    var postPromises = [];
-
-		    $.each( posts , function( i , post ){
-
-		      var promise = $.Deferred();
-		      postPromises.push( promise );
-
-		      if( post.metadata && post.metadata.operation === 'remove' ){
-
-		        appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		          promise.resolve();
-		        });
-
-		      }else if ( post.metadata && post.metadata.fileType ) {
-
-		        switch (post.metadata.fileType) {
-
-		          case 'generic':
-		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'document':
-		          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'image':
-		          appendDocumentCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'video':
-		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		          case 'music':
-		          appendGenericCard( post , post.authorObject , lang.postCreated , function(){
-		            promise.resolve();
-		          });
-		          break;
-
-		        }
-
-		      }else if( post.metadata && post.metadata.linkType ){
-
-		        switch (post.metadata.linkType) {
-
-		          case 'youtube':
-		          appendYoutubeCard( post , post.authorObject , lang.postCreated );
-		          promise.resolve();
-		          break;
-
-		        }
-
-		      }else{
-		        appendNoFileCard( post , post.authorObject , lang.postCreated );
-		        promise.resolve();
-		      }
-
-		    });
-
-		    loadingPost = false;
-
-		    $.when.apply( null, postPromises ).done( function(){
-		      callback();
-		    });
-
-		  });
+		    
 
 		}
 
@@ -586,18 +807,17 @@ var model = ( function( view ){
 
   	_getPosts(){
 
-  		 this.apiWorld.getPosts( {from: 0 , to: 10 , withFullUsers: true } , function( error , posts ){
+  		this.apiWorld.getPosts( {from: 0 , to: 10 , withFullUsers: true } , function( error , posts ){
 
   		 	if( error ){
   		 		return console.error( error )
   		 	}
 
 				posts.forEach( function( post ){
+					this.posts[ post.id ] = new Post( this.app, post )
+				}.bind(this))
 
-
-				})
-
-  		 }.bind(this))
+  		}.bind(this))
 
   	}
 
@@ -659,7 +879,13 @@ var model = ( function( view ){
   		this.apiPost = apiPost
 
   		this.comments = {}
+  		this.fsnodes = []
+  		this.promise 
+
+  		this.readyToInsert = false
+
   		this._loadComments()
+  		this._loadFsnodes()
 
   	}
 
@@ -671,11 +897,52 @@ var model = ( function( view ){
 					return console.error( error )
 				}
 
-				replies.forEach( function( element ){
-					this.comments[ element.id ] = new Comment( this.app, element )
+				replies.forEach( function( reply ){
+					this.comments[ reply.id ] = new Comment( this.app, reply )
 				}.bind(this))
 
 			}.bind(this))
+
+  	}
+
+  	_loadFsnodes(){
+
+  		this.promise = $.Deferred()
+
+		  this.apiPost.fsnode.forEach(function( fsnode ){
+
+		    api.fs( fsnode , function( error , fsnode ){
+
+		    	if( error ){
+		    		return console.error( error );
+		    	}
+
+		      this.fsnodes.push( fsnode );
+
+		      if( this.fsnodes.length == this.apiPost.fsnode.length ){
+
+						this.readyToInsert = true
+						this.promise.resolve( null )
+
+		      }
+
+		    }.bind(this));
+
+		  }.bind(this));
+
+  	}
+
+  	getPostReadyToInsert( callback ){
+
+  		if( this.readyToInsert ){
+  			callback(this)
+  		}else{
+
+  			$.when( this.promise ).done( function( message ){
+  				callback(this)
+  			}.bind(this))
+
+  		}
 
   	}
 
@@ -687,7 +954,7 @@ var model = ( function( view ){
 
   		this.app = app
 
-  		this.apiComment
+  		this.apiComment = apiComment
   		this.replies = {}
 
   		this._loadReplies()
@@ -702,8 +969,8 @@ var model = ( function( view ){
 					return console.error( error )
 				}
 
-				replies.forEach( function( element ){
-					this.replies[ element.id ] = element
+				replies.forEach( function( reply ){
+					this.replies[ reply.id ] = reply
 				}.bind(this))
 
 			}.bind(this))
@@ -769,6 +1036,16 @@ var controller = ( function( model, view ){
     		model.openWorld( $(this).attr('data-id') )
 
     	})
+
+      $('.world-selected').on('scroll', function(){
+
+        if ( $(this).scrollTop() > 60 ) {
+          $('.world-header-min').addClass('active')
+        }else{
+          $('.world-header-min').removeClass('active')
+        }
+        
+      })
 
     }
 

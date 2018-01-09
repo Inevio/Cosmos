@@ -53,6 +53,16 @@ var controller = ( function( model, view ){
 
     	})
 
+      $('.world-selected').on('scroll', function(){
+
+        if ( $(this).scrollTop() > 60 ) {
+          $('.world-header-min').addClass('active')
+        }else{
+          $('.world-header-min').removeClass('active')
+        }
+        
+      })
+
     }
 
 	}
