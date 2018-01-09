@@ -128,6 +128,8 @@ var model = ( function( view ){
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
 
+		  this.apiFsCalls = 0
+
   		this.isMobile = this.view.dom.hasClass( 'wz-mobile-view' )
 
 		  //this.changeMainAreaMode( MAINAREA_NULL )
@@ -258,7 +260,7 @@ var model = ( function( view ){
 		  async.map( list, function( post, callback ){
 
 		  	post.getPostReadyToInsert( function( post ){
-		  		console.log( i++ )
+		  		//console.log( i++ )
 		  		return callback( null, post )
 		  	})
 
@@ -438,6 +440,7 @@ var model = ( function( view ){
 
 		    api.fs( fsnode , function( error , fsnode ){
 
+		    	console.log( this.app.apiFsCalls++ )
 		    	if( error ){
 		    		return console.error( error );
 		    	}
@@ -459,7 +462,7 @@ var model = ( function( view ){
 
   	getPostReadyToInsert( callback ){
 
-  		if( this.readyToInsert ){
+  		if( this.readyToInsert || !this.apiPost.fsnode.length ){
   			callback(this)
   		}else{
 
