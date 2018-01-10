@@ -125,6 +125,8 @@ var model = ( function( view ){
   	  this.myContactID = api.system.user().id
 		  this.contacts = {}
 		  this.worlds = {}
+		  this.postsToLoad = []
+
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
 
@@ -225,6 +227,7 @@ var model = ( function( view ){
 		    }
 
 		    console.log(this.worlds)
+		    //this.loadFSNodes()
 
 		  }.bind( this ))
 
@@ -253,11 +256,18 @@ var model = ( function( view ){
 		  var id = null
 
 		  for( var i in this.worlds[ worldId ].posts ){
+
 		  	list.push( this.worlds[ worldId ].posts[ i ] )
+		  	if( this.worlds[ worldId ].posts[ i ].readyToInsert == false ){
+		  		this.postsToLoad.unshift( this.worlds[ worldId ].posts[ i ] )
+		  	}
+
 		  }
 
-		  var i = 0
-		  async.map( list, function( post, callback ){
+		  this.view.appendPostList( list )
+
+		  //var i = 0
+		  /*async.map( list, function( post, callback ){
 
 		  	post.getPostReadyToInsert( function( post ){
 		  		//console.log( i++ )
@@ -268,9 +278,44 @@ var model = ( function( view ){
 
 		  	this.view.appendPostList( finishedList )
 
-		  }.bind(this))
+		  }.bind(this))*/
 
 		    
+
+		}
+
+		loadFSNodes(){
+
+			while( this.postsToLoad.length ){
+
+				var post = this.postsToLoad.pop()
+
+				if( post.readyToInsert ){
+					this.updatePost(post)
+					continue
+				}
+
+				post.loadPostFsnodes( function( updatedPost ){
+					this.updatePost(post)
+				}.bind(this))
+
+			}
+
+		}
+
+		updatePost( post ){
+
+			var world = this.worlds[ post.apiPost.worldId ]
+
+			if( !world && !world.posts[ post.apiPost.id ] ){
+				return
+			}
+
+			world.posts[ post.apiPost.id ] = post
+
+			if( this.openedWorld && this.openedWorld.apiWorld.id == world.apiWorld.id ){
+				this.view.updatePostFSNodes( post )
+			}
 
 		}
 
@@ -412,7 +457,18 @@ var model = ( function( view ){
   		this.readyToInsert = false
 
   		this._loadComments()
-  		this._loadFsnodes()
+  		this._addToQueue()
+  		//this._loadFsnodes()
+
+  	}
+
+  	_addToQueue(){
+
+  		this.app.postsToLoad.push( this )
+
+  		if( this.app.postsToLoad.length === 1 ){
+  			this.app.loadFSNodes()
+  		}
 
   	}
 
@@ -432,47 +488,44 @@ var model = ( function( view ){
 
   	}
 
-  	_loadFsnodes(){
+  	loadPostFsnodes( callback ){
 
-  		this.promise = $.Deferred()
-
-		  this.apiPost.fsnode.forEach(function( fsnode ){
+  		async.map( this.apiPost.fsnode, function( fsnode, cb ){
 
 		    api.fs( fsnode , function( error , fsnode ){
 
-		    	console.log( this.app.apiFsCalls++ )
 		    	if( error ){
-		    		return console.error( error );
+		    		return cb(error);
 		    	}
 
-		      this.fsnodes.push( fsnode );
-
-		      if( this.fsnodes.length == this.apiPost.fsnode.length ){
-
-						this.readyToInsert = true
-						this.promise.resolve( null )
-
-		      }
+		      return cb(null, fsnode)
 
 		    }.bind(this));
 
-		  }.bind(this));
+		  }, function( error, finishedList ){
+
+		  	this.readyToInsert = true
+		  	this.fsnodes = finishedList
+		  	return callback( this )
+
+		  }.bind(this))
 
   	}
 
-  	getPostReadyToInsert( callback ){
+  	/*getPostReadyToInsert( callback ){
 
   		if( this.readyToInsert || !this.apiPost.fsnode.length ){
   			callback(this)
   		}else{
 
+  			this._loadFsnodes()
   			$.when( this.promise ).done( function( message ){
   				callback(this)
   			}.bind(this))
 
   		}
 
-  	}
+  	}*/
 
   }
 
