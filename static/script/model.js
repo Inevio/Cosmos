@@ -124,7 +124,9 @@ var model = ( function( view ){
   	  this.myContactID = api.system.user().id
 		  this.contacts = {}
 		  this.worlds = {}
+
 		  this.postsToLoad = []
+		  this.started = false //started to load posts fsnodes
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -234,10 +236,48 @@ var model = ( function( view ){
 
 		}
 
+		fastLoadFSNodes( post ){
+
+			if( !post.readyToInsert ){
+
+				post.loadPostFsnodes( function( updatedPost ){
+					this.updatePost(updatedPost)
+				}.bind(this))
+
+			}
+
+		}
+
+		lazyLoadFSNodes(){
+
+			//console.log( this.postsToLoad )
+
+			if( this.postsToLoad.length ){
+
+				var post = this.postsToLoad.pop()
+
+				if( post.readyToInsert ){
+					this.updatePost(post)
+					this.lazyLoadFSNodes()
+					return
+				}
+
+				post.loadPostFsnodes( function( updatedPost ){
+
+					this.updatePost(updatedPost)
+
+					setTimeout(function(){
+						this.lazyLoadFSNodes()
+					}.bind(this),40)
+
+				}.bind(this))
+
+			}
+
+		}
+
 		leaveWorld( worldId ){
-
 			
-
 		}
 
 		openWorld( worldId ){
@@ -258,7 +298,7 @@ var model = ( function( view ){
 
 		  	list.push( this.worlds[ worldId ].posts[ i ] )
 		  	if( this.worlds[ worldId ].posts[ i ].readyToInsert == false ){
-		  		this.postsToLoad.unshift( this.worlds[ worldId ].posts[ i ] )
+		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ i ] )
 		  	}
 
 		  }
@@ -280,25 +320,6 @@ var model = ( function( view ){
 		  }.bind(this))*/
 
 		    
-
-		}
-
-		loadFSNodes(){
-
-			while( this.postsToLoad.length ){
-
-				var post = this.postsToLoad.pop()
-
-				if( post.readyToInsert ){
-					this.updatePost(post)
-					continue
-				}
-
-				post.loadPostFsnodes( function( updatedPost ){
-					this.updatePost(post)
-				}.bind(this))
-
-			}
 
 		}
 
@@ -454,6 +475,9 @@ var model = ( function( view ){
   		this.promise 
 
   		this.readyToInsert = false
+  		if( this.apiPost.fsnode.length == 0 ){
+  			this.readyToInsert = true
+  		}
 
   		this._loadComments()
   		this._addToQueue()
@@ -465,8 +489,9 @@ var model = ( function( view ){
 
   		this.app.postsToLoad.push( this )
 
-  		if( this.app.postsToLoad.length === 1 ){
-  			this.app.loadFSNodes()
+  		if( this.app.postsToLoad.length && !this.app.started ){
+  			this.app.started = true
+  			this.app.lazyLoadFSNodes()
   		}
 
   	}
@@ -494,7 +519,8 @@ var model = ( function( view ){
 		    api.fs( fsnode , function( error , fsnode ){
 
 		    	if( error ){
-		    		return cb(error);
+		    		console.log( this )
+		    		return cb(error, null);
 		    	}
 
 		      return cb(null, fsnode)

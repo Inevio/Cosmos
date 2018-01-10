@@ -30,6 +30,8 @@ var view = ( function(){
 			this._noPosts									= $( '.cards-list .no-posts' )
 
 			this._genericCardPrototype 		= $( '.gen-card.wz-prototype' )
+			this._documentCardPrototype 	= $( '.doc-card.wz-prototype' );
+			this._youtubeCardPrototype  	= $( '.you-card.wz-prototype' );
 
 			this._translateInterface()
 
@@ -130,134 +132,261 @@ var view = ( function(){
 
 		}
 
+		appendDocumentCard( post , reason , callback ){
+
+		  var card = this._documentCardPrototype.clone()
+		  var user = post.apiPost.authorObject
+		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
+
+		  if( post.fsnodes.length ){
+
+		  	var fsNode = post.fsnodes[0]
+	
+	      if( fsNode.mime.indexOf( 'image' ) === 0 || fsNode.mime === 'application/pdf' ){
+	        card.find( '.doc-preview img' ).attr( 'src' , fsNode.thumbnails['1024'] )
+	        card.find( '.doc-preview-bar' ).hide()
+	      }else{
+	        // To Do -> Is this really neccesary? background with a micro thumb is added a few lines after this
+	        card.find( '.doc-preview img' ).attr( 'src',  fsNode.thumbnails.big )
+	      }
+
+	      card.find( '.preview-title' ).text( fsNode.name )
+	      card.find( '.preview-info' ).text( api.tool.bytesToUnit( fsNode.size, 1 ) )
+	      card.find( '.doc-preview' ).data( 'fsnode' , fsNode )
+	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' )
+
+		  }
+
+	    if ( post.apiPost.title === '' ) {
+	      card.find( '.title' ).hide()
+	    }else{
+	      card.find( '.title' ).text( post.apiPost.title )
+	    }
+
+	    if ( post.apiPost.content === '' ) {
+	      card.find( '.desc' ).hide()
+	    }else{
+	      card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+	    }
+
+	    card.find( '.desc' ).find('a').each( function(){
+
+	      if( !URL_REGEX.test( $(this).attr('href') ) ){
+	        $(this).attr( 'href', 'http://' + $(this).attr('href') )
+	      }
+
+	    });
+
+	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+	    card.find( '.card-user-name' ).text( user.fullName )
+	    card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) )
+
+	    /*if (!isMobile()) {
+	      setRepliesAsync( card , post.apiPost );
+	    }else{
+	      setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
+	    }
+	    appendCard( card , post.apiPost );*/
+
+	    return callback( card )
+
+		}
+
 		appendGenericCard( post , reason , callback ){
 
 		  var card = this._genericCardPrototype.clone()
 		  var user = post.apiPost.authorObject
 		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
 
-		  /*var fsnodes = [];
-		  post.fsnode.forEach(function( fsnode ){
+	    if( post.fsnodes.length ){
 
-		    var promise = $.Deferred();
-		    fsnodes.push( promise );
+	    	for (var i = 0; i < post.fsnodes.length; i++) {
 
-		    api.fs( fsnode , function( e , fsnode ){
-		      promise.resolve( e ? null: fsnode );
-		    });
+		      var fsnode = post.fsnodes[i]
 
-		  });*/
-
-		  //$.when.apply( null, fsnodes ).done( function(){
-
-		    //var fsnodes = arguments;
-
-		    if( post.fsnodes.length ){
-
-		    	for (var i = 0; i < post.fsnodes.length; i++) {
-
-			      var fsnode = post.fsnodes[i]
-
-			      if (!fsnode) {
-			        break
-			      }
-
-			      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
-
-			        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
-			        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id )
-
-			        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-			          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
-			        }else{
-			          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
-			        }
-
-
-			        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
-			          docPreview.find( '.doc-icon' ).addClass( 'office' )
-			        }
-
-			        docPreview.find( '.doc-title' ).text( fsnode.name )
-			        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )
-			        card.find( '.desc' ).after( docPreview )
-			        docPreview.data( 'fsnode' , fsnode )
-
-			      }
-
-			    }
-
-		    }else{
-
-					for (var i = 0; i < post.apiPost.fsnode.length; i++) {
-
-			      var fsnode = post.apiPost.fsnode[i]
-
-			      if (!fsnode) {
-			        break
-			      }
-
-			      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
-
-			        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
-			        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode )
-
-			        /*if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-			          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
-			        }else{
-			          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
-			        }
-
-
-			        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
-			          docPreview.find( '.doc-icon' ).addClass( 'office' )
-			        }
-
-			        docPreview.find( '.doc-title' ).text( fsnode.name )
-			        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )*/
-			        card.find( '.desc' ).after( docPreview )
-			        //docPreview.data( 'fsnode' , fsnode )
-
-			      }
-
-			    }
-
-		    }
-
-		    if ( post.apiPost.title === '' ) {
-		      card.find( '.title' ).hide()
-		    }else{
-		      card.find( '.title' ).text( post.apiPost.title )
-		    }
-
-		    if ( post.apiPost.content === '' ) {
-		      card.find( '.desc' ).hide()
-		    }else{
-		      card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
-		    }
-
-		    card.find( '.desc' ).find('a').each( function(){
-
-		      if( !URL_REGEX.test( $(this).attr('href') ) ){
-		        $(this).attr( 'href', 'http://' + $(this).attr('href') );
+		      if (!fsnode) {
+		        break
 		      }
 
-		    });
+		      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
 
-		    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
-		    card.find( '.card-user-name' ).text( user.fullName );
-		    card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) );
-		    card.data( 'time' , post.apiPost.created );
+		        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
+		        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id )
 
-		    /*if (!isMobile()) {
-		      setRepliesAsync( card , post )
-		    }else{
-		      setRepliesAsyncWithoutAppendMobile( card , post );
+		        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+		          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
+		        }else{
+		          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
+		        }
+
+
+		        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
+		          docPreview.find( '.doc-icon' ).addClass( 'office' )
+		        }
+
+		        docPreview.find( '.doc-title' ).text( fsnode.name )
+		        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )
+		        card.find( '.desc' ).after( docPreview )
+		        docPreview.data( 'fsnode' , fsnode )
+
+		      }
+
 		    }
-		    appendCard( card , post );*/
-		    callback( card );
 
-		  //}.bind(this));
+	    }else{
+
+				for (var i = 0; i < post.apiPost.fsnode.length; i++) {
+
+		      var fsnode = post.apiPost.fsnode[i]
+
+		      if (!fsnode) {
+		        break
+		      }
+
+		      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
+
+		        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
+		        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode )
+		        card.find( '.desc' ).after( docPreview )
+
+		      }
+
+		    }
+
+	    }
+
+	    if ( post.apiPost.title === '' ) {
+	      card.find( '.title' ).hide()
+	    }else{
+	      card.find( '.title' ).text( post.apiPost.title )
+	    }
+
+	    if ( post.apiPost.content === '' ) {
+	      card.find( '.desc' ).hide()
+	    }else{
+	      card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+	    }
+
+	    card.find( '.desc' ).find('a').each( function(){
+
+	      if( !URL_REGEX.test( $(this).attr('href') ) ){
+	        $(this).attr( 'href', 'http://' + $(this).attr('href') )
+	      }
+
+	    });
+
+	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+	    card.find( '.card-user-name' ).text( user.fullName )
+	    card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) )
+	    card.data( 'time' , post.apiPost.created )
+
+	    /*if (!isMobile()) {
+	      setRepliesAsync( card , post )
+	    }else{
+	      setRepliesAsyncWithoutAppendMobile( card , post );
+	    }
+	    appendCard( card , post );*/
+	    return callback( card )
+
+		}
+
+		appendNoFileCard( post , reason, callback ){
+
+		  var card = this._genericCardPrototype.clone()
+		  var user = post.apiPost.authorObject
+		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
+		  card.find( '.doc-preview' ).hide()
+
+		  if ( post.apiPost.title === '' ) {
+		    card.find( '.title' ).hide()
+		  }else{
+		    card.find( '.title' ).text( post.apiPost.title )
+		  }
+
+		  if ( post.apiPost.content === '' ) {
+		    card.find( '.desc' ).hide()
+		  }else{
+		    card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+		  }
+
+		  card.find( '.desc' ).find('a').each( function(){
+
+		    if( !URL_REGEX.test( $(this).attr('href') ) ){
+		      $(this).attr( 'href', 'http://' + $(this).attr('href') )
+		    }
+
+		  })
+
+		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+		  card.find( '.card-user-name' ).text( user.fullName )
+		  card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) )
+
+		  /*if (!isMobile()) {
+		    setRepliesAsync( card , post.apiPost );
+		  }else{
+		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
+		  }
+		  appendCard( card , post.apiPost );*/
+
+		  return callback( card )
+
+		}
+
+		appendYoutubeCard( post , user , reason, callback ){
+
+		  var card = this._youtubeCardPrototype.clone();
+		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' );
+
+		  var youtubeCode = getYoutubeCode( post.apiPost.content );
+
+		  if (isMobile()) {
+		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
+		  }else{
+		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
+		  }
+
+		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
+		  card.find( '.card-user-name' ).text( user.fullName );
+		  card.find( '.time-text' ).text( timeElapsed( new Date( post.apiPost.created ) ) );
+		  card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
+		  card.find( '.title' ).text( post.apiPost.title );
+		  card.find( '.activate-preview' ).text( lang.preview );
+
+		  card.find( '.desc' ).find('a').each( function(){
+
+		    if( !URL_REGEX.test( $(this).attr('href') ) ){
+		      $(this).attr( 'href', 'http://' + $(this).attr('href') );
+		    }
+
+		  });
+
+		  /*if (!isMobile()) {
+		    setRepliesAsync( card , post.apiPost );
+		  }else{
+		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
+		  }
+		  appendCard( card , post.apiPost );*/
+
+		  return callback( card )
+
+		}
+
+		getYoutubeCode( text ){
+
+		  var youtubeId = false;
+		  text.split(' ').forEach( function( word ){
+
+		    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
+
+		      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+		      var match = word.match(regExp);
+		      youtubeId = (match&&match[7].length==11)? match[7] : false;
+
+		    }
+
+		  });
+
+		  return youtubeId;
 
 		}
 
@@ -273,14 +402,10 @@ var view = ( function(){
 
   		list.forEach( function( post ){
 
-  			if( post.apiPost && post.apiPost.metadata && post.apiPost.metadata.fileType == 'generic' ){
+  			var promise = $.Deferred()
+	      postPromises.push( promise )
 
-	  			var promise = $.Deferred()
-	      	postPromises.push( promise )
-
-  			}
-
-  			this.appendPost( post, promise , function( postDom, promise ){
+  			this.appendPost( post, promise , function( postDom ){
 
 					domList.push( postDom )
   				promise.resolve()
@@ -293,9 +418,10 @@ var view = ( function(){
 
 	    	if( domList.length ){
 
+					this._domPostContainer.scrollTop(0)
 	 	    	this._noPosts.css( 'opacity' , '0' );
 					this._noPosts.hide()
-	      	this._domPostContainer.append( domList )
+	      	this._domPostContainer.append( domList.reverse() )
 	      	//this._domPostContainer.scrollTop( this._domPostContainer[ 0 ].scrollHeight )
 
 	    	}
@@ -306,8 +432,6 @@ var view = ( function(){
 
 		appendPost( post, promise, callback ){
 
-			//callback = api.tool.secureCallback()
-
       if( post.apiPost.metadata && post.apiPost.metadata.operation === 'remove' ){
 
         this.appendGenericCard( post , lang.postCreated , function( postDom ){
@@ -316,54 +440,58 @@ var view = ( function(){
 
       }else if ( post.apiPost.metadata && post.apiPost.metadata.fileType ) {
 
-        switch (post.apiPost.metadata.fileType) {
+        switch( post.apiPost.metadata.fileType ){
 
           case 'generic':
           this.appendGenericCard( post , lang.postCreated , function( postDom ){
             return callback( postDom, promise )
-          });
-          break;
+          })
+          break
 
           case 'document':
-          /*this.appendDocumentCard( post , lang.postCreated , function( postDom ){
+          this.appendDocumentCard( post , lang.postCreated , function( postDom ){
             return callback( postDom, promise )
-          });*/
-          break;
+          })
+          break
 
           case 'image':
-          /*this.appendDocumentCard( post , lang.postCreated , function( postDom ){
+          this.appendDocumentCard( post , lang.postCreated , function( postDom ){
             return callback( postDom, promise )
-          });*/
-          break;
+          })
+          break
 
           case 'video':
           this.appendGenericCard( post , lang.postCreated , function( postDom ){
             return callback( postDom, promise )
-          });
-          break;
+          })
+          break
 
           case 'music':
           this.appendGenericCard( post , lang.postCreated , function( postDom ){
             return callback( postDom, promise )
-          });
-          break;
+          })
+          break
 
         }
 
       }else if( post.apiPost.metadata && post.apiPost.metadata.linkType ){
 
-        switch (post.apiPost.metadata.linkType) {
+        switch( post.apiPost.metadata.linkType ){
 
           case 'youtube':
-          /*this.appendYoutubeCard( post , lang.postCreated );
-          return callback( postDom, promise )*/
-          break;
+          this.appendYoutubeCard( post , lang.postCreated, function( postDom ){
+          	return callback( postDom, promise )
+          })
+          break
 
         }
 
       }else{
-        /*this.appendNoFileCard( post , lang.postCreated );
-        return callback( postDom, promise )*/
+
+        this.appendNoFileCard( post , lang.postCreated, function( postDom ){
+         	return callback( postDom, promise )
+        })
+
       }
 
 		}
@@ -382,7 +510,7 @@ var view = ( function(){
 
 		}
 
-		updatePostFSNodes( post ){
+		updateGenericCardFSNodes( post ){
 
 			var card = $( '.post-' + post.apiPost.id )
 
@@ -410,6 +538,65 @@ var view = ( function(){
 		    }
 
 			})
+
+		}
+
+		updateDocumentCardFSNodes( post ){
+
+			var card = $( '.post-' + post.apiPost.id )
+
+			post.fsnodes.forEach( function( fsnode ){
+
+	      if( fsnode.mime.indexOf( 'image' ) === 0 || fsnode.mime === 'application/pdf' ){
+	        card.find( '.doc-preview img' ).attr( 'src' , fsnode.thumbnails['1024'] )
+	        card.find( '.doc-preview-bar' ).hide()
+	      }else{
+	        // To Do -> Is this really neccesary? background with a micro thumb is added a few lines after this
+	        card.find( '.doc-preview img' ).attr( 'src',  fsnode.thumbnails.big )
+	      }
+
+	      card.find( '.preview-title' ).text( fsnode.name )
+	      card.find( '.preview-info' ).text( api.tool.bytesToUnit( fsnode.size, 1 ) )
+	      card.find( '.doc-preview' ).data( 'fsnode' , fsnode )
+	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsnode.icons.micro +' )' )
+
+			})
+
+		}
+
+		updatePostFSNodes( post ){
+
+			if( post.apiPost.metadata && post.apiPost.metadata.operation === 'remove' ){
+
+        this.updateGenericCardFSNodes( post )
+
+      }else if ( post.apiPost.metadata && post.apiPost.metadata.fileType ) {
+
+        switch( post.apiPost.metadata.fileType ){
+
+          case 'generic':
+					this.updateGenericCardFSNodes( post )
+          break
+
+          case 'document':
+					this.updateDocumentCardFSNodes( post )
+          break
+
+          case 'image':
+          this.updateDocumentCardFSNodes( post )
+          break
+
+          case 'video':
+					this.updateGenericCardFSNodes( post )
+          break
+
+          case 'music':
+					this.updateGenericCardFSNodes( post )
+          break
+
+        }
+
+      }
 
 		}
 
@@ -662,7 +849,9 @@ var model = ( function( view ){
   	  this.myContactID = api.system.user().id
 		  this.contacts = {}
 		  this.worlds = {}
+
 		  this.postsToLoad = []
+		  this.started = false //started to load posts fsnodes
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -772,10 +961,48 @@ var model = ( function( view ){
 
 		}
 
+		fastLoadFSNodes( post ){
+
+			if( !post.readyToInsert ){
+
+				post.loadPostFsnodes( function( updatedPost ){
+					this.updatePost(updatedPost)
+				}.bind(this))
+
+			}
+
+		}
+
+		lazyLoadFSNodes(){
+
+			//console.log( this.postsToLoad )
+
+			if( this.postsToLoad.length ){
+
+				var post = this.postsToLoad.pop()
+
+				if( post.readyToInsert ){
+					this.updatePost(post)
+					this.lazyLoadFSNodes()
+					return
+				}
+
+				post.loadPostFsnodes( function( updatedPost ){
+
+					this.updatePost(updatedPost)
+
+					setTimeout(function(){
+						this.lazyLoadFSNodes()
+					}.bind(this),40)
+
+				}.bind(this))
+
+			}
+
+		}
+
 		leaveWorld( worldId ){
-
 			
-
 		}
 
 		openWorld( worldId ){
@@ -796,7 +1023,7 @@ var model = ( function( view ){
 
 		  	list.push( this.worlds[ worldId ].posts[ i ] )
 		  	if( this.worlds[ worldId ].posts[ i ].readyToInsert == false ){
-		  		this.postsToLoad.unshift( this.worlds[ worldId ].posts[ i ] )
+		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ i ] )
 		  	}
 
 		  }
@@ -818,25 +1045,6 @@ var model = ( function( view ){
 		  }.bind(this))*/
 
 		    
-
-		}
-
-		loadFSNodes(){
-
-			while( this.postsToLoad.length ){
-
-				var post = this.postsToLoad.pop()
-
-				if( post.readyToInsert ){
-					this.updatePost(post)
-					continue
-				}
-
-				post.loadPostFsnodes( function( updatedPost ){
-					this.updatePost(post)
-				}.bind(this))
-
-			}
 
 		}
 
@@ -992,6 +1200,9 @@ var model = ( function( view ){
   		this.promise 
 
   		this.readyToInsert = false
+  		if( this.apiPost.fsnode.length == 0 ){
+  			this.readyToInsert = true
+  		}
 
   		this._loadComments()
   		this._addToQueue()
@@ -1003,8 +1214,9 @@ var model = ( function( view ){
 
   		this.app.postsToLoad.push( this )
 
-  		if( this.app.postsToLoad.length === 1 ){
-  			this.app.loadFSNodes()
+  		if( this.app.postsToLoad.length && !this.app.started ){
+  			this.app.started = true
+  			this.app.lazyLoadFSNodes()
   		}
 
   	}
@@ -1032,7 +1244,8 @@ var model = ( function( view ){
 		    api.fs( fsnode , function( error , fsnode ){
 
 		    	if( error ){
-		    		return cb(error);
+		    		console.log( this )
+		    		return cb(error, null);
 		    	}
 
 		      return cb(null, fsnode)
