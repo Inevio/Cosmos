@@ -152,36 +152,75 @@ var view = ( function(){
 
 		    //var fsnodes = arguments;
 
-		    for (var i = 0; i < post.fsnodes.length; i++) {
+		    if( post.fsnodes.length ){
 
-		      var fsnode = post.fsnodes[i]
+		    	for (var i = 0; i < post.fsnodes.length; i++) {
 
-		      if (!fsnode) {
-		        break
-		      }
+			      var fsnode = post.fsnodes[i]
 
-		      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
+			      if (!fsnode) {
+			        break
+			      }
 
-		        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
-		        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id )
+			      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
 
-		        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-		          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
-		        }else{
-		          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
-		        }
+			        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
+			        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id )
+
+			        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+			          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
+			        }else{
+			          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
+			        }
 
 
-		        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
-		          docPreview.find( '.doc-icon' ).addClass( 'office' )
-		        }
+			        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
+			          docPreview.find( '.doc-icon' ).addClass( 'office' )
+			        }
 
-		        docPreview.find( '.doc-title' ).text( fsnode.name )
-		        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )
-		        card.find( '.desc' ).after( docPreview )
-		        docPreview.data( 'fsnode' , fsnode )
+			        docPreview.find( '.doc-title' ).text( fsnode.name )
+			        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )
+			        card.find( '.desc' ).after( docPreview )
+			        docPreview.data( 'fsnode' , fsnode )
 
-		      }
+			      }
+
+			    }
+
+		    }else{
+
+					for (var i = 0; i < post.apiPost.fsnode.length; i++) {
+
+			      var fsnode = post.apiPost.fsnode[i]
+
+			      if (!fsnode) {
+			        break
+			      }
+
+			      if ( card.find( '.attachment-' + fsnode.id ).length === 0 ){
+
+			        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
+			        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode )
+
+			        /*if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+			          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
+			        }else{
+			          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
+			        }
+
+
+			        if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
+			          docPreview.find( '.doc-icon' ).addClass( 'office' )
+			        }
+
+			        docPreview.find( '.doc-title' ).text( fsnode.name )
+			        docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )*/
+			        card.find( '.desc' ).after( docPreview )
+			        //docPreview.data( 'fsnode' , fsnode )
+
+			      }
+
+			    }
 
 		    }
 
@@ -343,6 +382,87 @@ var view = ( function(){
 
 		}
 
+		updatePostFSNodes( post ){
+
+			var card = $( '.post-' + post.apiPost.id )
+
+			post.fsnodes.forEach( function( fsnode ){
+
+		    if ( card.find( '.attachment-' + fsnode.id ).length != 0 ){
+
+		      var docPreview = card.find( '.attachment-' + fsnode.id )
+
+		      if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+		        docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
+		      }else{
+		        docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
+		      }
+
+		      if ( fsnode.mime && fsnode.mime.indexOf( 'office' ) > -1 ) {
+		        docPreview.find( '.doc-icon' ).addClass( 'office' )
+		      }
+
+		      docPreview.find( '.doc-title' ).text( fsnode.name )
+		      docPreview.find( '.doc-info' ).text( api.tool.bytesToUnit( fsnode.size ) )
+		      //card.find( '.desc' ).after( docPreview )
+		      docPreview.data( 'fsnode' , fsnode )
+
+		    }
+
+			})
+
+		}
+
+		updateWorldsListUI( worldList ){
+
+			worldList = worldList.sort( function( a, b ){
+		    return a.apiWorld.name.localeCompare( b.apiWorld.name )
+		  })
+
+			var publicWorlds = []
+
+			function isPrivate( world ){
+
+				if( !world.apiWorld.isPrivate ){
+					publicWorlds.push( world )
+				}
+
+				return world.apiWorld.isPrivate
+
+			}
+
+			worldList = worldList.filter( isPrivate )
+
+			//console.log( publicWorlds, worldList )
+			function worldSidebarDom( item ){
+
+		  	var world = $( '.sidebar .world.wz-prototype' ).clone();
+				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' );
+				world.find( '.world-name' ).text( item.apiWorld.name );
+
+				if( item.apiWorld.owner === api.system.user().id ){
+				  world.addClass( 'editable' )
+				}
+
+				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
+				world.attr( 'data-id', item.apiWorld.id )
+
+		  	return world
+
+			}
+
+		  this._domWorldsPrivateList.empty().append( worldList.map( function( item ){ 
+		  	return worldSidebarDom( item )
+		  }))
+
+
+		  this._domWorldsPublicList.empty().append( publicWorlds.map( function( item ){ 
+		  	return worldSidebarDom( item )
+		  }))
+
+		}
+
+
 		//Date functions
 
 		getStringHour( date ){
@@ -409,65 +529,7 @@ var view = ( function(){
 
 		}
 
-		updateWorldsListUI( worldList ){
 
-			worldList = worldList.sort( function( a, b ){
-		    return a.apiWorld.name.localeCompare( b.apiWorld.name )
-		  })
-
-			var publicWorlds = []
-
-			function isPrivate( world ){
-
-				if( !world.apiWorld.isPrivate ){
-					publicWorlds.push( world )
-				}
-
-				return world.apiWorld.isPrivate
-
-			}
-
-			worldList = worldList.filter( isPrivate )
-
-			//console.log( publicWorlds, worldList )
-
-		  this._domWorldsPrivateList.empty().append( worldList.map( function( item ){ 
-
-		  	var world = this._worldPrototype.clone();
-				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' );
-				world.find( '.world-name' ).text( item.apiWorld.name );
-
-				if( item.apiWorld.owner === this.myContactID ){
-				  world.addClass( 'editable' )
-				}
-
-				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
-				world.attr( 'data-id', item.apiWorld.id )
-
-		  	return world
-
-		  }.bind(this)))
-
-
-		  this._domWorldsPublicList.empty().append( publicWorlds.map( function( item ){ 
-
-		  	var world = this._worldPrototype.clone();
-				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' );
-				world.find( '.world-name' ).text( item.apiWorld.name );
-
-				if( item.apiWorld.owner === this.myContactID ){
-				  world.addClass('editable')
-				}
-
-				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
-				world.attr( 'data-id', item.apiWorld.id )
-
-		  	return world
-
-		  }.bind(this)))
-
-
-		}
 	}
 
 	return new View()
