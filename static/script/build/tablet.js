@@ -281,6 +281,28 @@ var model = ( function( view ){
 			
 		}
 
+		openFile( fsnode ){
+
+			if( typeof fsnode == 'undefined' ){
+				return
+			}
+
+			fsnode.open()
+
+		}
+
+		openFolder(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+		  api.fs( this.openedWorld.apiWorld.volume , function( error , folder ){
+		    folder.open();
+		  });
+
+		}
+
 		openWorld( worldId ){
 
 		  //app.addClass( 'selectingWorld' );
@@ -304,7 +326,7 @@ var model = ( function( view ){
 
 		  }
 
-		  this.view.appendPostList( list )
+		  this.view.appendPostList( list.reverse() )
 
 		  //var i = 0
 		  /*async.map( list, function( post, callback ){

@@ -48,9 +48,7 @@ var controller = ( function( model, view ){
     	})
 
     	this.dom.on( 'click' , '.category-list .world' , function(){
-
     		model.openWorld( $(this).attr('data-id') )
-
     	})
 
       $('.world-selected').on('scroll', function(){
@@ -61,6 +59,29 @@ var controller = ( function( model, view ){
           $('.world-header-min').removeClass('active')
         }
         
+      })
+
+      this.dom.on( 'click', '.open-folder-button' ,function(){
+        model.openFolder()
+      })
+
+      this.dom.on( 'click', '.cardDom:not(.loading) .doc-preview' ,function(){
+
+        var attachment = $( this );
+        var fsnode =  $( this ).data( 'fsnode' );
+        var fsnodeList = [];
+        $.each( attachment.closest( '.card' ).find( '.doc-preview:not(.wz-prototype)' ) , function( i , attachment ){
+          fsnodeList.push( $( attachment ).data( 'fsnode' ) );
+        });
+
+        fsnode.open( fsnodeList.filter(function( item ){ return item.type === fsnode.type; }).map( function( item ){ return item.id; }), function( error ){
+
+          if( error ){
+            fsnode.openLocal();
+          }
+
+        });
+
       })
 
     }
