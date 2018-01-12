@@ -140,21 +140,23 @@ var view = ( function(){
 
 		  if( post.fsnodes.length ){
 
-		  	var fsNode = post.fsnodes[0]
+		  	var fsnode = post.fsnodes[0]
 	
-	      if( fsNode.mime.indexOf( 'image' ) === 0 || fsNode.mime === 'application/pdf' ){
-	        card.find( '.doc-preview img' ).attr( 'src' , fsNode.thumbnails['1024'] )
+	      if( fsnode.mime.indexOf( 'image' ) === 0 || fsnode.mime === 'application/pdf' ){
+	        card.find( '.doc-preview img' ).attr( 'src' , fsnode.thumbnails['1024'] )
 	        card.find( '.doc-preview-bar' ).hide()
 	      }else{
 	        // To Do -> Is this really neccesary? background with a micro thumb is added a few lines after this
-	        card.find( '.doc-preview img' ).attr( 'src',  fsNode.thumbnails.big )
+	        card.find( '.doc-preview img' ).attr( 'src',  fsnode.thumbnails.big )
 	      }
 
-	      card.find( '.preview-title' ).text( fsNode.name )
-	      card.find( '.preview-info' ).text( api.tool.bytesToUnit( fsNode.size, 1 ) )
-	      card.find( '.doc-preview' ).data( 'fsnode' , fsNode )
-	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsNode.icons.micro +' )' )
+	      card.find( '.preview-title' ).text( fsnode.name )
+	      card.find( '.preview-info' ).text( api.tool.bytesToUnit( fsnode.size, 1 ) )
+	      card.find( '.doc-preview' ).addClass( 'attachment-' + fsnode.id ).data( 'fsnode' , fsnode )
+	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsnode.icons.micro +' )' )
 
+		  }else{
+		  	card.addClass('loading')
 		  }
 
 	    if ( post.apiPost.title === '' ) {
@@ -187,7 +189,7 @@ var view = ( function(){
 	      setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
 	    }
 	    appendCard( card , post.apiPost );*/
-
+	    
 	    return callback( card )
 
 		}
@@ -234,6 +236,8 @@ var view = ( function(){
 		    }
 
 	    }else{
+
+	    	card.addClass('loading')
 
 				for (var i = 0; i < post.apiPost.fsnode.length; i++) {
 
@@ -339,11 +343,11 @@ var view = ( function(){
 
 		  var youtubeCode = getYoutubeCode( post.apiPost.content );
 
-		  if (isMobile()) {
+		  /*if (isMobile()) {
 		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
-		  }else{
+		  }else{*/
 		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
-		  }
+		  //}
 
 		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
 		  card.find( '.card-user-name' ).text( user.fullName );
@@ -421,7 +425,7 @@ var view = ( function(){
 					this._domPostContainer.scrollTop(0)
 	 	    	this._noPosts.css( 'opacity' , '0' );
 					this._noPosts.hide()
-	      	this._domPostContainer.append( domList.reverse() )
+	      	this._domPostContainer.append( domList )
 	      	//this._domPostContainer.scrollTop( this._domPostContainer[ 0 ].scrollHeight )
 
 	    	}
@@ -513,6 +517,7 @@ var view = ( function(){
 		updateGenericCardFSNodes( post ){
 
 			var card = $( '.post-' + post.apiPost.id )
+			card.removeClass('loading')
 
 			post.fsnodes.forEach( function( fsnode ){
 
@@ -544,6 +549,7 @@ var view = ( function(){
 		updateDocumentCardFSNodes( post ){
 
 			var card = $( '.post-' + post.apiPost.id )
+			card.removeClass('loading')
 
 			post.fsnodes.forEach( function( fsnode ){
 
