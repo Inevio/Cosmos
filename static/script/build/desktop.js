@@ -190,7 +190,9 @@ var view = ( function(){
 	    }
 	    appendCard( card , post.apiPost );*/
 	    
-	    return callback( card )
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
 
 		}
 
@@ -290,7 +292,9 @@ var view = ( function(){
 	      setRepliesAsyncWithoutAppendMobile( card , post );
 	    }
 	    appendCard( card , post );*/
-	    return callback( card )
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
 
 		}
 
@@ -332,7 +336,9 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  return callback( card )
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
 
 		}
 
@@ -371,8 +377,10 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  return callback( card )
-
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
+  
 		}
 
 		getYoutubeCode( text ){
@@ -497,6 +505,30 @@ var view = ( function(){
         })
 
       }
+
+		}
+
+		appendReplies( card, comments, callback ){
+
+			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
+				card.find( '.comments-text' ).text( '0 ' + lang.comments )
+				return callback( card )
+		  }
+
+			comments = Object.keys( comments ).reverse()
+			console.log( card.find( '.comments-text' ) )
+	    card.find( '.comments-text' ).text( comments.length + ' ' + lang.comments )
+	    console.log( card.find( '.comments-text' ).text() )
+	    if ( comments.length === 1 ) {
+	      card.find( '.comments-text' ).text( comments.length + ' ' + lang.comment )
+	    }else{
+	      card.find( '.comments-text' ).text( comments.length + ' ' + lang.comments )
+	    }
+	    card.find( '.comments-text' ).data( 'num' , comments.length )
+
+	    var listToAppend = []
+	    //comments.forEach()
+	    return callback( card )
 
 		}
 
@@ -997,9 +1029,9 @@ var model = ( function( view ){
 
 					this.updatePost(updatedPost)
 
-					setTimeout(function(){
+					setTimeout( function(){
 						this.lazyLoadFSNodes()
-					}.bind(this),40)
+					}.bind(this),70 )
 
 				}.bind(this))
 
@@ -1058,22 +1090,6 @@ var model = ( function( view ){
 		  }.bind(this))
 
 		  this.view.appendPostList( list )
-
-		  //var i = 0
-		  /*async.map( list, function( post, callback ){
-
-		  	post.getPostReadyToInsert( function( post ){
-		  		//console.log( i++ )
-		  		return callback( null, post )
-		  	})
-
-		  }, function( error, finishedList ){
-
-		  	this.view.appendPostList( finishedList )
-
-		  }.bind(this))*/
-
-		    
 
 		}
 
@@ -1369,7 +1385,7 @@ var controller = ( function( model, view ){
     	this._domWorldCategory.on( 'click', function(){
 
     		var category = $(this).parent();
-			  category.toggleClass('closed');
+			  category.toggleClass( 'closed' );
 
 			  if ( category.hasClass( 'closed' ) ) {
 
@@ -1384,7 +1400,7 @@ var controller = ( function( model, view ){
 			    category.find( '.world-list' ).transition({
 			      'height'         : height
 			    }, 200, function(){
-			    	$(this).css('height', 'initial')
+			    	$(this).css( 'height' , 'initial' )
 			    });
 
 			  }
@@ -1392,15 +1408,15 @@ var controller = ( function( model, view ){
     	})
 
     	this.dom.on( 'click' , '.category-list .world' , function(){
-    		model.openWorld( $(this).attr('data-id') )
+    		model.openWorld( $(this).attr( 'data-id' ) )
     	})
 
-      $('.world-selected').on('scroll', function(){
+      $( '.world-selected' ).on( 'scroll' , function(){
 
         if ( $(this).scrollTop() > 60 ) {
-          $('.world-header-min').addClass('active')
+          $( '.world-header-min' ).addClass( 'active' )
         }else{
-          $('.world-header-min').removeClass('active')
+          $( '.world-header-min' ).removeClass( 'active' )
         }
         
       })

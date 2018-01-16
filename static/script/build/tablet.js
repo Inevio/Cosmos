@@ -267,9 +267,9 @@ var model = ( function( view ){
 
 					this.updatePost(updatedPost)
 
-					setTimeout(function(){
+					setTimeout( function(){
 						this.lazyLoadFSNodes()
-					}.bind(this),40)
+					}.bind(this),70 )
 
 				}.bind(this))
 
@@ -328,22 +328,6 @@ var model = ( function( view ){
 		  }.bind(this))
 
 		  this.view.appendPostList( list )
-
-		  //var i = 0
-		  /*async.map( list, function( post, callback ){
-
-		  	post.getPostReadyToInsert( function( post ){
-		  		//console.log( i++ )
-		  		return callback( null, post )
-		  	})
-
-		  }, function( error, finishedList ){
-
-		  	this.view.appendPostList( finishedList )
-
-		  }.bind(this))*/
-
-		    
 
 		}
 

@@ -190,7 +190,9 @@ var view = ( function(){
 	    }
 	    appendCard( card , post.apiPost );*/
 	    
-	    return callback( card )
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
 
 		}
 
@@ -290,7 +292,9 @@ var view = ( function(){
 	      setRepliesAsyncWithoutAppendMobile( card , post );
 	    }
 	    appendCard( card , post );*/
-	    return callback( card )
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
 
 		}
 
@@ -332,7 +336,9 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  return callback( card )
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
 
 		}
 
@@ -371,8 +377,10 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  return callback( card )
-
+		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  	return callback( cardToInsert )
+		  })
+  
 		}
 
 		getYoutubeCode( text ){
@@ -497,6 +505,30 @@ var view = ( function(){
         })
 
       }
+
+		}
+
+		appendReplies( card, comments, callback ){
+
+			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
+				card.find( '.comments-text' ).text( '0 ' + lang.comments )
+				return callback( card )
+		  }
+
+			comments = Object.keys( comments ).reverse()
+			console.log( card.find( '.comments-text' ) )
+	    card.find( '.comments-text' ).text( comments.length + ' ' + lang.comments )
+	    console.log( card.find( '.comments-text' ).text() )
+	    if ( comments.length === 1 ) {
+	      card.find( '.comments-text' ).text( comments.length + ' ' + lang.comment )
+	    }else{
+	      card.find( '.comments-text' ).text( comments.length + ' ' + lang.comments )
+	    }
+	    card.find( '.comments-text' ).data( 'num' , comments.length )
+
+	    var listToAppend = []
+	    //comments.forEach()
+	    return callback( card )
 
 		}
 

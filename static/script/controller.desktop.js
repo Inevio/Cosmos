@@ -25,7 +25,7 @@ var controller = ( function( model, view ){
     	this._domWorldCategory.on( 'click', function(){
 
     		var category = $(this).parent();
-			  category.toggleClass('closed');
+			  category.toggleClass( 'closed' );
 
 			  if ( category.hasClass( 'closed' ) ) {
 
@@ -40,7 +40,7 @@ var controller = ( function( model, view ){
 			    category.find( '.world-list' ).transition({
 			      'height'         : height
 			    }, 200, function(){
-			    	$(this).css('height', 'initial')
+			    	$(this).css( 'height' , 'initial' )
 			    });
 
 			  }
@@ -48,15 +48,15 @@ var controller = ( function( model, view ){
     	})
 
     	this.dom.on( 'click' , '.category-list .world' , function(){
-    		model.openWorld( $(this).attr('data-id') )
+    		model.openWorld( $(this).attr( 'data-id' ) )
     	})
 
-      $('.world-selected').on('scroll', function(){
+      $( '.world-selected' ).on( 'scroll' , function(){
 
         if ( $(this).scrollTop() > 60 ) {
-          $('.world-header-min').addClass('active')
+          $( '.world-header-min' ).addClass( 'active' )
         }else{
-          $('.world-header-min').removeClass('active')
+          $( '.world-header-min' ).removeClass( 'active' )
         }
         
       })
