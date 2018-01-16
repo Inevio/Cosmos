@@ -316,17 +316,18 @@ var model = ( function( view ){
 
 			var list = []
 		  var id = null
+		  var postsKeys = Object.keys( this.worlds[ worldId ].posts ).reverse()
 
-		  for( var i in this.worlds[ worldId ].posts ){
+		  postsKeys.forEach( function( postKey ){
 
-		  	list.push( this.worlds[ worldId ].posts[ i ] )
-		  	if( this.worlds[ worldId ].posts[ i ].readyToInsert == false ){
-		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ i ] )
+		  	list.push( this.worlds[ worldId ].posts[ postKey ] )
+		  	if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
+		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
 		  	}
 
-		  }
+		  }.bind(this))
 
-		  this.view.appendPostList( list.reverse() )
+		  this.view.appendPostList( list )
 
 		  //var i = 0
 		  /*async.map( list, function( post, callback ){
