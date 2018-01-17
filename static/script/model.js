@@ -21,7 +21,7 @@ var model = ( function( view ){
 	        callback( error )
 
 	        // Nullify
-	        list = step = callback = position = checkEnd = closed = null
+	        list = step = callback = position = checkEnd = null
 
 	      }
 
@@ -59,7 +59,7 @@ var model = ( function( view ){
 	        callback( error, result )
 
 	        // Nullify
-	        result = list = step = callback = position = checkEnd = closed = null
+	        result = list = step = callback = position = checkEnd = null
 
 	      }
 
@@ -97,7 +97,7 @@ var model = ( function( view ){
 	        callback( error, res )
 
 	        // Nullify
-	        list = callback = position = checkEnd = closed = null
+	        list = callback = position = checkEnd = null
 
 	      }
 

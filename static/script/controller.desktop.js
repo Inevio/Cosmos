@@ -84,6 +84,51 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click' , '.comments-opener' , function(){
+
+        var card = $(this).parent().parent();
+        var height = parseInt(card.find('.comments-list').css('height')) + 50;
+        var commentsSection = card.find( '.comments-section' );
+
+        /*if (isMobile()) {
+          return;
+        }*/
+
+        if (commentsSection.hasClass('opened')) {
+
+          commentsSection.css('height', height);
+          card.removeClass( 'comments-open' );
+          commentsSection.transition({
+
+            'height'         : 0
+
+          }, 200, function(){
+
+            commentsSection.removeClass('opened');
+
+          });
+
+        }else{
+
+          card.addClass( 'comments-open' );
+          commentsSection.find( '.comments-list' ).scrollTop(9999999);
+          commentsSection.transition({
+
+            'height'         : height
+
+          }, 200, function(){
+
+            commentsSection.addClass('opened');
+            commentsSection.css('height', 'auto');
+            commentsSection.find( 'textarea' ).focus();
+
+          });
+
+
+        }
+
+      })
+
     }
 
 	}
