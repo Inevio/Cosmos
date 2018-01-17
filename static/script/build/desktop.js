@@ -535,7 +535,7 @@ var view = ( function(){
 	      if( index == comments.length - 1 ){
 
 		      card.find( '.comments-list' ).append( listToAppend )
-	      	card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
+	      	//card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
 	      	return callback( card )
 
 	      }
@@ -637,6 +637,24 @@ var view = ( function(){
 	    reply.data( 'reply' , response )
 	    return reply
 
+		}
+
+		filterPosts( list ){
+
+			if( list ){
+
+				$( '.cardDom' ).removeClass( 'filtered' )
+				list.forEach( function( id ){
+					$( '.post-' + id ).addClass( 'filtered' )
+				})
+
+				$( '.cardDom:not(.filtered)' ).hide()
+				$( '.cardDom.filtered' ).show()
+
+			}else{
+				$( '.cardDom' ).removeClass( 'filtered' ).show()
+			}
+
 		}		
 
 		openWorld( world ){
@@ -650,6 +668,43 @@ var view = ( function(){
 		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
 		  $( '.select-world' ).hide()
 		  $( '.cardDom' ).remove()
+
+		}
+
+		toggleReplies( card ){
+
+      var height = parseInt( card.find( '.comments-list' ).css( 'height' ) ) + 50
+      var commentsSection = card.find( '.comments-section' )
+
+      /*if (isMobile()) {
+        return;
+      }*/
+
+      if( commentsSection.hasClass( 'opened' ) ){
+
+        commentsSection.css( 'height' , height )
+        card.removeClass( 'comments-open' )
+        commentsSection.transition({
+          'height' : 0
+        }, 200, function(){
+          commentsSection.removeClass( 'opened' )
+        });
+
+      }else{
+
+        card.addClass( 'comments-open' )
+        commentsSection.find( '.comments-list' ).scrollTop(9999999)
+        commentsSection.transition({
+          'height' : height
+        }, 200, function(){
+
+          commentsSection.addClass( 'opened' )
+          commentsSection.css( 'height', 'auto' )
+          commentsSection.find( 'textarea' ).focus()
+
+        })
+
+      }
 
 		}
 
@@ -1010,6 +1065,10 @@ var model = ( function( view ){
 
   	}
 
+  	_compareTitle( query, title ){
+			return ( title.toLowerCase().indexOf( query ) !== -1 )
+		}
+
   	_loadFullContactList( callback ){
 
   		callback = api.tool.secureCallback( callback )
@@ -1177,7 +1236,11 @@ var model = ( function( view ){
 		  //app.addClass( 'selectingWorld' );
 
 		  if( !this.worlds[worldId] ){
-		  	return console.error('Error al abrir mundo')
+		  	return console.error( 'Error al abrir mundo' )
+		  }
+
+		  if( this.openedWorld && this.openedWorld.apiWorld.id === worldId ){
+		  	return
 		  }
 
 		  this.openedWorld = this.worlds[worldId];
@@ -1197,6 +1260,35 @@ var model = ( function( view ){
 		  }.bind(this))
 
 		  this.view.appendPostList( list )
+
+		}
+
+		searchPost( query ){
+
+			if( !this.openedWorld || (Object.keys( this.openedWorld.posts ).length === 0 && this.openedWorld.posts.constructor === Object) ){
+				return
+			}
+
+			if( !query ){
+				return this.view.filterPosts( null )
+			}
+
+			var postsToShow = []
+
+			var posts = Object.values( this.openedWorld.posts )
+
+			posts.forEach( function( post, index ){
+
+    	  if( this._compareTitle( query, post.apiPost.title ) ){
+    	  	postsToShow.push( post.apiPost.id )
+    	  }
+
+	      if( index == posts.length - 1 ){
+	      	return this.view.filterPosts( postsToShow )
+	      }
+
+	    }.bind(this))
+
 
 		}
 
@@ -1515,7 +1607,7 @@ var controller = ( function( model, view ){
     	})
 
     	this.dom.on( 'click' , '.category-list .world' , function(){
-    		model.openWorld( $(this).attr( 'data-id' ) )
+    		model.openWorld( parseInt( $(this).attr( 'data-id' ) ) )
     	})
 
       $( '.world-selected' ).on( 'scroll' , function(){
@@ -1553,48 +1645,24 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click' , '.comments-opener' , function(){
 
-        var card = $(this).parent().parent();
-        var height = parseInt(card.find('.comments-list').css('height')) + 50;
-        var commentsSection = card.find( '.comments-section' );
-
-        /*if (isMobile()) {
-          return;
-        }*/
-
-        if (commentsSection.hasClass('opened')) {
-
-          commentsSection.css('height', height);
-          card.removeClass( 'comments-open' );
-          commentsSection.transition({
-
-            'height'         : 0
-
-          }, 200, function(){
-
-            commentsSection.removeClass('opened');
-
-          });
-
-        }else{
-
-          card.addClass( 'comments-open' );
-          commentsSection.find( '.comments-list' ).scrollTop(9999999);
-          commentsSection.transition({
-
-            'height'         : height
-
-          }, 200, function(){
-
-            commentsSection.addClass('opened');
-            commentsSection.css('height', 'auto');
-            commentsSection.find( 'textarea' ).focus();
-
-          });
-
-
-        }
+        var card = $(this).parent().parent()
+        view.toggleReplies( card )
 
       })
+
+
+      //Search posts
+      this.dom.on( 'input' , '.world-header .search-post' , function( e ){
+
+        //if (e.keyCode == 13) {
+          model.searchPost( $( this ).find( 'input' ).val() )
+        //}
+
+      })
+
+      /*this.dom.on( 'click' , '.world-header .search-post .delete-content' , function( e ){
+        model.searchPost( null )
+      })*/
 
     }
 
