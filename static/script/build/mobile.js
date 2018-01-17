@@ -559,12 +559,12 @@ var model = ( function( view ){
 
   	loadPostFsnodes( callback ){
 
-  		async.map( this.apiPost.fsnode, function( fsnode, cb ){
+  		async.map( this.apiPost.fsnode, function( fsnodeId, cb ){
 
-		    api.fs( fsnode , function( error , fsnode ){
+		    api.fs( fsnodeId , function( error , fsnode ){
 
 		    	if( error ){
-		    		console.log( this )
+		    		console.log( fsnodeId, error )
 		    		return cb(error, null);
 		    	}
 
