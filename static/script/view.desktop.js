@@ -535,7 +535,7 @@ var view = ( function(){
 	      if( index == comments.length - 1 ){
 
 		      card.find( '.comments-list' ).append( listToAppend )
-	      	card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
+	      	//card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
 	      	return callback( card )
 
 	      }
@@ -637,6 +637,24 @@ var view = ( function(){
 	    reply.data( 'reply' , response )
 	    return reply
 
+		}
+
+		filterPosts( list ){
+
+			if( list ){
+
+				$( '.cardDom' ).removeClass( 'filtered' )
+				list.forEach( function( id ){
+					$( '.post-' + id ).addClass( 'filtered' )
+				})
+
+				$( '.cardDom:not(.filtered)' ).hide()
+				$( '.cardDom.filtered' ).show()
+
+			}else{
+				$( '.cardDom' ).removeClass( 'filtered' ).show()
+			}
+
 		}		
 
 		openWorld( world ){
@@ -650,6 +668,43 @@ var view = ( function(){
 		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
 		  $( '.select-world' ).hide()
 		  $( '.cardDom' ).remove()
+
+		}
+
+		toggleReplies( card ){
+
+      var height = parseInt( card.find( '.comments-list' ).css( 'height' ) ) + 50
+      var commentsSection = card.find( '.comments-section' )
+
+      /*if (isMobile()) {
+        return;
+      }*/
+
+      if( commentsSection.hasClass( 'opened' ) ){
+
+        commentsSection.css( 'height' , height )
+        card.removeClass( 'comments-open' )
+        commentsSection.transition({
+          'height' : 0
+        }, 200, function(){
+          commentsSection.removeClass( 'opened' )
+        });
+
+      }else{
+
+        card.addClass( 'comments-open' )
+        commentsSection.find( '.comments-list' ).scrollTop(9999999)
+        commentsSection.transition({
+          'height' : height
+        }, 200, function(){
+
+          commentsSection.addClass( 'opened' )
+          commentsSection.css( 'height', 'auto' )
+          commentsSection.find( 'textarea' ).focus()
+
+        })
+
+      }
 
 		}
 

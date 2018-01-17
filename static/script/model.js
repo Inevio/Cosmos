@@ -140,6 +140,10 @@ var model = ( function( view ){
 
   	}
 
+  	_compareTitle( query, title ){
+			return ( title.toLowerCase().indexOf( query ) !== -1 )
+		}
+
   	_loadFullContactList( callback ){
 
   		callback = api.tool.secureCallback( callback )
@@ -307,7 +311,11 @@ var model = ( function( view ){
 		  //app.addClass( 'selectingWorld' );
 
 		  if( !this.worlds[worldId] ){
-		  	return console.error('Error al abrir mundo')
+		  	return console.error( 'Error al abrir mundo' )
+		  }
+
+		  if( this.openedWorld && this.openedWorld.apiWorld.id === worldId ){
+		  	return
 		  }
 
 		  this.openedWorld = this.worlds[worldId];
@@ -327,6 +335,35 @@ var model = ( function( view ){
 		  }.bind(this))
 
 		  this.view.appendPostList( list )
+
+		}
+
+		searchPost( query ){
+
+			if( !this.openedWorld || (Object.keys( this.openedWorld.posts ).length === 0 && this.openedWorld.posts.constructor === Object) ){
+				return
+			}
+
+			if( !query ){
+				return this.view.filterPosts( null )
+			}
+
+			var postsToShow = []
+
+			var posts = Object.values( this.openedWorld.posts )
+
+			posts.forEach( function( post, index ){
+
+    	  if( this._compareTitle( query, post.apiPost.title ) ){
+    	  	postsToShow.push( post.apiPost.id )
+    	  }
+
+	      if( index == posts.length - 1 ){
+	      	return this.view.filterPosts( postsToShow )
+	      }
+
+	    }.bind(this))
+
 
 		}
 
