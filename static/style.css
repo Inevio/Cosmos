@@ -2533,7 +2533,7 @@ to {background-position: -200% 0;}
     width: 225px;
   }
 
-  .comment .replay-button{
+  .comment .reply-button{
     float: right;
     font-size: 13px;
     font-weight: bold;
@@ -2544,7 +2544,7 @@ to {background-position: -200% 0;}
     margin-right: 9px;
   }
 
-  .comment:hover .replay-button{
+  .comment:hover .reply-button{
 
     opacity: 1;
 
@@ -2586,7 +2586,7 @@ to {background-position: -200% 0;}
 
   }
 
-  .comment .comment-text, .comment .replay-text{
+  .comment .comment-text, .comment .reply-text{
 
     float: left;
     margin-left: 9px;
@@ -2599,7 +2599,7 @@ to {background-position: -200% 0;}
 
   }
 
-  .comment .comment-text a, .comment .replay-text a{
+  .comment .comment-text a, .comment .reply-text a{
     cursor: pointer;
   }
 
@@ -2693,7 +2693,7 @@ to {background-position: -200% 0;}
 
   }
 
-  .replay-list{
+  .reply-list{
 
     float: left;
     margin-left: 30px;
@@ -2703,25 +2703,25 @@ to {background-position: -200% 0;}
 
   }
 
-  .replied .replay-list{
+  .replied .reply-list{
 
     display: inline-block;
 
   }
 
-  .replay{
+  .reply{
 
     float: left;
     width: 100%;
 
   }
 
-  .replay > i{
+  .reply > i{
 
     float: left;
     width: 11px;
     height: 7px;
-    background-image: url('@static/images/replay.png');
+    background-image: url('@static/images/reply.png');
     background-size: 11px 7px;
     margin-right: 3px;
     margin-top: 13px;
@@ -2729,12 +2729,12 @@ to {background-position: -200% 0;}
 
   }
 
-  .replay .name{
+  .reply .name{
     width: 225px;
     margin-top: 2px;
   }
 
-  .replay .replay-text{
+  .reply .reply-text{
     width: 375px;
   }
 
@@ -5528,7 +5528,7 @@ to {background-position: -200% 0;}
     margin-left: 48px;
   }
 
-  .comment .replay-button{
+  .comment .reply-button{
     float: left;
     font-size: 12px;
     color: #889399;
@@ -5556,11 +5556,11 @@ to {background-position: -200% 0;}
     width: auto;
   }
 
-  .replay .replay-text{
+  .reply .reply-text{
     width: ~'calc(100% - 70px)';
   }
 
-  .replay .time{
+  .reply .time{
     margin-left: 62px;
     margin-top: 3px;
   }

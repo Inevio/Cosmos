@@ -412,7 +412,6 @@ app
 
     });
 
-
   }
 
 })
@@ -1199,20 +1198,20 @@ if( newParams.queue ){
 
 .on( 'click' , '.comments-footer .send-button' , function(){
 
-  addReplayAsync( $( this ).parent().parent().parent() );
+  addreplyAsync( $( this ).parent().parent().parent() );
 
 })
 
-.on( 'click' , '.replay-button' , function(){
+.on( 'click' , '.reply-button' , function(){
 
-  prepareReplayComment( $( this ).parent() );
+  preparereplyComment( $( this ).parent() );
 
 })
 
 .on( 'keypress' , '.comments-footer .comment-input' , function( e ){
   if (e.keyCode == 13) {
     if (! e.shiftKey ) {
-      addReplayAsync( $( this ).parent().parent().parent() );
+      addreplyAsync( $( this ).parent().parent().parent() );
     }
   }
 })
@@ -2905,9 +2904,9 @@ var appendReply = function( card , reply , callback ){
   var comment = commentPrototype.eq(0).clone();
   comment.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + reply.id );
   if (isMobile()) {
-    comment.find( '.replay-button' ).text( '-   ' + lang.reply );
+    comment.find( '.reply-button' ).text( '-   ' + lang.reply );
   }else{
-    comment.find( '.replay-button' ).text( lang.reply );
+    comment.find( '.reply-button' ).text( lang.reply );
   }
   comment.find( '.edit-button' ).text( lang.edit );
 
@@ -3227,7 +3226,7 @@ var unFollowWorld = function( world ){
 
 }
 
-var addReplayAsync = function( card ){
+var addreplyAsync = function( card ){
 
   var post;
   var msg;
@@ -3338,7 +3337,7 @@ var createChat = function( world ){
 
 }
 
-var prepareReplayComment = function( comment ){
+var preparereplyComment = function( comment ){
 
   var post = comment.data( 'reply' );
   var name = comment.data( 'name' );
@@ -3359,8 +3358,8 @@ var appendReplyComment = function( card , reply , response ){
     comment = card.find( '.comment-' + reply.id );
   }
 
-  comment.find( '.replay-list' ).show();
-  var reply = comment.find( '.replay.wz-prototype' ).clone();
+  comment.find( '.reply-list' ).show();
+  var reply = comment.find( '.reply.wz-prototype' ).clone();
   reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id );
 
   if ( response.author === myContactID ) {
@@ -3382,9 +3381,9 @@ var appendReplyComment = function( card , reply , response ){
       reply.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.tiny + ')' );
       reply.find( '.name' ).text( user.fullName );
       reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-      reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
+      reply.find( '.reply-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
-      reply.find( '.replay-text' ).find('a').each( function(){
+      reply.find( '.reply-text' ).find('a').each( function(){
 
         if( !URL_REGEX.test( $(this).attr('href') ) ){
           $(this).attr( 'href', 'http://' + $(this).attr('href') );
@@ -3392,7 +3391,7 @@ var appendReplyComment = function( card , reply , response ){
 
       });
 
-      comment.find( '.replay-list' ).append( reply );
+      comment.find( '.reply-list' ).append( reply );
       if (!isMobile()) {
         card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
       }
@@ -3407,9 +3406,9 @@ var appendReplyComment = function( card , reply , response ){
     reply.find( '.avatar' ).css( 'background-image' , 'url(' + response.authorObject.avatar.tiny + ')' );
     reply.find( '.name' ).text( response.authorObject.fullName );
     reply.find( '.time' ).text( timeElapsed( new Date( response.created ) ) );
-    reply.find( '.replay-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
+    reply.find( '.reply-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
 
-    reply.find( '.replay-text' ).find('a').each( function(){
+    reply.find( '.reply-text' ).find('a').each( function(){
 
       if( !URL_REGEX.test( $(this).attr('href') ) ){
         $(this).attr( 'href', 'http://' + $(this).attr('href') );
@@ -3417,7 +3416,7 @@ var appendReplyComment = function( card , reply , response ){
 
     });
 
-    comment.find( '.replay-list' ).append( reply );
+    comment.find( '.reply-list' ).append( reply );
     if (!isMobile()) {
       card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
     }

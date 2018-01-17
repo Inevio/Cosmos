@@ -22,7 +22,7 @@ var view = ( function(){
 
 			this.isMobile = this.dom.hasClass( 'wz-mobile-view' )
 
-			this.myContactID = api.system.user().id
+			this.myContactID 							= api.system.user().id
 			this._domWorldsPrivateList 		= $( '.private-list' )
 			this._domWorldsPublicList 		= $( '.public-list' )
 			this._domPostContainer 				= $( '.cards-list' )
@@ -190,7 +190,7 @@ var view = ( function(){
 	    }
 	    appendCard( card , post.apiPost );*/
 	    
-		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post.comments, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -292,7 +292,7 @@ var view = ( function(){
 	      setRepliesAsyncWithoutAppendMobile( card , post );
 	    }
 	    appendCard( card , post );*/
-		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post.comments, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -336,7 +336,7 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post.comments, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -377,7 +377,7 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  this.appendReplies( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post.comments, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
   
@@ -508,17 +508,16 @@ var view = ( function(){
 
 		}
 
-		appendReplies( card, comments, callback ){
+		appendComments( card, comments, callback ){
 
 			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
 				card.find( '.comments-text' ).text( '0 ' + lang.comments )
 				return callback( card )
 		  }
 
-			comments = Object.keys( comments ).reverse()
-			console.log( card.find( '.comments-text' ) )
+			comments = Object.values( comments )
 	    card.find( '.comments-text' ).text( comments.length + ' ' + lang.comments )
-	    console.log( card.find( '.comments-text' ).text() )
+
 	    if ( comments.length === 1 ) {
 	      card.find( '.comments-text' ).text( comments.length + ' ' + lang.comment )
 	    }else{
@@ -527,10 +526,118 @@ var view = ( function(){
 	    card.find( '.comments-text' ).data( 'num' , comments.length )
 
 	    var listToAppend = []
-	    //comments.forEach()
-	    return callback( card )
+	    comments.forEach( function( comment, index ){
+
+    	  var commentDom = this.appendComment( comment )
+
+	      listToAppend.push( commentDom )
+
+	      if( index == comments.length - 1 ){
+
+		      card.find( '.comments-list' ).append( listToAppend )
+	      	card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
+	      	return callback( card )
+
+	      }
+
+	    }.bind(this))
 
 		}
+
+		appendComment( comment ){
+
+			var commentDom = $( '.comment.wz-prototype' ).eq(0).clone()
+			commentDom.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + comment.apiComment.id )
+		  /*if (isMobile()) {
+		    commentDom.find( '.reply-button' ).text( '-   ' + lang.reply )
+		  }else{*/
+		    commentDom.find( '.reply-button' ).text( lang.reply )
+		  //}
+		  commentDom.find( '.edit-button' ).text( lang.edit )
+
+		  if ( comment.apiComment.author === this.myContactID ) {
+		    commentDom.addClass('mine')
+		  }
+
+      commentDom.find( '.avatar' ).css( 'background-image' , 'url(' + comment.apiComment.authorObject.avatar.tiny + ')' )
+      commentDom.find( '.name' ).text( comment.apiComment.authorObject.fullName )
+      commentDom.find( '.time' ).text( this.timeElapsed( new Date( comment.apiComment.created ) ) )
+      commentDom.find( '.comment-text' ).html( comment.apiComment.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+
+      commentDom.find( '.comment-text' ).find('a').each( function(){
+
+        if( !URL_REGEX.test( $(this).attr('href') ) ){
+          $(this).attr( 'href', 'http://' + $(this).attr('href') )
+        }
+
+      })
+
+      /*var container
+      if (isMobile()) {
+        container = mobileWorldComments
+      }else{
+        container = card
+      }*/
+
+      commentDom.data( 'reply' , comment.apiComment )
+      commentDom.data( 'name' , comment.apiComment.authorObject.name.split( ' ' )[0] )
+
+      if( Object.keys( comment.replies ).length === 0 && comment.replies.constructor === Object ){
+				return commentDom
+		  }
+
+		  var repliesDom = []
+		  commentDom.find( '.reply-list' ).show()
+
+		  var replies = Object.values( comment.replies )
+		  replies.forEach( function( reply, index ){
+
+		  	var replyDom = this.appendReplyComment( reply, commentDom )
+
+		  	repliesDom.push( replyDom )
+		  	if( index === replies.length - 1 ){
+
+			    commentDom.find( '.reply-list' ).append( repliesDom );
+			    //card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+			    return commentDom
+
+		  	}
+
+		  }.bind(this))
+
+		}
+
+		appendReplyComment( response, comment ){
+
+		  var reply = comment.find( '.reply.wz-prototype' ).clone()
+		  reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id )
+
+		  if ( response.author === this.myContactID ) {
+		    reply.addClass('mine')
+		  }
+
+	    reply.find( '.avatar' ).css( 'background-image' , 'url(' + response.authorObject.avatar.tiny + ')' )
+	    reply.find( '.name' ).text( response.authorObject.fullName )
+	    reply.find( '.time' ).text( this.timeElapsed( new Date( response.created ) ) )
+	    reply.find( '.reply-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+
+	    reply.find( '.reply-text' ).find('a').each( function(){
+
+	      if( !URL_REGEX.test( $(this).attr('href') ) ){
+	        $(this).attr( 'href', 'http://' + $(this).attr('href') )
+	      }
+
+	    });
+
+	    //comment.find( '.reply-list' ).append( reply );
+	    /*if (!isMobile()) {
+	      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+	    }*/
+
+	    reply.data( 'reply' , response )
+	    return reply
+
+		}		
 
 		openWorld( world ){
 
@@ -784,7 +891,7 @@ var model = ( function( view ){
 	        callback( error )
 
 	        // Nullify
-	        list = step = callback = position = checkEnd = closed = null
+	        list = step = callback = position = checkEnd = null
 
 	      }
 
@@ -822,7 +929,7 @@ var model = ( function( view ){
 	        callback( error, result )
 
 	        // Nullify
-	        result = list = step = callback = position = checkEnd = closed = null
+	        result = list = step = callback = position = checkEnd = null
 
 	      }
 
@@ -860,7 +967,7 @@ var model = ( function( view ){
 	        callback( error, res )
 
 	        // Nullify
-	        list = callback = position = checkEnd = closed = null
+	        list = callback = position = checkEnd = null
 
 	      }
 
@@ -1441,6 +1548,51 @@ var controller = ( function( model, view ){
           }
 
         });
+
+      })
+
+      this.dom.on( 'click' , '.comments-opener' , function(){
+
+        var card = $(this).parent().parent();
+        var height = parseInt(card.find('.comments-list').css('height')) + 50;
+        var commentsSection = card.find( '.comments-section' );
+
+        /*if (isMobile()) {
+          return;
+        }*/
+
+        if (commentsSection.hasClass('opened')) {
+
+          commentsSection.css('height', height);
+          card.removeClass( 'comments-open' );
+          commentsSection.transition({
+
+            'height'         : 0
+
+          }, 200, function(){
+
+            commentsSection.removeClass('opened');
+
+          });
+
+        }else{
+
+          card.addClass( 'comments-open' );
+          commentsSection.find( '.comments-list' ).scrollTop(9999999);
+          commentsSection.transition({
+
+            'height'         : height
+
+          }, 200, function(){
+
+            commentsSection.addClass('opened');
+            commentsSection.css('height', 'auto');
+            commentsSection.find( 'textarea' ).focus();
+
+          });
+
+
+        }
 
       })
 
