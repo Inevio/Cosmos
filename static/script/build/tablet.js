@@ -281,7 +281,11 @@ var model = ( function( view ){
 
 		}
 
-		leaveWorld( worldId ){
+		loadMorePosts(){
+
+			if( this.openedWorld && !this.openedWorld.loadingPosts ){
+				this.openedWorld.getNextPosts()
+			}
 			
 		}
 
@@ -322,20 +326,43 @@ var model = ( function( view ){
 		  this.openedWorld = this.worlds[worldId];
 		  this.view.openWorld( this.worlds[worldId] )
 
+		  this.showPosts( worldId, 0 )
+
+		}
+
+		showPosts( worldId, start ){
+
+			if( !start ){
+				start = 0
+			}
+
 			var list = []
 		  var id = null
 		  var postsKeys = Object.keys( this.worlds[ worldId ].posts ).reverse()
 
-		  postsKeys.forEach( function( postKey ){
+		  /*postsKeys.forEach( function( postKey ){
 
 		  	list.push( this.worlds[ worldId ].posts[ postKey ] )
 		  	if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
 		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
 		  	}
 
-		  }.bind(this))
+		  }.bind(this))*/
 
-		  this.view.appendPostList( list )
+			if( start > postsKeys.length ){
+				return
+			}
+
+		  for( var i = start; i < postsKeys.length; i++ ){
+
+		  	list.push( this.worlds[ worldId ].posts[ postsKeys[i] ] )
+		  	if( this.worlds[ worldId ].posts[ postsKeys[i] ].readyToInsert == false ){
+		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postsKeys[i] ] )
+		  	}
+
+		  }
+
+		  this.view.appendPostList( list, start > 0 )
 
 		}
 
@@ -413,6 +440,8 @@ var model = ( function( view ){
 		  this.members = []
 		  this.folder
 		  this.conversation
+		  this.lastPostLoaded
+		  this.loadingPosts = false
 
   		if( world ){
 
@@ -424,7 +453,7 @@ var model = ( function( view ){
   		}
 
   		this._loadMembers()
-  		this._getPosts()
+  		this._getPosts(0,10)
 
   	}
 
@@ -442,16 +471,33 @@ var model = ( function( view ){
 
   	}
 
-  	_getPosts(){
+  	getNextPosts(){
+  		this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 10 )
+  	} 
 
-  		this.apiWorld.getPosts( {from: 0 , to: 10 , withFullUsers: true } , function( error , posts ){
+  	_getPosts( init, end ){
+
+  		this.lastPostLoaded = init
+  		this.loadingPosts = true
+
+  		this.apiWorld.getPosts( {from: init , to: end , withFullUsers: true } , function( error , posts ){
 
   		 	if( error ){
   		 		return console.error( error )
   		 	}
 
-				posts.forEach( function( post ){
+  		 	this.lastPostLoaded = end
+				this.loadingPosts = false
+
+				posts.forEach( function( post, index ){
+
 					this.posts[ post.id ] = new Post( this.app, post )
+					if( index === posts.length - 1 && init !== 0 ){
+
+						this.app.showPosts( this.apiWorld.id , init )
+
+					}
+
 				}.bind(this))
 
   		}.bind(this))

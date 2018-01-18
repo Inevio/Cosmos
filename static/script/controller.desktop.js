@@ -105,6 +105,22 @@ var controller = ( function( model, view ){
         model.searchPost( null )
       })*/
 
+      $( '.world-selected' ).on( 'scroll' , function(){
+
+        var scrollDiv = $( this );
+        var scrollFinish = $( '.world-selected' )[0].scrollHeight - scrollDiv.height();
+
+        if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
+
+          //var lastCard = scrollDiv.data( 'lastCard' );
+          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
+          //loadingPost = true;
+          model.loadMorePosts()
+
+        }
+
+      });
+
     }
 
 	}
