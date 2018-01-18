@@ -37,6 +37,25 @@ var view = ( function(){
 
 		}
 
+		_getYoutubeCode( text ){
+
+		  var youtubeId = false;
+		  text.split(' ').forEach( function( word ){
+
+		    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
+
+		      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+		      var match = word.match(regExp);
+		      youtubeId = (match&&match[7].length==11)? match[7] : false;
+
+		    }
+
+		  });
+
+		  return youtubeId;
+
+		}
+
 		_translateInterface(){
 
 			//Start
@@ -131,6 +150,77 @@ var view = ( function(){
 		  $( '.create-world-button.step-a span' ).text( lang.createWorldShort )
 
 		}
+
+		/* Date functions */
+
+		_getStringHour( date ){
+
+		  var now = new Date();
+
+		  var hh = date.getHours();
+		  var mm = date.getMinutes();
+
+		  if(hh<10) {
+		    hh='0'+hh
+		  }
+
+		  if(mm<10) {
+		    mm='0'+mm
+		  }
+
+		  return hh + ':' + mm;
+
+		}
+
+		_timeElapsed( lastTime ){
+
+		  var now = new Date();
+		  var last = new Date( lastTime );
+		  var message;
+		  var calculated = false;
+
+		  if( now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth() ){
+
+		    if( now.getDate() === last.getDate() ){
+
+		      message = this.getStringHour( lastTime );
+		      calculated = true;
+
+		    }else if( new Date ( now.setDate( now.getDate() - 1 ) ).getDate() === last.getDate() ){
+
+		      message = lang.lastDay + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
+		      calculated = true;
+
+		    }
+
+		  }
+
+		  if ( !calculated ) {
+
+		    var day = last.getDate();
+		    var month = last.getMonth()+1;
+
+		    if(day<10) {
+		      day='0'+day
+		    }
+
+		    if(month<10) {
+		      month='0'+month
+		    }
+
+		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
+		    calculated = true;
+
+		  }
+
+		  return message;
+
+		}
+
+		/* End of date functions */
+
+
+		/* Type of cards */
 
 		appendDocumentCard( post , reason , callback ){
 
@@ -383,24 +473,7 @@ var view = ( function(){
   
 		}
 
-		getYoutubeCode( text ){
-
-		  var youtubeId = false;
-		  text.split(' ').forEach( function( word ){
-
-		    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
-
-		      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-		      var match = word.match(regExp);
-		      youtubeId = (match&&match[7].length==11)? match[7] : false;
-
-		    }
-
-		  });
-
-		  return youtubeId;
-
-		}
+		/* End of type of cards */
 
 		appendPostList( list, loadingMorePosts ){
 
@@ -850,74 +923,6 @@ var view = ( function(){
 		  }))
 
 		}
-
-
-		//Date functions
-
-		getStringHour( date ){
-
-		  var now = new Date();
-
-		  var hh = date.getHours();
-		  var mm = date.getMinutes();
-
-		  if(hh<10) {
-		    hh='0'+hh
-		  }
-
-		  if(mm<10) {
-		    mm='0'+mm
-		  }
-
-		  return hh + ':' + mm;
-
-		}
-
-		timeElapsed( lastTime ){
-
-		  var now = new Date();
-		  var last = new Date( lastTime );
-		  var message;
-		  var calculated = false;
-
-		  if( now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth() ){
-
-		    if( now.getDate() === last.getDate() ){
-
-		      message = this.getStringHour( lastTime );
-		      calculated = true;
-
-		    }else if( new Date ( now.setDate( now.getDate() - 1 ) ).getDate() === last.getDate() ){
-
-		      message = lang.lastDay + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
-		      calculated = true;
-
-		    }
-
-		  }
-
-		  if ( !calculated ) {
-
-		    var day = last.getDate();
-		    var month = last.getMonth()+1;
-
-		    if(day<10) {
-		      day='0'+day
-		    }
-
-		    if(month<10) {
-		      month='0'+month
-		    }
-
-		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
-		    calculated = true;
-
-		  }
-
-		  return message;
-
-		}
-
 
 	}
 
