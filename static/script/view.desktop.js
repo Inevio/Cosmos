@@ -347,7 +347,7 @@ var view = ( function(){
 		  var card = this._youtubeCardPrototype.clone();
 		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' );
 
-		  var youtubeCode = getYoutubeCode( post.apiPost.content );
+		  var youtubeCode = this.getYoutubeCode( post.apiPost.content );
 
 		  /*if (isMobile()) {
 		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
@@ -402,7 +402,7 @@ var view = ( function(){
 
 		}
 
-		appendPostList( list, interval ){
+		appendPostList( list, loadingMorePosts ){
 
 			var domList = []
 			var postPromises = []
@@ -430,7 +430,9 @@ var view = ( function(){
 
 	    	if( domList.length ){
 
-					this._domPostContainer.scrollTop(0)
+	    		if( !loadingMorePosts ){
+	    			this._domPostContainer.scrollTop(0)
+	    		}
 	 	    	this._noPosts.css( 'opacity' , '0' );
 					this._noPosts.hide()
 	      	this._domPostContainer.append( domList )
