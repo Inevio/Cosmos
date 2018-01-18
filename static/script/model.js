@@ -281,6 +281,33 @@ var model = ( function( view ){
 
 		}
 
+		leaveWorld( worldId ){
+
+			if( !this.worlds[worldId] ){
+				return
+			}
+
+      this.worlds[worldId].apiWorld.removeUser( this.myContactID , function( error , o ){
+
+        if( error ){
+          console.error( error );
+        }else{
+
+        	delete this.worlds[worldId]
+        	this.updateWorldsListUI()
+
+          /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
+            if (err) {
+              console.error(err);
+            }
+          });*/
+
+        }
+        
+      }.bind(this));
+
+		}
+
 		loadMorePosts(){
 
 			if( this.openedWorld && !this.openedWorld.loadingPosts ){

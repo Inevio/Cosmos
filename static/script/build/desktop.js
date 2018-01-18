@@ -33,6 +33,10 @@ var view = ( function(){
 			this._documentCardPrototype 	= $( '.doc-card.wz-prototype' );
 			this._youtubeCardPrototype  	= $( '.you-card.wz-prototype' );
 
+			this.animationEffect 					= 'cubic-bezier(.4,0,.2,1)'
+
+			this.noWorlds  								= $( '.no-worlds' )
+
 			this._translateInterface()
 
 		}
@@ -183,12 +187,12 @@ var view = ( function(){
 
 		    if( now.getDate() === last.getDate() ){
 
-		      message = this.getStringHour( lastTime );
+		      message = this._getStringHour( lastTime );
 		      calculated = true;
 
 		    }else if( new Date ( now.setDate( now.getDate() - 1 ) ).getDate() === last.getDate() ){
 
-		      message = lang.lastDay + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
+		      message = lang.lastDay + ' ' + lang.at + ' ' + this._getStringHour( lastTime );
 		      calculated = true;
 
 		    }
@@ -208,7 +212,7 @@ var view = ( function(){
 		      month='0'+month
 		    }
 
-		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this.getStringHour( lastTime );
+		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this._getStringHour( lastTime );
 		    calculated = true;
 
 		  }
@@ -271,7 +275,7 @@ var view = ( function(){
 
 	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
 	    card.find( '.card-user-name' ).text( user.fullName )
-	    card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) )
+	    card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
 	    /*if (!isMobile()) {
 	      setRepliesAsync( card , post.apiPost );
@@ -373,7 +377,7 @@ var view = ( function(){
 
 	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
 	    card.find( '.card-user-name' ).text( user.fullName )
-	    card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) )
+	    card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 	    card.data( 'time' , post.apiPost.created )
 
 	    /*if (!isMobile()) {
@@ -417,7 +421,7 @@ var view = ( function(){
 
 		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
 		  card.find( '.card-user-name' ).text( user.fullName )
-		  card.find( '.time-text' ).text( this.timeElapsed( new Date( post.apiPost.created ) ) )
+		  card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
 		  /*if (!isMobile()) {
 		    setRepliesAsync( card , post.apiPost );
@@ -437,7 +441,7 @@ var view = ( function(){
 		  var card = this._youtubeCardPrototype.clone();
 		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' );
 
-		  var youtubeCode = this.getYoutubeCode( post.apiPost.content );
+		  var youtubeCode = this._getYoutubeCode( post.apiPost.content );
 
 		  /*if (isMobile()) {
 		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
@@ -636,7 +640,7 @@ var view = ( function(){
 
       commentDom.find( '.avatar' ).css( 'background-image' , 'url(' + comment.apiComment.authorObject.avatar.tiny + ')' )
       commentDom.find( '.name' ).text( comment.apiComment.authorObject.fullName )
-      commentDom.find( '.time' ).text( this.timeElapsed( new Date( comment.apiComment.created ) ) )
+      commentDom.find( '.time' ).text( this._timeElapsed( new Date( comment.apiComment.created ) ) )
       commentDom.find( '.comment-text' ).html( comment.apiComment.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 
       commentDom.find( '.comment-text' ).find('a').each( function(){
@@ -693,7 +697,7 @@ var view = ( function(){
 
 	    reply.find( '.avatar' ).css( 'background-image' , 'url(' + response.authorObject.avatar.tiny + ')' )
 	    reply.find( '.name' ).text( response.authorObject.fullName )
-	    reply.find( '.time' ).text( this.timeElapsed( new Date( response.created ) ) )
+	    reply.find( '.time' ).text( this._timeElapsed( new Date( response.created ) ) )
 	    reply.find( '.reply-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 
 	    reply.find( '.reply-text' ).find('a').each( function(){
@@ -714,6 +718,95 @@ var view = ( function(){
 
 		}
 
+		closeExploreWorlds(){
+
+		  if( $( '.worldDom' ).length === 0 ){
+
+		    this.noWorlds.show();
+		    this.noWorlds.transition({
+
+		      'opacity'         : 1
+
+		    }, 200, this.animationEffect );
+
+		  }else{
+
+		    this.noWorlds.transition({
+
+		      'opacity'         : 0
+
+		    }, 200, this.animationEffect , function(){
+
+		      this.noWorlds.hide();
+
+		    }.bind(this));
+
+		  }
+
+		  var exploreSection = $( '.explore-section' );
+
+		  // Fade out blue background
+		  exploreSection.stop().clearQueue().transition({
+
+		    'opacity' : 0
+
+		  }, 300, function(){
+
+		    exploreSection.css( 'display' , 'none' );
+
+		    $( '.new-world-button, .close-explore' ).css({
+		      'transform' : 'translateY(10px)',
+		      'opacity'   : 0
+		    });
+
+		  });
+
+		  // Stars goes down
+		  $( '.search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
+
+		    'opacity'   : 0,
+		    'transform' : 'translateY(20px)'
+
+		  }, 300);
+
+		  // New world button goes down
+		  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
+
+		    'opacity'   : 0,
+		    'transform' : 'translateY(10px)'
+
+		  }, 300);
+
+		  // World cards button goes down
+		  $( '.world-card' ).stop().clearQueue().transition({
+
+		    'opacity'   : 0,
+		    'transform' : 'translateY(40px)'
+
+		  }, 300);
+
+		}
+
+		fileContextMenu( fsnode ){
+
+      var menu = api.menu()
+
+      menu.addOption( lang.openFolder , function(){
+
+        api.fs( fsnode.parent, function( error , node ){
+          node.open()
+        })
+
+      })
+
+      menu.addOption( lang.download , function(){
+        fsnode.download();
+      })
+
+      menu.render();
+
+		}
+
 		filterPosts( list ){
 
 			if( list ){
@@ -731,6 +824,103 @@ var view = ( function(){
 			}
 
 		}		
+
+		leaveWorldDialog( worldId ){
+
+			var dialog = api.dialog();
+
+	    dialog.setTitle( lang.unfollowWorld );
+	    dialog.setText( lang.confirmExit );
+
+	    dialog.setButton( 0, wzLang.core.dialogCancel, 'black' );
+	    dialog.setButton( 1, wzLang.core.dialogAccept, 'red' );
+
+      dialog.render( function( doIt ){
+
+	      if( !doIt ){
+	        return;
+	      }
+
+	      model.leaveWorld( worldId )
+
+	    });
+
+		}
+
+		openExploreWorlds(){
+
+		  $( '.explore-container' ).scrollTop(0)
+		  //filterActive = null
+		  $( '.explore-container .search-bar input' ).val('')
+		  $('.world-card-dom').remove()
+
+	    var exploreSection = $( '.explore-section' );
+
+		  exploreSection.css( 'display' , 'block');
+		  $('.explore-container').scrollTop(0);
+
+		  // Fade in blue background
+		  exploreSection.stop().clearQueue().transition({
+		    'opacity' : 1
+		  }, 300, this.animationEffect , function(){
+
+		    this.noWorlds.transition({
+
+		      'opacity'         : 0
+
+		    }, 200, this.animationEffect , function(){
+
+		      this.noWorlds.hide();
+
+		    }.bind(this));
+
+		  }.bind(this));
+
+		  // Stars appears and goes up
+		  $( '.search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
+
+		    delay       : 550,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 500, this.animationEffect);
+
+		  // New world button appears and goes up
+		  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
+
+		    delay       : 800,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 450, this.animationEffect);
+
+		  // World cards appears and goes up
+		  var firstCards = $( '.tend-list .world-card' );
+		  var restOfCards = firstCards.splice(10, firstCards.length - 10);
+		  firstCards.each( function( i , card ){
+
+		    var d = i * 150;
+
+		    $( card ).transition({
+
+		      delay       : (550 + d),
+		      'opacity'   : 1,
+		      'transform' : 'translateY(0px)'
+
+		    }, 1000, function(){
+
+		      restOfCards.forEach(function(card){
+		        $(card).css({
+		          'opacity'   : 1,
+		          'transform' : 'translateY(0px)'
+		        });
+		      });
+
+		    });
+
+		  });
+
+		}
 
 		openWorld( world ){
 
@@ -907,6 +1097,7 @@ var view = ( function(){
 				}
 
 				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
+				world.data( 'world', item.apiWorld )
 				world.attr( 'data-id', item.apiWorld.id )
 
 		  	return world
@@ -921,6 +1112,57 @@ var view = ( function(){
 		  this._domWorldsPublicList.empty().append( publicWorlds.map( function( item ){ 
 		  	return worldSidebarDom( item )
 		  }))
+
+		}
+
+		worldContextMenu( worldDom , world ){
+
+      var menu = api.menu()
+      var isMine = world.owner === api.system.user().id ? true : false
+
+      menu.addOption( lang.searchPost , function(){
+
+        if ( worldDom.hasClass( 'active' ) ) {
+          $( '.search-button' ).click()
+        }else{
+
+         	worldDom.trigger( 'click' )
+         	/*selectWorld( worldDom , function(){
+            $( '.search-button' ).click()
+          })*/
+
+        }
+
+      })
+
+      if( isMine ){
+
+        menu.addOption( lang.editWorld , function(){
+
+          /*if( worldDom.hasClass( 'active' ) ){
+
+            $( '.new-world-container' ).data( 'world' , world );
+            editWorld( world );
+            
+          }else{
+
+            selectWorld( worldDom , function(){
+              editWorld( world );
+            });
+
+          }*/
+
+        });
+
+      }else{
+
+        menu.addOption( lang.abandonWorld , function(){
+          this.leaveWorldDialog( world.id );
+        }.bind(this), 'warning');
+
+      }
+
+      menu.render();
 
 		}
 
@@ -1210,6 +1452,33 @@ var model = ( function( view ){
 				}.bind(this))
 
 			}
+
+		}
+
+		leaveWorld( worldId ){
+
+			if( !this.worlds[worldId] ){
+				return
+			}
+
+      this.worlds[worldId].apiWorld.removeUser( this.myContactID , function( error , o ){
+
+        if( error ){
+          console.error( error );
+        }else{
+
+        	delete this.worlds[worldId]
+        	this.updateWorldsListUI()
+
+          /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
+            if (err) {
+              console.error(err);
+            }
+          });*/
+
+        }
+        
+      }.bind(this));
 
 		}
 
@@ -1714,6 +1983,33 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click' , '.world-members-button', function(){
+        view.openMembers()
+      })
+
+      /* World explore */
+
+      this.dom.on( 'click' , '.explore-button', function(){
+        view.openExploreWorlds()
+      })
+
+      this.dom.on( 'click' , '.close-explore', function(){
+        view.closeExploreWorlds()
+      })
+
+      /* enf od world explore */
+
+      /* Context menu */
+
+      this.dom.on( 'contextmenu', '.doc-preview', function(){
+        view.fileContextMenu( $( this ).data( 'fsnode' ) )
+      })
+
+      this.dom.on( 'contextmenu' , '.worldDom' , function(){
+        view.worldContextMenu( $(this), $(this).data( 'world' ) )
+      })
+
+      /* end of context menu */
 
       //Search posts
       this.dom.on( 'input' , '.world-header .search-post' , function( e ){
