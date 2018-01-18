@@ -407,7 +407,7 @@ var view = ( function(){
 			var domList = []
 			var postPromises = []
 
-			if( list.length == 0 ){
+			if( list.length == 0 && !loadingMorePosts ){
 				this._noPosts.css( 'opacity' , '1' );
 				this._noPosts.show()
 			}

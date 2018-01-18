@@ -127,6 +127,7 @@ var model = ( function( view ){
 
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
+		  this.postsPrinted = 0
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -351,8 +352,11 @@ var model = ( function( view ){
 			if( start > postsKeys.length ){
 				return
 			}
+			var end = start;
 
-		  for( var i = start; i < postsKeys.length; i++ ){
+			start + 10 < postsKeys.length ? end = start + 10 : end = postsKeys.length
+
+		  for( var i = start; i < end; i++ ){
 
 		  	list.push( this.worlds[ worldId ].posts[ postsKeys[i] ] )
 		  	if( this.worlds[ worldId ].posts[ postsKeys[i] ].readyToInsert == false ){
@@ -361,6 +365,7 @@ var model = ( function( view ){
 
 		  }
 
+		  this.postsPrinted = end
 		  this.view.appendPostList( list, start > 0 )
 
 		}
@@ -471,7 +476,13 @@ var model = ( function( view ){
   	}
 
   	getNextPosts(){
-  		this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 10 )
+
+  		if( this.app.postsPrinted < this.lastPostLoaded ){
+  			this.app.showPosts( this.apiWorld.id , this.app.postsPrinted )
+  		}else{
+  			this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 10 )
+  		}
+  		
   	} 
 
   	_getPosts( init, end ){
