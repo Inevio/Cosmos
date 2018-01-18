@@ -91,6 +91,33 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click' , '.world-members-button', function(){
+        view.openMembers()
+      })
+
+      /* World explore */
+
+      this.dom.on( 'click' , '.explore-button', function(){
+        view.openExploreWorlds()
+      })
+
+      this.dom.on( 'click' , '.close-explore', function(){
+        view.closeExploreWorlds()
+      })
+
+      /* enf od world explore */
+
+      /* Context menu */
+
+      this.dom.on( 'contextmenu', '.doc-preview', function(){
+        view.fileContextMenu( $( this ).data( 'fsnode' ) )
+      })
+
+      this.dom.on( 'contextmenu' , '.worldDom' , function(){
+        view.worldContextMenu( $(this), $(this).data( 'world' ) )
+      })
+
+      /* end of context menu */
 
       //Search posts
       this.dom.on( 'input' , '.world-header .search-post' , function( e ){
