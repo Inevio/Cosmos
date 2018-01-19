@@ -98,7 +98,7 @@ var controller = ( function( model, view ){
       /* World explore */
 
       this.dom.on( 'click' , '.explore-button', function(){
-        view.openExploreWorlds()
+        model.openExploreWorlds()
       })
 
       this.dom.on( 'click' , '.close-explore', function(){
@@ -106,6 +106,10 @@ var controller = ( function( model, view ){
       })
 
       /* enf od world explore */
+
+      this.dom.on( 'click' , '.world-card.unfollowed .follow-button' , function(){
+        model.followWorld( $( this ).parent().data( 'world' ) );
+      })
 
       /* Context menu */
 
@@ -146,7 +150,17 @@ var controller = ( function( model, view ){
 
         }
 
-      });
+      })
+
+      $( '.explore-container' ).on( 'scroll' , function(){
+
+        if ( $(this).scrollTop() > 200 ) {
+          view.showExploreTopBar()
+        }else{
+          view.hideExploreTopBar()
+        }
+
+      })
 
     }
 
