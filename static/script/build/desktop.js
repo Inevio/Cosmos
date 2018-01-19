@@ -718,6 +718,34 @@ var view = ( function(){
 
 		}
 
+		appendWorldCard( worldApi, following ){
+
+		  var world = $( '.world-card.wz-prototype' ).clone();
+		  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' );
+		  var worldTitle = worldApi.name;
+		  if ( worldTitle.length > 32 ) {
+		    worldTitle = worldTitle.substr(0 , 29) + '...';
+		  }
+		  world.find( '.world-title-min' ).text( worldTitle );
+		  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+
+		  if( worldApi.users ){
+		    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers );
+		  }
+
+		  if( following ){
+
+		    world.addClass( 'followed' ).removeClass( 'unfollowed' );
+		    world.find( '.follow-button span' ).text( lang.following );
+
+		  }
+
+		  $( '.world-card.wz-prototype' ).after( world );
+
+		  world.data( 'world' , worldApi );
+
+		}
+
 		closeExploreWorlds(){
 
 		  if( $( '.worldDom' ).length === 0 ){
@@ -824,6 +852,10 @@ var view = ( function(){
 			}
 
 		}		
+
+		hideExploreTopBar(){
+			$( '.explore-top-bar' ).removeClass( 'active' )
+		}
 
 		leaveWorldDialog( worldId ){
 
@@ -934,6 +966,10 @@ var view = ( function(){
 		  $( '.select-world' ).hide()
 		  $( '.cardDom' ).remove()
 
+		}
+
+		showExploreTopBar(){
+			$( '.explore-top-bar' ).addClass( 'active' )
 		}
 
 		toggleReplies( card ){
@@ -1062,6 +1098,13 @@ var view = ( function(){
         }
 
       }
+
+		}
+
+		updateWorldCard( worldId, following ){
+
+			$( '.world-card-' + worldId ).find( 'span' ).text( lang.following )
+    	$( '.world-card-' + worldId ).parent().addClass( 'followed' )
 
 		}
 
@@ -1302,6 +1345,10 @@ var model = ( function( view ){
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
 		  this.postsPrinted = 0
+		  this.totalPages
+		  this.filterActive = ''
+		  this.actualPageInterval
+		  this.showingWorlds
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -1383,6 +1430,66 @@ var model = ( function( view ){
 		  this.updateWorldsListUI()
 
 		  return this
+
+		}
+
+		getPublicWorldsAsync( options ){
+
+		  var interval = {
+		    from: (options.page - 1) * 20,
+		    to: options.page * 20
+		  }
+
+		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to } , function( error, worlds, nResults ){
+
+		    if( error ){
+		      return console.error( error )
+		    }
+
+		    if( options.page === 1 ){
+
+		      this.totalPages = Math.ceil( nResults / 20 )
+		      this.actualPageInterval = 1
+		      //addPages()
+
+		    }
+
+		    this.showingWorlds = { 'from': interval.from, 'to': interval.to }
+
+		    worlds.reverse().forEach( function( world ){
+
+		    	var following = false
+		    	if( this.worlds[world.id] ){
+		    		following = true
+		    	}
+		      view.appendWorldCard( world, following )
+
+		    }.bind(this))
+
+		  }.bind(this))
+
+		}
+
+		followWorld( world ){
+
+		  if( !this.worlds[world.id] ){
+		    return;
+		  }
+
+		  if( api.system.user().user.indexOf('demo') === 0 && !world.isPrivate ){
+		    alert(lang.noPublicWorlds);
+		    return;
+		  }
+
+		  world.addUser( this.myContactID , function( error , o ){
+
+		  	if( error ){
+		  		return console.error( error )
+		  	}
+
+		  	view.updateWorldCard( world.id, true )
+
+		  })
 
 		}
 
@@ -1488,6 +1595,15 @@ var model = ( function( view ){
 				this.openedWorld.getNextPosts()
 			}
 			
+		}
+
+		openExploreWorlds(){
+
+  		view.openExploreWorlds()
+			this.getPublicWorldsAsync({
+		    page: 1
+		  });
+
 		}
 
 		openFile( fsnode ){
@@ -1990,7 +2106,7 @@ var controller = ( function( model, view ){
       /* World explore */
 
       this.dom.on( 'click' , '.explore-button', function(){
-        view.openExploreWorlds()
+        model.openExploreWorlds()
       })
 
       this.dom.on( 'click' , '.close-explore', function(){
@@ -1998,6 +2114,10 @@ var controller = ( function( model, view ){
       })
 
       /* enf od world explore */
+
+      this.dom.on( 'click' , '.world-card.unfollowed .follow-button' , function(){
+        model.followWorld( $( this ).parent().data( 'world' ) );
+      })
 
       /* Context menu */
 
@@ -2038,7 +2158,17 @@ var controller = ( function( model, view ){
 
         }
 
-      });
+      })
+
+      $( '.explore-container' ).on( 'scroll' , function(){
+
+        if ( $(this).scrollTop() > 200 ) {
+          view.showExploreTopBar()
+        }else{
+          view.hideExploreTopBar()
+        }
+
+      })
 
     }
 

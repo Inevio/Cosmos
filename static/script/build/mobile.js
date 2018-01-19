@@ -129,6 +129,10 @@ var model = ( function( view ){
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
 		  this.postsPrinted = 0
+		  this.totalPages
+		  this.filterActive = ''
+		  this.actualPageInterval
+		  this.showingWorlds
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -210,6 +214,66 @@ var model = ( function( view ){
 		  this.updateWorldsListUI()
 
 		  return this
+
+		}
+
+		getPublicWorldsAsync( options ){
+
+		  var interval = {
+		    from: (options.page - 1) * 20,
+		    to: options.page * 20
+		  }
+
+		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to } , function( error, worlds, nResults ){
+
+		    if( error ){
+		      return console.error( error )
+		    }
+
+		    if( options.page === 1 ){
+
+		      this.totalPages = Math.ceil( nResults / 20 )
+		      this.actualPageInterval = 1
+		      //addPages()
+
+		    }
+
+		    this.showingWorlds = { 'from': interval.from, 'to': interval.to }
+
+		    worlds.reverse().forEach( function( world ){
+
+		    	var following = false
+		    	if( this.worlds[world.id] ){
+		    		following = true
+		    	}
+		      view.appendWorldCard( world, following )
+
+		    }.bind(this))
+
+		  }.bind(this))
+
+		}
+
+		followWorld( world ){
+
+		  if( !this.worlds[world.id] ){
+		    return;
+		  }
+
+		  if( api.system.user().user.indexOf('demo') === 0 && !world.isPrivate ){
+		    alert(lang.noPublicWorlds);
+		    return;
+		  }
+
+		  world.addUser( this.myContactID , function( error , o ){
+
+		  	if( error ){
+		  		return console.error( error )
+		  	}
+
+		  	view.updateWorldCard( world.id, true )
+
+		  })
 
 		}
 
@@ -315,6 +379,15 @@ var model = ( function( view ){
 				this.openedWorld.getNextPosts()
 			}
 			
+		}
+
+		openExploreWorlds(){
+
+  		view.openExploreWorlds()
+			this.getPublicWorldsAsync({
+		    page: 1
+		  });
+
 		}
 
 		openFile( fsnode ){
