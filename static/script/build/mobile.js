@@ -129,10 +129,11 @@ var model = ( function( view ){
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
 		  this.postsPrinted = 0
-		  this.totalPages
 		  this.filterActive = ''
-		  this.actualPageInterval
+
+		  this.publicWorldsList = []
 		  this.showingWorlds
+		  this.allPublicWorldsLoaded = false
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -217,38 +218,65 @@ var model = ( function( view ){
 
 		}
 
-		getPublicWorldsAsync( options ){
+		appendWorldCards(){
+
+			if( !this.showingWorlds ){
+				this.showingWorlds = { 'from': 0, 'to': 100 }
+			}else{
+				this.showingWorlds = { 'from': this.showingWorlds.to + 1, 'to': this.showingWorlds.to + 21 }
+			}
+
+	    /*var myWorlds = Object.keys( this.worlds ).reverse()
+	    view.appendWorldCards( worlds, myWorlds )*/
+
+	    var end = this.showingWorlds.to
+	    if( this.showingWorlds.to >= this.publicWorldsList.length ){
+	    	end = this.publicWorldsList.length
+	    }
+
+	    for( var i = this.showingWorlds.from; i < end; i++ ){
+
+	    	var world = this.publicWorldsList[i]
+	    	var following = false
+	    	if( this.worlds[world.id] ){
+	    		following = true
+	    	}
+	      view.appendWorldCard( world, following )
+
+	    }
+
+	    this.view.animateCards()
+
+		}
+
+		getPublicWorldsAsync( from ){
 
 		  var interval = {
-		    from: (options.page - 1) * 20,
-		    to: options.page * 20
+		    from: from * 100,
+		    to: (from+1) * 100
 		  }
 
-		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to } , function( error, worlds, nResults ){
+		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to }, function( error, worlds, nResults ){
 
 		    if( error ){
 		      return console.error( error )
 		    }
 
-		    if( options.page === 1 ){
+		    /*if( options.page === 1 ){
 
 		      this.totalPages = Math.ceil( nResults / 20 )
 		      this.actualPageInterval = 1
 		      //addPages()
 
+		    }*/
+
+		    if( !worlds.length ){
+		    	this.allPublicWorldsLoaded = true
+		    	return 
 		    }
 
-		    this.showingWorlds = { 'from': interval.from, 'to': interval.to }
-
-		    worlds.reverse().forEach( function( world ){
-
-		    	var following = false
-		    	if( this.worlds[world.id] ){
-		    		following = true
-		    	}
-		      view.appendWorldCard( world, following )
-
-		    }.bind(this))
+		    this.publicWorldsList = this.publicWorldsList.concat(worlds)
+		    this.appendWorldCards()
 
 		  }.bind(this))
 
@@ -380,10 +408,11 @@ var model = ( function( view ){
 
 		openExploreWorlds(){
 
+			this.showingWorlds = null //nullify
+		  this.publicWorldsList = []
+		  this.allPublicWorldsLoaded = false
   		view.openExploreWorlds()
-			this.getPublicWorldsAsync({
-		    page: 1
-		  });
+			this.getPublicWorldsAsync(0)
 
 		}
 
@@ -452,7 +481,7 @@ var model = ( function( view ){
 			}
 			var end = start;
 
-			start + 10 < postsKeys.length ? end = start + 10 : end = postsKeys.length
+			start + 5 < postsKeys.length ? end = start + 5 : end = postsKeys.length
 
 		  for( var i = start; i < end; i++ ){
 
@@ -578,7 +607,7 @@ var model = ( function( view ){
   		if( this.app.postsPrinted < this.lastPostLoaded ){
   			this.app.showPosts( this.apiWorld.id , this.app.postsPrinted )
   		}else{
-  			this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 10 )
+  			this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 5 )
   		}
   		
   	} 

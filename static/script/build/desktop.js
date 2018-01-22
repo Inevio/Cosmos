@@ -13,6 +13,7 @@ const GROUP_EDIT = 2
 var view = ( function(){
 
 	const colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
+	const URL_REGEX = /^http(s)?:\/\//i
 
 	class View{
 
@@ -223,6 +224,36 @@ var view = ( function(){
 
 		/* End of date functions */
 
+
+		animateCards(){
+
+		  // World cards appears and goes up
+		  var firstCards = $( '.tend-list .world-card' );
+		  var restOfCards = firstCards.splice(10, firstCards.length - 10);
+		  firstCards.each( function( i , card ){
+
+		    var d = i * 150;
+
+		    $( card ).transition({
+
+		      delay       : (550 + d),
+		      'opacity'   : 1,
+		      'transform' : 'translateY(0px)'
+
+		    }, 1000, function(){
+
+		      restOfCards.forEach(function(card){
+		        $(card).css({
+		          'opacity'   : 1,
+		          'transform' : 'translateY(0px)'
+		        });
+		      });
+
+		    });
+
+		  });
+
+		}
 
 		/* Type of cards */
 
@@ -718,6 +749,43 @@ var view = ( function(){
 
 		}
 
+		/*appendWorldCards( worlds, myWorlds ){
+
+			var cardsList = []
+
+			worlds.forEach( function( worldApi , index){
+
+			  var world = $( '.world-card.wz-prototype' ).clone();
+			  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' );
+			  var worldTitle = worldApi.name;
+			  if ( worldTitle.length > 32 ) {
+			    worldTitle = worldTitle.substr(0 , 29) + '...';
+			  }
+			  world.find( '.world-title-min' ).text( worldTitle );
+			  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+
+			  if( worldApi.users ){
+			    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers );
+			  }
+
+			  if( myWorlds.indexOf( worldApi.id ) !== -1 ){
+
+			    world.addClass( 'followed' ).removeClass( 'unfollowed' );
+			    world.find( '.follow-button span' ).text( lang.following );
+
+			  }
+
+			  world.data( 'world' , worldApi );
+			  cardsList.push( world )
+
+			  if( index === worlds.length - 1 ){
+			  	$( '.world-card.wz-prototype' ).after( cardsList );
+			  }
+
+			})
+
+		}*/
+
 		appendWorldCard( worldApi, following ){
 
 		  var world = $( '.world-card.wz-prototype' ).clone();
@@ -740,7 +808,9 @@ var view = ( function(){
 
 		  }
 
-		  $( '.world-card.wz-prototype' ).after( world );
+
+		  //$( '.world-card.wz-prototype' ).after( world );
+		  $( '.explore-container .tend-grid' ).append( world )
 
 		  world.data( 'world' , worldApi );
 
@@ -926,32 +996,6 @@ var view = ( function(){
 
 		  }, 450, this.animationEffect);
 
-		  // World cards appears and goes up
-		  var firstCards = $( '.tend-list .world-card' );
-		  var restOfCards = firstCards.splice(10, firstCards.length - 10);
-		  firstCards.each( function( i , card ){
-
-		    var d = i * 150;
-
-		    $( card ).transition({
-
-		      delay       : (550 + d),
-		      'opacity'   : 1,
-		      'transform' : 'translateY(0px)'
-
-		    }, 1000, function(){
-
-		      restOfCards.forEach(function(card){
-		        $(card).css({
-		          'opacity'   : 1,
-		          'transform' : 'translateY(0px)'
-		        });
-		      });
-
-		    });
-
-		  });
-
 		}
 
 		openWorld( world ){
@@ -1103,7 +1147,7 @@ var view = ( function(){
 
 		updateWorldCard( worldId, following ){
 
-			$( '.world-card-' + worldId ).find( 'span' ).text( lang.following )
+			$( '.world-card-' + worldId ).find( '.follow-button' ).text( lang.following )
     	$( '.world-card-' + worldId ).addClass( 'followed' )
 
 		}
@@ -1345,10 +1389,11 @@ var model = ( function( view ){
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
 		  this.postsPrinted = 0
-		  this.totalPages
 		  this.filterActive = ''
-		  this.actualPageInterval
+
+		  this.publicWorldsList = []
 		  this.showingWorlds
+		  this.allPublicWorldsLoaded = false
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -1433,38 +1478,65 @@ var model = ( function( view ){
 
 		}
 
-		getPublicWorldsAsync( options ){
+		appendWorldCards(){
+
+			if( !this.showingWorlds ){
+				this.showingWorlds = { 'from': 0, 'to': 100 }
+			}else{
+				this.showingWorlds = { 'from': this.showingWorlds.to + 1, 'to': this.showingWorlds.to + 21 }
+			}
+
+	    /*var myWorlds = Object.keys( this.worlds ).reverse()
+	    view.appendWorldCards( worlds, myWorlds )*/
+
+	    var end = this.showingWorlds.to
+	    if( this.showingWorlds.to >= this.publicWorldsList.length ){
+	    	end = this.publicWorldsList.length
+	    }
+
+	    for( var i = this.showingWorlds.from; i < end; i++ ){
+
+	    	var world = this.publicWorldsList[i]
+	    	var following = false
+	    	if( this.worlds[world.id] ){
+	    		following = true
+	    	}
+	      view.appendWorldCard( world, following )
+
+	    }
+
+	    this.view.animateCards()
+
+		}
+
+		getPublicWorldsAsync( from ){
 
 		  var interval = {
-		    from: (options.page - 1) * 20,
-		    to: options.page * 20
+		    from: from * 100,
+		    to: (from+1) * 100
 		  }
 
-		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to } , function( error, worlds, nResults ){
+		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to }, function( error, worlds, nResults ){
 
 		    if( error ){
 		      return console.error( error )
 		    }
 
-		    if( options.page === 1 ){
+		    /*if( options.page === 1 ){
 
 		      this.totalPages = Math.ceil( nResults / 20 )
 		      this.actualPageInterval = 1
 		      //addPages()
 
+		    }*/
+
+		    if( !worlds.length ){
+		    	this.allPublicWorldsLoaded = true
+		    	return 
 		    }
 
-		    this.showingWorlds = { 'from': interval.from, 'to': interval.to }
-
-		    worlds.reverse().forEach( function( world ){
-
-		    	var following = false
-		    	if( this.worlds[world.id] ){
-		    		following = true
-		    	}
-		      view.appendWorldCard( world, following )
-
-		    }.bind(this))
+		    this.publicWorldsList = this.publicWorldsList.concat(worlds)
+		    this.appendWorldCards()
 
 		  }.bind(this))
 
@@ -1596,10 +1668,11 @@ var model = ( function( view ){
 
 		openExploreWorlds(){
 
+			this.showingWorlds = null //nullify
+		  this.publicWorldsList = []
+		  this.allPublicWorldsLoaded = false
   		view.openExploreWorlds()
-			this.getPublicWorldsAsync({
-		    page: 1
-		  });
+			this.getPublicWorldsAsync(0)
 
 		}
 
@@ -1668,7 +1741,7 @@ var model = ( function( view ){
 			}
 			var end = start;
 
-			start + 10 < postsKeys.length ? end = start + 10 : end = postsKeys.length
+			start + 5 < postsKeys.length ? end = start + 5 : end = postsKeys.length
 
 		  for( var i = start; i < end; i++ ){
 
@@ -1794,7 +1867,7 @@ var model = ( function( view ){
   		if( this.app.postsPrinted < this.lastPostLoaded ){
   			this.app.showPosts( this.apiWorld.id , this.app.postsPrinted )
   		}else{
-  			this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 10 )
+  			this._getPosts( this.lastPostLoaded, this.lastPostLoaded + 5 )
   		}
   		
   	} 
