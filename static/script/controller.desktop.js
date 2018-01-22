@@ -160,6 +160,19 @@ var controller = ( function( model, view ){
           view.hideExploreTopBar()
         }
 
+        var scrollDiv = $( this );
+        var scrollFinish = $( '.explore-container' )[0].scrollHeight - scrollDiv.height();
+
+        if( scrollFinish - scrollDiv.scrollTop() < 200 ){
+
+          //var lastCard = scrollDiv.data( 'lastCard' );
+          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
+          //loadingPost = true;
+          model.appendPublicWorldsAsync()
+          //console.log('scrolled')
+
+        }
+
       })
 
     }
