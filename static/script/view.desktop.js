@@ -1104,7 +1104,7 @@ var view = ( function(){
 		updateWorldCard( worldId, following ){
 
 			$( '.world-card-' + worldId ).find( 'span' ).text( lang.following )
-    	$( '.world-card-' + worldId ).parent().addClass( 'followed' )
+    	$( '.world-card-' + worldId ).addClass( 'followed' )
 
 		}
 
