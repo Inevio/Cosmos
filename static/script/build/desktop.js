@@ -1391,9 +1391,8 @@ var model = ( function( view ){
 		  this.postsPrinted = 0
 		  this.filterActive = ''
 
-		  this.publicWorldsList = []
 		  this.showingWorlds
-		  this.allPublicWorldsLoaded = false
+		  this.loadingPublicWorlds = false
 
 		  this._mainAreaMode
 		  this._prevMainAreaMode = MAINAREA_NULL
@@ -1478,45 +1477,22 @@ var model = ( function( view ){
 
 		}
 
-		appendWorldCards(){
+		appendPublicWorldsAsync(){
 
-			if( !this.showingWorlds ){
-				this.showingWorlds = { 'from': 0, 'to': 100 }
+			console.log( 'append',  this.loadingPublicWorlds )
+			if( this.loadingPublicWorlds ){
+				return
+			}
+
+			this.loadingPublicWorlds = true
+
+    	if( !this.showingWorlds ){
+				this.showingWorlds = { 'from': 0, 'to': 20 }
 			}else{
 				this.showingWorlds = { 'from': this.showingWorlds.to + 1, 'to': this.showingWorlds.to + 21 }
 			}
 
-	    /*var myWorlds = Object.keys( this.worlds ).reverse()
-	    view.appendWorldCards( worlds, myWorlds )*/
-
-	    var end = this.showingWorlds.to
-	    if( this.showingWorlds.to >= this.publicWorldsList.length ){
-	    	end = this.publicWorldsList.length
-	    }
-
-	    for( var i = this.showingWorlds.from; i < end; i++ ){
-
-	    	var world = this.publicWorldsList[i]
-	    	var following = false
-	    	if( this.worlds[world.id] ){
-	    		following = true
-	    	}
-	      view.appendWorldCard( world, following )
-
-	    }
-
-	    this.view.animateCards()
-
-		}
-
-		getPublicWorldsAsync( from ){
-
-		  var interval = {
-		    from: from * 100,
-		    to: (from+1) * 100
-		  }
-
-		  api.cosmos.list( null , null , { 'from': interval.from , 'to': interval.to }, function( error, worlds, nResults ){
+		  api.cosmos.list( null , null , this.showingWorlds , function( error, worlds, nResults ){
 
 		    if( error ){
 		      return console.error( error )
@@ -1532,11 +1508,25 @@ var model = ( function( view ){
 
 		    if( !worlds.length ){
 		    	this.allPublicWorldsLoaded = true
-		    	return 
+		    	return
 		    }
 
-		    this.publicWorldsList = this.publicWorldsList.concat(worlds)
-		    this.appendWorldCards()
+		    worlds.forEach( function( world, index ){
+
+		    	var following = false
+		    	if( this.worlds[world.id] ){
+		    		following = true
+		    	}
+		      view.appendWorldCard( world, following )
+
+		      if( index === worlds.length - 1 ){
+
+				    this.loadingPublicWorlds = false
+				    this.view.animateCards()
+
+		      }
+
+		    }.bind(this))
 
 		  }.bind(this))
 
@@ -1672,7 +1662,7 @@ var model = ( function( view ){
 		  this.publicWorldsList = []
 		  this.allPublicWorldsLoaded = false
   		view.openExploreWorlds()
-			this.getPublicWorldsAsync(0)
+  		this.appendPublicWorldsAsync()
 
 		}
 
@@ -2236,6 +2226,19 @@ var controller = ( function( model, view ){
           view.showExploreTopBar()
         }else{
           view.hideExploreTopBar()
+        }
+
+        var scrollDiv = $( this );
+        var scrollFinish = $( '.explore-container' )[0].scrollHeight - scrollDiv.height();
+
+        if( scrollFinish - scrollDiv.scrollTop() < 200 ){
+
+          //var lastCard = scrollDiv.data( 'lastCard' );
+          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
+          //loadingPost = true;
+          model.appendPublicWorldsAsync()
+          //console.log('scrolled')
+
         }
 
       })
