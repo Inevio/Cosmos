@@ -1104,7 +1104,7 @@ var view = ( function(){
 		updateWorldCard( worldId, following ){
 
 			$( '.world-card-' + worldId ).find( 'span' ).text( lang.following )
-    	$( '.world-card-' + worldId ).parent().addClass( 'followed' )
+    	$( '.world-card-' + worldId ).addClass( 'followed' )
 
 		}
 
@@ -1472,10 +1472,6 @@ var model = ( function( view ){
 
 		followWorld( world ){
 
-		  if( !this.worlds[world.id] ){
-		    return;
-		  }
-
 		  if( api.system.user().user.indexOf('demo') === 0 && !world.isPrivate ){
 		    alert(lang.noPublicWorlds);
 		    return;
@@ -1487,9 +1483,10 @@ var model = ( function( view ){
 		  		return console.error( error )
 		  	}
 
-		  	view.updateWorldCard( world.id, true )
+		  	this.addWorld( world )
+		  	this.view.updateWorldCard( world.id, true )
 
-		  })
+		  }.bind(this))
 
 		}
 
