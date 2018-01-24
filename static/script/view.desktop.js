@@ -31,8 +31,8 @@ var view = ( function(){
 			this._noPosts									= $( '.cards-list .no-posts' )
 
 			this._genericCardPrototype 		= $( '.gen-card.wz-prototype' )
-			this._documentCardPrototype 	= $( '.doc-card.wz-prototype' );
-			this._youtubeCardPrototype  	= $( '.you-card.wz-prototype' );
+			this._documentCardPrototype 	= $( '.doc-card.wz-prototype' )
+			this._youtubeCardPrototype  	= $( '.you-card.wz-prototype' )
 
 			this.animationEffect 					= 'cubic-bezier(.4,0,.2,1)'
 
@@ -44,20 +44,20 @@ var view = ( function(){
 
 		_getYoutubeCode( text ){
 
-		  var youtubeId = false;
+		  var youtubeId = false
 		  text.split(' ').forEach( function( word ){
 
 		    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
 
 		      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-		      var match = word.match(regExp);
-		      youtubeId = (match&&match[7].length==11)? match[7] : false;
+		      var match = word.match(regExp)
+		      youtubeId = (match&&match[7].length==11)? match[7] : false
 
 		    }
 
 		  });
 
-		  return youtubeId;
+		  return youtubeId
 
 		}
 
@@ -160,10 +160,10 @@ var view = ( function(){
 
 		_getStringHour( date ){
 
-		  var now = new Date();
+		  var now = new Date()
 
-		  var hh = date.getHours();
-		  var mm = date.getMinutes();
+		  var hh = date.getHours()
+		  var mm = date.getMinutes()
 
 		  if(hh<10) {
 		    hh='0'+hh
@@ -173,28 +173,28 @@ var view = ( function(){
 		    mm='0'+mm
 		  }
 
-		  return hh + ':' + mm;
+		  return hh + ':' + mm
 
 		}
 
 		_timeElapsed( lastTime ){
 
-		  var now = new Date();
-		  var last = new Date( lastTime );
-		  var message;
+		  var now = new Date()
+		  var last = new Date( lastTime )
+		  var message
 		  var calculated = false;
 
 		  if( now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth() ){
 
 		    if( now.getDate() === last.getDate() ){
 
-		      message = this._getStringHour( lastTime );
-		      calculated = true;
+		      message = this._getStringHour( lastTime )
+		      calculated = true
 
 		    }else if( new Date ( now.setDate( now.getDate() - 1 ) ).getDate() === last.getDate() ){
 
-		      message = lang.lastDay + ' ' + lang.at + ' ' + this._getStringHour( lastTime );
-		      calculated = true;
+		      message = lang.lastDay + ' ' + lang.at + ' ' + this._getStringHour( lastTime )
+		      calculated = true
 
 		    }
 
@@ -202,8 +202,8 @@ var view = ( function(){
 
 		  if ( !calculated ) {
 
-		    var day = last.getDate();
-		    var month = last.getMonth()+1;
+		    var day = last.getDate()
+		    var month = last.getMonth()+1
 
 		    if(day<10) {
 		      day='0'+day
@@ -214,7 +214,7 @@ var view = ( function(){
 		    }
 
 		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this._getStringHour( lastTime );
-		    calculated = true;
+		    calculated = true
 
 		  }
 
@@ -228,8 +228,8 @@ var view = ( function(){
 		animateCards(){
 
 		  // World cards appears and goes up
-		  var firstCards = $( '.tend-list .world-card' );
-		  var restOfCards = firstCards.splice(10, firstCards.length - 10);
+		  var firstCards = $( '.tend-list .world-card' )
+		  var restOfCards = firstCards.splice(10, firstCards.length - 10)
 		  firstCards.each( function( i , card ){
 
 		    var d = i * 150;
@@ -243,15 +243,17 @@ var view = ( function(){
 		    }, 1000, function(){
 
 		      restOfCards.forEach(function(card){
-		        $(card).css({
+
+		        $( card ).css({
 		          'opacity'   : 1,
 		          'transform' : 'translateY(0px)'
-		        });
-		      });
+		        })
 
-		    });
+		      })
 
-		  });
+		    })
+
+		  })
 
 		}
 
@@ -308,7 +310,7 @@ var view = ( function(){
 	    card.find( '.card-user-name' ).text( user.fullName )
 	    card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
-	    /*if (!isMobile()) {
+	    /*if (!this.isMobile) {
 	      setRepliesAsync( card , post.apiPost );
 	    }else{
 	      setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
@@ -411,7 +413,7 @@ var view = ( function(){
 	    card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 	    card.data( 'time' , post.apiPost.created )
 
-	    /*if (!isMobile()) {
+	    /*if (!this.isMobile) {
 	      setRepliesAsync( card , post )
 	    }else{
 	      setRepliesAsyncWithoutAppendMobile( card , post );
@@ -454,7 +456,7 @@ var view = ( function(){
 		  card.find( '.card-user-name' ).text( user.fullName )
 		  card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
-		  /*if (!isMobile()) {
+		  /*if (!this.isMobile) {
 		    setRepliesAsync( card , post.apiPost );
 		  }else{
 		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
@@ -474,7 +476,7 @@ var view = ( function(){
 
 		  var youtubeCode = this._getYoutubeCode( post.apiPost.content );
 
-		  /*if (isMobile()) {
+		  /*if (this.isMobile) {
 		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
 		  }else{*/
 		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
@@ -495,7 +497,7 @@ var view = ( function(){
 
 		  });
 
-		  /*if (!isMobile()) {
+		  /*if (!this.isMobile) {
 		    setRepliesAsync( card , post.apiPost );
 		  }else{
 		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
@@ -658,7 +660,7 @@ var view = ( function(){
 
 			var commentDom = $( '.comment.wz-prototype' ).eq(0).clone()
 			commentDom.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + comment.apiComment.id )
-		  /*if (isMobile()) {
+		  /*if (this.isMobile) {
 		    commentDom.find( '.reply-button' ).text( '-   ' + lang.reply )
 		  }else{*/
 		    commentDom.find( '.reply-button' ).text( lang.reply )
@@ -683,7 +685,7 @@ var view = ( function(){
       })
 
       /*var container
-      if (isMobile()) {
+      if (this.isMobile) {
         container = mobileWorldComments
       }else{
         container = card
@@ -740,7 +742,7 @@ var view = ( function(){
 	    });
 
 	    //comment.find( '.reply-list' ).append( reply );
-	    /*if (!isMobile()) {
+	    /*if (!this.isMobile) {
 	      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
 	    }*/
 
@@ -885,6 +887,336 @@ var view = ( function(){
 
 		}
 
+		closeNewWorld(){
+
+			var newWorldContainer = $( '.new-world-container-wrap' )
+
+  		$( '.new-world-container' ).css( 'height' , '100%' )
+
+		  // Fade out White background
+		  newWorldContainer.stop().clearQueue().transition({
+
+		    'opacity' : 0
+
+		  }, 200, function(){
+
+		    newWorldContainer.css( 'display' , 'none' )
+		    $( '.new-world-avatar' ).hide()
+		    $( '.new-world-desc' ).hide()
+		    $( '.new-world-privacy' ).hide()
+		    $( '.new-world-title' ).removeClass( 'second' )
+		    $( '.create-world-button' ).removeClass( 'step-b' )
+		    $( '.create-world-button' ).addClass( 'step-a' )
+		    $( '.new-world-title .step-b' ).removeClass( 'hide' )
+		    $( '.new-world-title .title' ).text( lang.worldCreation )
+		    $( '.delete-world-button' ).addClass( 'hide' )
+
+		    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button' ).css({
+		      'transform' : 'translateY(20px)',
+		      'opacity'   : 0
+		    });
+
+		    $( '.close-new-world' ).css({
+		      'transform' : 'translateY(10px)',
+		      'opacity'   : 0
+		    });
+
+		    //if (!this.isMobile) {
+		      $( '.create-world-button' ).css( {
+
+
+		        'top'       : '400px',
+		        'transform' : 'translateY(20px)',
+		        'left'      : 'calc((50% - 236px) + 307px)'
+
+
+		      } ).find( 'span' ).text( lang.createWorldShort )
+		    //}
+
+		    //this.closeExploreWorlds()
+
+		    if ( $( '.worldDom' ).length === 0 ) {
+
+		      this.noWorlds.show();
+		      this.noWorlds.transition({
+
+		        'opacity'         : 1
+
+		      }, 200, this.animationEffect )
+
+		    }else{
+
+		      this.noWorlds.transition({
+
+		        'opacity'         : 0
+
+		      }, 200, this.animationEffect , function(){
+		        this.noWorlds.hide()
+		      }.bind(this))
+
+		    }
+
+		  }.bind(this))
+
+  		$( '.new-world-container' ).removeClass( 'editing' )
+
+		}
+
+		newWorldAnimationB(){
+
+			var editing = $( '.new-world-container' ).hasClass( 'editing' )
+
+		  if ( editing ) {
+
+		    //var height = this.isMobile ? '800px' : '770px'
+		    var height = '770px'
+		    $( '.new-world-container' ).css( 'height' , height )
+		    this.newWorldAnimationBEditing()
+
+		  }else{
+
+		    //var height = this.isMobile ? '720px' : '770px'
+		    var height = '770px'
+		    $( '.new-world-container' ).css( 'height' , height )
+		    this.newWorldAnimationBNormal()
+
+		  }
+
+		}
+
+		newWorldAnimationBNormal(){
+
+		  $( '.new-world-avatar' ).show()
+		  $( '.new-world-desc' ).show()
+		  $( '.new-world-privacy' ).show()
+		  $( '.new-world-title' ).addClass( 'second' )
+		  $( '.create-world-button' ).addClass( 'step-b' )
+		  $( '.create-world-button' ).removeClass( 'step-a' )
+		  $( '.option.private-option' ).addClass( 'active' )
+		  $( '.option.public' ).removeClass( 'active' )
+
+
+		  $( '.new-world-desc textarea' ).val('')
+
+		  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'none' )
+
+		  // Fade in and goes up title (animation)
+		  var translate = this.isMobile ? '0px' : '-67px'
+		  $( '.new-world-title' ).stop().clearQueue().transition({
+		    'transform' : 'translateY('+translate+')'
+		  }, 1000, this.animationEffect)
+
+		  // Fade in and goes up name (animation)
+		  $( '.new-world-name' ).stop().clearQueue().transition({
+		    'opacity'   : 0,
+		    'transform' : 'translateX(-200px)'
+		  }, 1000, this.animationEffect)
+
+
+		  // Fade in and goes up button (animation)
+		  //if (!this.isMobile) {
+		    $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
+
+		      'opacity'   : 0
+
+		    }, 800, this.animationEffect, function(){
+
+		      $( this ).css( {
+
+		        'top'       : '640px',
+		        'transform' : 'translateY(20px)',
+		        'right'     : '0',
+		        'left'      : 'calc(50% - 472px/2 + 150px)'
+
+		      } ).find( 'span' ).text( lang.accept )
+
+
+		    })
+		 	//}
+
+		  // Fade in and goes up avatar (animation)
+		  $( '.new-world-avatar' ).stop().clearQueue().transition({
+
+		    delay       : 500,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 1000)
+
+		  // Fade in and goes up desc (animation)
+		  $( '.new-world-desc' ).stop().clearQueue().transition({
+
+		    delay       : 650,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 1000)
+
+		  // Fade in and goes up privacy (animation)
+		  $( '.new-world-privacy' ).stop().clearQueue().transition({
+
+		    delay       : 800,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 1000)
+
+		  // Fade in and goes up privacy (animation)
+		  $( '.create-world-button' ).transition({
+
+		    delay       : 950,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 1000)
+		  $( '.delete-world-button' ).transition({
+
+		    delay       : 950,
+		    'opacity'   : 0.5,
+		    'transform' : 'translateY(0px)'
+
+		  }, 1000)
+
+		}
+
+		newWorldAnimationBEditing(){
+
+		  //bypassNewWorldAnimationA()
+	    $( '.new-world-container-wrap' ).css({
+
+		    'display' : 'block',
+
+		  }) 
+
+		  $( '.new-world-container-wrap' ).transition({
+
+		    'opacity' : 1
+
+		  }, 300)
+
+		  $( '.new-world-title' ).css({
+
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  })
+
+		  $( '.close-new-world' ).css({
+
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  })
+
+		  $( '.create-world-button' ).css( 'left' , 'calc((50% - 236px) + 55px)' ).find( 'span' ).text( lang.accept )
+		  var text = this.isMobile ? lang.exit : lang.unfollowWorld
+		  $( '.delete-world-button' ).css( 'left' , 'calc((50% - 135px) + 142px)' ).find( 'span' ).text( text )
+		  $( '.create-world-button , .delete-world-button' ).css( {
+
+		    'top'       : '640px',
+		    'transform' : 'translateY(20px)',
+		    'right'     : '0',
+		    'opacity'   : '0'
+
+		  })
+		  $( '.new-world-name' ).css({
+
+		    'opacity'   : '0'
+
+		  })
+
+		  $( '.new-world-title .title' ).text( lang.worldEdit )
+		  $( '.new-world-title .step-b' ).addClass( 'hide' )
+
+		  $( '.new-world-avatar' ).show()
+		  $( '.new-world-desc' ).show()
+		  $( '.new-world-privacy' ).show()
+		  $( '.new-world-title' ).addClass( 'second' )
+		  $( '.create-world-button' ).addClass( 'step-b' )
+		  $( '.create-world-button' ).removeClass( 'step-a' )
+
+		  $('.new-world-container-wrap').scrollTop(0)
+
+		  // Fade in and goes up title (animation)
+		  var translate = this.isMobile ? '0px' : '-67px'
+		  $( '.new-world-title' ).stop().clearQueue().transition({
+		    'transform' : 'translateY('+translate+')'
+		  }, 1000)
+
+
+		  // Fade in and goes up name (animation)
+		  var translate = this.isMobile ? '-15px' : '-58px'
+		  $( '.new-world-name' ).stop().clearQueue().transition({
+
+		    delay       : 100,
+		    'opacity'   : 1,
+		    'transform' : 'translateY('+translate+')'
+
+		  }, 1000)
+
+		  // Fade in and goes up avatar (animation)
+		  var translate = this.isMobile ? '50px' : '120px'
+		  $( '.new-world-avatar' ).css( 'transform' , 'translateY(158px)' )
+		  $( '.new-world-avatar' ).stop().clearQueue().transition({
+
+		    delay       : 300,
+		    'opacity'   : 1,
+		    'transform' : 'translateY('+translate+')'
+
+		  }, 1000)
+
+		  // Fade in and goes up desc (animation)
+		  var translate = this.isMobile ? '50px' : '120px'
+		  $( '.new-world-desc' ).css( 'transform' , 'translateY(158px)' )
+		  $( '.new-world-desc' ).stop().clearQueue().transition({
+
+		    delay       : 500,
+		    'opacity'   : 1,
+		    'transform' : 'translateY('+translate+')'
+
+		  }, 1000)
+
+		  // Fade in and goes up privacy (animation)
+		  var translate = this.isMobile ? '50px' : '120px'
+		  $( '.new-world-privacy' ).css( 'transform' , 'translateY(158px)' )
+		  $( '.new-world-privacy' ).stop().clearQueue().transition({
+
+		    delay       : 700,
+		    'opacity'   : 1,
+		    'transform' : 'translateY('+translate+')'
+
+		  }, 1000)
+
+
+		  // Fade in and goes up privacy (animation)
+		  var translate = this.isMobile ? '80px' : '120px'
+		  $( '.create-world-button, .delete-world-button' ).css( 'transform' , 'translateY(158px)' )
+		  $( '.create-world-button' ).transition({
+
+		    delay       : 900,
+		    'opacity'   : 1,
+		    'transform' : 'translateY('+translate+')'
+
+		  }, 1000)
+		  $( '.delete-world-button' ).transition({
+
+		    delay       : 900,
+		    'opacity'   : 0.5,
+		    'transform' : 'translateY('+translate+')'
+
+		  }, 1000)
+
+		}
+
+		newWorldStep(){
+
+	    this.newWorldAnimationB()
+	    /*if(uiContent.hasClass('compressed')){
+	      decompressCover( { instant : true , world : $('.world.active') } )
+	    }*/
+
+		}
+
 		fileContextMenu( fsnode ){
 
       var menu = api.menu()
@@ -898,10 +1230,10 @@ var view = ( function(){
       })
 
       menu.addOption( lang.download , function(){
-        fsnode.download();
+        fsnode.download()
       })
 
-      menu.render();
+      menu.render()
 
 		}
 
@@ -929,23 +1261,52 @@ var view = ( function(){
 
 		leaveWorldDialog( worldId ){
 
-			var dialog = api.dialog();
+			var dialog = api.dialog()
 
-	    dialog.setTitle( lang.unfollowWorld );
-	    dialog.setText( lang.confirmExit );
+	    dialog.setTitle( lang.unfollowWorld )
+	    dialog.setText( lang.confirmExit )
 
-	    dialog.setButton( 0, wzLang.core.dialogCancel, 'black' );
-	    dialog.setButton( 1, wzLang.core.dialogAccept, 'red' );
+	    dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+	    dialog.setButton( 1, wzLang.core.dialogAccept, 'red' )
 
       dialog.render( function( doIt ){
 
 	      if( !doIt ){
-	        return;
+	        return
 	      }
 
 	      model.leaveWorld( worldId )
 
-	    });
+	    })
+
+		}
+
+		openEditWorld(){
+
+			$( '.new-world-title input' ).val('');
+		  $( '.new-world-container' ).addClass( 'editing' );
+		  $( '.delete-world-button' ).removeClass( 'hide' );
+
+		  this.newWorldAnimationB();
+
+		  if (world.hasCustomIcon) {
+		    $( '.wz-groupicon-uploader-start' ).removeClass('non-icon');
+		    $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
+		  }else{
+		    $( '.wz-groupicon-uploader-start' ).removeClass('custom-icon');
+		    $( '.wz-groupicon-uploader-start' ).addClass('non-icon');
+		  }
+
+		  $( '.new-world-desc textarea' ).val( world.description );
+		  $( '.new-world-name input' ).val( world.name );
+		  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
+		  $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+		  $( '.privacy-options .option' ).removeClass( 'active' );
+		  if ( world.isPrivate ) {
+		    $( '.privacy-options .hidden' ).addClass( 'active' );
+		  }else{
+		    $( '.privacy-options .public' ).addClass( 'active' );
+		  }
 
 		}
 
@@ -956,10 +1317,10 @@ var view = ( function(){
 		  $( '.explore-container .search-bar input' ).val('')
 		  $('.world-card-dom').remove()
 
-	    var exploreSection = $( '.explore-section' );
+	    var exploreSection = $( '.explore-section' )
 
-		  exploreSection.css( 'display' , 'block');
-		  $('.explore-container').scrollTop(0);
+		  exploreSection.css( 'display' , 'block')
+		  $('.explore-container').scrollTop(0)
 
 		  // Fade in blue background
 		  exploreSection.stop().clearQueue().transition({
@@ -972,11 +1333,11 @@ var view = ( function(){
 
 		    }, 200, this.animationEffect , function(){
 
-		      this.noWorlds.hide();
+		      this.noWorlds.hide()
 
-		    }.bind(this));
+		    }.bind(this))
 
-		  }.bind(this));
+		  }.bind(this))
 
 		  // Stars appears and goes up
 		  $( '.search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
@@ -985,7 +1346,7 @@ var view = ( function(){
 		    'opacity'   : 1,
 		    'transform' : 'translateY(0px)'
 
-		  }, 500, this.animationEffect);
+		  }, 500, this.animationEffect)
 
 		  // New world button appears and goes up
 		  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
@@ -994,7 +1355,75 @@ var view = ( function(){
 		    'opacity'   : 1,
 		    'transform' : 'translateY(0px)'
 
-		  }, 450, this.animationEffect);
+		  }, 450, this.animationEffect)
+
+		}
+
+		openNewPost( world ){
+
+			/*if( this.isMobile ){
+		    newPostMobile()
+		  }else{*/
+		    api.app.createView( { type: 'manual' , world: world } , 'newPost' )
+		  //}
+
+		}
+
+		openNewWorld(){
+
+			var newWorldContainer = $( '.new-world-container-wrap' )
+
+		  $( '.new-world-name input' ).val( '' )
+
+		  newWorldContainer.css( 'display' , 'block')
+
+		  // Fade in White background (animation)
+		  newWorldContainer.stop().clearQueue().transition({
+		    'opacity' : 1
+		  }, 300)
+
+		  // Fade in and goes up title (animation)
+		  $( '.new-world-title' ).stop().clearQueue().transition({
+
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 300)
+
+		  // Fade in and goes up esc (animation)
+		  $( '.close-new-world' ).stop().clearQueue().transition({
+
+		    delay       : 250,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 300)
+
+		  // Fade in and goes up name (animation)
+		  $( '.new-world-name' ).stop().clearQueue().transition({
+
+		    delay       : 250,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 300)
+
+		  // Fade in and goes up button (animation)
+		  $( '.create-world-button' ).stop().clearQueue().transition({
+
+		    delay       : 250,
+		    'opacity'   : 1,
+		    'transform' : 'translateY(0px)'
+
+		  }, 300)
+
+		  $( '.delete-world-button' ).stop().clearQueue().transition({
+
+		    delay       : 250,
+		    'opacity'   : 0.5,
+		    'transform' : 'translateY(0px)'
+
+		  }, 300)
 
 		}
 
@@ -1021,8 +1450,8 @@ var view = ( function(){
       var height = parseInt( card.find( '.comments-list' ).css( 'height' ) ) + 50
       var commentsSection = card.find( '.comments-section' )
 
-      /*if (isMobile()) {
-        return;
+      /*if (this.isMobile) {
+        return
       }*/
 
       if( commentsSection.hasClass( 'opened' ) ){
@@ -1033,7 +1462,7 @@ var view = ( function(){
           'height' : 0
         }, 200, function(){
           commentsSection.removeClass( 'opened' )
-        });
+        })
 
       }else{
 
@@ -1175,15 +1604,15 @@ var view = ( function(){
 			//console.log( publicWorlds, worldList )
 			function worldSidebarDom( item ){
 
-		  	var world = $( '.sidebar .world.wz-prototype' ).clone();
-				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' );
-				world.find( '.world-name' ).text( item.apiWorld.name );
+		  	var world = $( '.sidebar .world.wz-prototype' ).clone()
+				world.removeClass( 'wz-prototype' ).addClass( 'world-' + item.apiWorld.id ).addClass( 'worldDom' )
+				world.find( '.world-name' ).text( item.apiWorld.name )
 
 				if( item.apiWorld.owner === api.system.user().id ){
 				  world.addClass( 'editable' )
 				}
 
-				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] );
+				world.find( '.world-icon' ).css( 'border-color' , colors[ item.apiWorld.id % colors.length ] )
 				world.data( 'world', item.apiWorld )
 				world.attr( 'data-id', item.apiWorld.id )
 
@@ -1226,30 +1655,24 @@ var view = ( function(){
 
         menu.addOption( lang.editWorld , function(){
 
-          /*if( worldDom.hasClass( 'active' ) ){
-
-            $( '.new-world-container' ).data( 'world' , world );
-            editWorld( world );
-            
+          if( worldDom.hasClass( 'active' ) ){
+            $( '.new-world-container' ).data( 'world' , world )
           }else{
+          	worldDom.trigger( 'click' )
+          }
+          this.openEditWorld( world )
 
-            selectWorld( worldDom , function(){
-              editWorld( world );
-            });
-
-          }*/
-
-        });
+        }.bind(this))
 
       }else{
 
         menu.addOption( lang.abandonWorld , function(){
-          this.leaveWorldDialog( world.id );
-        }.bind(this), 'warning');
+          this.leaveWorldDialog( world.id )
+        }.bind(this), 'warning')
 
       }
 
-      menu.render();
+      menu.render()
 
 		}
 

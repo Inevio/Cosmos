@@ -111,6 +111,26 @@ var controller = ( function( model, view ){
         model.followWorld( $( this ).parent().data( 'world' ) );
       })
 
+      this.dom.on( 'click' , '.new-post-button, .no-post-new-post-button', function(){
+        model.openNewPost()
+      })
+
+      this.dom.on( 'click' , '.new-world-button, .new-world-button-mini', function(){
+        view.openNewWorld()
+      })
+
+      this.dom.on( 'click' , '.close-new-world', function(){
+        view.closeNewWorld()
+      })
+
+      this.dom.on( 'click' , '.create-world-button.step-a', function(){
+
+        if ( $( '.new-world-name input' ).val() ) {
+          view.newWorldStep()
+        }
+
+      })
+
       /* Context menu */
 
       this.dom.on( 'contextmenu', '.doc-preview', function(){
