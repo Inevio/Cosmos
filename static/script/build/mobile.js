@@ -428,6 +428,16 @@ var model = ( function( view ){
 
 		}
 
+		openNewPost(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			view.openNewPost( this.openedWorld.apiWorld )
+
+		}
+
 		openWorld( worldId ){
 
 		  //app.addClass( 'selectingWorld' );
