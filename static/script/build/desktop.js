@@ -820,29 +820,7 @@ var view = ( function(){
 
 		closeExploreWorlds(){
 
-		  if( $( '.worldDom' ).length === 0 ){
-
-		    this.noWorlds.show();
-		    this.noWorlds.transition({
-
-		      'opacity'         : 1
-
-		    }, 200, this.animationEffect );
-
-		  }else{
-
-		    this.noWorlds.transition({
-
-		      'opacity'         : 0
-
-		    }, 200, this.animationEffect , function(){
-
-		      this.noWorlds.hide();
-
-		    }.bind(this));
-
-		  }
-
+			this.toggleNoWorlds()
 		  var exploreSection = $( '.explore-section' );
 
 		  // Fade out blue background
@@ -889,10 +867,10 @@ var view = ( function(){
 
 		closeMembers(){
 
-		  $( '.kick-user-container' ).toggleClass( 'popup' );
-		  $( '.kick-user-container *' ).toggleClass( 'popup' );
-		  $( '.invite-user-container .ui-input-search input' ).val('');
-		  //filterFriends('');
+		  $( '.kick-user-container' ).toggleClass( 'popup' )
+		  $( '.kick-user-container *' ).toggleClass( 'popup' )
+		  $( '.invite-user-container .ui-input-search input' ).val('')
+		  this.filterElements( '', '.friend' )
 
 		}
 
@@ -943,27 +921,7 @@ var view = ( function(){
 		    //}
 
 		    //this.closeExploreWorlds()
-
-		    if ( $( '.worldDom' ).length === 0 ) {
-
-		      this.noWorlds.show();
-		      this.noWorlds.transition({
-
-		        'opacity'         : 1
-
-		      }, 200, this.animationEffect )
-
-		    }else{
-
-		      this.noWorlds.transition({
-
-		        'opacity'         : 0
-
-		      }, 200, this.animationEffect , function(){
-		        this.noWorlds.hide()
-		      }.bind(this))
-
-		    }
+		    this.toggleNoWorlds()
 
 		  }.bind(this))
 
@@ -1246,6 +1204,16 @@ var view = ( function(){
 
 		}
 
+		filterElements( filter, elementQuery ){
+
+			var list = $( elementQuery )
+			list.show()
+		  var listToShow = list.filter( this.startsWith( filter ) );
+		  var listToHide = list.not( listToShow );
+		  listToHide.hide();	
+
+		}
+
 		filterPosts( list ){
 
 			if( list ){
@@ -1335,17 +1303,7 @@ var view = ( function(){
 		  exploreSection.stop().clearQueue().transition({
 		    'opacity' : 1
 		  }, 300, this.animationEffect , function(){
-
-		    this.noWorlds.transition({
-
-		      'opacity'         : 0
-
-		    }, 200, this.animationEffect , function(){
-
-		      this.noWorlds.hide()
-
-		    }.bind(this))
-
+		  	this.toggleNoWorlds( true )
 		  }.bind(this))
 
 		  // Stars appears and goes up
@@ -1375,15 +1333,15 @@ var view = ( function(){
 
 		  if ( world.apiWorld.owner === this.myContactID ) {
 		    $('.kick-user-section').addClass('admin')
+		    $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.kickPeople + '</i>' + lang.worldUsers.from + '<figure>' + world.apiWorld.name + '</figure>' )
 		  }else{
 		    $('.kick-user-section').removeClass('admin')
+		    $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.listPeople + '</i>' + lang.worldUsers.from + '<figure>' + world.apiWorld.name + '</figure>' )
 		  }
-
-		  $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.kickPeople + '</i>' + lang.worldUsers.from + '<figure>' + world.apiWorld.name + '</figure>' )
 
 		  $( '.memberDom' ).remove()
 		  $( '.kick-user-container .ui-input-search input' ).val('')
-		  //filterMembers('');
+		  this.filterElements( '', '.member' )
 
 		  world.members.sort(function(a , b){
         if(a.fullName < b.fullName) return -1
@@ -1497,13 +1455,46 @@ var view = ( function(){
 				$( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members )
 		  }
 		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
-		  $( '.select-world' ).hide()
+		  this.toggleSelectWorld( false )
 		  $( '.cardDom' ).remove()
 
 		}
 
 		showExploreTopBar(){
 			$( '.explore-top-bar' ).addClass( 'active' )
+		}
+
+		showNoWorlds(){
+
+		}
+
+		startsWith( wordToCompare ){
+
+		  return function( index , element ) {
+		    return $( element ).find( 'span' ).text().toLowerCase().indexOf( wordToCompare.toLowerCase() ) !== -1;
+		  }
+
+		}
+
+		toggleNoWorlds( showNoWorlds ){
+
+			if ( showNoWorlds || $( '.worldDom' ).length === 0 ) {
+
+		    this.noWorlds.show()
+		    this.noWorlds.transition({
+		      'opacity' : 1
+		    }, 200, this.animationEffect )
+
+	  	}else{
+
+		    this.noWorlds.transition({
+		      'opacity' : 0
+		    }, 200, this.animationEffect , function(){
+		      this.noWorlds.hide()
+		    }.bind(this))
+
+	  	}
+
 		}
 
 		toggleReplies( card ){
@@ -1540,6 +1531,16 @@ var view = ( function(){
         })
 
       }
+
+		}
+
+		toggleSelectWorld( show ){
+
+			if( show ){
+				$( '.select-world' ).show()
+			}else{
+				$( '.select-world' ).hide()
+			}
 
 		}
 
@@ -1643,6 +1644,10 @@ var view = ( function(){
 		}
 
 		updateWorldsListUI( worldList ){
+
+			if( worldList.length === 0 ){
+				return this.toggleNoWorlds(true)
+			}
 
 			worldList = worldList.sort( function( a, b ){
 		    return a.apiWorld.name.localeCompare( b.apiWorld.name )
@@ -2117,8 +2122,7 @@ var model = ( function( view ){
           console.error( error );
         }else{
 
-        	delete this.worlds[worldId]
-        	this.updateWorldsListUI()
+        	this.removeWorldFront( worldId )
 
           /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
             if (err) {
@@ -2135,7 +2139,7 @@ var model = ( function( view ){
 		loadMorePosts(){
 
 			if( this.openedWorld && !this.openedWorld.loadingPosts ){
-				this.openedWorld.getNextPosts()
+				this.openedWorld._getNextPosts()
 			}
 			
 		}
@@ -2313,6 +2317,54 @@ var model = ( function( view ){
 
 		}
 
+		removeWorldFront( worldId ){
+
+    	delete this.worlds[ worldId ]
+    	this.updateWorldsListUI()
+
+		}
+
+		removeUserBack( userId ){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+		  this.openedWorld.apiWorld.removeUser( userId, function( err ){
+
+		    if (err) {
+		      console.error(err);
+		    }
+
+		  });
+
+		}
+
+		removeUserFront( userId, world ){
+
+			if( userId === this.myContactID ){
+
+				if( this.openedWorld.apiWorld.id == world.id ){
+					view.toggleSelectWorld()
+				}
+
+				this.removeWorldFront()
+
+			}else{
+
+		    api.cosmos( world.id, function( err, worldApi ){
+
+		      /*closeKickUsers.click()
+		      $('.world-' + worldSelected.id).data('world', worldApi)
+		      worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members )
+		      worldSelected = worldApi*/
+		      
+		    })
+
+			}
+
+		}
+
   }
 
   class World{
@@ -2356,7 +2408,7 @@ var model = ( function( view ){
 
   	}
 
-  	getNextPosts(){
+  	_getNextPosts(){
 
   		if( this.app.postsPrinted < this.lastPostLoaded ){
   			this.app.showPosts( this.apiWorld.id , this.app.postsPrinted )
@@ -2707,6 +2759,10 @@ var controller = ( function( model, view ){
         view.closeMembers()
       })
 
+      this.dom.on( 'click' , '.kick-out-button', function(){
+        model.removeUserBack( $(this).parent().data('user').id )
+      })
+
       /* Context menu */
 
       this.dom.on( 'contextmenu', '.doc-preview', function(){
@@ -2719,7 +2775,8 @@ var controller = ( function( model, view ){
 
       /* end of context menu */
 
-      //Search posts
+      // Input events
+
       this.dom.on( 'input' , '.world-header .search-post' , function( e ){
 
         //if (e.keyCode == 13) {
@@ -2727,6 +2784,13 @@ var controller = ( function( model, view ){
         //}
 
       })
+
+      this.dom.on( 'input', '.kick-user-container .ui-input-search input', function(){
+        view.filterElements( $(this).val(), '.member' )
+      })
+
+
+      // End of input events
 
       /*this.dom.on( 'click' , '.world-header .search-post .delete-content' , function( e ){
         model.searchPost( null )
@@ -2787,6 +2851,10 @@ var controller = ( function( model, view ){
         }*/
 
       });
+
+      api.cosmos.on( 'userRemoved', function( userId, world ){
+        model.userRemoved( userId, world )
+      })
 
 
       // END OF COSMOS EVENTS

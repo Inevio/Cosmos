@@ -18,6 +18,7 @@
     "worldUsers" : {
         "invitePeople"  : "Invitar gente",
         "kickPeople"    : "Administrar miembros",
+        "listPeople"    : "Miembros",
         "to"            : "a",
         "from"          : "de",
         "kickOut"       : "Expulsar"

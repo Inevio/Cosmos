@@ -372,8 +372,7 @@ var model = ( function( view ){
           console.error( error );
         }else{
 
-        	delete this.worlds[worldId]
-        	this.updateWorldsListUI()
+        	this.removeWorldFront( worldId )
 
           /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
             if (err) {
@@ -390,7 +389,7 @@ var model = ( function( view ){
 		loadMorePosts(){
 
 			if( this.openedWorld && !this.openedWorld.loadingPosts ){
-				this.openedWorld.getNextPosts()
+				this.openedWorld._getNextPosts()
 			}
 			
 		}
@@ -568,6 +567,54 @@ var model = ( function( view ){
 
 		}
 
+		removeWorldFront( worldId ){
+
+    	delete this.worlds[ worldId ]
+    	this.updateWorldsListUI()
+
+		}
+
+		removeUserBack( userId ){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+		  this.openedWorld.apiWorld.removeUser( userId, function( err ){
+
+		    if (err) {
+		      console.error(err);
+		    }
+
+		  });
+
+		}
+
+		removeUserFront( userId, world ){
+
+			if( userId === this.myContactID ){
+
+				if( this.openedWorld.apiWorld.id == world.id ){
+					view.toggleSelectWorld()
+				}
+
+				this.removeWorldFront()
+
+			}else{
+
+		    api.cosmos( world.id, function( err, worldApi ){
+
+		      /*closeKickUsers.click()
+		      $('.world-' + worldSelected.id).data('world', worldApi)
+		      worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members )
+		      worldSelected = worldApi*/
+		      
+		    })
+
+			}
+
+		}
+
   }
 
   class World{
@@ -611,7 +658,7 @@ var model = ( function( view ){
 
   	}
 
-  	getNextPosts(){
+  	_getNextPosts(){
 
   		if( this.app.postsPrinted < this.lastPostLoaded ){
   			this.app.showPosts( this.apiWorld.id , this.app.postsPrinted )
