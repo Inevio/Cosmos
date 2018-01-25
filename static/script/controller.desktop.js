@@ -92,7 +92,7 @@ var controller = ( function( model, view ){
       })
 
       this.dom.on( 'click' , '.world-members-button', function(){
-        view.openMembers()
+        model.openMembers()
       })
 
       /* World explore */
@@ -129,6 +129,10 @@ var controller = ( function( model, view ){
           view.newWorldStep()
         }
 
+      })
+
+      this.dom.on( 'click' , '.close-kick-user', function(){
+        view.closeMembers()
       })
 
       /* Context menu */
@@ -194,6 +198,26 @@ var controller = ( function( model, view ){
         }
 
       })
+
+      // COSMOS EVENTS
+
+      api.cosmos.on( 'worldCreated' , function( world ){
+
+        model.addWorld( world );
+        /*$( '.new-world-name input' ).val('');
+        $( '.new-world-container' ).data( 'world' , world );
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+
+        myWorlds.push( world.id );
+
+        if ( world.owner === myContactID ) {
+          selectWorld( $( '.world-' + world.id ) , function(){});
+        }*/
+
+      });
+
+
+      // END OF COSMOS EVENTS
 
     }
 

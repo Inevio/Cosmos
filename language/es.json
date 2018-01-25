@@ -3,6 +3,7 @@
 
     "worldHeader"  : {
         "members"       : "miembros -",
+        "member"        : "miembro -",
         "invite"        : "Invitar",
         "chatButton"   : "Chat grupal",
         "folderButton" : "Carpeta mundo",
