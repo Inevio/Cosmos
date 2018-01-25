@@ -887,6 +887,15 @@ var view = ( function(){
 
 		}
 
+		closeMembers(){
+
+		  $( '.kick-user-container' ).toggleClass( 'popup' );
+		  $( '.kick-user-container *' ).toggleClass( 'popup' );
+		  $( '.invite-user-container .ui-input-search input' ).val('');
+		  //filterFriends('');
+
+		}
+
 		closeNewWorld(){
 
 			var newWorldContainer = $( '.new-world-container-wrap' )
@@ -1359,6 +1368,54 @@ var view = ( function(){
 
 		}
 
+		openMembers( world ){
+
+			$( '.kick-user-container' ).toggleClass( 'popup' )
+		  $( '.kick-user-container *' ).toggleClass( 'popup' )
+
+		  if ( world.apiWorld.owner === this.myContactID ) {
+		    $('.kick-user-section').addClass('admin')
+		  }else{
+		    $('.kick-user-section').removeClass('admin')
+		  }
+
+		  $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.kickPeople + '</i>' + lang.worldUsers.from + '<figure>' + world.apiWorld.name + '</figure>' )
+
+		  $( '.memberDom' ).remove()
+		  $( '.kick-user-container .ui-input-search input' ).val('')
+		  //filterMembers('');
+
+		  world.members.sort(function(a , b){
+        if(a.fullName < b.fullName) return -1
+        if(a.fullName > b.fullName) return 1
+        return 0
+      })
+
+      var memberDomList = []
+
+      world.members.forEach( function( user, index ){
+
+			  var member = $( '.member.wz-prototype' ).clone()
+			  member.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'memberDom' )
+
+			  if ( user.id === world.apiWorld.owner ) {
+			    member.addClass('isAdmin')
+			  }
+
+			  member.find( '.member-name' ).text( user.fullName )
+			  member.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+
+			  member.data( 'user' , user )
+			  memberDomList.push( member )
+
+			  if( index === world.members.length - 1 ){
+					$( '.members-list' ).append( memberDomList )
+			  } 
+
+      })
+
+		}
+
 		openNewPost( world ){
 
 			/*if( this.isMobile ){
@@ -1434,7 +1491,11 @@ var view = ( function(){
 		  $( '.world-' + world.apiWorld.id ).addClass( 'active' )
 		  $( '.search-post input, .mobile-world-content .search-bar input' ).val('')
 		  $( '.world-title' ).text( world.apiWorld.name )
-		  $( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members )
+		  if( world.apiWorld.users == 1 ){
+				$( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.member )
+		  }else{
+				$( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members )
+		  }
 		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
 		  $( '.select-world' ).hide()
 		  $( '.cardDom' ).remove()
@@ -2111,6 +2172,16 @@ var model = ( function( view ){
 
 		}
 
+		openMembers(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			view.openMembers( this.openedWorld )
+
+		}
+
 		openNewPost(){
 
 			if( !this.openedWorld ){
@@ -2593,7 +2664,7 @@ var controller = ( function( model, view ){
       })
 
       this.dom.on( 'click' , '.world-members-button', function(){
-        view.openMembers()
+        model.openMembers()
       })
 
       /* World explore */
@@ -2630,6 +2701,10 @@ var controller = ( function( model, view ){
           view.newWorldStep()
         }
 
+      })
+
+      this.dom.on( 'click' , '.close-kick-user', function(){
+        view.closeMembers()
       })
 
       /* Context menu */
@@ -2695,6 +2770,26 @@ var controller = ( function( model, view ){
         }
 
       })
+
+      // COSMOS EVENTS
+
+      api.cosmos.on( 'worldCreated' , function( world ){
+
+        model.addWorld( world );
+        /*$( '.new-world-name input' ).val('');
+        $( '.new-world-container' ).data( 'world' , world );
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+
+        myWorlds.push( world.id );
+
+        if ( world.owner === myContactID ) {
+          selectWorld( $( '.world-' + world.id ) , function(){});
+        }*/
+
+      });
+
+
+      // END OF COSMOS EVENTS
 
     }
 

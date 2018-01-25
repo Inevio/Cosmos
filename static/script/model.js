@@ -427,6 +427,16 @@ var model = ( function( view ){
 
 		}
 
+		openMembers(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			view.openMembers( this.openedWorld )
+
+		}
+
 		openNewPost(){
 
 			if( !this.openedWorld ){
