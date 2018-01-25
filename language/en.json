@@ -18,6 +18,7 @@
     "worldUsers" : {
         "invitePeople"  : "Invite people",
         "kickPeople"    : "Admin members",
+        "listPeople"    : "Members",
         "to"            : "to",
         "from"          : "from",
         "kickOut"       : "Kick out"

@@ -135,6 +135,10 @@ var controller = ( function( model, view ){
         view.closeMembers()
       })
 
+      this.dom.on( 'click' , '.kick-out-button', function(){
+        model.removeUserBack( $(this).parent().data('user').id )
+      })
+
       /* Context menu */
 
       this.dom.on( 'contextmenu', '.doc-preview', function(){
@@ -147,7 +151,8 @@ var controller = ( function( model, view ){
 
       /* end of context menu */
 
-      //Search posts
+      // Input events
+
       this.dom.on( 'input' , '.world-header .search-post' , function( e ){
 
         //if (e.keyCode == 13) {
@@ -155,6 +160,13 @@ var controller = ( function( model, view ){
         //}
 
       })
+
+      this.dom.on( 'input', '.kick-user-container .ui-input-search input', function(){
+        view.filterElements( $(this).val(), '.member' )
+      })
+
+
+      // End of input events
 
       /*this.dom.on( 'click' , '.world-header .search-post .delete-content' , function( e ){
         model.searchPost( null )
@@ -215,6 +227,10 @@ var controller = ( function( model, view ){
         }*/
 
       });
+
+      api.cosmos.on( 'userRemoved', function( userId, world ){
+        model.userRemoved( userId, world )
+      })
 
 
       // END OF COSMOS EVENTS
