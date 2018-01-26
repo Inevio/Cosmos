@@ -139,6 +139,21 @@ var controller = ( function( model, view ){
         model.removeUserBack( $(this).parent().data('user').id )
       })
 
+      this.dom.on( 'click' , '.invite-user-button' , function(){
+        model.openInviteMembers()
+      })
+
+      this.dom.on( 'click' , '.cancel-invite-user, .close-invite-user', function(){
+        view.closeInviteMembers()
+      })
+
+      this.dom.on( 'click' , '.invite-user-container .invite-user', function(){
+
+        var users = $( '.friend .ui-checkbox.active' ).parent()
+        model.inviteUsers( $.makeArray( users ) )
+
+      })
+
       /* Context menu */
 
       this.dom.on( 'contextmenu', '.doc-preview', function(){
@@ -165,6 +180,9 @@ var controller = ( function( model, view ){
         view.filterElements( $(this).val(), '.member' )
       })
 
+      this.dom.on( 'input', '.invite-user-container .ui-input-search input', function(){
+        view.filterElements( $(this).val(), '.friend' )
+      })
 
       // End of input events
 
@@ -215,7 +233,7 @@ var controller = ( function( model, view ){
 
       api.cosmos.on( 'worldCreated' , function( world ){
 
-        model.addWorld( world );
+        model.addWorld( world )
         /*$( '.new-world-name input' ).val('');
         $( '.new-world-container' ).data( 'world' , world );
         $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
@@ -226,10 +244,14 @@ var controller = ( function( model, view ){
           selectWorld( $( '.world-' + world.id ) , function(){});
         }*/
 
-      });
+      })
+
+      api.cosmos.on( 'userAdded', function( userId, world ){
+        model.addUserFront( userId, world )
+      })
 
       api.cosmos.on( 'userRemoved', function( userId, world ){
-        model.userRemoved( userId, world )
+        model.removeUserFront( userId, world )
       })
 
 

@@ -162,7 +162,17 @@ var model = ( function( view ){
 		    this.contacts = {}
 
 		    list.forEach( function( user ){
-		      this.addContact( user )
+
+		    	api.user( user, function( error, userApi ){
+
+		    		if( error ){
+		    			return console.error
+		    		}
+
+		    		this.addContact( userApi )
+
+		    	}.bind(this))
+		      
 		    }.bind( this ))
 
 				callback( null, list )		
@@ -203,10 +213,42 @@ var model = ( function( view ){
 
 		}
 
+		addUserFront( userId, world ){
+
+			if( userId === this.myContactID ){
+
+				/*if( this.openedWorld.apiWorld.id == world.id ){
+					view.toggleSelectWorld()
+				}*/
+
+				this.addWorld( world )
+
+
+			}else{
+
+				this.worlds[ world.id ].apiWorld = world
+				this.worlds[ world.id ].removeMember( userId )
+				this.view.closeInviteMembers()
+
+				if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
+
+					this.openedWorld = this.worlds[ world.id ]
+					this.view.openWorld( this.worlds[ world.id ], true )
+
+				}
+
+			}			
+
+		}
+
 		addWorld( world ){
 
 		  if( this.worlds[ world.id ] ){
 		    return this
+		  }
+
+		  if( !Object.keys( this.worlds ).length ){
+		  	this.view.hideNoWorlds()
 		  }
 
 		  this.worlds[ world.id ] = new World( this, world )
@@ -308,6 +350,7 @@ var model = ( function( view ){
 
 		    	//Show no worlds
 		      //this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
+		      this.view.showNoWorlds()
 
 		    }
 
@@ -329,6 +372,30 @@ var model = ( function( view ){
 				}.bind(this))
 
 			}
+
+		}
+
+		inviteUsers( users ){
+
+		  //inviteUsers()
+
+		  if( !this.openedWorld || !users.length ){
+		  	return
+		  }
+
+		  users.forEach( function( userDom, index ){
+
+		  	var user = $( userDom ).data( 'user' )
+
+		  	this.openedWorld.apiWorld.addUser( user.id, function( error, o ){
+
+		  		if( error ){
+		  			console.error( error )
+		  		}
+
+		  	})
+
+		  }.bind(this))
 
 		}
 
@@ -426,6 +493,25 @@ var model = ( function( view ){
 
 		}
 
+		openInviteMembers(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			var contactsToShow = []
+			for( var i in this.contacts ){
+
+				if( !this.searchMember( this.contacts[i].id, this.openedWorld.members ) ){
+					contactsToShow.push( this.contacts[i] )
+				}
+
+			}
+
+			view.openInviteMembers( contactsToShow, this.openedWorld.apiWorld.name )
+
+		}
+
 		openMembers(){
 
 			if( !this.openedWorld ){
@@ -462,6 +548,26 @@ var model = ( function( view ){
 		  this.view.openWorld( this.worlds[worldId] )
 
 		  this.showPosts( worldId, 0 )
+
+		}
+
+		searchMember( idToSearch, array ){
+
+			if( !idToSearch || !array.length ){
+				return false
+			}
+
+			array.forEach( function( element, index ){
+
+				if( element.id === idToSearch ){
+					return true
+				}
+
+				if( index === array.length - 1 ){
+					return false
+				}
+
+			})
 
 		}
 
@@ -602,14 +708,16 @@ var model = ( function( view ){
 
 			}else{
 
-		    api.cosmos( world.id, function( err, worldApi ){
+				this.worlds[ world.id ].apiWorld = world
+				this.worlds[ world.id ].removeMember( userId )
+				this.view.closeMembers()
 
-		      /*closeKickUsers.click()
-		      $('.world-' + worldSelected.id).data('world', worldApi)
-		      worldMembersButton.text( worldApi.users + ' ' + lang.worldHeader.members )
-		      worldSelected = worldApi*/
-		      
-		    })
+				if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
+
+					this.openedWorld = this.worlds[ world.id ]
+					this.view.openWorld( this.worlds[ world.id ], true )
+
+				}
 
 			}
 
@@ -741,6 +849,18 @@ var model = ( function( view ){
         return 0
 
       }.bind(this))
+
+  	}
+
+  	removeMember( memberId ){
+
+  		this.members.forEach( function( member, index ){
+
+  			if( member.id === memberId ){
+  				this.members.splice( index, 1 )
+  			}
+
+  		}.bind(this))
 
   	}
 
