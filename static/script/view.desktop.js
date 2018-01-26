@@ -865,10 +865,20 @@ var view = ( function(){
 
 		}
 
+		closeInviteMembers(){
+
+		  $( '.invite-user-container' ).removeClass( 'popup' )
+		  $( '.invite-user-container *' ).removeClass( 'popup' )
+		  $( '.friend .ui-checkbox' ).removeClass( 'active' )
+		  $( '.invite-user-container .ui-input-search input' ).val('')
+		  this.filterElements( '', '.friend' )
+
+		}
+
 		closeMembers(){
 
-		  $( '.kick-user-container' ).toggleClass( 'popup' )
-		  $( '.kick-user-container *' ).toggleClass( 'popup' )
+		  $( '.kick-user-container' ).removeClass( 'popup' )
+		  $( '.kick-user-container *' ).removeClass( 'popup' )
 		  $( '.invite-user-container .ui-input-search input' ).val('')
 		  this.filterElements( '', '.friend' )
 
@@ -1236,6 +1246,16 @@ var view = ( function(){
 			$( '.explore-top-bar' ).removeClass( 'active' )
 		}
 
+		hideNoWorlds(){
+
+			$( '.no-worlds' ).transition({
+	      'opacity'         : 0
+	    }, 200, this.animationEffect , function(){
+	      $( '.no-worlds' ).hide()
+	    })
+
+		}
+
 		leaveWorldDialog( worldId ){
 
 			var dialog = api.dialog()
@@ -1326,10 +1346,47 @@ var view = ( function(){
 
 		}
 
+		openInviteMembers( friends, worldName ){
+
+	    $( '.invite-user-container' ).addClass( 'popup' )
+    	$( '.invite-user-container *' ).addClass( 'popup' )
+
+			$( '.invite-user-title' ).html( '<i>' + lang.worldUsers.invitePeople + '</i>' + lang.worldUsers.to + '<figure>' + worldName + '</figure>' )
+
+		  $( '.friendDom' ).remove()
+		  $( '.invite-user-container .ui-input-search input' ).val('')
+		  this.filterElements( '' , '.friend' )
+
+		  friends.sort(function(a , b){
+	      if(a.fullName < b.fullName) return -1
+	      if(a.fullName > b.fullName) return 1
+	      return 0
+	    })
+
+	    var friendDomList = []
+
+	    friends.forEach( function( friendApi, index ){
+
+    	  var friend = $( '.friend.wz-prototype' ).clone()
+			  friend.removeClass( 'wz-prototype' ).addClass( 'user-' + friendApi.id ).addClass( 'friendDom' )
+
+			  friend.find( 'span' ).text( friendApi.fullName )
+			  friend.find( '.avatar' ).css( 'background-image' , 'url(' + friendApi.avatar.normal + ')' )
+			  friend.data( 'user' , friendApi )
+			  friendDomList.push( friend )
+
+			  if( index === friends.length - 1 ){
+			  	$( '.friend-list' ).append( friendDomList )
+			  }
+
+	    })
+
+		}
+
 		openMembers( world ){
 
-			$( '.kick-user-container' ).toggleClass( 'popup' )
-		  $( '.kick-user-container *' ).toggleClass( 'popup' )
+			$( '.kick-user-container' ).addClass( 'popup' )
+		  $( '.kick-user-container *' ).addClass( 'popup' )
 
 		  if ( world.apiWorld.owner === this.myContactID ) {
 		    $('.kick-user-section').addClass('admin')
@@ -1442,7 +1499,7 @@ var view = ( function(){
 
 		}
 
-		openWorld( world ){
+		openWorld( world, updatingHeader ){
 
 			$( '.clean' ).remove()
 		  $( '.category-list .world' ).removeClass( 'active' )
@@ -1456,7 +1513,10 @@ var view = ( function(){
 		  }
 		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
 		  this.toggleSelectWorld( false )
-		  $( '.cardDom' ).remove()
+
+		  if( !updatingHeader ){
+		  	$( '.cardDom' ).remove()
+		  }
 
 		}
 
@@ -1465,6 +1525,11 @@ var view = ( function(){
 		}
 
 		showNoWorlds(){
+
+      $( '.no-worlds' ).show()
+      $( '.no-worlds' ).transition({
+        'opacity' : 1
+      }, 200, this.animationEffect )
 
 		}
 
@@ -1636,10 +1701,19 @@ var view = ( function(){
 
 		}
 
-		updateWorldCard( worldId, following ){
+		updateWorldCard( worldId, toFollow ){
 
-			$( '.world-card-' + worldId ).find( '.follow-button' ).text( lang.following )
-    	$( '.world-card-' + worldId ).addClass( 'followed' )
+			if( toFollow ){
+
+				$( '.world-card-' + worldId ).find( '.follow-button span' ).text( lang.following )
+	    	$( '.world-card-' + worldId ).addClass( 'followed' )
+
+			}else{
+
+				$( '.world-card-' + worldId ).find( '.follow-button span' ).text( lang.follow )
+				$( '.world-card-' + worldId ).removeClass( 'followed' )
+
+			}
 
 		}
 
