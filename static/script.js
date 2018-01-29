@@ -4077,7 +4077,7 @@ var setMobile = function(){
 
 var newPostMobile = function(){
   changeMobileView('newPost');
-  $( '.mobile-new-post .new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + lang.for + '<figure class="wz-dragger ellipsis">' + worldSelected.name + '</figure>' );
+  $( '.mobile-new-post .new-card-title' ).html( '<i class="wz-dragger">' + lang.newPost + '</i>' + '<span>' + lang.for + '</span>' + '<figure class="wz-dragger ellipsis">' + worldSelected.name + '</figure>' );
   $( '.mobile-new-post .post-new-card span' ).text( lang.publishPost );
   $( '.mobile-new-post .new-card-input' ).attr( 'placeholder', lang.title );
   $( '.mobile-new-post .new-card-textarea' ).attr( 'placeholder', lang.description );
