@@ -1816,6 +1816,7 @@ var initTexts = function(){
   $( '.attachments span' ).text( lang.addFiles );
   $( '.attach-select .inevio span, .attach-select-new-post .inevio span' ).text( lang.uploadInevio );
   $( '.attach-select .pc span, .attach-select-new-post .pc span' ).text( lang.uploadPC );
+  $( '.mobile-world-comments .comments-title' ).text( lang.comments );
 
   //World users
   $( '.invite-user-container .ui-input-search input, .kick-user-container .ui-input-search input' ).attr(  'placeholder' , lang.search );
