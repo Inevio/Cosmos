@@ -5769,13 +5769,20 @@ to {background-position: -200% 0;}
     color: #545f65;
     font-weight: bold;
     margin-right: 4px;
+    float: left;
+
+  }
+
+  .new-card-title span{
+
+    float: left;
 
   }
 
   .new-card-title figure{
     color: @redHorbito;
     font-weight: bold;
-    display: inline-block;
+    float: left;
     margin-left: 4px;
     max-width: 170px;
   }
