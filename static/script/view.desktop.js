@@ -10,6 +10,121 @@ const GROUP_NULL = 0
 const GROUP_CREATE = 1
 const GROUP_EDIT = 2
 
+const async = {
+
+  each : function( list, step, callback ){
+
+    var position = 0
+    var closed   = false
+    var checkEnd = function( error ){
+
+      if( closed ){
+        return
+      }
+
+      position++
+
+      if( position === list.length || error ){
+
+        closed = true
+
+        callback( error )
+
+        // Nullify
+        list = step = callback = position = checkEnd = null
+
+      }
+
+    }
+
+    if( !list.length ){
+      return callback()
+    }
+
+    list.forEach( function( item ){
+      step( item, checkEnd )
+    })
+
+  },
+
+  map : function( list, step, callback ){
+
+    var position = 0
+    var closed   = false
+    var result   = []
+    var checkEnd = function( index, error, data ){
+
+      if( closed ){
+        return
+      }
+
+      position++
+
+      result[ index ] = data
+
+      if( position === list.length || error ){
+
+        closed = true
+
+        callback( error, result )
+
+        // Nullify
+        result = list = step = callback = position = checkEnd = null
+
+      }
+
+    }
+
+    if( !list.length ){
+      return callback()
+    }
+
+    list.forEach( function( item, index ){
+      step( item, checkEnd.bind( null, index ) )
+    })
+
+  },
+
+  parallel : function( fns, callback ){
+
+    var list     = Object.keys( fns )
+    var position = 0
+    var closed   = false
+    var res      = {}
+    var checkEnd = function( i, error, value ){
+
+      if( closed ){
+        return
+      }
+
+      res[ i ] = value
+      position++
+
+      if( position === list.length || error ){
+
+        closed = true
+
+        callback( error, res )
+
+        // Nullify
+        list = callback = position = checkEnd = null
+
+      }
+
+    }
+
+    if( !list.length ){
+      return callback()
+    }
+
+    list.forEach( function( fn ){
+      fns[ fn ]( checkEnd.bind( null, fn ) )
+    })
+
+  }
+
+}
+
 var view = ( function(){
 
 	const colors = [ '#4fb0c6' , '#d09e88' , '#b44b9f' , '#1664a5' , '#e13d35', '#ebab10', '#128a54' , '#6742aa', '#fc913a' , '#58c9b9' ]
@@ -452,8 +567,11 @@ var view = ( function(){
 
 		  })
 
-		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
-		  card.find( '.card-user-name' ).text( user.fullName )
+		  if( user ){
+			  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+		  	card.find( '.card-user-name' ).text( user.fullName )
+		  }
+
 		  card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
 		  /*if (!this.isMobile) {
@@ -520,6 +638,10 @@ var view = ( function(){
 			if( list.length == 0 && !loadingMorePosts ){
 				this._noPosts.css( 'opacity' , '1' );
 				this._noPosts.show()
+			}
+
+			if( !loadingMorePosts ){
+				$( '.cardDom' ).remove()
 			}
 
   		list.forEach( function( post ){
@@ -638,25 +760,25 @@ var view = ( function(){
 	    card.find( '.comments-text' ).data( 'num' , comments.length )
 
 	    var listToAppend = []
-	    comments.forEach( function( comment, index ){
 
-    	  var commentDom = this.appendComment( comment )
+	    async.each( comments, function( comment, checkEnd ){
 
-	      listToAppend.push( commentDom )
+	    	this.appendComment( comment, function( commentDom ){
+	    		listToAppend.push( commentDom )
+	    		checkEnd()
+	    	})
 
-	      if( index == comments.length - 1 ){
+	    }.bind(this), function(){
 
-		      card.find( '.comments-list' ).append( listToAppend )
-	      	//card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
-	      	return callback( card )
+	      card.find( '.comments-list' ).append( listToAppend )
+      	//card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
+      	return callback( card )
 
-	      }
-
-	    }.bind(this))
+	    })
 
 		}
 
-		appendComment( comment ){
+		appendComment( comment, callback, appending ){
 
 			var commentDom = $( '.comment.wz-prototype' ).eq(0).clone()
 			commentDom.removeClass( 'wz-prototype' ).addClass( 'commentDom comment-' + comment.apiComment.id )
@@ -695,7 +817,11 @@ var view = ( function(){
       commentDom.data( 'name' , comment.apiComment.authorObject.name.split( ' ' )[0] )
 
       if( Object.keys( comment.replies ).length === 0 && comment.replies.constructor === Object ){
-				return commentDom
+
+      	if( appending ){
+      		$( '.post-' + comment.parent ).find( '.comments-list' ).append( comment )
+      	}
+				return callback( commentDom )
 		  }
 
 		  var repliesDom = []
@@ -709,9 +835,9 @@ var view = ( function(){
 		  	repliesDom.push( replyDom )
 		  	if( index === replies.length - 1 ){
 
-			    commentDom.find( '.reply-list' ).append( repliesDom );
+			    commentDom.find( '.reply-list' ).append( repliesDom )
 			    //card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
-			    return commentDom
+			    return callback( commentDom )
 
 		  	}
 
@@ -719,7 +845,7 @@ var view = ( function(){
 
 		}
 
-		appendReplyComment( response, comment ){
+		appendReplyComment( response, comment, appending ){
 
 		  var reply = comment.find( '.reply.wz-prototype' ).clone()
 		  reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id )
@@ -747,6 +873,10 @@ var view = ( function(){
 	    }*/
 
 	    reply.data( 'reply' , response )
+	    if( appending ){
+	    	comment.find( '.reply-list' ).append( reply )
+	    }
+
 	    return reply
 
 		}

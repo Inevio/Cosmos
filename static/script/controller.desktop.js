@@ -154,6 +154,13 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click', '.world-card-dom.followed', function(){
+
+        $( '.close-explore' ).click()
+        model.openWorld( $( this ).data( 'world' ).id )
+
+      })
+
       /* Context menu */
 
       this.dom.on( 'contextmenu', '.doc-preview', function(){
@@ -182,6 +189,10 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'input', '.invite-user-container .ui-input-search input', function(){
         view.filterElements( $(this).val(), '.friend' )
+      })
+
+      this.dom.on( 'input', '.explore-container .search-bar input', function(){
+        view.filterElements( $(this).val(), '.world-card-dom' )
       })
 
       // End of input events
@@ -254,6 +265,13 @@ var controller = ( function( model, view ){
         model.removeUserFront( userId, world )
       })
 
+      api.cosmos.on( 'postAdded', function( post ){
+        model.addPost( post )
+      })
+
+      api.cosmos.on( 'postRemoved', function( postId , world ){
+
+      })
 
       // END OF COSMOS EVENTS
 
