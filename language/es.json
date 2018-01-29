@@ -29,7 +29,6 @@
     "send"    : "Enviar",
     "lastDay" : "Ayer",
 
-
     "publics"       : "Mundos públicos",
     "privates"      : "Mundos privados",
     "explore"       : "Explorar",
@@ -41,7 +40,7 @@
     
     "search"        : "Buscar...",
     "updatedFile"   : "ha actualizado un arhivo",
-    "comments"      : "comentarios",
+    "comments"      : "Comentarios",
     "comfirmDeletePost" : "¿Está seguro que quiere eliminar el post?",
     "comfirmDeleteComment" : "¿Está seguro que quiere eliminar el comentario?",
     "deletePost"    : "Borrar post",
