@@ -1,120 +1,5 @@
 var model = ( function( view ){
 
-	var async = {
-
-	  each : function( list, step, callback ){
-
-	    var position = 0
-	    var closed   = false
-	    var checkEnd = function( error ){
-
-	      if( closed ){
-	        return
-	      }
-
-	      position++
-
-	      if( position === list.length || error ){
-
-	        closed = true
-
-	        callback( error )
-
-	        // Nullify
-	        list = step = callback = position = checkEnd = null
-
-	      }
-
-	    }
-
-	    if( !list.length ){
-	      return callback()
-	    }
-
-	    list.forEach( function( item ){
-	      step( item, checkEnd )
-	    })
-
-	  },
-
-	  map : function( list, step, callback ){
-
-	    var position = 0
-	    var closed   = false
-	    var result   = []
-	    var checkEnd = function( index, error, data ){
-
-	      if( closed ){
-	        return
-	      }
-
-	      position++
-
-	      result[ index ] = data
-
-	      if( position === list.length || error ){
-
-	        closed = true
-
-	        callback( error, result )
-
-	        // Nullify
-	        result = list = step = callback = position = checkEnd = null
-
-	      }
-
-	    }
-
-	    if( !list.length ){
-	      return callback()
-	    }
-
-	    list.forEach( function( item, index ){
-	      step( item, checkEnd.bind( null, index ) )
-	    })
-
-	  },
-
-	  parallel : function( fns, callback ){
-
-	    var list     = Object.keys( fns )
-	    var position = 0
-	    var closed   = false
-	    var res      = {}
-	    var checkEnd = function( i, error, value ){
-
-	      if( closed ){
-	        return
-	      }
-
-	      res[ i ] = value
-	      position++
-
-	      if( position === list.length || error ){
-
-	        closed = true
-
-	        callback( error, res )
-
-	        // Nullify
-	        list = callback = position = checkEnd = null
-
-	      }
-
-	    }
-
-	    if( !list.length ){
-	      return callback()
-	    }
-
-	    list.forEach( function( fn ){
-	      fns[ fn ]( checkEnd.bind( null, fn ) )
-	    })
-
-	  }
-
-	}
-
 	class Model{
 
   	constructor( view ){
@@ -210,6 +95,42 @@ var model = ( function( view ){
 
 		  this.contacts[ user.id ] = user;
 		  return this
+
+		}
+
+		addPost( post ){
+
+			var needToAppend = false
+			if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
+				needToAppend = true
+			}
+
+			if( post.isReply ){
+
+				if( this.worlds[ post.worldId ].posts[ post.parent ] ){
+
+					this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
+					if( needToAppend ){
+						this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
+					}
+
+				}else{
+
+					//this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.parent ].replies[ post.id ]
+					/*if( needToAppend ){
+						this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
+					}*/
+
+				}
+
+			}else{
+
+				this.worlds[post.worldId].posts[ post.id ] = new Post( this, post )
+				if( needToAppend ){
+					this.showPosts( post.worldId , 0 )
+				}
+
+			}
 
 		}
 
@@ -960,7 +881,7 @@ var model = ( function( view ){
 
   class Comment{
 
-  	constructor( app, apiComment, info ){
+  	constructor( app, apiComment ){
 
   		this.app = app
 
