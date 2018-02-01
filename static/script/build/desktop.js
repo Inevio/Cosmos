@@ -651,10 +651,14 @@ var view = ( function(){
 
   			this.appendPost( post, promise , function( postDom ){
 
+  				if( post.apiPost.author === this.myContactID ){
+  					postDom.addClass( 'mine' )
+  				}
+  				postDom.data( 'post', post )
 					domList.push( postDom )
   				promise.resolve()
 
-  			})
+  			}.bind(this))
 		    
 	    }.bind(this) )
 
@@ -1315,6 +1319,56 @@ var view = ( function(){
 
 		}
 
+		newWorldAnimationOut(){
+
+		  var newWorldContainer = $( '.new-world-container-wrap' );
+
+		  $( '.new-world-container' ).css( 'height' , '100%' );
+
+		  // Fade out White background
+		  newWorldContainer.stop().clearQueue().transition({
+		    'opacity' : 0
+		  }, 200, function(){
+
+		    newWorldContainer.css( 'display' , 'none' )
+		    $( '.new-world-avatar' ).hide()
+		    $( '.new-world-desc' ).hide()
+		    $( '.new-world-privacy' ).hide()
+		    $( '.new-world-title' ).removeClass( 'second' )
+		    $( '.create-world-button' ).removeClass( 'step-b' )
+		    $( '.create-world-button' ).addClass( 'step-a' )
+		    $( '.new-world-title .step-b' ).removeClass( 'hide' )
+		    $( '.new-world-title .title' ).text( lang.worldCreation )
+		    $( '.delete-world-button' ).addClass( 'hide' )
+
+		    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button' ).css({
+		      'transform' : 'translateY(20px)',
+		      'opacity'   : 0
+		    })
+
+		    $( '.close-new-world' ).css({
+		      'transform' : 'translateY(10px)',
+		      'opacity'   : 0
+		    })
+
+		    if( !this.isMobile ){
+
+		      $( '.create-world-button' ).css({
+
+		        'top'       : '400px',
+		        'transform' : 'translateY(20px)',
+		        'left'      : 'calc((50% - 236px) + 307px)'
+
+		      }).find( 'span' ).text( lang.createWorldShort )
+
+		    }
+
+		    this.closeExploreWorlds()
+
+		  }.bind(this))
+
+		}
+
 		newWorldStep(){
 
 	    this.newWorldAnimationB()
@@ -1408,7 +1462,7 @@ var view = ( function(){
 
 		}
 
-		openEditWorld(){
+		openEditWorld( world ){
 
 			$( '.new-world-title input' ).val('');
 		  $( '.new-world-container' ).addClass( 'editing' );
@@ -2054,35 +2108,57 @@ var model = ( function( view ){
 
 		addPost( post ){
 
+			if( post.isReply ){
+
+				this.addReplyFront( post )
+
+			}else{
+
+				this.worlds[post.worldId].posts[ post.id ] = new Post( this, post )
+				if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
+					this.showPosts( post.worldId , 0 )
+				}
+
+			}
+
+		}
+
+		addReplyBack( post, message ){
+
+			if( !this.openedWorld || !this.openedWorld.posts[ post.apiPost.id ] ){
+				return
+			}
+
+			this.openedWorld.posts[ post.apiPost.id ].apiPost.reply( { content: message }, function( error, object ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+			})
+
+		}
+
+		addReplyFront( post ){
+
 			var needToAppend = false
 			if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
 				needToAppend = true
 			}
 
-			if( post.isReply ){
+			if( this.worlds[ post.worldId ].posts[ post.parent ] ){
 
-				if( this.worlds[ post.worldId ].posts[ post.parent ] ){
-
-					this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
-					if( needToAppend ){
-						this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-					}
-
-				}else{
-
-					//this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.parent ].replies[ post.id ]
-					/*if( needToAppend ){
-						this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-					}*/
-
+				this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
+				if( needToAppend ){
+					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
 				}
 
 			}else{
 
-				this.worlds[post.worldId].posts[ post.id ] = new Post( this, post )
-				if( needToAppend ){
-					this.showPosts( post.worldId , 0 )
-				}
+				//this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.parent ].replies[ post.id ]
+				/*if( needToAppend ){
+					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
+				}*/
 
 			}
 
@@ -2185,6 +2261,56 @@ var model = ( function( view ){
 		    }.bind(this))
 
 		  }.bind(this))
+
+		}
+
+		createWorld( worldName ){
+
+		  if ( !worldName ) {
+
+		    var dialog = api.dialog()
+
+		    dialog.setText( lang.worldTitleMandatory )
+		    dialog.setButton( 0, lang.accept, 'red' )
+		    dialog.render()
+
+		    return
+
+		  }
+
+		  api.cosmos.create( worldName , null, true , null , function( error , world ){
+
+		    if( error ){
+		      return console.log( error )
+		    }
+
+		    this.addWorld( world )
+		    this.view.newWorldStep()
+		    //createChat( o )
+
+		  }.bind(this));
+
+		}
+
+		editWorld( world, isPrivate, name, description ){
+
+			if( !this.worlds[ world.id ] ){
+				return
+			}
+
+			world.isPrivate = isPrivate
+			world.description = description
+			world.name = name
+
+			world.set( world, function( error, editedWorld ){
+
+				if( error ){
+					return error
+				}
+
+				console.log( editedWorld )
+
+			})
 
 		}
 
@@ -2314,7 +2440,7 @@ var model = ( function( view ){
           console.error( error );
         }else{
 
-        	this.removeWorldFront( worldId )
+        	//this.removeWorldFront( worldId )
 
           /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
             if (err) {
@@ -2423,6 +2549,18 @@ var model = ( function( view ){
 		  this.view.openWorld( this.worlds[worldId] )
 
 		  this.showPosts( worldId, 0 )
+
+		}
+
+		openWorldChat(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+	    api.app.openApp( 14 , [ 'open-world-chat' , { 'world' : this.openedWorld.apiWorld } , function( o ){
+      	console.log(o);
+  		}]);
 
 		}
 
@@ -2548,6 +2686,46 @@ var model = ( function( view ){
 
 		}
 
+		removePostBack( post ){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			this.openedWorld.removePost( post.id, function( error, ok ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+			})
+
+		}
+
+		removePostFront( postId, world ){
+
+			if( !this.worlds[ world.id ] ){
+				return
+			}
+
+			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
+				view.removePost( postId )
+			}
+
+			//this.worlds[ world.id ]
+
+		}
+
+		removeWorldBack(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			this.leaveWorld( this.openedWorld.apiWorld.id )
+
+		}
+
 		removeWorldFront( worldId ){
 
     	delete this.worlds[ worldId ]
@@ -2563,11 +2741,11 @@ var model = ( function( view ){
 
 		  this.openedWorld.apiWorld.removeUser( userId, function( err ){
 
-		    if (err) {
-		      console.error(err);
+		    if( err ){
+		      console.error(err)
 		    }
 
-		  });
+		  })
 
 		}
 
@@ -2576,10 +2754,13 @@ var model = ( function( view ){
 			if( userId === this.myContactID ){
 
 				if( this.openedWorld.apiWorld.id == world.id ){
-					view.toggleSelectWorld()
+
+					view.toggleSelectWorld( true )
+					view.newWorldAnimationOut()
+
 				}
 
-				this.removeWorldFront()
+				this.removeWorldFront( world.id )
 
 			}else{
 
@@ -2916,19 +3097,20 @@ var controller = ( function( model, view ){
 
     	})
 
+      this.dom.on( 'click', function( event ){
+
+        if( !$( event.target ).hasClass( 'popup' ) && ! $( event.target ).hasClass( 'popup-launcher' ) ){
+
+          $( '.popup' ).removeClass( 'popup' );
+          $( this ).parent().find( '.comments-footer .attach-select' ).hide();
+
+        }
+
+      })
+
     	this.dom.on( 'click' , '.category-list .world' , function(){
     		model.openWorld( parseInt( $(this).attr( 'data-id' ) ) )
     	})
-
-      $( '.world-selected' ).on( 'scroll' , function(){
-
-        if ( $(this).scrollTop() > 60 ) {
-          $( '.world-header-min' ).addClass( 'active' )
-        }else{
-          $( '.world-header-min' ).removeClass( 'active' )
-        }
-        
-      })
 
       this.dom.on( 'click', '.open-folder-button' ,function(){
         model.openFolder()
@@ -2995,8 +3177,66 @@ var controller = ( function( model, view ){
       this.dom.on( 'click' , '.create-world-button.step-a', function(){
 
         if ( $( '.new-world-name input' ).val() ) {
-          view.newWorldStep()
+          model.createWorld( $( '.new-world-name input' ).val() )
         }
+
+      })
+
+      this.dom.on( 'click', '.create-world-button.step-b', function(){
+
+        var worldApi = $( '.new-world-container' ).data( 'world' )
+        var isPrivate
+
+        if( api.system.user().user.indexOf('demo') === 0 ){
+          isPrivate = true
+        }else{
+          isPrivate = $( '.private-option' ).hasClass( 'active' )
+        }
+
+        var editing = $( '.new-world-container' ).hasClass( 'editing' )
+        var name = worldApi.name
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , worldApi.id )
+
+        if ( editing ) {
+          name = $( '.new-world-name input' ).val()
+        }
+        var description = $( '.new-world-desc textarea' ).val()
+
+        model.editWorld( worldApi, isPrivate, name, description )
+        view.newWorldAnimationOut()
+
+      })
+
+      this.dom.on( 'click', '.delete-world-button', function(){
+
+        var dialog = api.dialog()
+
+        dialog.setTitle( lang.unfollowWorld )
+        dialog.setText( lang.confirmExit )
+
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, wzLang.core.dialogAccept, 'red' )
+
+        dialog.render( function( ok ){
+
+          if( !ok ){
+            return
+          }
+
+          model.removeWorldBack()
+          $( '.new-world-container' ).removeClass( 'editing' )
+          //view.newWorldAnimationOut()
+
+          /*if (isMobile()) {
+            changeMobileView('worldSidebar');
+            mobileNewWorld.stop().clearQueue().transition({
+              'transform' : 'translateY(-100%)'
+            }, 300, function(){
+              mobileNewWorld.addClass('hide');
+            });
+          }*/
+
+        })
 
       })
 
@@ -3027,6 +3267,55 @@ var controller = ( function( model, view ){
 
         $( '.close-explore' ).click()
         model.openWorld( $( this ).data( 'world' ).id )
+
+      })
+
+      this.dom.on( 'click', '.open-chat-button', function(){
+        model.openWorldChat()
+      })
+
+      this.dom.on( 'click', '.privacy-options .option', function(){
+
+        $( '.privacy-options .option' ).removeClass( 'active' )
+        $( this ).addClass( 'active' )
+
+      })
+
+      this.dom.on( 'click', '.comments-footer .send-button', function(){
+
+        var post = $( this ).parent().parent().parent().data( 'post' )
+        var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+
+        model.addReplyBack( post , message )
+
+      })
+
+      this.dom.on( 'click', '.card-options', function(){
+
+        var post = $( this ).closest( '.card' ).data( 'post' )
+
+        $( this ).parent().find( '.card-options-section' ).addClass( 'popup' )
+        $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' )
+
+      })
+
+
+      /* Keypress */
+
+      this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
+
+        if( e.keyCode == 13 ){
+
+          if ( !e.shiftKey ) {
+
+            var post = $( this ).parent().parent().parent().data( 'post' )
+            var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+
+            model.addReplyBack( post, message )
+
+          }
+
+        }
 
       })
 
@@ -3072,6 +3361,12 @@ var controller = ( function( model, view ){
 
       $( '.world-selected' ).on( 'scroll' , function(){
 
+        if ( $(this).scrollTop() > 60 ) {
+          $( '.world-header-min' ).addClass( 'active' )
+        }else{
+          $( '.world-header-min' ).removeClass( 'active' )
+        }
+
         var scrollDiv = $( this );
         var scrollFinish = $( '.world-selected' )[0].scrollHeight - scrollDiv.height();
 
@@ -3114,6 +3409,7 @@ var controller = ( function( model, view ){
       api.cosmos.on( 'worldCreated' , function( world ){
 
         model.addWorld( world )
+        $( '.new-world-container' ).data( 'world' , world )
         /*$( '.new-world-name input' ).val('');
         $( '.new-world-container' ).data( 'world' , world );
         $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
@@ -3139,7 +3435,7 @@ var controller = ( function( model, view ){
       })
 
       api.cosmos.on( 'postRemoved', function( postId , world ){
-
+        model.removePost( postId, world )
       })
 
       // END OF COSMOS EVENTS
