@@ -651,10 +651,14 @@ var view = ( function(){
 
   			this.appendPost( post, promise , function( postDom ){
 
+  				if( post.apiPost.author === this.myContactID ){
+  					postDom.addClass( 'mine' )
+  				}
+  				postDom.data( 'post', post )
 					domList.push( postDom )
   				promise.resolve()
 
-  			})
+  			}.bind(this))
 		    
 	    }.bind(this) )
 
@@ -1315,6 +1319,56 @@ var view = ( function(){
 
 		}
 
+		newWorldAnimationOut(){
+
+		  var newWorldContainer = $( '.new-world-container-wrap' );
+
+		  $( '.new-world-container' ).css( 'height' , '100%' );
+
+		  // Fade out White background
+		  newWorldContainer.stop().clearQueue().transition({
+		    'opacity' : 0
+		  }, 200, function(){
+
+		    newWorldContainer.css( 'display' , 'none' )
+		    $( '.new-world-avatar' ).hide()
+		    $( '.new-world-desc' ).hide()
+		    $( '.new-world-privacy' ).hide()
+		    $( '.new-world-title' ).removeClass( 'second' )
+		    $( '.create-world-button' ).removeClass( 'step-b' )
+		    $( '.create-world-button' ).addClass( 'step-a' )
+		    $( '.new-world-title .step-b' ).removeClass( 'hide' )
+		    $( '.new-world-title .title' ).text( lang.worldCreation )
+		    $( '.delete-world-button' ).addClass( 'hide' )
+
+		    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button' ).css({
+		      'transform' : 'translateY(20px)',
+		      'opacity'   : 0
+		    })
+
+		    $( '.close-new-world' ).css({
+		      'transform' : 'translateY(10px)',
+		      'opacity'   : 0
+		    })
+
+		    if( !this.isMobile ){
+
+		      $( '.create-world-button' ).css({
+
+		        'top'       : '400px',
+		        'transform' : 'translateY(20px)',
+		        'left'      : 'calc((50% - 236px) + 307px)'
+
+		      }).find( 'span' ).text( lang.createWorldShort )
+
+		    }
+
+		    this.closeExploreWorlds()
+
+		  }.bind(this))
+
+		}
+
 		newWorldStep(){
 
 	    this.newWorldAnimationB()
@@ -1408,7 +1462,7 @@ var view = ( function(){
 
 		}
 
-		openEditWorld(){
+		openEditWorld( world ){
 
 			$( '.new-world-title input' ).val('');
 		  $( '.new-world-container' ).addClass( 'editing' );

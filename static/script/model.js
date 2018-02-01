@@ -100,35 +100,57 @@ var model = ( function( view ){
 
 		addPost( post ){
 
+			if( post.isReply ){
+
+				this.addReplyFront( post )
+
+			}else{
+
+				this.worlds[post.worldId].posts[ post.id ] = new Post( this, post )
+				if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
+					this.showPosts( post.worldId , 0 )
+				}
+
+			}
+
+		}
+
+		addReplyBack( post, message ){
+
+			if( !this.openedWorld || !this.openedWorld.posts[ post.apiPost.id ] ){
+				return
+			}
+
+			this.openedWorld.posts[ post.apiPost.id ].apiPost.reply( { content: message }, function( error, object ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+			})
+
+		}
+
+		addReplyFront( post ){
+
 			var needToAppend = false
 			if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
 				needToAppend = true
 			}
 
-			if( post.isReply ){
+			if( this.worlds[ post.worldId ].posts[ post.parent ] ){
 
-				if( this.worlds[ post.worldId ].posts[ post.parent ] ){
-
-					this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
-					if( needToAppend ){
-						this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-					}
-
-				}else{
-
-					//this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.parent ].replies[ post.id ]
-					/*if( needToAppend ){
-						this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-					}*/
-
+				this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
+				if( needToAppend ){
+					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
 				}
 
 			}else{
 
-				this.worlds[post.worldId].posts[ post.id ] = new Post( this, post )
-				if( needToAppend ){
-					this.showPosts( post.worldId , 0 )
-				}
+				//this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.parent ].replies[ post.id ]
+				/*if( needToAppend ){
+					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
+				}*/
 
 			}
 
@@ -231,6 +253,56 @@ var model = ( function( view ){
 		    }.bind(this))
 
 		  }.bind(this))
+
+		}
+
+		createWorld( worldName ){
+
+		  if ( !worldName ) {
+
+		    var dialog = api.dialog()
+
+		    dialog.setText( lang.worldTitleMandatory )
+		    dialog.setButton( 0, lang.accept, 'red' )
+		    dialog.render()
+
+		    return
+
+		  }
+
+		  api.cosmos.create( worldName , null, true , null , function( error , world ){
+
+		    if( error ){
+		      return console.log( error )
+		    }
+
+		    this.addWorld( world )
+		    this.view.newWorldStep()
+		    //createChat( o )
+
+		  }.bind(this));
+
+		}
+
+		editWorld( world, isPrivate, name, description ){
+
+			if( !this.worlds[ world.id ] ){
+				return
+			}
+
+			world.isPrivate = isPrivate
+			world.description = description
+			world.name = name
+
+			world.set( world, function( error, editedWorld ){
+
+				if( error ){
+					return error
+				}
+
+				console.log( editedWorld )
+
+			})
 
 		}
 
@@ -360,7 +432,7 @@ var model = ( function( view ){
           console.error( error );
         }else{
 
-        	this.removeWorldFront( worldId )
+        	//this.removeWorldFront( worldId )
 
           /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
             if (err) {
@@ -469,6 +541,18 @@ var model = ( function( view ){
 		  this.view.openWorld( this.worlds[worldId] )
 
 		  this.showPosts( worldId, 0 )
+
+		}
+
+		openWorldChat(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+	    api.app.openApp( 14 , [ 'open-world-chat' , { 'world' : this.openedWorld.apiWorld } , function( o ){
+      	console.log(o);
+  		}]);
 
 		}
 
@@ -594,6 +678,46 @@ var model = ( function( view ){
 
 		}
 
+		removePostBack( post ){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			this.openedWorld.removePost( post.id, function( error, ok ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+			})
+
+		}
+
+		removePostFront( postId, world ){
+
+			if( !this.worlds[ world.id ] ){
+				return
+			}
+
+			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
+				view.removePost( postId )
+			}
+
+			//this.worlds[ world.id ]
+
+		}
+
+		removeWorldBack(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			this.leaveWorld( this.openedWorld.apiWorld.id )
+
+		}
+
 		removeWorldFront( worldId ){
 
     	delete this.worlds[ worldId ]
@@ -609,11 +733,11 @@ var model = ( function( view ){
 
 		  this.openedWorld.apiWorld.removeUser( userId, function( err ){
 
-		    if (err) {
-		      console.error(err);
+		    if( err ){
+		      console.error(err)
 		    }
 
-		  });
+		  })
 
 		}
 
@@ -622,10 +746,13 @@ var model = ( function( view ){
 			if( userId === this.myContactID ){
 
 				if( this.openedWorld.apiWorld.id == world.id ){
-					view.toggleSelectWorld()
+
+					view.toggleSelectWorld( true )
+					view.newWorldAnimationOut()
+
 				}
 
-				this.removeWorldFront()
+				this.removeWorldFront( world.id )
 
 			}else{
 

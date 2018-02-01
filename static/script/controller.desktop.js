@@ -47,19 +47,20 @@ var controller = ( function( model, view ){
 
     	})
 
+      this.dom.on( 'click', function( event ){
+
+        if( !$( event.target ).hasClass( 'popup' ) && ! $( event.target ).hasClass( 'popup-launcher' ) ){
+
+          $( '.popup' ).removeClass( 'popup' );
+          $( this ).parent().find( '.comments-footer .attach-select' ).hide();
+
+        }
+
+      })
+
     	this.dom.on( 'click' , '.category-list .world' , function(){
     		model.openWorld( parseInt( $(this).attr( 'data-id' ) ) )
     	})
-
-      $( '.world-selected' ).on( 'scroll' , function(){
-
-        if ( $(this).scrollTop() > 60 ) {
-          $( '.world-header-min' ).addClass( 'active' )
-        }else{
-          $( '.world-header-min' ).removeClass( 'active' )
-        }
-        
-      })
 
       this.dom.on( 'click', '.open-folder-button' ,function(){
         model.openFolder()
@@ -126,8 +127,66 @@ var controller = ( function( model, view ){
       this.dom.on( 'click' , '.create-world-button.step-a', function(){
 
         if ( $( '.new-world-name input' ).val() ) {
-          view.newWorldStep()
+          model.createWorld( $( '.new-world-name input' ).val() )
         }
+
+      })
+
+      this.dom.on( 'click', '.create-world-button.step-b', function(){
+
+        var worldApi = $( '.new-world-container' ).data( 'world' )
+        var isPrivate
+
+        if( api.system.user().user.indexOf('demo') === 0 ){
+          isPrivate = true
+        }else{
+          isPrivate = $( '.private-option' ).hasClass( 'active' )
+        }
+
+        var editing = $( '.new-world-container' ).hasClass( 'editing' )
+        var name = worldApi.name
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , worldApi.id )
+
+        if ( editing ) {
+          name = $( '.new-world-name input' ).val()
+        }
+        var description = $( '.new-world-desc textarea' ).val()
+
+        model.editWorld( worldApi, isPrivate, name, description )
+        view.newWorldAnimationOut()
+
+      })
+
+      this.dom.on( 'click', '.delete-world-button', function(){
+
+        var dialog = api.dialog()
+
+        dialog.setTitle( lang.unfollowWorld )
+        dialog.setText( lang.confirmExit )
+
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, wzLang.core.dialogAccept, 'red' )
+
+        dialog.render( function( ok ){
+
+          if( !ok ){
+            return
+          }
+
+          model.removeWorldBack()
+          $( '.new-world-container' ).removeClass( 'editing' )
+          //view.newWorldAnimationOut()
+
+          /*if (isMobile()) {
+            changeMobileView('worldSidebar');
+            mobileNewWorld.stop().clearQueue().transition({
+              'transform' : 'translateY(-100%)'
+            }, 300, function(){
+              mobileNewWorld.addClass('hide');
+            });
+          }*/
+
+        })
 
       })
 
@@ -158,6 +217,55 @@ var controller = ( function( model, view ){
 
         $( '.close-explore' ).click()
         model.openWorld( $( this ).data( 'world' ).id )
+
+      })
+
+      this.dom.on( 'click', '.open-chat-button', function(){
+        model.openWorldChat()
+      })
+
+      this.dom.on( 'click', '.privacy-options .option', function(){
+
+        $( '.privacy-options .option' ).removeClass( 'active' )
+        $( this ).addClass( 'active' )
+
+      })
+
+      this.dom.on( 'click', '.comments-footer .send-button', function(){
+
+        var post = $( this ).parent().parent().parent().data( 'post' )
+        var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+
+        model.addReplyBack( post , message )
+
+      })
+
+      this.dom.on( 'click', '.card-options', function(){
+
+        var post = $( this ).closest( '.card' ).data( 'post' )
+
+        $( this ).parent().find( '.card-options-section' ).addClass( 'popup' )
+        $( this ).parent().find( '.card-options-section *' ).addClass( 'popup' )
+
+      })
+
+
+      /* Keypress */
+
+      this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
+
+        if( e.keyCode == 13 ){
+
+          if ( !e.shiftKey ) {
+
+            var post = $( this ).parent().parent().parent().data( 'post' )
+            var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+
+            model.addReplyBack( post, message )
+
+          }
+
+        }
 
       })
 
@@ -203,6 +311,12 @@ var controller = ( function( model, view ){
 
       $( '.world-selected' ).on( 'scroll' , function(){
 
+        if ( $(this).scrollTop() > 60 ) {
+          $( '.world-header-min' ).addClass( 'active' )
+        }else{
+          $( '.world-header-min' ).removeClass( 'active' )
+        }
+
         var scrollDiv = $( this );
         var scrollFinish = $( '.world-selected' )[0].scrollHeight - scrollDiv.height();
 
@@ -245,6 +359,7 @@ var controller = ( function( model, view ){
       api.cosmos.on( 'worldCreated' , function( world ){
 
         model.addWorld( world )
+        $( '.new-world-container' ).data( 'world' , world )
         /*$( '.new-world-name input' ).val('');
         $( '.new-world-container' ).data( 'world' , world );
         $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
@@ -270,7 +385,7 @@ var controller = ( function( model, view ){
       })
 
       api.cosmos.on( 'postRemoved', function( postId , world ){
-
+        model.removePost( postId, world )
       })
 
       // END OF COSMOS EVENTS
