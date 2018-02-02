@@ -432,7 +432,7 @@ var view = ( function(){
 	    }
 	    appendCard( card , post.apiPost );*/
 	    
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -534,7 +534,7 @@ var view = ( function(){
 	      setRepliesAsyncWithoutAppendMobile( card , post );
 	    }
 	    appendCard( card , post );*/
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -581,7 +581,7 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -622,7 +622,7 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
   
@@ -746,7 +746,14 @@ var view = ( function(){
 
 		}
 
-		appendComments( card, comments, callback ){
+		appendComments( card, post, callback ){
+
+			if( !post.commentsLoaded ){
+				card.find( '.comments-text' ).text( lang.loading + ' ' + lang.comments )
+				return callback( card )
+			}
+
+			var comments = post.comments
 
 			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
 				card.find( '.comments-text' ).text( '0 ' + lang.comments )
@@ -1846,6 +1853,15 @@ var view = ( function(){
 	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsnode.icons.micro +' )' )
 
 			})
+
+		}
+
+		updatePostComments( post ){
+			
+			var card = $( '.post-' + post.apiPost.id )
+			if( card.length ){
+				this.appendComments( card, post, function(){} )				
+			}
 
 		}
 

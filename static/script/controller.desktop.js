@@ -249,6 +249,84 @@ var controller = ( function( model, view ){
 
       })
 
+      this.on( 'click' , '.delete-comment.parent' , function(){
+
+        var post = $( this ).closest( '.comment' ).data( 'reply' )
+        var confirmText = lang.comfirmDeletePost
+        if ( post.isReply ) {
+          confirmText = lang.comfirmDeleteComment
+        }
+
+        /*if (isMobile()) {
+
+          worldSelected.removePost( post.id , function( err, o ){
+            if (err) {
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+            }
+          });
+
+        }else{*/
+
+          confirm( confirmText , function( ok ){
+
+            if( ok ){
+
+              model.removeComment( post )
+              /*worldSelected.removePost( post.id , function( err, o ){
+
+                if( error ){
+                  alert( lang.notAllowedDeletePost )
+                }
+
+              })*/
+
+            }
+
+          })
+
+        //}
+
+      })
+
+      this.on( 'click' , '.delete-comment.child' , function(){
+
+        var post = $( this ).closest( '.replyDom' ).data( 'reply' )
+        var confirmText = lang.comfirmDeletePost
+        if ( post.isReply ) {
+          confirmText = lang.comfirmDeleteComment
+        }
+
+        /*if (isMobile()) {
+
+          worldSelected.removePost( post.id , function( err, o ){
+            if (err) {
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+            }
+          });
+
+        }else{*/
+
+          confirm( confirmText , function( ok ){
+
+            if( ok ){
+
+              model.removePostBack( post )
+              /*worldSelected.removePost( post.id , function( err, o ){
+
+                if( error ){
+                  alert( lang.notAllowedDeletePost )
+                }
+
+              })*/
+
+            }
+            
+          })
+
+        //}
+
+      })
+
 
       /* Keypress */
 
@@ -385,7 +463,7 @@ var controller = ( function( model, view ){
       })
 
       api.cosmos.on( 'postRemoved', function( postId , world ){
-        model.removePost( postId, world )
+        model.removePostFront( postId, world )
       })
 
       // END OF COSMOS EVENTS

@@ -1871,7 +1871,7 @@ to {background-position: -200% 0;}
   .card-footer .comments-opener{
 
     float: left;
-    width: 150px;
+    /*width: 150px;*/
     height: 100%;
     cursor: pointer;
     opacity: 0.7;

@@ -931,6 +931,8 @@ var model = ( function( view ){
   			this.readyToInsert = true
   		}
 
+  		this.commentsLoaded = false
+
   		this._loadComments()
   		this._addToQueue()
   		//this._loadFsnodes()
@@ -952,6 +954,8 @@ var model = ( function( view ){
 
 			this.apiPost.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
 
+				this.commentsLoaded = true
+
 				if( error ){
 					return console.error( error )
 				}
@@ -959,6 +963,10 @@ var model = ( function( view ){
 				replies.forEach( function( reply ){
 					this.comments[ reply.id ] = new Comment( this.app, reply )
 				}.bind(this))
+
+				if( this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId ){
+					this.app.view.updatePostComments( this )
+				}
 
 			}.bind(this))
 
@@ -1015,6 +1023,8 @@ var model = ( function( view ){
   		this.apiComment = apiComment
   		this.replies = {}
 
+  		this.repliesLoaded = false
+
   		this._loadReplies()
 
   	}
@@ -1023,6 +1033,8 @@ var model = ( function( view ){
 
   		this.apiComment.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
 
+  			this.repliesLoaded = true
+
 				if( error ){
 					return console.error( error )
 				}
@@ -1030,6 +1042,10 @@ var model = ( function( view ){
 				replies.forEach( function( reply ){
 					this.replies[ reply.id ] = reply
 				}.bind(this))
+
+				/*if( this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId ){
+					this.app.view.updatePostComments( this )
+				}*/
 
 			}.bind(this))
   		

@@ -177,7 +177,9 @@
     "fileCanNotOpen"  : "horbito no puede abrir este fichero en el dispositivo",
 
     "next"  : "Siguiente",
-    "previous"  : "Anterior"
+    "previous"  : "Anterior",
+
+    "loading" : "Cargando"
 
 
   }

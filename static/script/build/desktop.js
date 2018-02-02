@@ -432,7 +432,7 @@ var view = ( function(){
 	    }
 	    appendCard( card , post.apiPost );*/
 	    
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -534,7 +534,7 @@ var view = ( function(){
 	      setRepliesAsyncWithoutAppendMobile( card , post );
 	    }
 	    appendCard( card , post );*/
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -581,7 +581,7 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
 
@@ -622,7 +622,7 @@ var view = ( function(){
 		  }
 		  appendCard( card , post.apiPost );*/
 
-		  this.appendComments( card, post.comments, function( cardToInsert ){
+		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
   
@@ -746,7 +746,14 @@ var view = ( function(){
 
 		}
 
-		appendComments( card, comments, callback ){
+		appendComments( card, post, callback ){
+
+			if( !post.commentsLoaded ){
+				card.find( '.comments-text' ).text( lang.loading + ' ' + lang.comments )
+				return callback( card )
+			}
+
+			var comments = post.comments
 
 			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
 				card.find( '.comments-text' ).text( '0 ' + lang.comments )
@@ -1849,6 +1856,15 @@ var view = ( function(){
 
 		}
 
+		updatePostComments( post ){
+			
+			var card = $( '.post-' + post.apiPost.id )
+			if( card.length ){
+				this.appendComments( card, post, function(){} )				
+			}
+
+		}
+
 		updatePostFSNodes( post ){
 
 			if( post.apiPost.metadata && post.apiPost.metadata.operation === 'remove' ){
@@ -2939,6 +2955,8 @@ var model = ( function( view ){
   			this.readyToInsert = true
   		}
 
+  		this.commentsLoaded = false
+
   		this._loadComments()
   		this._addToQueue()
   		//this._loadFsnodes()
@@ -2960,6 +2978,8 @@ var model = ( function( view ){
 
 			this.apiPost.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
 
+				this.commentsLoaded = true
+
 				if( error ){
 					return console.error( error )
 				}
@@ -2967,6 +2987,10 @@ var model = ( function( view ){
 				replies.forEach( function( reply ){
 					this.comments[ reply.id ] = new Comment( this.app, reply )
 				}.bind(this))
+
+				if( this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId ){
+					this.app.view.updatePostComments( this )
+				}
 
 			}.bind(this))
 
@@ -3023,6 +3047,8 @@ var model = ( function( view ){
   		this.apiComment = apiComment
   		this.replies = {}
 
+  		this.repliesLoaded = false
+
   		this._loadReplies()
 
   	}
@@ -3031,6 +3057,8 @@ var model = ( function( view ){
 
   		this.apiComment.getReplies( { from : 0, to : 1000 , withFullUsers: true }, function( error , replies ){
 
+  			this.repliesLoaded = true
+
 				if( error ){
 					return console.error( error )
 				}
@@ -3038,6 +3066,10 @@ var model = ( function( view ){
 				replies.forEach( function( reply ){
 					this.replies[ reply.id ] = reply
 				}.bind(this))
+
+				/*if( this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId ){
+					this.app.view.updatePostComments( this )
+				}*/
 
 			}.bind(this))
   		
@@ -3299,6 +3331,84 @@ var controller = ( function( model, view ){
 
       })
 
+      this.on( 'click' , '.delete-comment.parent' , function(){
+
+        var post = $( this ).closest( '.comment' ).data( 'reply' )
+        var confirmText = lang.comfirmDeletePost
+        if ( post.isReply ) {
+          confirmText = lang.comfirmDeleteComment
+        }
+
+        /*if (isMobile()) {
+
+          worldSelected.removePost( post.id , function( err, o ){
+            if (err) {
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+            }
+          });
+
+        }else{*/
+
+          confirm( confirmText , function( ok ){
+
+            if( ok ){
+
+              model.removeComment( post )
+              /*worldSelected.removePost( post.id , function( err, o ){
+
+                if( error ){
+                  alert( lang.notAllowedDeletePost )
+                }
+
+              })*/
+
+            }
+
+          })
+
+        //}
+
+      })
+
+      this.on( 'click' , '.delete-comment.child' , function(){
+
+        var post = $( this ).closest( '.replyDom' ).data( 'reply' )
+        var confirmText = lang.comfirmDeletePost
+        if ( post.isReply ) {
+          confirmText = lang.comfirmDeleteComment
+        }
+
+        /*if (isMobile()) {
+
+          worldSelected.removePost( post.id , function( err, o ){
+            if (err) {
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+            }
+          });
+
+        }else{*/
+
+          confirm( confirmText , function( ok ){
+
+            if( ok ){
+
+              model.removePostBack( post )
+              /*worldSelected.removePost( post.id , function( err, o ){
+
+                if( error ){
+                  alert( lang.notAllowedDeletePost )
+                }
+
+              })*/
+
+            }
+            
+          })
+
+        //}
+
+      })
+
 
       /* Keypress */
 
@@ -3435,7 +3545,7 @@ var controller = ( function( model, view ){
       })
 
       api.cosmos.on( 'postRemoved', function( postId , world ){
-        model.removePost( postId, world )
+        model.removePostFront( postId, world )
       })
 
       // END OF COSMOS EVENTS
