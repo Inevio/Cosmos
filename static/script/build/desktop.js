@@ -2197,7 +2197,7 @@ var model = ( function( view ){
 			}else{
 
 				this.worlds[ world.id ].apiWorld = world
-				this.worlds[ world.id ].removeMember( userId )
+				this.worlds[ world.id ].addMember( userId )
 				this.view.closeInviteMembers()
 
 				if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
@@ -2925,6 +2925,20 @@ var model = ( function( view ){
         return 0
 
       }.bind(this))
+
+  	}
+
+  	addMember( userId ){
+
+  		api.user( userId, function( error, user ){
+
+  			if( error ){
+  				return console.error( error )
+  			}
+
+  			this.members.push( user )
+
+  		}.bind(this))
 
   	}
 
