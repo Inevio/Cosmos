@@ -1567,7 +1567,10 @@ var view = ( function(){
 			  friendDomList.push( friend )
 
 			  if( index === friends.length - 1 ){
+
+			  	$( '.friend-list' ).scrollTop(0)
 			  	$( '.friend-list' ).append( friendDomList )
+			  	
 			  }
 
 	    })

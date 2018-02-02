@@ -249,7 +249,7 @@ var controller = ( function( model, view ){
 
       })
 
-      this.on( 'click' , '.delete-comment.parent' , function(){
+      this.dom.on( 'click' , '.delete-comment.parent' , function(){
 
         var post = $( this ).closest( '.comment' ).data( 'reply' )
         var confirmText = lang.comfirmDeletePost
@@ -288,7 +288,7 @@ var controller = ( function( model, view ){
 
       })
 
-      this.on( 'click' , '.delete-comment.child' , function(){
+      this.dom.on( 'click' , '.delete-comment.child' , function(){
 
         var post = $( this ).closest( '.replyDom' ).data( 'reply' )
         var confirmText = lang.comfirmDeletePost
