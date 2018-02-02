@@ -271,7 +271,7 @@ var controller = ( function( model, view ){
 
             if( ok ){
 
-              model.removeComment( post )
+              model.removePostBack( post )
               /*worldSelected.removePost( post.id , function( err, o ){
 
                 if( error ){
@@ -327,6 +327,20 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click', '.invite-by-mail', function(){
+        model.openInviteByMail()
+      })
+
+      this.dom.on( 'click' , '.reply-button' , function(){
+
+        var comment = $( this ).parent()
+        var post = comment.data( 'reply' )
+        var name = comment.data( 'name' )
+        var input = comment.parent().parent().find( '.comments-footer .comment-input' )
+
+        view.prepareReplyComment( post, name, input )
+
+      })
 
       /* Keypress */
 

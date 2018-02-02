@@ -26,6 +26,7 @@ var model = ( function( view ){
   		this.isMobile = this.view.dom.hasClass( 'wz-mobile-view' )
 
 		  //this.changeMainAreaMode( MAINAREA_NULL )
+		  this.checkNotifications()
   		this.fullLoad()
 
   	}
@@ -253,6 +254,34 @@ var model = ( function( view ){
 		    }.bind(this))
 
 		  }.bind(this))
+
+		}
+
+		checkNotifications(){
+
+		  api.notification.list( 'cosmos' , function( e , notifications ){
+
+		    /*worldNotifications = [];
+		    postsNotifications = [];
+		    commentsNotifications = [];
+		    notifications.forEach(function( notification ){
+
+		      if (notification.data.type === 'addedToWorld') {
+		        worldNotifications.push(notification)
+		      }else if (notification.data.type === 'post') {
+		        postsNotifications.push(notification)
+		      }else if (notification.data.type === 'reply') {
+		        commentsNotifications.push(notification)
+		      }
+
+		    });
+
+		    updateBadges();
+		    wz.app.setBadge( notifications.length );
+		    console.log('WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
+		    console.log(notifications);
+
+		  })
 
 		}
 
@@ -486,6 +515,16 @@ var model = ( function( view ){
 
 		}
 
+		openInviteByMail(){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			api.app.createView( this.openedWorld.apiWorld.id, 'inviteByMail' )
+
+		}
+
 		openInviteMembers(){
 
 			if( !this.openedWorld ){
@@ -685,7 +724,7 @@ var model = ( function( view ){
 				return
 			}
 
-			this.openedWorld.removePost( post.id, function( error, ok ){
+			this.openedWorld.apiWorld.removePost( post.id, function( error, ok ){
 
 				if( error ){
 					return console.error( error )

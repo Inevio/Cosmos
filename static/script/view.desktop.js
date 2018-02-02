@@ -1570,7 +1570,7 @@ var view = ( function(){
 
 			  	$( '.friend-list' ).scrollTop(0)
 			  	$( '.friend-list' ).append( friendDomList )
-			  	
+
 			  }
 
 	    })
@@ -1711,6 +1711,14 @@ var view = ( function(){
 		  if( !updatingHeader ){
 		  	$( '.cardDom' ).remove()
 		  }
+
+		}
+
+		prepareReplyComment( post, name, input ){
+
+		  input.attr( 'placeholder' ,  '@' + name + ' ')
+		  input.focus()
+		  input.data( 'reply' , post )
 
 		}
 
