@@ -492,16 +492,13 @@ var model = ( function( view ){
 				return
 			}
 
-			var contactsToShow = []
-			for( var i in this.contacts ){
+			var contacts = Object.values( this.contacts )
 
-				if( !this.searchMember( this.contacts[i].id, this.openedWorld.members ) ){
-					contactsToShow.push( this.contacts[i] )
-				}
+			this.searchMember( contacts, this.openedWorld.members, function( contactsToShow ){
 
-			}
+				view.openInviteMembers( contactsToShow, this.openedWorld.apiWorld.name )
 
-			view.openInviteMembers( contactsToShow, this.openedWorld.apiWorld.name )
+			}.bind(this))
 
 		}
 
@@ -556,23 +553,27 @@ var model = ( function( view ){
 
 		}
 
-		searchMember( idToSearch, array ){
+		searchMember( contacts, members, callback ){
 
-			if( !idToSearch || !array.length ){
-				return false
+			if( !contacts || !members ){
+				return callback( false )
 			}
 
-			array.forEach( function( element, index ){
+			var listToShow = contacts
 
-				if( element.id === idToSearch ){
-					return true
+			for( var i = 0; i < contacts.length; i++ ){
+
+				for( var j = 0; j < members.length; j++ ){
+
+					if( contacts[i].id === members[j].id ){
+						listToShow.splice( i,1 )
+					}
+
 				}
 
-				if( index === array.length - 1 ){
-					return false
-				}
+			}
 
-			})
+			return callback( listToShow )
 
 		}
 
