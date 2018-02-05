@@ -234,7 +234,15 @@ var controller = ( function( model, view ){
       this.dom.on( 'click', '.comments-footer .send-button', function(){
 
         var post = $( this ).parent().parent().parent().data( 'post' )
+        var input = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' )
         var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+
+        if( input.attr( 'placeholder' )[0] === '@' ){
+
+          post = input.data( 'reply' )
+          $( '.comments-footer .comment-input' ).attr( 'placeholder' , lang.writeComment )
+
+        }
 
         model.addReplyBack( post , message )
 
@@ -327,6 +335,45 @@ var controller = ( function( model, view ){
 
       })
 
+      .on( 'click' , '.card-options-section .delete' , function(){
+
+        var post = $(this).closest('.card').data('post')
+        var confirmText = lang.comfirmDeletePost
+        if ( post.isReply ) {
+          confirmText = lang.comfirmDeleteComment
+        }
+
+        /*if (isMobile()) {
+
+          worldSelected.removePost( post.id , function( err, o ){
+            if (err) {
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+            }
+          });
+
+        }else{*/
+
+          confirm( confirmText , function( ok ){
+
+            if( ok ){
+
+              model.removePostBack( post.apiPost )
+              /*worldSelected.removePost( post.id , function( err, o ){
+
+                if( error ){
+                  alert( lang.notAllowedDeletePost )
+                }
+
+              })*/
+
+            }
+            
+          })
+
+        //}
+
+      })
+
       this.dom.on( 'click', '.invite-by-mail', function(){
         model.openInviteByMail()
       })
@@ -378,7 +425,7 @@ var controller = ( function( model, view ){
       this.dom.on( 'input' , '.world-header .search-post' , function( e ){
 
         //if (e.keyCode == 13) {
-          model.searchPost( $( this ).find( 'input' ).val() )
+          model.searchLocalPost( $( this ).find( 'input' ).val() )
         //}
 
       })
@@ -398,7 +445,7 @@ var controller = ( function( model, view ){
       // End of input events
 
       /*this.dom.on( 'click' , '.world-header .search-post .delete-content' , function( e ){
-        model.searchPost( null )
+        model.searchLocalPost( null )
       })*/
 
       $( '.world-selected' ).on( 'scroll' , function(){
