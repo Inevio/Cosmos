@@ -119,17 +119,39 @@ var model = ( function( view ){
 
 		addReplyBack( post, message ){
 
-			if( !this.openedWorld || !this.openedWorld.posts[ post.apiPost.id ] ){
+			if( !this.openedWorld ){
 				return
 			}
 
-			this.openedWorld.posts[ post.apiPost.id ].apiPost.reply( { content: message }, function( error, object ){
+			if( post.isReply ){
 
-				if( error ){
-					return console.error( error )
+				if( !this.openedWorld.posts[ post.parent ] || !this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment ){
+					return
 				}
 
-			})
+				this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply( { content: message }, function( error, object ){
+
+					if( error ){
+						return console.error( error )
+					}
+
+				})
+
+			}else{
+
+				if( !this.openedWorld.posts[ post.id ] || !this.openedWorld.posts[ post.id ].apiPost ){
+					return
+				}
+
+				this.openedWorld.posts[ post.id ].apiPost.reply( { content: message }, function( error, object ){
+
+					if( error ){
+						return console.error( error )
+					}
+
+				})
+
+			}
 
 		}
 
@@ -593,132 +615,6 @@ var model = ( function( view ){
 
 		}
 
-		searchMember( contacts, members, callback ){
-
-			if( !contacts || !members ){
-				return callback( false )
-			}
-
-			var listToShow = contacts
-
-			for( var i = 0; i < contacts.length; i++ ){
-
-				for( var j = 0; j < members.length; j++ ){
-
-					if( contacts[i].id === members[j].id ){
-						listToShow.splice( i,1 )
-					}
-
-				}
-
-			}
-
-			return callback( listToShow )
-
-		}
-
-		showPosts( worldId, start ){
-
-			if( !start ){
-				start = 0
-			}
-
-			var list = []
-		  var id = null
-		  var postsKeys = Object.keys( this.worlds[ worldId ].posts ).reverse()
-
-		  /*postsKeys.forEach( function( postKey ){
-
-		  	list.push( this.worlds[ worldId ].posts[ postKey ] )
-		  	if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
-		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
-		  	}
-
-		  }.bind(this))*/
-
-			if( start > postsKeys.length ){
-				return
-			}
-			var end = start;
-
-			start + 5 < postsKeys.length ? end = start + 5 : end = postsKeys.length
-
-		  for( var i = start; i < end; i++ ){
-
-		  	list.push( this.worlds[ worldId ].posts[ postsKeys[i] ] )
-		  	if( this.worlds[ worldId ].posts[ postsKeys[i] ].readyToInsert == false ){
-		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postsKeys[i] ] )
-		  	}
-
-		  }
-
-		  this.postsPrinted = end
-		  this.view.appendPostList( list, start > 0 )
-
-		}
-
-		searchPost( query ){
-
-			if( !this.openedWorld || (Object.keys( this.openedWorld.posts ).length === 0 && this.openedWorld.posts.constructor === Object) ){
-				return
-			}
-
-			if( !query ){
-				return this.view.filterPosts( null )
-			}
-
-			var postsToShow = []
-
-			var posts = Object.values( this.openedWorld.posts )
-
-			posts.forEach( function( post, index ){
-
-    	  if( this._compareTitle( query, post.apiPost.title ) ){
-    	  	postsToShow.push( post.apiPost.id )
-    	  }
-
-	      if( index == posts.length - 1 ){
-	      	return this.view.filterPosts( postsToShow )
-	      }
-
-	    }.bind(this))
-
-
-		}
-
-		updatePost( post ){
-
-			var world = this.worlds[ post.apiPost.worldId ]
-
-			if( !world && !world.posts[ post.apiPost.id ] ){
-				return
-			}
-
-			world.posts[ post.apiPost.id ] = post
-
-			if( this.openedWorld && this.openedWorld.apiWorld.id == world.apiWorld.id ){
-				this.view.updatePostFSNodes( post )
-			}
-
-		}
-
-		updateWorldsListUI(){
-
-			var list = []
-		  var id = null
-
-		  for( var i in this.worlds ){
-		    list.push( this.worlds[ i ] )
-		  }
-
-		  if( this.openedWorld ){
-		  	id = this.openedWorld.apiWorld.id
-		  }
-
-			this.view.updateWorldsListUI( list, id )
-
-		}
-
 		removePostBack( post ){
 
 			if( !this.openedWorld ){
@@ -809,6 +705,169 @@ var model = ( function( view ){
 				}
 
 			}
+
+		}
+
+		searchMember( contacts, members, callback ){
+
+			if( !contacts || !members ){
+				return callback( false )
+			}
+
+			var listToShow = contacts
+
+			for( var i = 0; i < contacts.length; i++ ){
+
+				for( var j = 0; j < members.length; j++ ){
+
+					if( contacts[i].id === members[j].id ){
+						listToShow.splice( i,1 )
+					}
+
+				}
+
+			}
+
+			return callback( listToShow )
+
+		}
+
+		searchLocalPost( query ){
+
+			if( !this.openedWorld || (Object.keys( this.openedWorld.posts ).length === 0 && this.openedWorld.posts.constructor === Object) ){
+				return
+			}
+
+			if( !query ){
+				return this.view.filterPosts( null )
+			}
+
+			var postsToShow = []
+
+			var posts = Object.values( this.openedWorld.posts )
+
+			posts.forEach( function( post, index ){
+
+    	  if( this._compareTitle( query, post.apiPost.title ) ){
+    	  	postsToShow.push( post.apiPost.id )
+    	  }
+
+	      if( index == posts.length - 1 ){
+	      	return this.view.filterPosts( postsToShow )
+	      }
+
+	    }.bind(this))
+
+		}
+
+		searchPost( postId ){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			this.openedWorld.apiWorld.getPost( filter, { from: 0, to: 100 }, function( error, posts ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+
+
+
+			})
+
+		}
+
+		searchPostById( postId ){
+
+			if( !this.openedWorld ){
+				return
+			}
+
+			this.openedWorld.apiWorld.getPost( filter, { from: 0, to: 100 }, function( error, posts ){
+
+				if( error ){
+					return console.error( error )
+				}
+
+
+
+
+			})
+
+		}
+
+		showPosts( worldId, start ){
+
+			if( !start ){
+				start = 0
+			}
+
+			var list = []
+		  var id = null
+		  var postsKeys = Object.keys( this.worlds[ worldId ].posts ).reverse()
+
+		  /*postsKeys.forEach( function( postKey ){
+
+		  	list.push( this.worlds[ worldId ].posts[ postKey ] )
+		  	if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
+		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
+		  	}
+
+		  }.bind(this))*/
+
+			if( start > postsKeys.length ){
+				return
+			}
+			var end = start;
+
+			start + 5 < postsKeys.length ? end = start + 5 : end = postsKeys.length
+
+		  for( var i = start; i < end; i++ ){
+
+		  	list.push( this.worlds[ worldId ].posts[ postsKeys[i] ] )
+		  	if( this.worlds[ worldId ].posts[ postsKeys[i] ].readyToInsert == false ){
+		  		this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postsKeys[i] ] )
+		  	}
+
+		  }
+
+		  this.postsPrinted = end
+		  this.view.appendPostList( list, start > 0 )
+
+		}
+
+		updatePost( post ){
+
+			var world = this.worlds[ post.apiPost.worldId ]
+
+			if( !world && !world.posts[ post.apiPost.id ] ){
+				return
+			}
+
+			world.posts[ post.apiPost.id ] = post
+
+			if( this.openedWorld && this.openedWorld.apiWorld.id == world.apiWorld.id ){
+				this.view.updatePostFSNodes( post )
+			}
+
+		}
+
+		updateWorldsListUI(){
+
+			var list = []
+		  var id = null
+
+		  for( var i in this.worlds ){
+		    list.push( this.worlds[ i ] )
+		  }
+
+		  if( this.openedWorld ){
+		  	id = this.openedWorld.apiWorld.id
+		  }
+
+			this.view.updateWorldsListUI( list, id )
 
 		}
 
@@ -1095,12 +1154,15 @@ var model = ( function( view ){
 				}
 
 				replies.forEach( function( reply ){
+
 					this.replies[ reply.id ] = reply
+					if( this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiComment.worldId ){
+						this.app.view.appendReplyComment( reply, null, true )
+					}
+
 				}.bind(this))
 
-				/*if( this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId ){
-					this.app.view.updatePostComments( this )
-				}*/
+	
 
 			}.bind(this))
   		

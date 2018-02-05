@@ -654,7 +654,7 @@ var view = ( function(){
   				if( post.apiPost.author === this.myContactID ){
   					postDom.addClass( 'mine' )
   				}
-  				postDom.data( 'post', post )
+  				postDom.data( 'post', post.apiPost )
 					domList.push( postDom )
   				promise.resolve()
 
@@ -858,6 +858,9 @@ var view = ( function(){
 
 		appendReplyComment( response, comment, appending ){
 
+			if( !comment ){
+				comment = $( '.comment-' + response.parent )
+			}
 		  var reply = comment.find( '.reply.wz-prototype' ).clone()
 		  reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id )
 
@@ -885,6 +888,7 @@ var view = ( function(){
 
 	    reply.data( 'reply' , response )
 	    if( appending ){
+	    	comment.find( '.reply-list' ).show()
 	    	comment.find( '.reply-list' ).append( reply )
 	    }
 
@@ -1080,7 +1084,91 @@ var view = ( function(){
 
 		}
 
-		newWorldAnimationB(){
+		fileContextMenu( fsnode ){
+
+      var menu = api.menu()
+
+      menu.addOption( lang.openFolder , function(){
+
+        api.fs( fsnode.parent, function( error , node ){
+          node.open()
+        })
+
+      })
+
+      menu.addOption( lang.download , function(){
+        fsnode.download()
+      })
+
+      menu.render()
+
+		}
+
+		filterElements( filter, elementQuery ){
+
+			var list = $( elementQuery )
+			list.show()
+		  var listToShow = list.filter( this.startsWith( filter ) );
+		  var listToHide = list.not( listToShow );
+		  listToHide.hide();	
+
+		}
+
+		filterPosts( list ){
+
+			if( list ){
+
+				$( '.cardDom' ).removeClass( 'filtered' )
+				list.forEach( function( id ){
+					$( '.post-' + id ).addClass( 'filtered' )
+				})
+
+				$( '.cardDom:not(.filtered)' ).hide()
+				$( '.cardDom.filtered' ).show()
+
+			}else{
+				$( '.cardDom' ).removeClass( 'filtered' ).show()
+			}
+
+		}		
+
+		hideExploreTopBar(){
+			$( '.explore-top-bar' ).removeClass( 'active' )
+		}
+
+		hideNoWorlds(){
+
+			$( '.no-worlds' ).transition({
+	      'opacity'         : 0
+	    }, 200, this.animationEffect , function(){
+	      $( '.no-worlds' ).hide()
+	    })
+
+		}
+
+		leaveWorldDialog( worldId ){
+
+			var dialog = api.dialog()
+
+	    dialog.setTitle( lang.unfollowWorld )
+	    dialog.setText( lang.confirmExit )
+
+	    dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+	    dialog.setButton( 1, wzLang.core.dialogAccept, 'red' )
+
+      dialog.render( function( doIt ){
+
+	      if( !doIt ){
+	        return
+	      }
+
+	      model.leaveWorld( worldId )
+
+	    })
+
+		}
+
+				newWorldAnimationB(){
 
 			var editing = $( '.new-world-container' ).hasClass( 'editing' )
 
@@ -1385,90 +1473,6 @@ var view = ( function(){
 
 		}
 
-		fileContextMenu( fsnode ){
-
-      var menu = api.menu()
-
-      menu.addOption( lang.openFolder , function(){
-
-        api.fs( fsnode.parent, function( error , node ){
-          node.open()
-        })
-
-      })
-
-      menu.addOption( lang.download , function(){
-        fsnode.download()
-      })
-
-      menu.render()
-
-		}
-
-		filterElements( filter, elementQuery ){
-
-			var list = $( elementQuery )
-			list.show()
-		  var listToShow = list.filter( this.startsWith( filter ) );
-		  var listToHide = list.not( listToShow );
-		  listToHide.hide();	
-
-		}
-
-		filterPosts( list ){
-
-			if( list ){
-
-				$( '.cardDom' ).removeClass( 'filtered' )
-				list.forEach( function( id ){
-					$( '.post-' + id ).addClass( 'filtered' )
-				})
-
-				$( '.cardDom:not(.filtered)' ).hide()
-				$( '.cardDom.filtered' ).show()
-
-			}else{
-				$( '.cardDom' ).removeClass( 'filtered' ).show()
-			}
-
-		}		
-
-		hideExploreTopBar(){
-			$( '.explore-top-bar' ).removeClass( 'active' )
-		}
-
-		hideNoWorlds(){
-
-			$( '.no-worlds' ).transition({
-	      'opacity'         : 0
-	    }, 200, this.animationEffect , function(){
-	      $( '.no-worlds' ).hide()
-	    })
-
-		}
-
-		leaveWorldDialog( worldId ){
-
-			var dialog = api.dialog()
-
-	    dialog.setTitle( lang.unfollowWorld )
-	    dialog.setText( lang.confirmExit )
-
-	    dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
-	    dialog.setButton( 1, wzLang.core.dialogAccept, 'red' )
-
-      dialog.render( function( doIt ){
-
-	      if( !doIt ){
-	        return
-	      }
-
-	      model.leaveWorld( worldId )
-
-	    })
-
-		}
-
 		openEditWorld( world ){
 
 			$( '.new-world-title input' ).val('');
@@ -1711,6 +1715,10 @@ var view = ( function(){
 		  if( !updatingHeader ){
 		  	$( '.cardDom' ).remove()
 		  }
+
+		}
+
+		removePost( post ){
 
 		}
 
