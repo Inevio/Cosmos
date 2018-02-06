@@ -4915,6 +4915,7 @@ to {background-position: -200% 0;}
       position: absolute;
       margin: 0px;
       left: 105px;
+      max-width: 32vmax;
       top: 17px;
     }
 
@@ -5064,8 +5065,9 @@ to {background-position: -200% 0;}
       font-weight: 900;
       position: absolute;
       top: 116px;
+      max-width: 50vmax;
+      margin-left: 30px;
       width: 100%;
-      margin: 0px;
       text-align: center;
     }
 
@@ -5074,7 +5076,7 @@ to {background-position: -200% 0;}
       width: 100%;
       text-align: center;
       margin: 0px;
-      top: 155px;
+      top: 175px;
     }
 
     .open-chat-button{
