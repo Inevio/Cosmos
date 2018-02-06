@@ -339,39 +339,6 @@ var view = ( function(){
 
 		/* End of date functions */
 
-
-		animateCards(){
-
-		  // World cards appears and goes up
-		  var firstCards = $( '.tend-list .world-card' )
-		  var restOfCards = firstCards.splice(10, firstCards.length - 10)
-		  firstCards.each( function( i , card ){
-
-		    var d = i * 150;
-
-		    $( card ).transition({
-
-		      delay       : (550 + d),
-		      'opacity'   : 1,
-		      'transform' : 'translateY(0px)'
-
-		    }, 1000, function(){
-
-		      restOfCards.forEach(function(card){
-
-		        $( card ).css({
-		          'opacity'   : 1,
-		          'transform' : 'translateY(0px)'
-		        })
-
-		      })
-
-		    })
-
-		  })
-
-		}
-
 		/* Type of cards */
 
 		appendDocumentCard( post , reason , callback ){
@@ -629,6 +596,38 @@ var view = ( function(){
 		}
 
 		/* End of type of cards */
+
+		animateCards(){
+
+		  // World cards appears and goes up
+		  var firstCards = $( '.tend-list .world-card' )
+		  var restOfCards = firstCards.splice(10, firstCards.length - 10)
+		  firstCards.each( function( i , card ){
+
+		    var d = i * 150;
+
+		    $( card ).transition({
+
+		      delay       : (550 + d),
+		      'opacity'   : 1,
+		      'transform' : 'translateY(0px)'
+
+		    }, 1000, function(){
+
+		      restOfCards.forEach(function(card){
+
+		        $( card ).css({
+		          'opacity'   : 1,
+		          'transform' : 'translateY(0px)'
+		        })
+
+		      })
+
+		    })
+
+		  })
+
+		}
 
 		appendPostList( list, loadingMorePosts ){
 
@@ -1697,6 +1696,13 @@ var view = ( function(){
 
 		}
 
+		openNotificationPopup(){
+
+			$( '.notifications-container' ).toggleClass( 'popup' )
+  		$( '.notifications-container *' ).toggleClass( 'popup' )
+
+		}
+
 		openWorld( world, updatingHeader ){
 
 			$( '.clean' ).remove()
@@ -1741,6 +1747,10 @@ var view = ( function(){
         'opacity' : 1
       }, 200, this.animationEffect )
 
+		}
+
+		showNotificationPost( post ){
+			this.appendPostList( [post] )			
 		}
 
 		startsWith( wordToCompare ){
@@ -1870,6 +1880,36 @@ var view = ( function(){
 	      card.find( '.preview-info' ).text( api.tool.bytesToUnit( fsnode.size, 1 ) )
 	      card.find( '.doc-preview' ).data( 'fsnode' , fsnode )
 	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsnode.icons.micro +' )' )
+
+			})
+
+		}
+
+		updateNotification( notification ){
+			
+		}
+
+		updateNotificationList( notificationList ){
+
+			var notificationDomList = []
+
+			notificationList.forEach( function( notification ){
+
+				var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
+				/*notificationDom.addClass('notification-' + notification.id)
+        notificationDom.data('notification', notification)
+        notificationDom.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' )
+        if (post.author === myContactID) {
+          if ( !post.isReply ) {
+            notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment )
+          }else{
+            notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment3 )
+          }
+        }else{
+          notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + world.name )
+        }
+        notificationDom.find('.notification-time').html('<i></i>' +  timeElapsed( new Date( notification.time ) ) )*/
+        notificationDomList.push( notificationDom )
 
 			})
 

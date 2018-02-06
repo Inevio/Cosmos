@@ -10,6 +10,8 @@ var model = ( function( view ){
 		  this.contacts = {}
 		  this.worlds = {}
 
+		  this.notifications = {}
+
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
 		  this.postsPrinted = 0
@@ -189,7 +191,6 @@ var model = ( function( view ){
 
 				this.addWorld( world )
 
-
 			}else{
 
 				this.worlds[ world.id ].apiWorld = world
@@ -207,7 +208,7 @@ var model = ( function( view ){
 
 		}
 
-		addWorld( world ){
+		addWorld( world, justCreated ){
 
 		  if( this.worlds[ world.id ] ){
 		    return this
@@ -219,6 +220,10 @@ var model = ( function( view ){
 
 		  this.worlds[ world.id ] = new World( this, world )
 		  this.updateWorldsListUI()
+
+		  if( justCreated ){
+		  	this.openWorld( world.id )
+		  }
 
 		  return this
 
@@ -281,7 +286,7 @@ var model = ( function( view ){
 
 		checkNotifications(){
 
-		  api.notification.list( 'cosmos' , function( e , notifications ){
+		  api.notification.list( 'cosmos' , function( error , notifications ){
 
 		    /*worldNotifications = [];
 		    postsNotifications = [];
@@ -301,9 +306,23 @@ var model = ( function( view ){
 		    updateBadges();
 		    wz.app.setBadge( notifications.length );
 		    console.log('WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
+		    if( error ){
+		    	return console.error( error )
+		    }
+
+		    if( notifications.length ){
+
+		    	notifications.forEach( function( notification ){
+		    		this.notifications[ notification.id ] = notification
+		    	})
+
+		    	view.updateNotificationsList( this.notifications )
+
+		    }
+
 		    console.log(notifications);
 
-		  })
+		  }.bind(this))
 
 		}
 
@@ -505,6 +524,36 @@ var model = ( function( view ){
 			
 		}
 
+		notificationAttended( notificationList ){
+
+			if( !notificationList.length ){
+				return
+			}
+
+			notificationList.forEach( function( notification ){
+
+				if( !this.notifications[ notification.id ] ){
+					return
+				}
+
+				this.notifications[ notification.id ].attended = true
+				this.view.updateNotificationStatus( notification )
+
+			}.bind(this))
+
+		}
+
+		notificationNew( notification ){
+
+			if( !notification || this.notifications[ notification.id ] ){
+				return
+			}
+
+			this.notifications[ notification.id ] = notification
+			this.view.updateNotificationsList( this.notifications )
+
+		}
+
 		openExploreWorlds(){
 
 			this.showingWorlds = null //nullify
@@ -587,7 +636,7 @@ var model = ( function( view ){
 
 		  //app.addClass( 'selectingWorld' );
 
-		  if( !this.worlds[worldId] ){
+		  if( !this.worlds[ worldId ] ){
 		  	return console.error( 'Error al abrir mundo' )
 		  }
 
@@ -595,8 +644,8 @@ var model = ( function( view ){
 		  	return
 		  }
 
-		  this.openedWorld = this.worlds[worldId];
-		  this.view.openWorld( this.worlds[worldId] )
+		  this.openedWorld = this.worlds[ worldId ]
+		  this.view.openWorld( this.worlds[ worldId ] )
 
 		  this.showPosts( worldId, 0 )
 

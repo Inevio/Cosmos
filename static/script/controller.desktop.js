@@ -389,6 +389,10 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click', '.notifications', function(){
+        view.openNotificationPopup()
+      })
+
       /* Keypress */
 
       this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
@@ -497,7 +501,7 @@ var controller = ( function( model, view ){
 
       api.cosmos.on( 'worldCreated' , function( world ){
 
-        model.addWorld( world )
+        model.addWorld( world, true )
         $( '.new-world-container' ).data( 'world' , world )
         /*$( '.new-world-name input' ).val('');
         $( '.new-world-container' ).data( 'world' , world );
@@ -528,6 +532,18 @@ var controller = ( function( model, view ){
       })
 
       // END OF COSMOS EVENTS
+
+      // NOTIFICATION EVENTS
+
+      api.notification.on( 'new', function( notification ){
+        model.notificationNew( notification )
+      })
+
+      api.notification.on( 'attended', function( list ){
+        model.notificationAttended( list )
+      })
+
+      //
 
     }
 
