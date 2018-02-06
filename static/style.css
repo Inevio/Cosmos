@@ -1071,7 +1071,7 @@ to {background-position: -200% 0;}
   width: 100%;
   height: 58px;
   top: 0px;
-  z-index: 3;
+  z-index: 2;
   background-color: #fff;
   box-shadow: 0 1px #eee;
   border-top-right-radius: 6px;
@@ -4914,7 +4914,7 @@ to {background-position: -200% 0;}
     .world-title{
       position: absolute;
       margin: 0px;
-      left: 105px;
+      left: 16vmax;
       max-width: 32vmax;
       top: 17px;
     }
@@ -5066,7 +5066,7 @@ to {background-position: -200% 0;}
       position: absolute;
       top: 116px;
       max-width: 50vmax;
-      margin-left: 30px;
+      margin-left: 5vmax;
       width: 100%;
       text-align: center;
     }
