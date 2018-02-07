@@ -4889,7 +4889,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 15px;
       height: 15px;
-      z-index: 8;
+      z-index: 2;
       padding: 20px;
       margin-top: 1px;
 
@@ -4923,7 +4923,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 19px;
       height: 19px;
-      z-index: 8;
+      z-index: 2;
       padding: 17px;
       right: 0;
       margin-top: 3px;
@@ -5015,7 +5015,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 15px;
       height: 15px;
-      z-index: 8;
+      z-index: 2;
       padding: 20px;
       margin-top: 4px;
 
@@ -5032,7 +5032,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 19px;
       height: 19px;
-      z-index: 8;
+      z-index: 2;
       padding: 17px;
       right: 0;
       margin-top: 5px;
@@ -5711,7 +5711,7 @@ to {background-position: -200% 0;}
     position: absolute;
     width: 15px;
     height: 15px;
-    z-index: 8;
+    z-index: 2;
     padding: 20px;
     margin-top: 22px
   }
