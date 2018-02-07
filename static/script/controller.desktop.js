@@ -24,24 +24,24 @@ var controller = ( function( model, view ){
 
     	this._domWorldCategory.on( 'click', function(){
 
-    		var category = $(this).parent();
-			  category.toggleClass( 'closed' );
+    		var category = $(this).parent()
+			  category.toggleClass( 'closed' )
 
 			  if ( category.hasClass( 'closed' ) ) {
 
-			    category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) );
+			    category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) )
 			    category.find( '.world-list' ).transition({
 			      'height'         : '0px'
-			    }, 200);
+			    }, 200)
 
 			  }else{
 
-			    var height = category.find( '.world' ).length * $( '.world.wz-prototype' ).outerHeight();
+			    var height = category.find( '.world' ).length * $( '.world.wz-prototype' ).outerHeight()
 			    category.find( '.world-list' ).transition({
 			      'height'         : height
 			    }, 200, function(){
 			    	$(this).css( 'height' , 'initial' )
-			    });
+			    })
 
 			  }
 
@@ -51,8 +51,8 @@ var controller = ( function( model, view ){
 
         if( !$( event.target ).hasClass( 'popup' ) && ! $( event.target ).hasClass( 'popup-launcher' ) ){
 
-          $( '.popup' ).removeClass( 'popup' );
-          $( this ).parent().find( '.comments-footer .attach-select' ).hide();
+          $( '.popup' ).removeClass( 'popup' )
+          $( this ).parent().find( '.comments-footer .attach-select' ).hide()
 
         }
 
@@ -68,20 +68,20 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click', '.cardDom:not(.loading) .doc-preview' ,function(){
 
-        var attachment = $( this );
-        var fsnode =  $( this ).data( 'fsnode' );
-        var fsnodeList = [];
+        var attachment = $( this )
+        var fsnode =  $( this ).data( 'fsnode' )
+        var fsnodeList = []
         $.each( attachment.closest( '.card' ).find( '.doc-preview:not(.wz-prototype)' ) , function( i , attachment ){
-          fsnodeList.push( $( attachment ).data( 'fsnode' ) );
-        });
+          fsnodeList.push( $( attachment ).data( 'fsnode' ) )
+        })
 
-        fsnode.open( fsnodeList.filter(function( item ){ return item.type === fsnode.type; }).map( function( item ){ return item.id; }), function( error ){
+        fsnode.open( fsnodeList.filter(function( item ){ return item.type === fsnode.type }).map( function( item ){ return item.id }), function( error ){
 
           if( error ){
-            fsnode.openLocal();
+            fsnode.openLocal()
           }
 
-        });
+        })
 
       })
 
@@ -109,7 +109,7 @@ var controller = ( function( model, view ){
       /* enf od world explore */
 
       this.dom.on( 'click' , '.world-card.unfollowed .follow-button' , function(){
-        model.followWorld( $( this ).parent().data( 'world' ) );
+        model.followWorld( $( this ).parent().data( 'world' ) )
       })
 
       this.dom.on( 'click' , '.new-post-button, .no-post-new-post-button', function(){
@@ -137,7 +137,7 @@ var controller = ( function( model, view ){
         var worldApi = $( '.new-world-container' ).data( 'world' )
         var isPrivate
 
-        if( api.system.user().user.indexOf('demo') === 0 ){
+        if( api.system.user().user.indexOf( 'demo' ) === 0 ){
           isPrivate = true
         }else{
           isPrivate = $( '.private-option' ).hasClass( 'active' )
@@ -178,12 +178,12 @@ var controller = ( function( model, view ){
           //view.newWorldAnimationOut()
 
           /*if (isMobile()) {
-            changeMobileView('worldSidebar');
+            changeMobileView( 'worldSidebar' )
             mobileNewWorld.stop().clearQueue().transition({
               'transform' : 'translateY(-100%)'
             }, 300, function(){
-              mobileNewWorld.addClass('hide');
-            });
+              mobileNewWorld.addClass( 'hide' )
+            })
           }*/
 
         })
@@ -195,7 +195,7 @@ var controller = ( function( model, view ){
       })
 
       this.dom.on( 'click' , '.kick-out-button', function(){
-        model.removeUserBack( $(this).parent().data('user').id )
+        model.removeUserBack( $(this).parent().data( 'user' ).id )
       })
 
       this.dom.on( 'click' , '.invite-user-button' , function(){
@@ -269,9 +269,9 @@ var controller = ( function( model, view ){
 
           worldSelected.removePost( post.id , function( err, o ){
             if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
             }
-          });
+          })
 
         }else{*/
 
@@ -308,9 +308,9 @@ var controller = ( function( model, view ){
 
           worldSelected.removePost( post.id , function( err, o ){
             if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
             }
-          });
+          })
 
         }else{*/
 
@@ -337,7 +337,7 @@ var controller = ( function( model, view ){
 
       .on( 'click' , '.card-options-section .delete' , function(){
 
-        var post = $(this).closest('.card').data('post')
+        var post = $(this).closest( '.card' ).data( 'post' )
         var confirmText = lang.comfirmDeletePost
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
@@ -347,9 +347,9 @@ var controller = ( function( model, view ){
 
           worldSelected.removePost( post.id , function( err, o ){
             if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost );
+              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
             }
-          });
+          })
 
         }else{*/
 
@@ -460,14 +460,14 @@ var controller = ( function( model, view ){
           $( '.world-header-min' ).removeClass( 'active' )
         }
 
-        var scrollDiv = $( this );
-        var scrollFinish = $( '.world-selected' )[0].scrollHeight - scrollDiv.height();
+        var scrollDiv = $( this )
+        var scrollFinish = $( '.world-selected' )[0].scrollHeight - scrollDiv.height()
 
         if ( scrollFinish - scrollDiv.scrollTop() < 300 ) {
 
-          //var lastCard = scrollDiv.data( 'lastCard' );
-          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
-          //loadingPost = true;
+          //var lastCard = scrollDiv.data( 'lastCard' )
+          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){})
+          //loadingPost = true
           model.loadMorePosts()
 
         }
@@ -482,16 +482,16 @@ var controller = ( function( model, view ){
           view.hideExploreTopBar()
         }
 
-        var scrollDiv = $( this );
-        var scrollFinish = $( '.explore-container' )[0].scrollHeight - scrollDiv.height();
+        var scrollDiv = $( this )
+        var scrollFinish = $( '.explore-container' )[0].scrollHeight - scrollDiv.height()
 
         if( scrollFinish - scrollDiv.scrollTop() < 200 ){
 
-          //var lastCard = scrollDiv.data( 'lastCard' );
-          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){});
-          //loadingPost = true;
+          //var lastCard = scrollDiv.data( 'lastCard' )
+          //getWorldPostsAsync( $( '.world.active' ).data( 'world' ) , { init: lastCard , final: lastCard + 6 } , function(){})
+          //loadingPost = true
           model.appendPublicWorldsAsync()
-          //console.log('scrolled')
+          //console.log( 'scrolled' )
 
         }
 
@@ -503,14 +503,14 @@ var controller = ( function( model, view ){
 
         model.addWorld( world, true )
         $( '.new-world-container' ).data( 'world' , world )
-        /*$( '.new-world-name input' ).val('');
-        $( '.new-world-container' ).data( 'world' , world );
-        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
+        /*$( '.new-world-name input' ).val( '' )
+        $( '.new-world-container' ).data( 'world' , world )
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
 
-        myWorlds.push( world.id );
+        myWorlds.push( world.id )
 
         if ( world.owner === myContactID ) {
-          selectWorld( $( '.world-' + world.id ) , function(){});
+          selectWorld( $( '.world-' + world.id ) , function(){})
         }*/
 
       })

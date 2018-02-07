@@ -160,17 +160,17 @@ var view = ( function(){
 		_getYoutubeCode( text ){
 
 		  var youtubeId = false
-		  text.split(' ').forEach( function( word ){
+		  text.split( ' ' ).forEach( function( word ){
 
 		    if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
 
-		      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+		      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
 		      var match = word.match(regExp)
 		      youtubeId = (match&&match[7].length==11)? match[7] : false
 
 		    }
 
-		  });
+		  })
 
 		  return youtubeId
 
@@ -218,7 +218,7 @@ var view = ( function(){
 		  }
 
 		  //Posts
-		  $( '.new-post-button .my-avatar' ).css( 'background-image', 'url(' + api.system.user().avatar.tiny + ')' )
+		  $( '.new-post-button .my-avatar' ).css( 'background-image', 'url( ' + api.system.user().avatar.tiny + ' )' )
 		  $( '.new-post-button .something-to-say' ).text( lang.cardsList.somethingToSay )
 		  $( '.no-posts .no-post-to-show' ).text( lang.cardsList.noPostToShow )
 		  $( '.no-posts .left-side span' ).text( lang.noPosts )
@@ -246,7 +246,7 @@ var view = ( function(){
 		  $( '.explore-text, .search-title' ).text( lang.explore )
 		  $( '.tend-text' ).text( lang.tend )
 		  $( '.follow-button span' ).text( lang.follow )
-		  $( '.search-bar input' ).attr('placeholder', lang.search)
+		  $( '.search-bar input' ).attr( 'placeholder', lang.search )
 		  $( '.next-page .next-text' ).text( lang.next )
 		  $( '.back-page .back-text' ).text( lang.previous )
 
@@ -297,7 +297,7 @@ var view = ( function(){
 		  var now = new Date()
 		  var last = new Date( lastTime )
 		  var message
-		  var calculated = false;
+		  var calculated = false
 
 		  if( now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth() ){
 
@@ -328,12 +328,12 @@ var view = ( function(){
 		      month='0'+month
 		    }
 
-		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this._getStringHour( lastTime );
+		    message = day + '/' + month + '/' + last.getFullYear().toString().substring( 2 , 4 ) + ' ' + lang.at + ' ' + this._getStringHour( lastTime )
 		    calculated = true
 
 		  }
 
-		  return message;
+		  return message
 
 		}
 
@@ -365,7 +365,7 @@ var view = ( function(){
 	      card.find( '.doc-preview-bar i' ).css( 'background-image' , 'url( '+ fsnode.icons.micro +' )' )
 
 		  }else{
-		  	card.addClass('loading')
+		  	card.addClass( 'loading' )
 		  }
 
 	    if ( post.apiPost.title === '' ) {
@@ -380,24 +380,24 @@ var view = ( function(){
 	      card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 	    }
 
-	    card.find( '.desc' ).find('a').each( function(){
+	    card.find( '.desc' ).find( 'a' ).each( function(){
 
-	      if( !URL_REGEX.test( $(this).attr('href') ) ){
-	        $(this).attr( 'href', 'http://' + $(this).attr('href') )
+	      if( !URL_REGEX.test( $(this).attr( 'href' ) ) ){
+	        $(this).attr( 'href', 'http://' + $(this).attr( 'href' ) )
 	      }
 
-	    });
+	    })
 
-	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url( ' + user.avatar.normal + ' )' )
 	    card.find( '.card-user-name' ).text( user.fullName )
 	    card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
 	    /*if (!this.isMobile) {
-	      setRepliesAsync( card , post.apiPost );
+	      setRepliesAsync( card , post.apiPost )
 	    }else{
-	      setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
+	      setRepliesAsyncWithoutAppendMobile( card , post.apiPost )
 	    }
-	    appendCard( card , post.apiPost );*/
+	    appendCard( card , post.apiPost )*/
 	    
 		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
@@ -426,7 +426,7 @@ var view = ( function(){
 		        var docPreview = card.find( '.doc-preview.wz-prototype' ).clone()
 		        docPreview.removeClass( 'wz-prototype' ).addClass( 'attachment-' + fsnode.id )
 
-		        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+		        if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove' ) {
 		          docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
 		        }else{
 		          docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
@@ -448,7 +448,7 @@ var view = ( function(){
 
 	    }else{
 
-	    	card.addClass('loading')
+	    	card.addClass( 'loading' )
 
 				for (var i = 0; i < post.apiPost.fsnode.length; i++) {
 
@@ -482,15 +482,15 @@ var view = ( function(){
 	      card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 	    }
 
-	    card.find( '.desc' ).find('a').each( function(){
+	    card.find( '.desc' ).find( 'a' ).each( function(){
 
-	      if( !URL_REGEX.test( $(this).attr('href') ) ){
-	        $(this).attr( 'href', 'http://' + $(this).attr('href') )
+	      if( !URL_REGEX.test( $(this).attr( 'href' ) ) ){
+	        $(this).attr( 'href', 'http://' + $(this).attr( 'href' ) )
 	      }
 
-	    });
+	    })
 
-	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+	    card.find( '.card-user-avatar' ).css( 'background-image' , 'url( ' + user.avatar.normal + ' )' )
 	    card.find( '.card-user-name' ).text( user.fullName )
 	    card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 	    card.data( 'time' , post.apiPost.created )
@@ -498,9 +498,9 @@ var view = ( function(){
 	    /*if (!this.isMobile) {
 	      setRepliesAsync( card , post )
 	    }else{
-	      setRepliesAsyncWithoutAppendMobile( card , post );
+	      setRepliesAsyncWithoutAppendMobile( card , post )
 	    }
-	    appendCard( card , post );*/
+	    appendCard( card , post )*/
 		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
 		  })
@@ -514,7 +514,7 @@ var view = ( function(){
 		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
 		  card.find( '.doc-preview' ).hide()
 
-		  if ( post.apiPost.title === '' ) {
+		  if( post.apiPost.title === '' ){
 		    card.find( '.title' ).hide()
 		  }else{
 		    card.find( '.title' ).text( post.apiPost.title )
@@ -526,27 +526,27 @@ var view = ( function(){
 		    card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 		  }
 
-		  card.find( '.desc' ).find('a').each( function(){
+		  card.find( '.desc' ).find( 'a' ).each( function(){
 
-		    if( !URL_REGEX.test( $(this).attr('href') ) ){
-		      $(this).attr( 'href', 'http://' + $(this).attr('href') )
+		    if( !URL_REGEX.test( $(this).attr( 'href' ) ) ){
+		      $(this).attr( 'href', 'http://' + $(this).attr( 'href' ) )
 		    }
 
 		  })
 
 		  if( user ){
-			  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+			  card.find( '.card-user-avatar' ).css( 'background-image' , 'url( ' + user.avatar.normal + ' )' )
 		  	card.find( '.card-user-name' ).text( user.fullName )
 		  }
 
 		  card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 
 		  /*if (!this.isMobile) {
-		    setRepliesAsync( card , post.apiPost );
+		    setRepliesAsync( card , post.apiPost )
 		  }else{
-		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
+		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost )
 		  }
-		  appendCard( card , post.apiPost );*/
+		  appendCard( card , post.apiPost )*/
 
 		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
@@ -556,38 +556,38 @@ var view = ( function(){
 
 		appendYoutubeCard( post , user , reason, callback ){
 
-		  var card = this._youtubeCardPrototype.clone();
-		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' );
+		  var card = this._youtubeCardPrototype.clone()
+		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
 
-		  var youtubeCode = this._getYoutubeCode( post.apiPost.content );
+		  var youtubeCode = this._getYoutubeCode( post.apiPost.content )
 
 		  /*if (this.isMobile) {
-		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode );
+		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode )
 		  }else{*/
-		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' );
+		    card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0' )
 		  //}
 
-		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' );
-		  card.find( '.card-user-name' ).text( user.fullName );
-		  card.find( '.time-text' ).text( timeElapsed( new Date( post.apiPost.created ) ) );
-		  card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) );
-		  card.find( '.title' ).text( post.apiPost.title );
-		  card.find( '.activate-preview' ).text( lang.preview );
+		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url( ' + user.avatar.normal + ' )' )
+		  card.find( '.card-user-name' ).text( user.fullName )
+		  card.find( '.time-text' ).text( timeElapsed( new Date( post.apiPost.created ) ) )
+		  card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
+		  card.find( '.title' ).text( post.apiPost.title )
+		  card.find( '.activate-preview' ).text( lang.preview )
 
-		  card.find( '.desc' ).find('a').each( function(){
+		  card.find( '.desc' ).find( 'a' ).each( function(){
 
-		    if( !URL_REGEX.test( $(this).attr('href') ) ){
-		      $(this).attr( 'href', 'http://' + $(this).attr('href') );
+		    if( !URL_REGEX.test( $(this).attr( 'href' ) ) ){
+		      $(this).attr( 'href', 'http://' + $(this).attr( 'href' ) )
 		    }
 
-		  });
+		  })
 
 		  /*if (!this.isMobile) {
-		    setRepliesAsync( card , post.apiPost );
+		    setRepliesAsync( card , post.apiPost )
 		  }else{
-		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost );
+		    setRepliesAsyncWithoutAppendMobile( card , post.apiPost )
 		  }
-		  appendCard( card , post.apiPost );*/
+		  appendCard( card , post.apiPost )*/
 
 		  this.appendComments( card, post, function( cardToInsert ){
 		  	return callback( cardToInsert )
@@ -601,10 +601,11 @@ var view = ( function(){
 
 		  // World cards appears and goes up
 		  var firstCards = $( '.tend-list .world-card' )
-		  var restOfCards = firstCards.splice(10, firstCards.length - 10)
+		  var restOfCards = firstCards.splice( 10, firstCards.length - 10 )
+
 		  firstCards.each( function( i , card ){
 
-		    var d = i * 150;
+		    var d = i * 150
 
 		    $( card ).transition({
 
@@ -635,8 +636,10 @@ var view = ( function(){
 			var postPromises = []
 
 			if( list.length == 0 && !loadingMorePosts ){
-				this._noPosts.css( 'opacity' , '1' );
+
+				this._noPosts.css( 'opacity' , '1' )
 				this._noPosts.show()
+
 			}
 
 			if( !loadingMorePosts ){
@@ -668,14 +671,14 @@ var view = ( function(){
 	    		if( !loadingMorePosts ){
 	    			this._domPostContainer.scrollTop(0)
 	    		}
-	 	    	this._noPosts.css( 'opacity' , '0' );
+	 	    	this._noPosts.css( 'opacity' , '0' )
 					this._noPosts.hide()
 	      	this._domPostContainer.append( domList )
 	      	//this._domPostContainer.scrollTop( this._domPostContainer[ 0 ].scrollHeight )
 
 	    	}
 
-    	}.bind(this));
+    	}.bind(this))
 
 		}
 
@@ -685,7 +688,7 @@ var view = ( function(){
 
         this.appendGenericCard( post , lang.postCreated , function( postDom ){
           return callback( postDom, promise )
-        });
+        })
 
       }else if ( post.apiPost.metadata && post.apiPost.metadata.fileType ) {
 
@@ -800,18 +803,18 @@ var view = ( function(){
 		  commentDom.find( '.edit-button' ).text( lang.edit )
 
 		  if ( comment.apiComment.author === this.myContactID ) {
-		    commentDom.addClass('mine')
+		    commentDom.addClass( 'mine' )
 		  }
 
-      commentDom.find( '.avatar' ).css( 'background-image' , 'url(' + comment.apiComment.authorObject.avatar.tiny + ')' )
+      commentDom.find( '.avatar' ).css( 'background-image' , 'url( ' + comment.apiComment.authorObject.avatar.tiny + ' )' )
       commentDom.find( '.name' ).text( comment.apiComment.authorObject.fullName )
       commentDom.find( '.time' ).text( this._timeElapsed( new Date( comment.apiComment.created ) ) )
       commentDom.find( '.comment-text' ).html( comment.apiComment.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 
-      commentDom.find( '.comment-text' ).find('a').each( function(){
+      commentDom.find( '.comment-text' ).find( 'a' ).each( function(){
 
-        if( !URL_REGEX.test( $(this).attr('href') ) ){
-          $(this).attr( 'href', 'http://' + $(this).attr('href') )
+        if( !URL_REGEX.test( $(this).attr( 'href' ) ) ){
+          $(this).attr( 'href', 'http://' + $(this).attr( 'href' ) )
         }
 
       })
@@ -846,7 +849,7 @@ var view = ( function(){
 		  	if( index === replies.length - 1 ){
 
 			    commentDom.find( '.reply-list' ).append( repliesDom )
-			    //card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+			    //card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
 			    return callback( commentDom )
 
 		  	}
@@ -864,25 +867,25 @@ var view = ( function(){
 		  reply.removeClass( 'wz-prototype' ).addClass( 'replyDom reply-' + response.id )
 
 		  if ( response.author === this.myContactID ) {
-		    reply.addClass('mine')
+		    reply.addClass( 'mine' )
 		  }
 
-	    reply.find( '.avatar' ).css( 'background-image' , 'url(' + response.authorObject.avatar.tiny + ')' )
+	    reply.find( '.avatar' ).css( 'background-image' , 'url( ' + response.authorObject.avatar.tiny + ' )' )
 	    reply.find( '.name' ).text( response.authorObject.fullName )
 	    reply.find( '.time' ).text( this._timeElapsed( new Date( response.created ) ) )
 	    reply.find( '.reply-text' ).html( response.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 
-	    reply.find( '.reply-text' ).find('a').each( function(){
+	    reply.find( '.reply-text' ).find( 'a' ).each( function(){
 
-	      if( !URL_REGEX.test( $(this).attr('href') ) ){
-	        $(this).attr( 'href', 'http://' + $(this).attr('href') )
+	      if( !URL_REGEX.test( $(this).attr( 'href' ) ) ){
+	        $(this).attr( 'href', 'http://' + $(this).attr( 'href' ) )
 	      }
 
-	    });
+	    })
 
-	    //comment.find( '.reply-list' ).append( reply );
+	    //comment.find( '.reply-list' ).append( reply )
 	    /*if (!this.isMobile) {
-	      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+	      card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
 	    }*/
 
 	    reply.data( 'reply' , response )
@@ -901,31 +904,31 @@ var view = ( function(){
 
 			worlds.forEach( function( worldApi , index){
 
-			  var world = $( '.world-card.wz-prototype' ).clone();
-			  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' );
-			  var worldTitle = worldApi.name;
+			  var world = $( '.world-card.wz-prototype' ).clone()
+			  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' )
+			  var worldTitle = worldApi.name
 			  if ( worldTitle.length > 32 ) {
-			    worldTitle = worldTitle.substr(0 , 29) + '...';
+			    worldTitle = worldTitle.substr(0 , 29) + '...'
 			  }
-			  world.find( '.world-title-min' ).text( worldTitle );
-			  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+			  world.find( '.world-title-min' ).text( worldTitle )
+			  world.find( '.world-avatar-min' ).css( 'background-image' , 'url( ' + worldApi.icons.normal + '?token=' + Date.now() + ' )' )
 
 			  if( worldApi.users ){
-			    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers );
+			    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers )
 			  }
 
 			  if( myWorlds.indexOf( worldApi.id ) !== -1 ){
 
-			    world.addClass( 'followed' ).removeClass( 'unfollowed' );
-			    world.find( '.follow-button span' ).text( lang.following );
+			    world.addClass( 'followed' ).removeClass( 'unfollowed' )
+			    world.find( '.follow-button span' ).text( lang.following )
 
 			  }
 
-			  world.data( 'world' , worldApi );
+			  world.data( 'world' , worldApi )
 			  cardsList.push( world )
 
 			  if( index === worlds.length - 1 ){
-			  	$( '.world-card.wz-prototype' ).after( cardsList );
+			  	$( '.world-card.wz-prototype' ).after( cardsList )
 			  }
 
 			})
@@ -934,38 +937,38 @@ var view = ( function(){
 
 		appendWorldCard( worldApi, following ){
 
-		  var world = $( '.world-card.wz-prototype' ).clone();
-		  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' );
-		  var worldTitle = worldApi.name;
+		  var world = $( '.world-card.wz-prototype' ).clone()
+		  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' )
+		  var worldTitle = worldApi.name
 		  if ( worldTitle.length > 32 ) {
-		    worldTitle = worldTitle.substr(0 , 29) + '...';
+		    worldTitle = worldTitle.substr(0 , 29) + '...'
 		  }
-		  world.find( '.world-title-min' ).text( worldTitle );
-		  world.find( '.world-avatar-min' ).css( 'background-image' , 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')' );
+		  world.find( '.world-title-min' ).text( worldTitle )
+		  world.find( '.world-avatar-min' ).css( 'background-image' , 'url( ' + worldApi.icons.normal + '?token=' + Date.now() + ' )' )
 
 		  if( worldApi.users ){
-		    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers );
+		    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers )
 		  }
 
 		  if( following ){
 
-		    world.addClass( 'followed' ).removeClass( 'unfollowed' );
-		    world.find( '.follow-button span' ).text( lang.following );
+		    world.addClass( 'followed' ).removeClass( 'unfollowed' )
+		    world.find( '.follow-button span' ).text( lang.following )
 
 		  }
 
 
-		  //$( '.world-card.wz-prototype' ).after( world );
+		  //$( '.world-card.wz-prototype' ).after( world )
 		  $( '.explore-container .tend-grid' ).append( world )
 
-		  world.data( 'world' , worldApi );
+		  world.data( 'world' , worldApi )
 
 		}
 
 		closeExploreWorlds(){
 
 			this.toggleNoWorlds()
-		  var exploreSection = $( '.explore-section' );
+		  var exploreSection = $( '.explore-section' )
 
 		  // Fade out blue background
 		  exploreSection.stop().clearQueue().transition({
@@ -974,14 +977,14 @@ var view = ( function(){
 
 		  }, 300, function(){
 
-		    exploreSection.css( 'display' , 'none' );
+		    exploreSection.css( 'display' , 'none' )
 
 		    $( '.new-world-button, .close-explore' ).css({
 		      'transform' : 'translateY(10px)',
 		      'opacity'   : 0
-		    });
+		    })
 
-		  });
+		  })
 
 		  // Stars goes down
 		  $( '.search-title, .search-bar, .tend-text' ).stop().clearQueue().transition({
@@ -989,7 +992,7 @@ var view = ( function(){
 		    'opacity'   : 0,
 		    'transform' : 'translateY(20px)'
 
-		  }, 300);
+		  }, 300 )
 
 		  // New world button goes down
 		  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
@@ -997,7 +1000,7 @@ var view = ( function(){
 		    'opacity'   : 0,
 		    'transform' : 'translateY(10px)'
 
-		  }, 300);
+		  }, 300 )
 
 		  // World cards button goes down
 		  $( '.world-card' ).stop().clearQueue().transition({
@@ -1005,7 +1008,7 @@ var view = ( function(){
 		    'opacity'   : 0,
 		    'transform' : 'translateY(40px)'
 
-		  }, 300);
+		  }, 300 )
 
 		}
 
@@ -1014,7 +1017,7 @@ var view = ( function(){
 		  $( '.invite-user-container' ).removeClass( 'popup' )
 		  $( '.invite-user-container *' ).removeClass( 'popup' )
 		  $( '.friend .ui-checkbox' ).removeClass( 'active' )
-		  $( '.invite-user-container .ui-input-search input' ).val('')
+		  $( '.invite-user-container .ui-input-search input' ).val( '' )
 		  this.filterElements( '', '.friend' )
 
 		}
@@ -1023,7 +1026,7 @@ var view = ( function(){
 
 		  $( '.kick-user-container' ).removeClass( 'popup' )
 		  $( '.kick-user-container *' ).removeClass( 'popup' )
-		  $( '.invite-user-container .ui-input-search input' ).val('')
+		  $( '.invite-user-container .ui-input-search input' ).val( '' )
 		  this.filterElements( '', '.friend' )
 
 		}
@@ -1055,12 +1058,12 @@ var view = ( function(){
 		    $( '.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button' ).css({
 		      'transform' : 'translateY(20px)',
 		      'opacity'   : 0
-		    });
+		    })
 
 		    $( '.close-new-world' ).css({
 		      'transform' : 'translateY(10px)',
 		      'opacity'   : 0
-		    });
+		    })
 
 		    //if (!this.isMobile) {
 		      $( '.create-world-button' ).css( {
@@ -1107,9 +1110,9 @@ var view = ( function(){
 
 			var list = $( elementQuery )
 			list.show()
-		  var listToShow = list.filter( this.startsWith( filter ) );
-		  var listToHide = list.not( listToShow );
-		  listToHide.hide();	
+		  var listToShow = list.filter( this.startsWith( filter ) )
+		  var listToHide = list.not( listToShow )
+		  listToHide.hide()
 
 		}
 
@@ -1167,7 +1170,7 @@ var view = ( function(){
 
 		}
 
-				newWorldAnimationB(){
+		newWorldAnimationB(){
 
 			var editing = $( '.new-world-container' ).hasClass( 'editing' )
 
@@ -1201,14 +1204,14 @@ var view = ( function(){
 		  $( '.option.public' ).removeClass( 'active' )
 
 
-		  $( '.new-world-desc textarea' ).val('')
+		  $( '.new-world-desc textarea' ).val( '' )
 
 		  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'none' )
 
 		  // Fade in and goes up title (animation)
 		  var translate = this.isMobile ? '0px' : '-67px'
 		  $( '.new-world-title' ).stop().clearQueue().transition({
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 		  }, 1000, this.animationEffect)
 
 		  // Fade in and goes up name (animation)
@@ -1221,9 +1224,7 @@ var view = ( function(){
 		  // Fade in and goes up button (animation)
 		  //if (!this.isMobile) {
 		    $( '.create-world-button , .delete-world-button' ).stop().clearQueue().transition({
-
 		      'opacity'   : 0
-
 		    }, 800, this.animationEffect, function(){
 
 		      $( this ).css( {
@@ -1234,7 +1235,6 @@ var view = ( function(){
 		        'left'      : 'calc(50% - 472px/2 + 150px)'
 
 		      } ).find( 'span' ).text( lang.accept )
-
 
 		    })
 		 	//}
@@ -1288,15 +1288,11 @@ var view = ( function(){
 
 		  //bypassNewWorldAnimationA()
 	    $( '.new-world-container-wrap' ).css({
-
 		    'display' : 'block',
-
 		  }) 
 
 		  $( '.new-world-container-wrap' ).transition({
-
 		    'opacity' : 1
-
 		  }, 300)
 
 		  $( '.new-world-title' ).css({
@@ -1340,12 +1336,12 @@ var view = ( function(){
 		  $( '.create-world-button' ).addClass( 'step-b' )
 		  $( '.create-world-button' ).removeClass( 'step-a' )
 
-		  $('.new-world-container-wrap').scrollTop(0)
+		  $( '.new-world-container-wrap' ).scrollTop(0)
 
 		  // Fade in and goes up title (animation)
 		  var translate = this.isMobile ? '0px' : '-67px'
 		  $( '.new-world-title' ).stop().clearQueue().transition({
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 		  }, 1000)
 
 
@@ -1355,7 +1351,7 @@ var view = ( function(){
 
 		    delay       : 100,
 		    'opacity'   : 1,
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 
 		  }, 1000)
 
@@ -1366,7 +1362,7 @@ var view = ( function(){
 
 		    delay       : 300,
 		    'opacity'   : 1,
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 
 		  }, 1000)
 
@@ -1377,7 +1373,7 @@ var view = ( function(){
 
 		    delay       : 500,
 		    'opacity'   : 1,
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 
 		  }, 1000)
 
@@ -1388,7 +1384,7 @@ var view = ( function(){
 
 		    delay       : 700,
 		    'opacity'   : 1,
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 
 		  }, 1000)
 
@@ -1400,14 +1396,14 @@ var view = ( function(){
 
 		    delay       : 900,
 		    'opacity'   : 1,
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 
 		  }, 1000)
 		  $( '.delete-world-button' ).transition({
 
 		    delay       : 900,
 		    'opacity'   : 0.5,
-		    'transform' : 'translateY('+translate+')'
+		    'transform' : 'translateY( '+translate+' )'
 
 		  }, 1000)
 
@@ -1415,9 +1411,9 @@ var view = ( function(){
 
 		newWorldAnimationOut(){
 
-		  var newWorldContainer = $( '.new-world-container-wrap' );
+		  var newWorldContainer = $( '.new-world-container-wrap' )
 
-		  $( '.new-world-container' ).css( 'height' , '100%' );
+		  $( '.new-world-container' ).css( 'height' , '100%' )
 
 		  // Fade out White background
 		  newWorldContainer.stop().clearQueue().transition({
@@ -1466,37 +1462,42 @@ var view = ( function(){
 		newWorldStep(){
 
 	    this.newWorldAnimationB()
-	    /*if(uiContent.hasClass('compressed')){
-	      decompressCover( { instant : true , world : $('.world.active') } )
+	    /*if(uiContent.hasClass( 'compressed' )){
+	      decompressCover( { instant : true , world : $( '.world.active' ) } )
 	    }*/
 
 		}
 
 		openEditWorld( world ){
 
-			$( '.new-world-title input' ).val('');
-		  $( '.new-world-container' ).addClass( 'editing' );
-		  $( '.delete-world-button' ).removeClass( 'hide' );
+			$( '.new-world-title input' ).val( '' )
+		  $( '.new-world-container' ).addClass( 'editing' )
+		  $( '.delete-world-button' ).removeClass( 'hide' )
 
-		  this.newWorldAnimationB();
+		  this.newWorldAnimationB()
 
-		  if (world.hasCustomIcon) {
-		    $( '.wz-groupicon-uploader-start' ).removeClass('non-icon');
-		    $( '.wz-groupicon-uploader-start' ).addClass('custom-icon');
+		  if( world.hasCustomIcon ){
+
+		    $( '.wz-groupicon-uploader-start' ).removeClass( 'non-icon' )
+		    $( '.wz-groupicon-uploader-start' ).addClass( 'custom-icon' )
+
 		  }else{
-		    $( '.wz-groupicon-uploader-start' ).removeClass('custom-icon');
-		    $( '.wz-groupicon-uploader-start' ).addClass('non-icon');
+
+		    $( '.wz-groupicon-uploader-start' ).removeClass( 'custom-icon' )
+		    $( '.wz-groupicon-uploader-start' ).addClass( 'non-icon' )
+
 		  }
 
-		  $( '.new-world-desc textarea' ).val( world.description );
-		  $( '.new-world-name input' ).val( world.name );
-		  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' );
-		  $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id );
-		  $( '.privacy-options .option' ).removeClass( 'active' );
+		  $( '.new-world-desc textarea' ).val( world.description )
+		  $( '.new-world-name input' ).val( world.name )
+		  $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url( ' + world.icons.normal + '?token=' + Date.now() + ' )' )
+		  $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
+		  $( '.privacy-options .option' ).removeClass( 'active' )
+
 		  if ( world.isPrivate ) {
-		    $( '.privacy-options .hidden' ).addClass( 'active' );
+		    $( '.privacy-options .hidden' ).addClass( 'active' )
 		  }else{
-		    $( '.privacy-options .public' ).addClass( 'active' );
+		    $( '.privacy-options .public' ).addClass( 'active' )
 		  }
 
 		}
@@ -1505,13 +1506,13 @@ var view = ( function(){
 
 		  $( '.explore-container' ).scrollTop(0)
 		  //filterActive = null
-		  $( '.explore-container .search-bar input' ).val('')
-		  $('.world-card-dom').remove()
+		  $( '.explore-container .search-bar input' ).val( '' )
+		  $( '.world-card-dom' ).remove()
 
 	    var exploreSection = $( '.explore-section' )
 
-		  exploreSection.css( 'display' , 'block')
-		  $('.explore-container').scrollTop(0)
+		  exploreSection.css( 'display' , 'block' )
+		  $( '.explore-container' ).scrollTop(0)
 
 		  // Fade in blue background
 		  exploreSection.stop().clearQueue().transition({
@@ -1527,7 +1528,7 @@ var view = ( function(){
 		    'opacity'   : 1,
 		    'transform' : 'translateY(0px)'
 
-		  }, 500, this.animationEffect)
+		  }, 500, this.animationEffect )
 
 		  // New world button appears and goes up
 		  $( '.new-world-button, .close-explore' ).stop().clearQueue().transition({
@@ -1536,7 +1537,7 @@ var view = ( function(){
 		    'opacity'   : 1,
 		    'transform' : 'translateY(0px)'
 
-		  }, 450, this.animationEffect)
+		  }, 450, this.animationEffect )
 
 		}
 
@@ -1548,7 +1549,7 @@ var view = ( function(){
 			$( '.invite-user-title' ).html( '<i>' + lang.worldUsers.invitePeople + '</i>' + lang.worldUsers.to + '<figure>' + worldName + '</figure>' )
 
 		  $( '.friendDom' ).remove()
-		  $( '.invite-user-container .ui-input-search input' ).val('')
+		  $( '.invite-user-container .ui-input-search input' ).val( '' )
 		  this.filterElements( '' , '.friend' )
 
 		  friends.sort(function(a , b){
@@ -1565,7 +1566,7 @@ var view = ( function(){
 			  friend.removeClass( 'wz-prototype' ).addClass( 'user-' + friendApi.id ).addClass( 'friendDom' )
 
 			  friend.find( 'span' ).text( friendApi.fullName )
-			  friend.find( '.avatar' ).css( 'background-image' , 'url(' + friendApi.avatar.normal + ')' )
+			  friend.find( '.avatar' ).css( 'background-image' , 'url( ' + friendApi.avatar.normal + ' )' )
 			  friend.data( 'user' , friendApi )
 			  friendDomList.push( friend )
 
@@ -1585,16 +1586,16 @@ var view = ( function(){
 			$( '.kick-user-container' ).addClass( 'popup' )
 		  $( '.kick-user-container *' ).addClass( 'popup' )
 
-		  if ( world.apiWorld.owner === this.myContactID ) {
-		    $('.kick-user-section').addClass('admin')
+		  if( world.apiWorld.owner === this.myContactID ){
+		    $( '.kick-user-section' ).addClass( 'admin' )
 		    $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.kickPeople + '</i>' + lang.worldUsers.from + '<figure>' + world.apiWorld.name + '</figure>' )
 		  }else{
-		    $('.kick-user-section').removeClass('admin')
+		    $( '.kick-user-section' ).removeClass( 'admin' )
 		    $( '.kick-user-title' ).html( '<i>' + lang.worldUsers.listPeople + '</i>' + lang.worldUsers.from + '<figure>' + world.apiWorld.name + '</figure>' )
 		  }
 
 		  $( '.memberDom' ).remove()
-		  $( '.kick-user-container .ui-input-search input' ).val('')
+		  $( '.kick-user-container .ui-input-search input' ).val( '' )
 		  this.filterElements( '', '.member' )
 
 		  world.members.sort(function(a , b){
@@ -1611,11 +1612,11 @@ var view = ( function(){
 			  member.removeClass( 'wz-prototype' ).addClass( 'user-' + user.id ).addClass( 'memberDom' )
 
 			  if ( user.id === world.apiWorld.owner ) {
-			    member.addClass('isAdmin')
+			    member.addClass( 'isAdmin' )
 			  }
 
 			  member.find( '.member-name' ).text( user.fullName )
-			  member.find( '.avatar' ).css( 'background-image' , 'url(' + user.avatar.normal + ')' )
+			  member.find( '.avatar' ).css( 'background-image' , 'url( ' + user.avatar.normal + ' )' )
 
 			  member.data( 'user' , user )
 			  memberDomList.push( member )
@@ -1644,7 +1645,7 @@ var view = ( function(){
 
 		  $( '.new-world-name input' ).val( '' )
 
-		  newWorldContainer.css( 'display' , 'block')
+		  newWorldContainer.css( 'display' , 'block' )
 
 		  // Fade in White background (animation)
 		  newWorldContainer.stop().clearQueue().transition({
@@ -1708,14 +1709,14 @@ var view = ( function(){
 			$( '.clean' ).remove()
 		  $( '.category-list .world' ).removeClass( 'active' )
 		  $( '.world-' + world.apiWorld.id ).addClass( 'active' )
-		  $( '.search-post input, .mobile-world-content .search-bar input' ).val('')
+		  $( '.search-post input, .mobile-world-content .search-bar input' ).val( '' )
 		  $( '.world-title' ).text( world.apiWorld.name )
 		  if( world.apiWorld.users == 1 ){
 				$( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.member )
 		  }else{
 				$( '.world-members-button' ).text( world.apiWorld.users + ' ' + lang.worldHeader.members )
 		  }
-		  $( '.world-avatar' ).css( 'background-image' , 'url(' + world.apiWorld.icons.normal + '?token=' + Date.now() + ')' )
+		  $( '.world-avatar' ).css( 'background-image' , 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )' )
 		  this.toggleSelectWorld( false )
 
 		  if( !updatingHeader ){
@@ -1730,7 +1731,7 @@ var view = ( function(){
 
 		prepareReplyComment( post, name, input ){
 
-		  input.attr( 'placeholder' ,  '@' + name + ' ')
+		  input.attr( 'placeholder' ,  '@' + name + ' ' )
 		  input.focus()
 		  input.data( 'reply' , post )
 
@@ -1756,7 +1757,7 @@ var view = ( function(){
 		startsWith( wordToCompare ){
 
 		  return function( index , element ) {
-		    return $( element ).find( 'span' ).text().toLowerCase().indexOf( wordToCompare.toLowerCase() ) !== -1;
+		    return $( element ).find( 'span' ).text().toLowerCase().indexOf( wordToCompare.toLowerCase() ) !== -1
 		  }
 
 		}
@@ -1832,7 +1833,7 @@ var view = ( function(){
 		updateGenericCardFSNodes( post ){
 
 			var card = $( '.post-' + post.apiPost.id )
-			card.removeClass('loading')
+			card.removeClass( 'loading' )
 
 			post.fsnodes.forEach( function( fsnode ){
 
@@ -1840,7 +1841,7 @@ var view = ( function(){
 
 		      var docPreview = card.find( '.attachment-' + fsnode.id )
 
-		      if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+		      if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove' ) {
 		        docPreview.find( '.doc-icon img' ).attr( 'src' , 'https://static.horbito.com/app/360/deleted.png' )
 		      }else{
 		        docPreview.find( '.doc-icon img' ).attr( 'src' , fsnode.icons.big )
@@ -1864,7 +1865,7 @@ var view = ( function(){
 		updateDocumentCardFSNodes( post ){
 
 			var card = $( '.post-' + post.apiPost.id )
-			card.removeClass('loading')
+			card.removeClass( 'loading' )
 
 			post.fsnodes.forEach( function( fsnode ){
 
@@ -1895,20 +1896,20 @@ var view = ( function(){
 
 			notificationList.forEach( function( notification ){
 
-				var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
-				/*notificationDom.addClass('notification-' + notification.id)
-        notificationDom.data('notification', notification)
-        notificationDom.find('.notification-avatar').css('background-image', 'url(' + user.avatar.tiny + ')' )
+				var notificationDom = $( '.notification.wz-prototype' ).clone().removeClass( 'wz-prototype' )
+				/*notificationDom.addClass( 'notification-' + notification.id)
+        notificationDom.data( 'notification', notification)
+        notificationDom.find( '.notification-avatar' ).css( 'background-image', 'url( ' + user.avatar.tiny + ' )' )
         if (post.author === myContactID) {
           if ( !post.isReply ) {
-            notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment )
+            notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment )
           }else{
-            notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment3 )
+            notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment3 )
           }
         }else{
-          notificationDom.find('.notification-action').html('<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + world.name )
+          notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + world.name )
         }
-        notificationDom.find('.notification-time').html('<i></i>' +  timeElapsed( new Date( notification.time ) ) )*/
+        notificationDom.find( '.notification-time' ).html( '<i></i>' +  timeElapsed( new Date( notification.time ) ) )*/
         notificationDomList.push( notificationDom )
 
 			})
@@ -2067,7 +2068,7 @@ var view = ( function(){
 
         menu.addOption( lang.abandonWorld , function(){
           this.leaveWorldDialog( world.id )
-        }.bind(this), 'warning')
+        }.bind(this), 'warning' )
 
       }
 
