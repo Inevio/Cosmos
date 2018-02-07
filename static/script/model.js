@@ -96,7 +96,7 @@ var model = ( function( view ){
 		    return this
 		  }
 
-		  this.contacts[ user.id ] = user;
+		  this.contacts[ user.id ] = user
 		  return this
 
 		}
@@ -172,10 +172,10 @@ var model = ( function( view ){
 
 			}else{
 
-				//this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.parent ].replies[ post.id ]
-				/*if( needToAppend ){
-					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-				}*/
+				this.worlds[ post.worldId ].posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ] = post
+				if( needToAppend ){
+					this.view.appendReplyComment( this.worlds[ post.worldId ].posts[ post.mainPost ].comments[ post.id ].replies[ post.id ], function(){}, true )
+				}
 
 			}
 
@@ -288,24 +288,24 @@ var model = ( function( view ){
 
 		  api.notification.list( 'cosmos' , function( error , notifications ){
 
-		    /*worldNotifications = [];
-		    postsNotifications = [];
-		    commentsNotifications = [];
+		    /*worldNotifications = []
+		    postsNotifications = []
+		    commentsNotifications = []
 		    notifications.forEach(function( notification ){
 
-		      if (notification.data.type === 'addedToWorld') {
+		      if (notification.data.type === 'addedToWorld' ) {
 		        worldNotifications.push(notification)
-		      }else if (notification.data.type === 'post') {
+		      }else if (notification.data.type === 'post' ) {
 		        postsNotifications.push(notification)
-		      }else if (notification.data.type === 'reply') {
+		      }else if (notification.data.type === 'reply' ) {
 		        commentsNotifications.push(notification)
 		      }
 
-		    });
+		    })
 
-		    updateBadges();
-		    wz.app.setBadge( notifications.length );
-		    console.log('WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
+		    updateBadges()
+		    wz.app.setBadge( notifications.length )
+		    console.log( 'WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
 		    if( error ){
 		    	return console.error( error )
 		    }
@@ -320,7 +320,7 @@ var model = ( function( view ){
 
 		    }
 
-		    console.log(notifications);
+		    console.log(notifications)
 
 		  }.bind(this))
 
@@ -350,7 +350,7 @@ var model = ( function( view ){
 		    this.view.newWorldStep()
 		    //createChat( o )
 
-		  }.bind(this));
+		  }.bind(this))
 
 		}
 
@@ -378,9 +378,11 @@ var model = ( function( view ){
 
 		followWorld( world ){
 
-		  if( api.system.user().user.indexOf('demo') === 0 && !world.isPrivate ){
-		    alert(lang.noPublicWorlds);
-		    return;
+		  if( api.system.user().user.indexOf( 'demo' ) === 0 && !world.isPrivate ){
+
+		    alert(lang.noPublicWorlds)
+		    return
+
 		  }
 
 		  world.addUser( this.myContactID , function( error , o ){
@@ -499,20 +501,20 @@ var model = ( function( view ){
       this.worlds[worldId].apiWorld.removeUser( this.myContactID , function( error , o ){
 
         if( error ){
-          console.error( error );
+          console.error( error )
         }else{
 
         	//this.removeWorldFront( worldId )
 
           /*wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
             if (err) {
-              console.error(err);
+              console.error(err)
             }
-          });*/
+          })*/
 
         }
         
-      }.bind(this));
+      }.bind(this))
 
 		}
 
@@ -581,8 +583,8 @@ var model = ( function( view ){
 			}
 
 		  api.fs( this.openedWorld.apiWorld.volume , function( error , folder ){
-		    folder.open();
-		  });
+		    folder.open()
+		  })
 
 		}
 
@@ -634,7 +636,7 @@ var model = ( function( view ){
 
 		openWorld( worldId ){
 
-		  //app.addClass( 'selectingWorld' );
+		  //app.addClass( 'selectingWorld' )
 
 		  if( !this.worlds[ worldId ] ){
 		  	return console.error( 'Error al abrir mundo' )
@@ -658,8 +660,8 @@ var model = ( function( view ){
 			}
 
 	    api.app.openApp( 14 , [ 'open-world-chat' , { 'world' : this.openedWorld.apiWorld } , function( o ){
-      	console.log(o);
-  		}]);
+      	console.log(o)
+  		}])
 
 		}
 
@@ -868,7 +870,7 @@ var model = ( function( view ){
 			if( start > postsKeys.length ){
 				return
 			}
-			var end = start;
+			var end = start
 
 			start + 5 < postsKeys.length ? end = start + 5 : end = postsKeys.length
 
@@ -1026,13 +1028,13 @@ var model = ( function( view ){
 			      	}
 			        this._addMember( user, member.userId )
 
-			      }.bind(this));
+			      }.bind(this))
 
 		    	}
 
 		  	}.bind(this))
 
-		  }.bind(this));
+		  }.bind(this))
 
   	}
 
@@ -1142,12 +1144,12 @@ var model = ( function( view ){
 
 		    	if( error ){
 		    		console.log( fsnodeId, error )
-		    		return cb(error, null);
+		    		return cb(error, null)
 		    	}
 
 		      return cb(null, fsnode)
 
-		    }.bind(this));
+		    }.bind(this))
 
 		  }, function( error, finishedList ){
 
