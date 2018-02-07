@@ -1890,29 +1890,53 @@ var view = ( function(){
 			
 		}
 
-		updateNotificationList( notificationList ){
+		updateNotificationsList( notificationList ){
 
 			var notificationDomList = []
+			console.log( notificationList )
 
-			notificationList.forEach( function( notification ){
+			notificationList.forEach( function( notification, index ){
 
 				var notificationDom = $( '.notification.wz-prototype' ).clone().removeClass( 'wz-prototype' )
-				/*notificationDom.addClass( 'notification-' + notification.id)
-        notificationDom.data( 'notification', notification)
-        notificationDom.find( '.notification-avatar' ).css( 'background-image', 'url( ' + user.avatar.tiny + ' )' )
-        if (post.author === myContactID) {
+
+				notificationDom.addClass( 'notification-' + notification.id )
+				if( !notification.attended ){
+					notificationDom.addClass( 'unattended' )
+				}
+
+        notificationDom.data( 'notification-data', notification.data )
+
+        notificationDom.find( '.notification-avatar' ).css( 'background-image', 'url( ' + notification.apiSender.avatar.tiny + ' )' )
+        if( notification.apiWorld ){
+        	notificationDom.find( '.notification-world-avatar' ).css( 'background-image', 'url( ' + notification.apiWorld.icons.tiny + ' )' )
+        }
+        
+        /*if( post.author === this.myContactID ){
+
           if ( !post.isReply ) {
             notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment )
           }else{
             notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment3 )
           }
+
         }else{
-          notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + world.name )
-        }
-        notificationDom.find( '.notification-time' ).html( '<i></i>' +  timeElapsed( new Date( notification.time ) ) )*/
+          notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
+        }*/
+
+        /*if( notification.data.type == "reply" ){
+        	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment3 )
+        }else{
+        	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
+        }*/
+
+        notificationDom.find( '.notification-time' ).html( '<i></i>' + this._timeElapsed( new Date( notification.time ) ) )
         notificationDomList.push( notificationDom )
 
-			})
+        if( index === notificationList.length - 1 ){
+        	$( '.notifications-list' ).append( notificationDomList )
+        }
+
+			}.bind(this))
 
 		}
 

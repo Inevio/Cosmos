@@ -12,6 +12,7 @@ var model = ( function( view ){
 		  this.worlds = {}
 
 		  this.notifications = {}
+		  this.restOfUsers = {}
 
 		  this.postsToLoad = []
 		  this.started = false //started to load posts fsnodes
@@ -29,7 +30,7 @@ var model = ( function( view ){
   		this.isMobile = this.view.dom.hasClass( 'wz-mobile-view' )
 
 		  //this.changeMainAreaMode( MAINAREA_NULL )
-		  this.checkNotifications()
+		  this.loadNotifications()
   		this.fullLoad()
 
   	}
@@ -99,6 +100,17 @@ var model = ( function( view ){
 
 		  this.contacts[ user.id ] = user
 		  return this
+
+		}
+
+		addRestOfUsers( user ){
+
+		  if( this.restOfUsers[ user.id ] ){
+		    return this.restOfUsers[ user.id ]
+		  }
+
+		  this.restOfUsers[ user.id ] = user
+		  return this.restOfUsers[ user.id ]
 
 		}
 
@@ -280,48 +292,6 @@ var model = ( function( view ){
 		      }
 
 		    }.bind(this))
-
-		  }.bind(this))
-
-		}
-
-		checkNotifications(){
-
-		  api.notification.list( 'cosmos' , function( error , notifications ){
-
-		    /*worldNotifications = []
-		    postsNotifications = []
-		    commentsNotifications = []
-		    notifications.forEach(function( notification ){
-
-		      if (notification.data.type === 'addedToWorld' ) {
-		        worldNotifications.push(notification)
-		      }else if (notification.data.type === 'post' ) {
-		        postsNotifications.push(notification)
-		      }else if (notification.data.type === 'reply' ) {
-		        commentsNotifications.push(notification)
-		      }
-
-		    })
-
-		    updateBadges()
-		    wz.app.setBadge( notifications.length )
-		    console.log( 'WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
-		    if( error ){
-		    	return console.error( error )
-		    }
-
-		    if( notifications.length ){
-
-		    	notifications.forEach( function( notification ){
-		    		this.notifications[ notification.id ] = notification
-		    	})
-
-		    	view.updateNotificationsList( this.notifications )
-
-		    }
-
-		    console.log(notifications)
 
 		  }.bind(this))
 
@@ -527,6 +497,83 @@ var model = ( function( view ){
 			
 		}
 
+		loadNotifications(){
+
+		  api.notification.list( 'cosmos' , { 'includeUnattended' : true }, function( error , notifications ){
+
+		    /*worldNotifications = []
+		    postsNotifications = []
+		    commentsNotifications = []
+		    notifications.forEach(function( notification ){
+
+		      if (notification.data.type === 'addedToWorld' ) {
+		        worldNotifications.push(notification)
+		      }else if (notification.data.type === 'post' ) {
+		        postsNotifications.push(notification)
+		      }else if (notification.data.type === 'reply' ) {
+		        commentsNotifications.push(notification)
+		      }
+
+		    })
+
+		    updateBadges()
+		    wz.app.setBadge( notifications.length )
+		    console.log( 'WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
+		    if( error ){
+		    	return console.error( error )
+		    }
+
+		    if( notifications.length ){
+
+  		    async.each( notifications, function( notification, checkEnd ){
+
+  		    	if( !this.worlds[ notification.data.world ] ){
+  		    		return checkEnd()
+  		    	}
+
+  		    	this.notifications[ notification.id ] = notification
+  		    	this.notifications[ notification.id ].apiWorld = this.worlds[ notification.data.world ].apiWorld
+
+		    		if( this.contacts[ notification.sender ] ){
+
+		    			this.notifications[ notification.id ].apiSender = this.contacts[ notification.sender ]
+		    			checkEnd()
+
+		    		}else if( this.restOfUsers[ notification.sender ] ){
+
+		    			this.notifications[ notification.id ].apiSender = this.restOfUsers[ notification.sender ]
+		    			checkEnd()
+
+		    		}else{
+
+		    			api.user( notification.sender, function( error, user ){
+
+		    				if( error ){
+		    					return console.error( error )
+		    				}
+
+		    				this.notifications[ notification.id ].apiSender = this.addRestOfUsers( user )
+		    				checkEnd()
+
+		    			}.bind(this))
+
+		    		}
+
+			    }.bind(this), function(){
+
+			    	var notificationList = Object.values( this.notifications ).reverse()
+
+						this.view.updateNotificationsList( notificationList )
+						console.log( this.notifications )
+
+			    }.bind(this))
+
+		    }
+
+		  }.bind(this))
+
+		}
+
 		notificationAttended( notificationList ){
 
 			if( !notificationList.length ){
@@ -688,11 +735,11 @@ var model = ( function( view ){
 				return
 			}
 
+			//this.worlds[ world.id ]
+
 			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
 				view.removePost( postId )
 			}
-
-			//this.worlds[ world.id ]
 
 		}
 
@@ -811,7 +858,7 @@ var model = ( function( view ){
 
 		}
 
-		searchPost( postId ){
+		/*searchPost( filter ){
 
 			if( !this.openedWorld ){
 				return
@@ -828,24 +875,66 @@ var model = ( function( view ){
 
 			})
 
-		}
+		}*/
 
-		searchPostById( postId ){
+		searchNotificationPost( postId, worldId ){
 
-			if( !this.openedWorld ){
+			if( !this.worlds[ worldId ] ){
 				return
 			}
 
-			this.openedWorld.apiWorld.getPost( filter, { from: 0, to: 100 }, function( error, posts ){
+			this.openWorld( worldId )
+
+			if( this.worlds[ worldId ].posts[ postId ] ){
+				return view.appendPostList( this.worlds[ worldId ].posts[ postId ] )
+			}
+
+			var modelPost = null
+
+			this.worlds[ worldId ].apiWorld.getPost( postId, function( error, post ){
 
 				if( error ){
 					return console.error( error )
 				}
 
+				if( post.isReply ){
 
+					if( post.mainParent ){
 
+						this.worlds[ worldId ].apiWorld.getPost( post.mainParent, function( error, post ){
 
-			})
+							if( error ){
+								return console.error( error )
+							}
+
+							modelPost = new Post( this, post )
+							this.view.showNotificationPost( modelPost )
+
+						}.bind(this))
+
+					}else{
+
+						this.worlds[ worldId ].apiWorld.getPost( post.parent, function( error, post ){
+
+							if( error ){
+								return console.error( error )
+							}
+
+							modelPost = new Post( this, post )
+							this.view.showNotificationPost( modelPost )
+
+						}.bind(this))
+
+					}
+
+				}else{
+
+					modelPost = new Post( this, post )
+					this.view.showNotificationPost( modelPost )
+
+				}
+
+			}.bind(this))
 
 		}
 
