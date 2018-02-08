@@ -1138,6 +1138,21 @@ var view = ( function(){
 			$( '.explore-top-bar' ).removeClass( 'active' )
 		}
 
+		hideGoBackButton(){
+			$( '.cards-list .go-back-button' ).hide()
+		}
+
+		hideNewPostButton(){
+			$('.new-post-button').hide()
+		}
+
+		hideNotificationMode(){
+	
+			this.hideGoBackButton()
+			this.showNewPostButton()
+
+		}
+
 		hideNoWorlds(){
 
 			$( '.no-worlds' ).transition({
@@ -1741,6 +1756,21 @@ var view = ( function(){
 			$( '.explore-top-bar' ).addClass( 'active' )
 		}
 
+		showGoBackButton(){
+			$( '.cards-list .go-back-button' ).show()
+		}
+
+		showNewPostButton(){
+			$('.new-post-button').show()
+		}
+
+		showNotificationMode(){
+	
+			this.showGoBackButton()
+			this.hideNewPostButton()
+
+		}
+
 		showNoWorlds(){
 
       $( '.no-worlds' ).show()
@@ -1751,7 +1781,10 @@ var view = ( function(){
 		}
 
 		showNotificationPost( post ){
-			this.appendPostList( [post] )			
+
+			this.appendPostList( [post] )
+			$('.world-title').trigger('click')
+
 		}
 
 		startsWith( wordToCompare ){
@@ -1890,8 +1923,19 @@ var view = ( function(){
 			
 		}
 
+		updateNotificationIcon( showIcon ){
+
+			if( showIcon ){
+				$( '.sidebar .notifications' ).addClass( 'with-notification' )
+			}else{
+				$( '.sidebar .notifications' ).removeClass( 'with-notification' )
+			}
+
+		}
+
 		updateNotificationsList( notificationList ){
 
+			$( '.notificationDom' ).remove()
 			var notificationDomList = []
 			console.log( notificationList )
 
@@ -1900,15 +1944,23 @@ var view = ( function(){
 				var notificationDom = $( '.notification.wz-prototype' ).clone().removeClass( 'wz-prototype' )
 
 				notificationDom.addClass( 'notification-' + notification.id )
+				notificationDom.addClass( 'notificationDom' )
 				if( !notification.attended ){
 					notificationDom.addClass( 'unattended' )
 				}
 
-        notificationDom.data( 'notification-data', notification.data )
+        notificationDom.data( 'notification', notification )
 
         notificationDom.find( '.notification-avatar' ).css( 'background-image', 'url( ' + notification.apiSender.avatar.tiny + ' )' )
         if( notification.apiWorld ){
         	notificationDom.find( '.notification-world-avatar' ).css( 'background-image', 'url( ' + notification.apiWorld.icons.tiny + ' )' )
+        }
+
+        if( notification.data.type == "post" ){
+        	notificationDom.addClass( 'isPost' )
+        	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.postCreated + ' ' + lang.in + ' ' + notification.apiWorld.name )
+        }else{
+        	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
         }
         
         /*if( post.author === this.myContactID ){
@@ -1937,6 +1989,16 @@ var view = ( function(){
         }
 
 			}.bind(this))
+
+		}
+
+		updateNotificationStatus( notificationId, attended ){
+
+			if( attended ){
+				$( '.notification-' + notificationId ).removeClass( 'unattended' )
+			}else{
+				$( '.notification-' + notificationId ).addClass( 'unattended' )
+			}
 
 		}
 
