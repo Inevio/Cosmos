@@ -961,25 +961,6 @@ var model = ( function( view ){
 
 		}
 
-		/*searchPost( filter ){
-
-			if( !this.openedWorld ){
-				return
-			}
-
-			this.openedWorld.apiWorld.getPost( filter, { from: 0, to: 100 }, function( error, posts ){
-
-				if( error ){
-					return console.error( error )
-				}
-
-
-
-
-			})
-
-		}*/
-
 		showPosts( worldId, start ){
 
 			if( !start ){
@@ -1310,21 +1291,6 @@ var model = ( function( view ){
 		  }.bind(this))
 
   	}
-
-  	/*getPostReadyToInsert( callback ){
-
-  		if( this.readyToInsert || !this.apiPost.fsnode.length ){
-  			callback(this)
-  		}else{
-
-  			this._loadFsnodes()
-  			$.when( this.promise ).done( function( message ){
-  				callback(this)
-  			}.bind(this))
-
-  		}
-
-  	}*/
 
   }
 
