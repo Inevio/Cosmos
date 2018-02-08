@@ -1780,11 +1780,16 @@ var view = ( function(){
 
 		}
 
-		showNotificationPost( post ){
+		showNotificationPost( post, notificationData ){
 
 			this.appendPostList( [post] )
-			$('.world-title').trigger('click')
+			$( '.world-title' ).trigger( 'click' )
+			if( notificationData.type == "reply" ){
 
+				$( '.post-' + post.apiPost.id + ' ' + '.comments-opener' ).trigger( 'click' )
+
+			}
+			
 		}
 
 		startsWith( wordToCompare ){
