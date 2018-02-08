@@ -1291,6 +1291,37 @@ to {background-position: -200% 0;}
   }
 }
 
+.go-back-button{
+
+  float: left;
+  width: 529px;
+  margin-top: 22px;
+  margin-left: 22px;
+  transition: all 0.2s ease;
+  height: 30px;
+  display: none;
+
+  .arrow{
+    width: 18px;
+    height: 16px;
+    margin-top: 7px;
+    margin-right: 11px;
+    background-color: red;
+    background-size: 18px 16px;
+    display: inline-block;
+    float: left;
+  }
+
+  .text{
+    font-weight: bold;
+    font-size: 17px;
+    color: #717171;
+    display: inline-block;
+    margin-top: 6px;
+  }
+
+}
+
 .no-posts{
   float: left;
   width: 100%;
@@ -4178,11 +4209,11 @@ to {background-position: -200% 0;}
 .notifications-container{
 
   position: absolute;
-  width: 350px;
+  width: 400px;
   height: 364px;
   background-color: #fff;
   top: 56px;
-  left: 73px;
+  left: 48px;
   border-radius: 6px;
   opacity: 0;
   visibility: hidden;
@@ -4250,6 +4281,7 @@ to {background-position: -200% 0;}
     float: left;
     padding: 0 10px;
     width: 100%;
+    height: 73px;
     box-sizing: border-box;
     position: relative;
     border-bottom: 1px solid #e5e9ea;
@@ -4263,7 +4295,7 @@ to {background-position: -200% 0;}
     height: 48px;
     border-radius: 50%;
     background-size: cover;
-    margin-top: 9px;
+    margin-top: 13px;
 
   }
 
@@ -4272,10 +4304,10 @@ to {background-position: -200% 0;}
     float: left;
     font-size: 13px;
     color: #889399;
-    margin-top: 14px;
+    margin-top: 11px;
     line-height: 18px;
     margin-left: 13px;
-    width: 200px;
+    width: 300px;
     margin-bottom: 25px;
 
   }
@@ -4293,10 +4325,10 @@ to {background-position: -200% 0;}
     font-size: 13px;
     color: #889399;
     width: 215px;
-    margin-top: 2px;
+    /*margin-top: 2px;*/
     position: absolute;
     left: 71px;
-    bottom: 6px;
+    bottom: 8px;
 
   }
 
@@ -4318,7 +4350,7 @@ to {background-position: -200% 0;}
     height: 24px;
     border-radius: 50%;
     background-size: cover;
-    top: 35px;
+    top: 39px;
     left: 37px;
     background-color: #f0f0f0;
 
@@ -4336,6 +4368,7 @@ to {background-position: -200% 0;}
     top: 16px;
     padding: 5px;
     box-sizing: border-box;
+    cursor: pointer;
     display: none
 
   }
@@ -4351,6 +4384,23 @@ to {background-position: -200% 0;}
 
   .notification:hover{
     background-color: #e7e7e7;
+  }
+
+  .notification.isPost .notification-time{
+
+    bottom: 6px;
+
+  }
+
+  .notification.isPost .notification-time i{
+
+    float: left;
+    width: 20px;
+    height: 17px;
+    background-image: url('@static/images/new-post-icon.png');
+    background-size: 20px 17px;
+    margin-right: 3px;
+
   }
 
 }

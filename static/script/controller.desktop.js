@@ -59,7 +59,7 @@ var controller = ( function( model, view ){
       })
 
     	this.dom.on( 'click' , '.category-list .world' , function(){
-    		model.openWorld( parseInt( $(this).attr( 'data-id' ) ) )
+    		model.openWorld( parseInt( $(this).attr( 'data-id' ) ), false )
     	})
 
       this.dom.on( 'click', '.open-folder-button' ,function(){
@@ -357,7 +357,7 @@ var controller = ( function( model, view ){
 
             if( ok ){
 
-              model.removePostBack( post.apiPost )
+              model.removePostBack( post )
               /*worldSelected.removePost( post.id , function( err, o ){
 
                 if( error ){
@@ -391,6 +391,26 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click', '.notifications', function(){
         view.openNotificationPopup()
+      })
+
+      this.dom.on( 'click', '.notification', function(){
+
+        console.log( $(this).data( 'notification' ) )
+        model.notificationOpen( $(this).data( 'notification' ) )
+
+      })
+
+      this.dom.on( 'click', '.notification .notification-blue-dot', function( event ){
+
+        model.notificationAttendedBack( $(this).parents('.notification').data( 'notification' ).id )
+        event.stopPropagation()
+        /*console.log( $(this).data( 'notification-data' ) )
+        model.notificationOpen( $(this).data( 'notification-data' ) )*/
+
+      })
+
+      this.dom.on( 'click', '.go-back-button', function(){
+        model.openWorld()
       })
 
       /* Keypress */
@@ -540,7 +560,7 @@ var controller = ( function( model, view ){
       })
 
       api.notification.on( 'attended', function( list ){
-        model.notificationAttended( list )
+        model.notificationAttendedFront( list )
       })
 
       //
