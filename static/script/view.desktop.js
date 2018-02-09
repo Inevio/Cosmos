@@ -200,7 +200,7 @@ var view = ( function(){
 		  $( '.no-worlds-mobile .posts-feature .description' ).html( lang.feature3 )
 
 		  //Sidebar
-		  $( '.notifications-title span' ).text( lang.activity )
+		  $( '.notifications-header .title' ).text( lang.activity )
 
 		  //World selected
 		  $( '.select-world span' ).text( lang.selectWorld )
@@ -806,6 +806,11 @@ var view = ( function(){
 		    commentDom.addClass( 'mine' )
 		  }
 
+		  /*if( !comment.apiComment.authorObject ){
+		  	console.log( 'mal', comment )
+		  }else{
+		  	console.log( 'bien', comment )
+		  }*/
       commentDom.find( '.avatar' ).css( 'background-image' , 'url( ' + comment.apiComment.authorObject.avatar.tiny + ' )' )
       commentDom.find( '.name' ).text( comment.apiComment.authorObject.fullName )
       commentDom.find( '.time' ).text( this._timeElapsed( new Date( comment.apiComment.created ) ) )
@@ -1740,8 +1745,16 @@ var view = ( function(){
 
 		}
 
-		removePost( post ){
+		removeComment( comment ){
+			$( '.comment-' + comment.id ).remove()
+		}
 
+		removePost( post ){
+			$( '.post-' + post.id ).remove()
+		}
+
+		removeReply( reply ){
+			$( '.reply-' + reply.id ).remove()
 		}
 
 		prepareReplyComment( post, name, input ){

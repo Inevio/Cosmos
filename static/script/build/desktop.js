@@ -200,7 +200,7 @@ var view = ( function(){
 		  $( '.no-worlds-mobile .posts-feature .description' ).html( lang.feature3 )
 
 		  //Sidebar
-		  $( '.notifications-title span' ).text( lang.activity )
+		  $( '.notifications-header .title' ).text( lang.activity )
 
 		  //World selected
 		  $( '.select-world span' ).text( lang.selectWorld )
@@ -806,6 +806,11 @@ var view = ( function(){
 		    commentDom.addClass( 'mine' )
 		  }
 
+		  /*if( !comment.apiComment.authorObject ){
+		  	console.log( 'mal', comment )
+		  }else{
+		  	console.log( 'bien', comment )
+		  }*/
       commentDom.find( '.avatar' ).css( 'background-image' , 'url( ' + comment.apiComment.authorObject.avatar.tiny + ' )' )
       commentDom.find( '.name' ).text( comment.apiComment.authorObject.fullName )
       commentDom.find( '.time' ).text( this._timeElapsed( new Date( comment.apiComment.created ) ) )
@@ -1740,8 +1745,16 @@ var view = ( function(){
 
 		}
 
-		removePost( post ){
+		removeComment( comment ){
+			$( '.comment-' + comment.id ).remove()
+		}
 
+		removePost( post ){
+			$( '.post-' + post.id ).remove()
+		}
+
+		removeReply( reply ){
+			$( '.reply-' + reply.id ).remove()
 		}
 
 		prepareReplyComment( post, name, input ){
@@ -2425,21 +2438,23 @@ var model = ( function( view ){
 				needToAppend = true
 			}
 
-			if( this.worlds[ post.worldId ].posts[ post.parent ] ){
-
-				this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
-				if( needToAppend ){
-					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-				}
-
-			}else{
+			if( post.mainPost != post.parent ){
 
 				this.worlds[ post.worldId ].posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ] = post
 				if( needToAppend ){
-					this.view.appendReplyComment( this.worlds[ post.worldId ].posts[ post.mainPost ].comments[ post.id ].replies[ post.id ], function(){}, true )
+					this.view.updatePostComments( this.worlds[ post.worldId ].posts[ post.mainPost ] )
+				}		
+
+			}else{
+
+				this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
+				if( needToAppend ){
+					this.view.updatePostComments( this.worlds[ post.worldId ].posts[ post.parent ] )
 				}
 
 			}
+
+
 
 		}
 
@@ -2806,7 +2821,7 @@ var model = ( function( view ){
 
 			var mainPostId = null
 
-			if( notificationData.mainPost ){
+			if( notificationData.mainPost != notificationData.parent ){
 
 				//Es una respuesta
 				mainPostId = notificationData.mainPost
@@ -2851,7 +2866,25 @@ var model = ( function( view ){
 
 			}
 
+		}
 
+		notificationMarkAllAsAttended(){
+
+			var notifications = Object.values( this.notifications )
+
+			notifications.forEach( function( notification ){
+
+				if( !notification.attended ){
+
+					api.notification.markAsAttended( 'cosmos', notification.id , function( error ){
+						if( error ){
+							console.error( error )
+						}
+					})
+
+				}
+
+			})
 
 		}
 
@@ -3007,16 +3040,49 @@ var model = ( function( view ){
 
 		}
 
-		removePostFront( postId, world ){
+		removePostFront( post, world ){
 
 			if( !this.worlds[ world.id ] ){
 				return
 			}
 
-			//this.worlds[ world.id ]
-
+			var needToRemove = false
 			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
-				view.removePost( postId )
+				needToRemove = true
+			}
+
+			if( post.isReply ){
+
+				if( post.mainPost != post.parent ){
+
+					delete this.worlds[ world.id ].posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ]
+
+					if( needToRemove ){
+
+						this.view.removeReply( post )
+						this.view.updatePostComments( this.worlds[ world.id ].posts[ post.mainPost ] )
+
+					}
+
+				}else{
+
+					delete this.worlds[ world.id ].posts[ post.mainPost ].comments[ post.id ]
+					if( needToRemove ){
+
+						this.view.removeComment( post )
+						this.view.updatePostComments( this.worlds[ world.id ].posts[ post.parent ] )
+
+					}
+
+				}
+
+			}else{
+
+				delete this.worlds[ world.id ].posts[ post.id ]
+				if( needToRemove ){
+					this.view.removePost( post )
+				}
+
 			}
 
 		}
@@ -3929,6 +3995,25 @@ var controller = ( function( model, view ){
         model.openWorld()
       })
 
+      this.dom.on( 'click', '.card-options-section .edit', function(){
+
+        $( this ).closest( '.card' ).addClass( 'editing' )
+        $( this ).closest( '.card' ).find( '.popup' ).removeClass( 'popup' )
+        //editPostAsync( $( this ).closest( '.card' ) )
+
+      })
+
+      this.dom.on( 'click' , '.cancel-new-card' , function(){
+
+        $( this ).closest( '.card' ).removeClass( 'editing' )
+        $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' )
+
+      })
+
+      this.dom.on( 'click', '.notifications-header .mark-as-attended', function(){
+        model.notificationMarkAllAsAttended()
+      })
+
       /* Keypress */
 
       this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
@@ -3979,6 +4064,10 @@ var controller = ( function( model, view ){
       })
 
       this.dom.on( 'input', '.explore-container .search-bar input', function(){
+        view.filterElements( $(this).val(), '.world-card-dom' )
+      })
+
+      this.dom.on( 'input', '.explore-top-bar .search-bar input', function(){
         view.filterElements( $(this).val(), '.world-card-dom' )
       })
 
@@ -4065,6 +4154,10 @@ var controller = ( function( model, view ){
 
       api.cosmos.on( 'postRemoved', function( postId , world ){
         model.removePostFront( postId, world )
+      })
+
+      api.cosmos.on( 'postModified', function( post ){
+        console.log( post )
       })
 
       // END OF COSMOS EVENTS
