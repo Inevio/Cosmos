@@ -16,6 +16,10 @@ var worldNotifications = [];
 var postsNotifications = [];
 var commentsNotifications = [];
 
+//Albeniz
+var worldsScrollPageCount = 1
+
+
 var URL_REGEX = /^http(s)?:\/\//i;
 var colors = ['#4fb0c6', '#d09e88', '#b44b9f', '#1664a5', '#e13d35', '#ebab10', '#128a54', '#6742aa', '#fc913a', '#58c9b9']
 
@@ -1932,6 +1936,40 @@ var getMyWorldsAsync = function (options) {
     }
 
 };
+
+
+//Albeniz****************************************
+
+$('.tend-list').on('scroll', function () {
+
+    console.log('Scrolling!')
+    extendWorldListScroll()
+
+})
+
+
+var extendWorldListScroll = function () {
+
+    //Comparar la distancia del scroll top vs scroll height
+    var totalHeight = $('.tend-list')[0].scrollHeight
+    var currentPosition = $('.tend-list').scrollTop()
+    var realPosition = totalHeight - currentPosition
+
+    console.log('Scroll Heigh is equal to ' + totalHeight)
+    console.log('Scroll Top is equal to ' + currentPosition)
+    console.log('real position is equal to ' + realPosition)
+
+    if ((realPosition / totalHeight) < 0.3) {
+
+        worldsScrollPageCount++
+        console.log('Load more worlds')
+        getPublicWorldsAsync({
+            page: worldsScrollPageCount,
+            withAnimation: true
+        })
+    }
+}
+//Albeniz****************************************
 
 var getPublicWorldsAsync = function (options) {
 
