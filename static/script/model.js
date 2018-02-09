@@ -250,21 +250,23 @@ var model = ( function( view ){
 				needToAppend = true
 			}
 
-			if( this.worlds[ post.worldId ].posts[ post.parent ] ){
-
-				this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
-				if( needToAppend ){
-					this.view.appendComment( this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ], function(){}, true )
-				}
-
-			}else{
+			if( post.mainPost != post.parent ){
 
 				this.worlds[ post.worldId ].posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ] = post
 				if( needToAppend ){
-					this.view.appendReplyComment( this.worlds[ post.worldId ].posts[ post.mainPost ].comments[ post.id ].replies[ post.id ], function(){}, true )
+					this.view.updatePostComments( this.worlds[ post.worldId ].posts[ post.mainPost ] )
+				}		
+
+			}else{
+
+				this.worlds[ post.worldId ].posts[ post.parent ].comments[ post.id ] = new Comment( this, post )
+				if( needToAppend ){
+					this.view.updatePostComments( this.worlds[ post.worldId ].posts[ post.parent ] )
 				}
 
 			}
+
+
 
 		}
 
@@ -631,7 +633,7 @@ var model = ( function( view ){
 
 			var mainPostId = null
 
-			if( notificationData.mainPost ){
+			if( notificationData.mainPost != notificationData.parent ){
 
 				//Es una respuesta
 				mainPostId = notificationData.mainPost
@@ -676,7 +678,25 @@ var model = ( function( view ){
 
 			}
 
+		}
 
+		notificationMarkAllAsAttended(){
+
+			var notifications = Object.values( this.notifications )
+
+			notifications.forEach( function( notification ){
+
+				if( !notification.attended ){
+
+					api.notification.markAsAttended( 'cosmos', notification.id , function( error ){
+						if( error ){
+							console.error( error )
+						}
+					})
+
+				}
+
+			})
 
 		}
 
@@ -832,16 +852,49 @@ var model = ( function( view ){
 
 		}
 
-		removePostFront( postId, world ){
+		removePostFront( post, world ){
 
 			if( !this.worlds[ world.id ] ){
 				return
 			}
 
-			//this.worlds[ world.id ]
-
+			var needToRemove = false
 			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
-				view.removePost( postId )
+				needToRemove = true
+			}
+
+			if( post.isReply ){
+
+				if( post.mainPost != post.parent ){
+
+					delete this.worlds[ world.id ].posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ]
+
+					if( needToRemove ){
+
+						this.view.removeReply( post )
+						this.view.updatePostComments( this.worlds[ world.id ].posts[ post.mainPost ] )
+
+					}
+
+				}else{
+
+					delete this.worlds[ world.id ].posts[ post.mainPost ].comments[ post.id ]
+					if( needToRemove ){
+
+						this.view.removeComment( post )
+						this.view.updatePostComments( this.worlds[ world.id ].posts[ post.parent ] )
+
+					}
+
+				}
+
+			}else{
+
+				delete this.worlds[ world.id ].posts[ post.id ]
+				if( needToRemove ){
+					this.view.removePost( post )
+				}
+
 			}
 
 		}

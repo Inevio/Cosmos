@@ -413,6 +413,25 @@ var controller = ( function( model, view ){
         model.openWorld()
       })
 
+      this.dom.on( 'click', '.card-options-section .edit', function(){
+
+        $( this ).closest( '.card' ).addClass( 'editing' )
+        $( this ).closest( '.card' ).find( '.popup' ).removeClass( 'popup' )
+        //editPostAsync( $( this ).closest( '.card' ) )
+
+      })
+
+      this.dom.on( 'click' , '.cancel-new-card' , function(){
+
+        $( this ).closest( '.card' ).removeClass( 'editing' )
+        $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' )
+
+      })
+
+      this.dom.on( 'click', '.notifications-header .mark-as-attended', function(){
+        model.notificationMarkAllAsAttended()
+      })
+
       /* Keypress */
 
       this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
@@ -463,6 +482,10 @@ var controller = ( function( model, view ){
       })
 
       this.dom.on( 'input', '.explore-container .search-bar input', function(){
+        view.filterElements( $(this).val(), '.world-card-dom' )
+      })
+
+      this.dom.on( 'input', '.explore-top-bar .search-bar input', function(){
         view.filterElements( $(this).val(), '.world-card-dom' )
       })
 
@@ -549,6 +572,10 @@ var controller = ( function( model, view ){
 
       api.cosmos.on( 'postRemoved', function( postId , world ){
         model.removePostFront( postId, world )
+      })
+
+      api.cosmos.on( 'postModified', function( post ){
+        console.log( post )
       })
 
       // END OF COSMOS EVENTS

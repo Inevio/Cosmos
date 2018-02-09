@@ -1306,7 +1306,7 @@ to {background-position: -200% 0;}
     height: 16px;
     margin-top: 7px;
     margin-right: 11px;
-    background-color: red;
+    background-image: url('@static/images/back.png');
     background-size: 18px 16px;
     display: inline-block;
     float: left;
@@ -4247,7 +4247,7 @@ to {background-position: -200% 0;}
 
 .notifications-container{
 
-  .notifications-title{
+  .notifications-header{
 
     margin: 0 10px;
     width: ~'calc( 100% - 20px )';
@@ -4256,16 +4256,31 @@ to {background-position: -200% 0;}
 
   }
 
-  .notifications-title span{
+  .notifications-header .title{
 
     float: left;
-    width: 100%;
     font-size: 21px;
     font-weight: bolder;
     color: black;
     margin-top: 21px;
     margin-left: 13px;
 
+  }
+
+  .notifications-header .mark-as-attended{
+
+    float: right;
+    font-size: 13px;
+    font-weight: bolder;
+    color: black;
+    margin-top: 26px;
+    margin-right: 8px;
+    color: #0071f6;
+
+  }
+
+  .notifications-header .mark-as-attended:hover{
+    text-decoration: underline;
   }
 
   .notifications-list{
