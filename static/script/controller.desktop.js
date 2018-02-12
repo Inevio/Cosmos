@@ -396,6 +396,9 @@ var controller = ( function( model, view ){
       this.dom.on( 'click', '.notification', function(){
 
         console.log( $(this).data( 'notification' ) )
+        if( !$(this).data( 'notification' ).mainPost ){
+          return alert( 'Notificacion pendiente de migrar' )
+        }
         model.notificationOpen( $(this).data( 'notification' ) )
 
       })
@@ -559,23 +562,44 @@ var controller = ( function( model, view ){
       })
 
       api.cosmos.on( 'userAdded', function( userId, world ){
+
+        console.log( 'userAdded', userId, world )
         model.addUserFront( userId, world )
+
       })
 
       api.cosmos.on( 'userRemoved', function( userId, world ){
+
+        console.log( 'userRemoved', userId, world )
         model.removeUserFront( userId, world )
+
       })
 
       api.cosmos.on( 'postAdded', function( post ){
+
+        console.log( 'postAdded', post )
         model.addPost( post )
+
       })
 
-      api.cosmos.on( 'postRemoved', function( postId , world ){
-        model.removePostFront( postId, world )
+      api.cosmos.on( 'postRemoved', function( post , world ){
+
+        console.log( 'postRemoved', post, world )
+        model.removePostFront( post, world )
+
       })
 
       api.cosmos.on( 'postModified', function( post ){
-        console.log( post )
+
+        console.log( 'postModified', post )
+
+      })
+
+      api.cosmos.on( 'worldChanged', function( world ){
+
+        console.log( 'worldChanged', world )
+        model.updateWorld( world )
+
       })
 
       // END OF COSMOS EVENTS
@@ -583,10 +607,12 @@ var controller = ( function( model, view ){
       // NOTIFICATION EVENTS
 
       api.notification.on( 'new', function( notification ){
+        console.log( 'notificationNew', notification )
         model.notificationNew( notification )
       })
 
       api.notification.on( 'attended', function( list ){
+        console.log( 'notificationAttended', list )
         model.notificationAttendedFront( list )
       })
 

@@ -269,6 +269,9 @@ var view = ( function(){
 		  $( '.option.hidden > span' ).text( lang.private )
 		  $( '.create-world-button.step-a span' ).text( lang.createWorldShort )
 
+		  //Notifications
+		  $( '.mark-as-attended' ).text( lang.markAsRead )
+
 		}
 
 		/* Date functions */
@@ -554,10 +557,11 @@ var view = ( function(){
 
 		}
 
-		appendYoutubeCard( post , user , reason, callback ){
+		appendYoutubeCard( post , reason, callback ){
 
 		  var card = this._youtubeCardPrototype.clone()
 		  card.removeClass( 'wz-prototype' ).addClass( 'post-' + post.apiPost.id ).addClass( 'cardDom' )
+		  var user = post.apiPost.authorObject
 
 		  var youtubeCode = this._getYoutubeCode( post.apiPost.content )
 
@@ -569,7 +573,7 @@ var view = ( function(){
 
 		  card.find( '.card-user-avatar' ).css( 'background-image' , 'url( ' + user.avatar.normal + ' )' )
 		  card.find( '.card-user-name' ).text( user.fullName )
-		  card.find( '.time-text' ).text( timeElapsed( new Date( post.apiPost.created ) ) )
+		  card.find( '.time-text' ).text( this._timeElapsed( new Date( post.apiPost.created ) ) )
 		  card.find( '.desc' ).html( post.apiPost.content.replace(/\n/g, "<br />").replace( /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>' ) )
 		  card.find( '.title' ).text( post.apiPost.title )
 		  card.find( '.activate-preview' ).text( lang.preview )
@@ -902,43 +906,6 @@ var view = ( function(){
 	    return reply
 
 		}
-
-		/*appendWorldCards( worlds, myWorlds ){
-
-			var cardsList = []
-
-			worlds.forEach( function( worldApi , index){
-
-			  var world = $( '.world-card.wz-prototype' ).clone()
-			  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' )
-			  var worldTitle = worldApi.name
-			  if ( worldTitle.length > 32 ) {
-			    worldTitle = worldTitle.substr(0 , 29) + '...'
-			  }
-			  world.find( '.world-title-min' ).text( worldTitle )
-			  world.find( '.world-avatar-min' ).css( 'background-image' , 'url( ' + worldApi.icons.normal + '?token=' + Date.now() + ' )' )
-
-			  if( worldApi.users ){
-			    world.find( '.world-followers' ).text( worldApi.users + ' ' + lang.followers )
-			  }
-
-			  if( myWorlds.indexOf( worldApi.id ) !== -1 ){
-
-			    world.addClass( 'followed' ).removeClass( 'unfollowed' )
-			    world.find( '.follow-button span' ).text( lang.following )
-
-			  }
-
-			  world.data( 'world' , worldApi )
-			  cardsList.push( world )
-
-			  if( index === worlds.length - 1 ){
-			  	$( '.world-card.wz-prototype' ).after( cardsList )
-			  }
-
-			})
-
-		}*/
 
 		appendWorldCard( worldApi, following ){
 
@@ -1847,7 +1814,7 @@ var view = ( function(){
 
         commentsSection.css( 'height' , height )
         card.removeClass( 'comments-open' )
-        commentsSection.transition({
+        commentsSection.stop().clearQueue().transition({
           'height' : 0
         }, 200, function(){
           commentsSection.removeClass( 'opened' )
@@ -1857,7 +1824,7 @@ var view = ( function(){
 
         card.addClass( 'comments-open' )
         commentsSection.find( '.comments-list' ).scrollTop(9999999)
-        commentsSection.transition({
+        commentsSection.stop().clearQueue().transition({
           'height' : height
         }, 200, function(){
 

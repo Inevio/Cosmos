@@ -127,7 +127,7 @@ var model = ( function( view ){
 		    					return console.error( error )
 		    				}
 
-		    				this.notifications[ notification.id ].apiSender = this.addRestOfUsers( user )
+		    				this.notifications[ notification.id ].apiSender = this.addToRestOfUsers( user )
 		    				checkEnd()
 
 		    			}.bind(this))
@@ -178,17 +178,6 @@ var model = ( function( view ){
 
 		}
 
-		addRestOfUsers( user ){
-
-		  if( this.restOfUsers[ user.id ] ){
-		    return this.restOfUsers[ user.id ]
-		  }
-
-		  this.restOfUsers[ user.id ] = user
-		  return this.restOfUsers[ user.id ]
-
-		}
-
 		addPost( post ){
 
 			if( post.isReply ){
@@ -218,7 +207,7 @@ var model = ( function( view ){
 					return
 				}
 
-				this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply( { content: message }, function( error, object ){
+				this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply( { content: message, notification : {} }, function( error, object ){
 
 					if( error ){
 						return console.error( error )
@@ -232,7 +221,7 @@ var model = ( function( view ){
 					return
 				}
 
-				this.openedWorld.posts[ post.id ].apiPost.reply( { content: message }, function( error, object ){
+				this.openedWorld.posts[ post.id ].apiPost.reply( { content: message, notification : {} }, function( error, object ){
 
 					if( error ){
 						return console.error( error )
@@ -267,7 +256,16 @@ var model = ( function( view ){
 
 			}
 
+		}
 
+		addToRestOfUsers( user ){
+
+		  if( this.restOfUsers[ user.id ] ){
+		    return this.restOfUsers[ user.id ]
+		  }
+
+		  this.restOfUsers[ user.id ] = user
+		  return this.restOfUsers[ user.id ]
 
 		}
 
@@ -363,9 +361,9 @@ var model = ( function( view ){
 
 		      if( index === worlds.length - 1 ){
 
-				    this.loadingPublicWorlds = false
-				    this.view.animateCards()
-
+		      	this.loadingPublicWorlds = false
+		      	this.view.animateCards()
+				    
 		      }
 
 		    }.bind(this))
@@ -452,7 +450,6 @@ var model = ( function( view ){
 
 		    contacts : this._loadFullContactList.bind(this),
 		    worlds : this._loadFullWorldsList.bind(this),
-		    notifications : this._loadFullNotificationList.bind(this)
 
 		  }, function( err, res ){
 
@@ -468,14 +465,20 @@ var model = ( function( view ){
 
 		    }
 
-		    if( res.notifications ){
+		    this._loadFullNotificationList( function( error, notifications ){
+
+			    if( notifications ){
 
 		    		var notificationList = Object.values( this.notifications ).reverse()
 						this.view.updateNotificationsList( notificationList )
 						console.log( this.notifications )
 						this.updateNotificationIcon()
 
-		    }
+		    	}
+
+		    }.bind(this))
+
+
 
 		    console.log(this.worlds)
 		    //this.loadFSNodes()
@@ -586,6 +589,15 @@ var model = ( function( view ){
 
 			}
 			
+		}
+
+		notificationAdd( notificationUpdated ){
+
+			this.notifications[ notificationUpdated.id ] = notificationUpdated
+			var notificationList = Object.values( this.notifications ).reverse()
+			this.view.updateNotificationsList( notificationList )
+			this.updateNotificationIcon()
+
 		}
 
 		notificationAttendedFront( notificationList ){
@@ -707,10 +719,34 @@ var model = ( function( view ){
 				return
 			}
 
-			this.notifications[ notification.id ] = notification
-			var notificationList = Object.values( this.notifications ).reverse()
-			this.view.updateNotificationsList( notificationList )
-			this.updateNotificationIcon()
+			if( this.worlds[ notification.data.world ] ){
+				notification.apiWorld = this.worlds[ notification.data.world ].apiWorld
+			}
+
+			if( this.contacts[ notification.sender ] ){
+
+				notification.apiSender = this.contacts[ notification.sender ]
+				this.notificationAdd( notification )
+
+			}else if( this.restOfUsers[ notification.sender ] ){
+
+				notification.apiSender = this.restOfUsers[ notification.sender ]
+				this.notificationAdd( notification )
+
+			}else{
+
+  			api.user( notification.sender, function( error, user ){
+
+  				if( error ){
+  					return console.error( error )
+  				}
+
+  				notification.apiSender = this.addToRestOfUsers( user )
+  				this.notificationAdd( notification )
+
+  			}.bind(this))
+
+			}
 
 		}
 
@@ -1089,6 +1125,20 @@ var model = ( function( view ){
 
 		}
 
+		updateWorld( world ){
+
+			if( !this.worlds[ world.id ] ){
+				return
+			}
+
+			this.worlds[ world.id ].apiWorld = world
+			this.updateWorldsListUI()
+			if( this.openedWorld.apiWorld.id === world.id ){
+				this.view.openWorld( this.worlds[ world.id ] )
+			}
+
+		}
+
 		updateWorldsListUI(){
 
 			var list = []
@@ -1126,8 +1176,6 @@ var model = ( function( view ){
 			  this.icon = world.icons.big
 			  this.apiWorld = world
 
-  		}else{
-  			this._createWorld( info )
   		}
 
   		this._loadMembers()
