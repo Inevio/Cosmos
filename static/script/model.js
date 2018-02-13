@@ -356,12 +356,17 @@ var model = ( function( view ){
 		    	if( this.worlds[world.id] ){
 		    		following = true
 		    	}
-		      view.appendWorldCard( world, following )
+		      view.appendWorldCard( world, following, this.showingWorlds.from !== 0 )
 
 		      if( index === worlds.length - 1 ){
 
-		      	this.loadingPublicWorlds = false
-		      	this.view.animateCards()
+		      	setTimeout( function(){
+		      		this.loadingPublicWorlds = false
+		      	}.bind(this),3000)
+		      	
+		      	if( this.showingWorlds.from == 0 ){
+		      		this.view.animateCards()
+		      	}
 				    
 		      }
 
@@ -1004,7 +1009,7 @@ var model = ( function( view ){
 				return callback( false )
 			}
 
-			var listToShow = contacts
+			var listToShow = contacts.slice(0)
 
 			for( var i = 0; i < contacts.length; i++ ){
 
@@ -1132,7 +1137,7 @@ var model = ( function( view ){
 
 			this.worlds[ world.id ].apiWorld = world
 			this.updateWorldsListUI()
-			if( this.openedWorld.apiWorld.id === world.id ){
+			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
 				this.view.openWorld( this.worlds[ world.id ] )
 			}
 
