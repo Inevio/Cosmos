@@ -907,7 +907,7 @@ var view = ( function(){
 
 		}
 
-		appendWorldCard( worldApi, following ){
+		appendWorldCard( worldApi, following, appending ){
 
 		  var world = $( '.world-card.wz-prototype' ).clone()
 		  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' )
@@ -926,6 +926,15 @@ var view = ( function(){
 
 		    world.addClass( 'followed' ).removeClass( 'unfollowed' )
 		    world.find( '.follow-button span' ).text( lang.following )
+
+		  }
+
+		  if( appending ){
+
+		  	world.css({
+          'opacity'   : 1,
+          'transform' : 'translateY(0px)'
+        })
 
 		  }
 
@@ -1637,7 +1646,9 @@ var view = ( function(){
 		  // Fade in White background (animation)
 		  newWorldContainer.stop().clearQueue().transition({
 		    'opacity' : 1
-		  }, 300)
+		  }, 300, function(){
+		  	$( '.new-world-name input' ).focus()
+		  })
 
 		  // Fade in and goes up title (animation)
 		  $( '.new-world-title' ).stop().clearQueue().transition({

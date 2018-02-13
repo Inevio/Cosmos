@@ -643,6 +643,7 @@ to {background-position: -200% 0;}
       height: 6px;
       background-image: url('@static/images/flecha-sidebar.png');
       background-size: 10px 6px;
+      cursor: pointer;
     }
 
   }
@@ -1742,6 +1743,7 @@ to {background-position: -200% 0;}
     margin-top: 16px;
     margin-left: 10px;
     height: 19px;
+    min-width: 70px;
 
   }
 

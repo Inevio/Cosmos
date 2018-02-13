@@ -396,7 +396,7 @@ var controller = ( function( model, view ){
       this.dom.on( 'click', '.notification', function(){
 
         console.log( $(this).data( 'notification' ) )
-        if( !$(this).data( 'notification' ).mainPost ){
+        if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
           return alert( 'Notificacion pendiente de migrar' )
         }
         model.notificationOpen( $(this).data( 'notification' ) )
@@ -433,6 +433,10 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click', '.notifications-header .mark-as-attended', function(){
         model.notificationMarkAllAsAttended()
+      })
+
+      this.dom.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
+        $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' )
       })
 
       /* Keypress */
@@ -545,22 +549,6 @@ var controller = ( function( model, view ){
 
       // COSMOS EVENTS
 
-      api.cosmos.on( 'worldCreated' , function( world ){
-
-        model.addWorld( world, true )
-        $( '.new-world-container' ).data( 'world' , world )
-        /*$( '.new-world-name input' ).val( '' )
-        $( '.new-world-container' ).data( 'world' , world )
-        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
-
-        myWorlds.push( world.id )
-
-        if ( world.owner === myContactID ) {
-          selectWorld( $( '.world-' + world.id ) , function(){})
-        }*/
-
-      })
-
       api.cosmos.on( 'userAdded', function( userId, world ){
 
         console.log( 'userAdded', userId, world )
@@ -602,21 +590,63 @@ var controller = ( function( model, view ){
 
       })
 
+      api.cosmos.on( 'worldCreated' , function( world ){
+
+        console.log( 'worldCreated', world )
+        model.addWorld( world, true )
+        $( '.new-world-container' ).data( 'world' , world )
+        /*$( '.new-world-name input' ).val( '' )
+        $( '.new-world-container' ).data( 'world' , world )
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
+
+        myWorlds.push( world.id )
+
+        if ( world.owner === myContactID ) {
+          selectWorld( $( '.world-' + world.id ) , function(){})
+        }*/
+
+      })
+
+      api.cosmos.on( 'worldIconSetted' , function( world ){
+
+        if ( $( '.world.active' ).hasClass( 'world-' + world.id ) ) {
+          $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' )
+          $( '.world-avatar' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' )
+        }
+
+      })
+
       // END OF COSMOS EVENTS
 
       // NOTIFICATION EVENTS
 
       api.notification.on( 'new', function( notification ){
+
         console.log( 'notificationNew', notification )
         model.notificationNew( notification )
+
       })
 
       api.notification.on( 'attended', function( list ){
+
         console.log( 'notificationAttended', list )
         model.notificationAttendedFront( list )
+
       })
 
-      //
+      //UPLOAD EVENTS
+
+      api.upload.on( 'worldIconProgress', function( percent ){
+        $( '.loading-animation-container' ).show()
+      })
+
+      api.upload.on( 'worldIconEnd', function( worldId ){
+ 
+        $( '.loading-animation-container' ).hide()
+        $( '.wz-groupicon-uploader-start' ).removeClass( 'non-icon' )
+        $( '.wz-groupicon-uploader-start' ).addClass( 'custom-icon' )
+
+      })
 
     }
 

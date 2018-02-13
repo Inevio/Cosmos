@@ -907,7 +907,7 @@ var view = ( function(){
 
 		}
 
-		appendWorldCard( worldApi, following ){
+		appendWorldCard( worldApi, following, appending ){
 
 		  var world = $( '.world-card.wz-prototype' ).clone()
 		  world.removeClass( 'wz-prototype' ).addClass( 'world-card-' + worldApi.id ).addClass( 'world-card-dom' )
@@ -926,6 +926,15 @@ var view = ( function(){
 
 		    world.addClass( 'followed' ).removeClass( 'unfollowed' )
 		    world.find( '.follow-button span' ).text( lang.following )
+
+		  }
+
+		  if( appending ){
+
+		  	world.css({
+          'opacity'   : 1,
+          'transform' : 'translateY(0px)'
+        })
 
 		  }
 
@@ -1637,7 +1646,9 @@ var view = ( function(){
 		  // Fade in White background (animation)
 		  newWorldContainer.stop().clearQueue().transition({
 		    'opacity' : 1
-		  }, 300)
+		  }, 300, function(){
+		  	$( '.new-world-name input' ).focus()
+		  })
 
 		  // Fade in and goes up title (animation)
 		  $( '.new-world-title' ).stop().clearQueue().transition({
@@ -2511,12 +2522,17 @@ var model = ( function( view ){
 		    	if( this.worlds[world.id] ){
 		    		following = true
 		    	}
-		      view.appendWorldCard( world, following )
+		      view.appendWorldCard( world, following, this.showingWorlds.from !== 0 )
 
 		      if( index === worlds.length - 1 ){
 
-		      	this.loadingPublicWorlds = false
-		      	this.view.animateCards()
+		      	setTimeout( function(){
+		      		this.loadingPublicWorlds = false
+		      	}.bind(this),3000)
+		      	
+		      	if( this.showingWorlds.from == 0 ){
+		      		this.view.animateCards()
+		      	}
 				    
 		      }
 
@@ -3159,7 +3175,7 @@ var model = ( function( view ){
 				return callback( false )
 			}
 
-			var listToShow = contacts
+			var listToShow = contacts.slice(0)
 
 			for( var i = 0; i < contacts.length; i++ ){
 
@@ -3287,7 +3303,7 @@ var model = ( function( view ){
 
 			this.worlds[ world.id ].apiWorld = world
 			this.updateWorldsListUI()
-			if( this.openedWorld.apiWorld.id === world.id ){
+			if( this.openedWorld && this.openedWorld.apiWorld.id === world.id ){
 				this.view.openWorld( this.worlds[ world.id ] )
 			}
 
@@ -3993,7 +4009,7 @@ var controller = ( function( model, view ){
       this.dom.on( 'click', '.notification', function(){
 
         console.log( $(this).data( 'notification' ) )
-        if( !$(this).data( 'notification' ).mainPost ){
+        if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
           return alert( 'Notificacion pendiente de migrar' )
         }
         model.notificationOpen( $(this).data( 'notification' ) )
@@ -4030,6 +4046,10 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click', '.notifications-header .mark-as-attended', function(){
         model.notificationMarkAllAsAttended()
+      })
+
+      this.dom.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
+        $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' )
       })
 
       /* Keypress */
@@ -4142,22 +4162,6 @@ var controller = ( function( model, view ){
 
       // COSMOS EVENTS
 
-      api.cosmos.on( 'worldCreated' , function( world ){
-
-        model.addWorld( world, true )
-        $( '.new-world-container' ).data( 'world' , world )
-        /*$( '.new-world-name input' ).val( '' )
-        $( '.new-world-container' ).data( 'world' , world )
-        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
-
-        myWorlds.push( world.id )
-
-        if ( world.owner === myContactID ) {
-          selectWorld( $( '.world-' + world.id ) , function(){})
-        }*/
-
-      })
-
       api.cosmos.on( 'userAdded', function( userId, world ){
 
         console.log( 'userAdded', userId, world )
@@ -4199,21 +4203,63 @@ var controller = ( function( model, view ){
 
       })
 
+      api.cosmos.on( 'worldCreated' , function( world ){
+
+        console.log( 'worldCreated', world )
+        model.addWorld( world, true )
+        $( '.new-world-container' ).data( 'world' , world )
+        /*$( '.new-world-name input' ).val( '' )
+        $( '.new-world-container' ).data( 'world' , world )
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
+
+        myWorlds.push( world.id )
+
+        if ( world.owner === myContactID ) {
+          selectWorld( $( '.world-' + world.id ) , function(){})
+        }*/
+
+      })
+
+      api.cosmos.on( 'worldIconSetted' , function( world ){
+
+        if ( $( '.world.active' ).hasClass( 'world-' + world.id ) ) {
+          $( '.wz-groupicon-uploader-start' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' )
+          $( '.world-avatar' ).css( 'background-image' , 'url(' + world.icons.normal + '?token=' + Date.now() + ')' )
+        }
+
+      })
+
       // END OF COSMOS EVENTS
 
       // NOTIFICATION EVENTS
 
       api.notification.on( 'new', function( notification ){
+
         console.log( 'notificationNew', notification )
         model.notificationNew( notification )
+
       })
 
       api.notification.on( 'attended', function( list ){
+
         console.log( 'notificationAttended', list )
         model.notificationAttendedFront( list )
+
       })
 
-      //
+      //UPLOAD EVENTS
+
+      api.upload.on( 'worldIconProgress', function( percent ){
+        $( '.loading-animation-container' ).show()
+      })
+
+      api.upload.on( 'worldIconEnd', function( worldId ){
+ 
+        $( '.loading-animation-container' ).hide()
+        $( '.wz-groupicon-uploader-start' ).removeClass( 'non-icon' )
+        $( '.wz-groupicon-uploader-start' ).addClass( 'custom-icon' )
+
+      })
 
     }
 
