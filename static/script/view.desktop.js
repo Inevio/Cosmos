@@ -759,6 +759,8 @@ var view = ( function(){
 				return callback( card )
 			}
 
+			card.find( '.commentDom' ).remove()
+
 			var comments = post.comments
 
 			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
@@ -788,7 +790,7 @@ var view = ( function(){
 	    }.bind(this), function(){
 
 	      card.find( '.comments-list' ).append( listToAppend )
-      	//card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
+      	card.find( '.comments-list' ).scrollTop( 999999999999999 )
       	return callback( card )
 
 	    })

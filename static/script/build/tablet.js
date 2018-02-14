@@ -397,7 +397,7 @@ var model = ( function( view ){
 		      return console.log( error )
 		    }
 
-		    this.addWorld( world )
+		    //this.addWorld( world )
 		    this.view.newWorldStep()
 		    //createChat( o )
 
@@ -611,6 +611,8 @@ var model = ( function( view ){
 				return
 			}
 
+			this.updateNotificationIcon()
+
 			notificationList.forEach( function( notification ){
 
 				if( !this.notifications[ notification ] ){
@@ -803,9 +805,7 @@ var model = ( function( view ){
 				return
 			}
 
-			var contacts = Object.values( this.contacts )
-
-			this.searchMember( contacts, this.openedWorld.members, function( contactsToShow ){
+			this.searchMember( this.openedWorld.members, function( contactsToShow ){
 
 				view.openInviteMembers( contactsToShow, this.openedWorld.apiWorld.name )
 
@@ -1004,28 +1004,27 @@ var model = ( function( view ){
 
 		}
 
-		searchMember( contacts, members, callback ){
+		searchMember( members, callback ){
 
-			if( !contacts || !members ){
+			if( !members ){
 				return callback( false )
 			}
 
-			var listToShow = contacts.slice(0)
+			var listToShow = JSON.parse(JSON.stringify(this.contacts))
 
-			for( var i = 0; i < contacts.length; i++ ){
+			for( var j = 0; j < members.length; j++ ){
 
-				for( var j = 0; j < members.length; j++ ){
+				if( this.contacts[ members[j].id ] ){
+					delete listToShow[ members[j].id ]
+				}
 
-					if( contacts[i].id === members[j].id ){
-						listToShow.splice( i,1 )
-					}
-
+				if( j === members.length - 1 ){
+					return callback( Object.values( listToShow ) )
 				}
 
 			}
 
-			return callback( listToShow )
-
+		
 		}
 
 		searchLocalPost( query ){
