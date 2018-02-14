@@ -245,6 +245,7 @@ var controller = ( function( model, view ){
         }
 
         model.addReplyBack( post , message )
+        $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val( '' )
 
       })
 
@@ -261,38 +262,28 @@ var controller = ( function( model, view ){
 
         var post = $( this ).closest( '.comment' ).data( 'reply' )
         var confirmText = lang.comfirmDeletePost
+
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
         }
 
-        /*if (isMobile()) {
+        var dialog = api.dialog()
 
-          worldSelected.removePost( post.id , function( err, o ){
-            if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
-            }
-          })
+        dialog.setTitle( lang.deletePost )
+        dialog.setText( confirmText )
 
-        }else{*/
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, lang.delete, 'red' )
 
-          confirm( confirmText , function( ok ){
+        dialog.render( function( ok ){
 
-            if( ok ){
+          if( !ok ){
+            return
+          }
 
-              model.removePostBack( post )
-              /*worldSelected.removePost( post.id , function( err, o ){
+          model.removePostBack( post )
 
-                if( error ){
-                  alert( lang.notAllowedDeletePost )
-                }
-
-              })*/
-
-            }
-
-          })
-
-        //}
+        })
 
       })
 
@@ -300,38 +291,28 @@ var controller = ( function( model, view ){
 
         var post = $( this ).closest( '.replyDom' ).data( 'reply' )
         var confirmText = lang.comfirmDeletePost
+
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
         }
 
-        /*if (isMobile()) {
+        var dialog = api.dialog()
 
-          worldSelected.removePost( post.id , function( err, o ){
-            if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
-            }
-          })
+        dialog.setTitle( lang.deletePost )
+        dialog.setText( confirmText )
 
-        }else{*/
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, lang.delete, 'red' )
 
-          confirm( confirmText , function( ok ){
+        dialog.render( function( ok ){
 
-            if( ok ){
+          if( !ok ){
+            return
+          }
 
-              model.removePostBack( post )
-              /*worldSelected.removePost( post.id , function( err, o ){
+          model.removePostBack( post )
 
-                if( error ){
-                  alert( lang.notAllowedDeletePost )
-                }
-
-              })*/
-
-            }
-            
-          })
-
-        //}
+        })
 
       })
 
@@ -339,38 +320,28 @@ var controller = ( function( model, view ){
 
         var post = $(this).closest( '.card' ).data( 'post' )
         var confirmText = lang.comfirmDeletePost
+
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
         }
 
-        /*if (isMobile()) {
+        var dialog = api.dialog()
 
-          worldSelected.removePost( post.id , function( err, o ){
-            if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
-            }
-          })
+        dialog.setTitle( lang.deletePost )
+        dialog.setText( confirmText )
 
-        }else{*/
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, lang.delete, 'red' )
 
-          confirm( confirmText , function( ok ){
+        dialog.render( function( ok ){
 
-            if( ok ){
+          if( !ok ){
+            return
+          }
 
-              model.removePostBack( post )
-              /*worldSelected.removePost( post.id , function( err, o ){
+          model.removePostBack( post )
 
-                if( error ){
-                  alert( lang.notAllowedDeletePost )
-                }
-
-              })*/
-
-            }
-            
-          })
-
-        //}
+        })
 
       })
 
@@ -439,6 +410,32 @@ var controller = ( function( model, view ){
         $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' )
       })
 
+      /* Mouse enter */
+
+
+      this.dom.on( 'mouseenter', '.privacy-options .option i' , function(){
+
+        var popup = $( this ).parent().find( '.info-section' )
+
+        popup.show();
+        popup.transition({
+          'opacity': 1
+        }, 200, 'cubic-bezier(.4,0,.2,1)')
+
+      });
+
+      this.dom.on( 'mouseleave', '.privacy-options .option i' , function(){
+
+        var popup = $( this ).parent().find( '.info-section' )
+
+        popup.transition({
+          'opacity': 0
+        }, 200, 'cubic-bezier(.4,0,.2,1)', function(){
+          popup.hide()
+        })
+
+      });
+
       /* Keypress */
 
       this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
@@ -448,9 +445,19 @@ var controller = ( function( model, view ){
           if ( !e.shiftKey ) {
 
             var post = $( this ).parent().parent().parent().data( 'post' )
-            var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+            var input = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' )
+            var message = input.val()
+
+            if( input.attr( 'placeholder' )[0] === '@' ){
+
+              post = input.data( 'reply' )
+              $( '.comments-footer .comment-input' ).attr( 'placeholder' , lang.writeComment )
+
+            }
 
             model.addReplyBack( post, message )
+            input.val( '' )
+            e.preventDefault()
 
           }
 

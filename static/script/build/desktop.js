@@ -759,6 +759,8 @@ var view = ( function(){
 				return callback( card )
 			}
 
+			card.find( '.commentDom' ).remove()
+
 			var comments = post.comments
 
 			if( Object.keys( comments ).length === 0 && comments.constructor === Object ){
@@ -788,7 +790,7 @@ var view = ( function(){
 	    }.bind(this), function(){
 
 	      card.find( '.comments-list' ).append( listToAppend )
-      	//card.find( '.comments-list' ).scrollTop( commentDom[0].offsetTop )
+      	card.find( '.comments-list' ).scrollTop( 999999999999999 )
       	return callback( card )
 
 	    })
@@ -2562,7 +2564,7 @@ var model = ( function( view ){
 		      return console.log( error )
 		    }
 
-		    this.addWorld( world )
+		    //this.addWorld( world )
 		    this.view.newWorldStep()
 		    //createChat( o )
 
@@ -2776,6 +2778,8 @@ var model = ( function( view ){
 				return
 			}
 
+			this.updateNotificationIcon()
+
 			notificationList.forEach( function( notification ){
 
 				if( !this.notifications[ notification ] ){
@@ -2968,9 +2972,7 @@ var model = ( function( view ){
 				return
 			}
 
-			var contacts = Object.values( this.contacts )
-
-			this.searchMember( contacts, this.openedWorld.members, function( contactsToShow ){
+			this.searchMember( this.openedWorld.members, function( contactsToShow ){
 
 				view.openInviteMembers( contactsToShow, this.openedWorld.apiWorld.name )
 
@@ -3169,28 +3171,27 @@ var model = ( function( view ){
 
 		}
 
-		searchMember( contacts, members, callback ){
+		searchMember( members, callback ){
 
-			if( !contacts || !members ){
+			if( !members ){
 				return callback( false )
 			}
 
-			var listToShow = contacts.slice(0)
+			var listToShow = JSON.parse(JSON.stringify(this.contacts))
 
-			for( var i = 0; i < contacts.length; i++ ){
+			for( var j = 0; j < members.length; j++ ){
 
-				for( var j = 0; j < members.length; j++ ){
+				if( this.contacts[ members[j].id ] ){
+					delete listToShow[ members[j].id ]
+				}
 
-					if( contacts[i].id === members[j].id ){
-						listToShow.splice( i,1 )
-					}
-
+				if( j === members.length - 1 ){
+					return callback( Object.values( listToShow ) )
 				}
 
 			}
 
-			return callback( listToShow )
-
+		
 		}
 
 		searchLocalPost( query ){
@@ -3858,6 +3859,7 @@ var controller = ( function( model, view ){
         }
 
         model.addReplyBack( post , message )
+        $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val( '' )
 
       })
 
@@ -3874,38 +3876,28 @@ var controller = ( function( model, view ){
 
         var post = $( this ).closest( '.comment' ).data( 'reply' )
         var confirmText = lang.comfirmDeletePost
+
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
         }
 
-        /*if (isMobile()) {
+        var dialog = api.dialog()
 
-          worldSelected.removePost( post.id , function( err, o ){
-            if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
-            }
-          })
+        dialog.setTitle( lang.deletePost )
+        dialog.setText( confirmText )
 
-        }else{*/
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, lang.delete, 'red' )
 
-          confirm( confirmText , function( ok ){
+        dialog.render( function( ok ){
 
-            if( ok ){
+          if( !ok ){
+            return
+          }
 
-              model.removePostBack( post )
-              /*worldSelected.removePost( post.id , function( err, o ){
+          model.removePostBack( post )
 
-                if( error ){
-                  alert( lang.notAllowedDeletePost )
-                }
-
-              })*/
-
-            }
-
-          })
-
-        //}
+        })
 
       })
 
@@ -3913,38 +3905,28 @@ var controller = ( function( model, view ){
 
         var post = $( this ).closest( '.replyDom' ).data( 'reply' )
         var confirmText = lang.comfirmDeletePost
+
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
         }
 
-        /*if (isMobile()) {
+        var dialog = api.dialog()
 
-          worldSelected.removePost( post.id , function( err, o ){
-            if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
-            }
-          })
+        dialog.setTitle( lang.deletePost )
+        dialog.setText( confirmText )
 
-        }else{*/
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, lang.delete, 'red' )
 
-          confirm( confirmText , function( ok ){
+        dialog.render( function( ok ){
 
-            if( ok ){
+          if( !ok ){
+            return
+          }
 
-              model.removePostBack( post )
-              /*worldSelected.removePost( post.id , function( err, o ){
+          model.removePostBack( post )
 
-                if( error ){
-                  alert( lang.notAllowedDeletePost )
-                }
-
-              })*/
-
-            }
-            
-          })
-
-        //}
+        })
 
       })
 
@@ -3952,38 +3934,28 @@ var controller = ( function( model, view ){
 
         var post = $(this).closest( '.card' ).data( 'post' )
         var confirmText = lang.comfirmDeletePost
+
         if ( post.isReply ) {
           confirmText = lang.comfirmDeleteComment
         }
 
-        /*if (isMobile()) {
+        var dialog = api.dialog()
 
-          worldSelected.removePost( post.id , function( err, o ){
-            if (err) {
-              navigator.notification.alert( '', function(){},lang.notAllowedDeletePost )
-            }
-          })
+        dialog.setTitle( lang.deletePost )
+        dialog.setText( confirmText )
 
-        }else{*/
+        dialog.setButton( 0, wzLang.core.dialogCancel, 'black' )
+        dialog.setButton( 1, lang.delete, 'red' )
 
-          confirm( confirmText , function( ok ){
+        dialog.render( function( ok ){
 
-            if( ok ){
+          if( !ok ){
+            return
+          }
 
-              model.removePostBack( post )
-              /*worldSelected.removePost( post.id , function( err, o ){
+          model.removePostBack( post )
 
-                if( error ){
-                  alert( lang.notAllowedDeletePost )
-                }
-
-              })*/
-
-            }
-            
-          })
-
-        //}
+        })
 
       })
 
@@ -4052,6 +4024,32 @@ var controller = ( function( model, view ){
         $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' )
       })
 
+      /* Mouse enter */
+
+
+      this.dom.on( 'mouseenter', '.privacy-options .option i' , function(){
+
+        var popup = $( this ).parent().find( '.info-section' )
+
+        popup.show();
+        popup.transition({
+          'opacity': 1
+        }, 200, 'cubic-bezier(.4,0,.2,1)')
+
+      });
+
+      this.dom.on( 'mouseleave', '.privacy-options .option i' , function(){
+
+        var popup = $( this ).parent().find( '.info-section' )
+
+        popup.transition({
+          'opacity': 0
+        }, 200, 'cubic-bezier(.4,0,.2,1)', function(){
+          popup.hide()
+        })
+
+      });
+
       /* Keypress */
 
       this.dom.on( 'keypress' , '.comments-footer .comment-input' , function( e ){
@@ -4061,9 +4059,19 @@ var controller = ( function( model, view ){
           if ( !e.shiftKey ) {
 
             var post = $( this ).parent().parent().parent().data( 'post' )
-            var message = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' ).val()
+            var input = $( this ).parent().parent().parent().find( '.comments-footer .comment-input' )
+            var message = input.val()
+
+            if( input.attr( 'placeholder' )[0] === '@' ){
+
+              post = input.data( 'reply' )
+              $( '.comments-footer .comment-input' ).attr( 'placeholder' , lang.writeComment )
+
+            }
 
             model.addReplyBack( post, message )
+            input.val( '' )
+            e.preventDefault()
 
           }
 

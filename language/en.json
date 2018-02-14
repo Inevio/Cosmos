@@ -57,7 +57,7 @@
     "posts"         : "Posts",
     "files"         : "Files",
     "worldCreation" : "World creation",
-    "worldEdit"     : "World edit",
+    "worldEdit"     : "Edit world",
     "accept"        : "Accept",
     "worldCreated"  : "World created",
     "postCreated"   : "Post created",
@@ -79,11 +79,11 @@
     "createWorld"   : "Create new world",
     "reply"         : "Reply",
     "preview"       : "Preview",
-    "tend"          : "Trends",
+    "tend"          : "Trending",
     "follow"        : "Enter",
     "stepa"         : "Step 1 of 2",
     "stepb"         : "Step 2 of 2 - (Optional) Add some additional info about the world",
-    "worldName"     : "World name",
+    "worldName"     : "World's name",
     "avatarBack"    : "Avatar",
     "changeBack"    : "Change background",
     "worldDesc"     : "Description (optional)",
@@ -181,6 +181,7 @@
     "next"      : "Next",
     "previous"  : "Previous",
 
-    "loading" : "Loading"
+    "loading" : "Loading",
+    "delete"  : "Delete"
 
 }

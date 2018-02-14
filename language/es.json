@@ -181,7 +181,8 @@
     "next"  : "Siguiente",
     "previous"  : "Anterior",
 
-    "loading" : "Cargando"
+    "loading" : "Cargando",
+    "delete"  : "Borrar"
 
 
   }
