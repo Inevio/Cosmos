@@ -3100,6 +3100,28 @@ to {background-position: -200% 0;}
 
   }
 
+/*Albeniz*************************/
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+  .loading-img{
+
+    margin-top: 40px;
+    background-image: url('@static/loading.svg');
+    width: 100px;
+    height: 100px;
+    floar: left;
+    display: none;
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+
+
+  }
+/*Albeniz*************************/
+
   .pages{
 
     position: absolute;
