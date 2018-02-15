@@ -28,14 +28,17 @@
 
   <section class="notifications-container"> 
     <i></i> 
-    <section class="notifications-title"> 
-      <span></span> 
+    <section class="notifications-header"> 
+      <span class="title"></span>
+      <span class="mark-as-attended"></span>
     </section>
     <section class="notifications-list wz-scroll"> 
       <article class="notification wz-prototype"> 
         <figure class="notification-avatar"></figure> 
         <span class="notification-action"><i>Rachel Green</i>ha comentado en tu publicación</span> 
-        <span class="notification-time"><i></i>Ayer a las 17:13</span> 
+        <span class="notification-time"><i></i>Ayer a las 17:13</span>
+        <figure class="notification-world-avatar"></figure>
+        <figure class="notification-blue-dot"></figure>
       </article> 
     </section> 
   </section>
@@ -140,6 +143,11 @@
           <figure class="attachment-icon"></figure>
         </section>
 
+        <section class="go-back-button">
+          <figure class="arrow"></figure>
+          <span class="text">#Go back to timeline#</span>
+        </section>
+
         <section class="no-posts">
           <figure class="no-post-image"></figure>
           <span class="no-post-to-show"></span>
@@ -147,6 +155,7 @@
 
         <!-- DOCUMENT WITH PREVIEW -->
         <section class="card doc-card wz-prototype">
+
           <section class="top-card">
             <figure class="card-user-avatar"></figure>
             <span class="card-user-name"></span>
@@ -211,23 +220,23 @@
           </section>
           <section class="comments-section">
             <i></i>
-            <section class="comments-list">
+            <section class="comments-list wz-scroll">
               <article class="comment wz-prototype">
                 <figure class="avatar"></figure>
                 <span class="name ellipsis"></span>
                 <span class="time"></span>
                 <span class="edit-button"></span>
-                <span class="replay-button"></span>
+                <span class="reply-button"></span>
                 <span class="comment-text wz-selectable"></span>
                 <textarea class="comment-text-edit"></textarea>
                 <figure class="delete-comment parent"><i></i></figure>
-                <section class="replay-list">
-                  <article class="replay wz-prototype">
+                <section class="reply-list">
+                  <article class="reply wz-prototype">
                     <i></i>
                     <figure class="avatar"></figure>
                     <span class="name ellipsis"></span>
                     <span class="time"></span>
-                    <span class="replay-text"></span>
+                    <span class="reply-text"></span>
                     <figure class="delete-comment child"><i></i></figure>
                   </article>
                 </section>
@@ -242,6 +251,24 @@
               </section>
             </section>
           </section>
+
+          <section class="spinner-container">
+            <div class="sk-circle">
+              <div class="sk-circle1 sk-child"></div>
+              <div class="sk-circle2 sk-child"></div>
+              <div class="sk-circle3 sk-child"></div>
+              <div class="sk-circle4 sk-child"></div>
+              <div class="sk-circle5 sk-child"></div>
+              <div class="sk-circle6 sk-child"></div>
+              <div class="sk-circle7 sk-child"></div>
+              <div class="sk-circle8 sk-child"></div>
+              <div class="sk-circle9 sk-child"></div>
+              <div class="sk-circle10 sk-child"></div>
+              <div class="sk-circle11 sk-child"></div>
+              <div class="sk-circle12 sk-child"></div>
+            </div>         
+          </section>
+
         </section>
 
         <!-- GENERIC CARD -->
@@ -307,21 +334,21 @@
           </section>
           <section class="comments-section">
             <i></i>
-            <section class="comments-list">
+            <section class="comments-list wz-scroll">
               <article class="comment wz-prototype">
                 <figure class="avatar"></figure>
                 <span class="name ellipsis"></span>
                 <span class="time"></span>
                 <span class="edit-button"></span>
-                <span class="replay-button"></span>
+                <span class="reply-button"></span>
                 <span class="comment-text wz-selectable"></span>
-                <section class="replay-list">
-                  <article class="replay wz-prototype">
+                <section class="reply-list">
+                  <article class="reply wz-prototype">
                     <i></i>
                     <figure class="avatar"></figure>
                     <span class="name ellipsis"></span>
                     <span class="time"></span>
-                    <span class="replay-text"></span>
+                    <span class="reply-text"></span>
                   </article>
                 </section>
               </article>
@@ -334,6 +361,24 @@
               </section>
             </section>
           </section>
+
+          <section class="spinner-container">
+            <div class="sk-circle">
+              <div class="sk-circle1 sk-child"></div>
+              <div class="sk-circle2 sk-child"></div>
+              <div class="sk-circle3 sk-child"></div>
+              <div class="sk-circle4 sk-child"></div>
+              <div class="sk-circle5 sk-child"></div>
+              <div class="sk-circle6 sk-child"></div>
+              <div class="sk-circle7 sk-child"></div>
+              <div class="sk-circle8 sk-child"></div>
+              <div class="sk-circle9 sk-child"></div>
+              <div class="sk-circle10 sk-child"></div>
+              <div class="sk-circle11 sk-child"></div>
+              <div class="sk-circle12 sk-child"></div>
+            </div>           
+          </section>
+
         </section>
 
         <!-- PHOTO FILE WITH COMMENTS -->
@@ -373,21 +418,21 @@
           </section>
           <section class="comments-section">
             <i></i>
-            <section class="comments-list">
+            <section class="comments-list wz-scroll">
               <article class="comment wz-prototype">
                 <figure class="avatar"></figure>
                 <span class="name ellipsis"></span>
                 <span class="time"></span>
                 <span class="edit-button"></span>
-                <span class="replay-button"></span>
+                <span class="reply-button"></span>
                 <span class="comment-text wz-selectable"></span>
-                <section class="replay-list">
-                  <article class="replay wz-prototype">
+                <section class="reply-list">
+                  <article class="reply wz-prototype">
                     <i></i>
                     <figure class="avatar"></figure>
                     <span class="name ellipsis"></span>
                     <span class="time"></span>
-                    <span class="replay-text"></span>
+                    <span class="reply-text"></span>
                   </article>
                 </section>
               </article>
@@ -465,21 +510,21 @@
           </section>
           <section class="comments-section view-mode">
             <i></i>
-            <section class="comments-list">
+            <section class="comments-list wz-scroll">
               <article class="comment wz-prototype">
                 <figure class="avatar"></figure>
                 <span class="name ellipsis"></span>
                 <span class="time"></span>
                 <span class="edit-button"></span>
-                <span class="replay-button"></span>
+                <span class="reply-button"></span>
                 <span class="comment-text wz-selectable"></span>
-                <section class="replay-list">
-                  <article class="replay wz-prototype">
+                <section class="reply-list">
+                  <article class="reply wz-prototype">
                     <i></i>
                     <figure class="avatar"></figure>
                     <span class="name ellipsis"></span>
                     <span class="time"></span>
-                    <span class="replay-text"></span>
+                    <span class="reply-text"></span>
                   </article>
                 </section>
               </article>

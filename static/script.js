@@ -3563,10 +3563,10 @@ var appendReplyComment = function (card, reply, response) {
 
             });
 
-            comment.find('.replay-list').append(reply);
-            if (!isMobile()) {
-                card.find('.comments-list').scrollTop(reply[0].offsetTop);
-            }
+      comment.find( '.replay-list' ).append( reply );
+      if (!isMobile()) {
+        card.find( '.comments-list' ).scrollTop( reply[0].offsetTop );
+      }
 
             reply.data('reply', response);
 

@@ -69,10 +69,12 @@ app.on( 'click' , '.edit-button' , function(){
   var comment = $( this ).parent();
 
   if ( button.hasClass( 'save' ) ) {
+
     comment.removeClass( 'editing' );
-    comment.data( 'reply' ).setContent( comment.find( '.comment-text-edit' ).val() );
+    comment.data( 'reply' ).setContent( comment.find( '.comment-text-edit' ).val(), function(){} );
     button.removeClass( 'save' );
     button.text( lang.edit );
+
   }else{
 
     button.text( lang.save );
@@ -87,4 +89,5 @@ app.on( 'click' , '.edit-button' , function(){
     comment.find( '.comment-text-edit' ).attr( 'placeholder' , lang.writeComment );
 
   }
+  
 });

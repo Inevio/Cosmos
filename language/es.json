@@ -3,6 +3,7 @@
 
     "worldHeader"  : {
         "members"       : "miembros -",
+        "member"        : "miembro -",
         "invite"        : "Invitar",
         "chatButton"   : "Chat grupal",
         "folderButton" : "Carpeta mundo",
@@ -17,6 +18,7 @@
     "worldUsers" : {
         "invitePeople"  : "Invitar gente",
         "kickPeople"    : "Administrar miembros",
+        "listPeople"    : "Miembros",
         "to"            : "a",
         "from"          : "de",
         "kickOut"       : "Expulsar"
@@ -170,11 +172,16 @@
     "hasComment"    : "ha comentado en tu publicación",
     "hasComment2"   : "ha comentado una publicación del mundo",
     "hasComment3"   : "ha respondido a tu comentario",
+    "in"            : "en",
+    "markAsRead"    : "Marcar todas como leídas",
 
     "fileCanNotOpen"  : "horbito no puede abrir este fichero en el dispositivo",
 
     "next"  : "Siguiente",
-    "previous"  : "Anterior"
+    "previous"  : "Anterior",
+
+    "loading" : "Cargando",
+    "delete"  : "Borrar"
 
 
   }

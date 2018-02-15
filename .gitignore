@@ -1,5 +1,5 @@
 
-\.DS_Store
+.DS_Store
 
 \.idea/Cosmos\.iml
 
@@ -8,3 +8,5 @@
 \.idea/vcs\.xml
 
 \.idea/workspace\.xml
+
+node_modules/
