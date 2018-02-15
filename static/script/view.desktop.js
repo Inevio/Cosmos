@@ -634,6 +634,40 @@ var view = ( function(){
 
 		}
 
+		appendAttachment( info , useItem ){
+
+		  var attachment = useItem || $( '.editing .attachment.wz-prototype' ).clone();
+
+		  attachment.removeClass('wz-prototype')
+		  attachment.find('.attachment-title').text( info.fsnode.name )
+
+		  if( typeof info.fsnode.id !== 'undefined' ){
+		    attachment.addClass( 'attachment-' + info.fsnode.id )
+		  }
+
+		  if( info.fsnode && info.fsnode.id ){
+		    attachment.addClass( 'attachment-fsnode-' + info.fsnode.id )
+		  }
+
+		  if( !info.uploaded ){
+
+		    attachment.addClass('from-pc uploading')
+		    attachment.find('.aux-title').show().text( lang.uploading )
+		    $('.editing').addClass('uploading')
+
+		  }else{
+		    attachment.find('.icon').css( 'background-image', 'url(' + info.fsnode.icons.micro + ')' );
+		  }
+
+		  $('.editing').find( '.attachment.wz-prototype' ).after( attachment );
+		  attachment.data( 'fsnode', info.fsnode );
+
+		  if ( info.fsnode.pending ) {
+		    attachment.data( 'mime', info.fsnode.type );
+		  }
+		  
+		}
+
 		appendPostList( list, loadingMorePosts ){
 
 			var domList = []
@@ -1066,6 +1100,38 @@ var view = ( function(){
 		  }.bind(this))
 
   		$( '.new-world-container' ).removeClass( 'editing' )
+
+		}
+
+		editPost( card ){
+
+		  var post = card.data( 'post' )
+		  console.log(post)
+		  card.find( '.title-input' ).val( post.title )
+		  card.find( '.title-input' ).data( 'prev' , post.title )
+		  card.find( '.content-input' ).val( post.content )
+		  card.find( '.content-input' ).data( 'prev' , post.content )
+		  card.find( '.card-options' ).addClass( 'hide' )
+		  card.find( '.attachment:not(.wz-prototype)' ).remove()
+
+		  card.find( '.attach-list' ).data( 'prev' , post.fsnode )
+
+		  if ( post.fsnode.length != 0 ) {
+
+		    post.fsnode.forEach(function( fsnodeId ){
+
+		      var fsnode
+		      if ( post.fsnode.length === 1 ) {
+		        fsnode = card.find( '.doc-preview' ).data( 'fsnode' )
+		      }else{
+		        fsnode = card.find( '.attachment-' + fsnodeId ).data( 'fsnode' )
+		      }
+
+		      this.appendAttachment( { fsnode: fsnode , uploaded: true , card: card  } )
+
+		    }.bind(this))
+
+		  }
 
 		}
 
@@ -2004,8 +2070,34 @@ var view = ( function(){
 			
 			var card = $( '.post-' + post.apiPost.id )
 			if( card.length ){
-				this.appendComments( card, post, function(){} )				
+				this.appendComments( card, post, function(){
+					card.find('.comments-list').scrollTop(99999999)
+				})				
 			}
+
+		}
+
+		updatePostComment( comment ){
+
+			var commentDom = $( '.comment-' + comment.id )
+			commentDom.find( '.comment-text' ).text( comment.content )
+
+		}
+
+		updatePostReply( reply ){
+
+			var replyDom = $( '.reply-' + reply.id )
+			replyDom.find( '.reply-text' ).text( reply.content )
+
+		}
+
+		updatePost( post ){
+
+			var postDom = $( '.post-' + post.id )
+
+			postDom.find( '.title' ).text( post.title )
+			postDom.find( '.desc' ).text( post.content )
+			//this.updatePostFSNodes
 
 		}
 

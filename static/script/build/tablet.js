@@ -92,7 +92,7 @@ var model = ( function( view ){
 		    })
 
 		    updateBadges()
-		    wz.app.setBadge( notifications.length )
+		    api.app.setBadge( notifications.length )
 		    console.log( 'WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
 		    if( error ){
 		    	return console.error( error )
@@ -377,6 +377,25 @@ var model = ( function( view ){
 
 		}
 
+		checkMetadata( content, fsnode ){
+
+			var newMetadata;
+
+		  if ( fsnode.length > 0 ) {
+		    if ( fsnode.length === 1 ) {
+		      newMetadata = { fileType: checkTypePost( fsnode[0] ) }
+		    }else{
+		      newMetadata = { fileType: 'generic' }
+		    }
+		  }else if( content.indexOf( 'www.youtube' ) != -1 ){
+		    newMetadata = { linkType: 'youtube' }
+		  }else{
+		    newMetadata = null
+		  }
+		  return newMetadata
+
+		}
+
 		createWorld( worldName ){
 
 		  if ( !worldName ) {
@@ -499,7 +518,7 @@ var model = ( function( view ){
 			if( !post.readyToInsert ){
 
 				post.loadPostFsnodes( function( updatedPost ){
-					this.updatePost(updatedPost)
+					this.updatePostFSNodes(updatedPost)
 				}.bind(this))
 
 			}
@@ -530,6 +549,20 @@ var model = ( function( view ){
 
 		}
 
+		isYoutubePost( text ){
+
+		  var isYoutube = false
+		  text.split(' ').forEach( function( word ){
+		    word.split('\n').forEach( function( word ){
+		      if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
+		        isYoutube = true
+		      }
+		    })
+		  })
+		  return isYoutube
+
+		}
+
 		lazyLoadFSNodes(){
 
 			//console.log( this.postsToLoad )
@@ -539,14 +572,14 @@ var model = ( function( view ){
 				var post = this.postsToLoad.pop()
 
 				if( post.readyToInsert ){
-					this.updatePost(post)
+					this.updatePostFSNodes(post)
 					this.lazyLoadFSNodes()
 					return
 				}
 
 				post.loadPostFsnodes( function( updatedPost ){
 
-					this.updatePost(updatedPost)
+					this.updatePostFSNodes(updatedPost)
 
 					setTimeout( function(){
 						this.lazyLoadFSNodes()
@@ -1114,6 +1147,54 @@ var model = ( function( view ){
 		}
 
 		updatePost( post ){
+
+			var world = this.worlds[ post.worldId ]
+			var needToRefresh = false
+
+			if( !world ){
+				return
+			}
+			
+			if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
+				needToRefresh = true
+			}
+
+			if( post.isReply ){
+
+				if( post.parent === post.mainPost ){
+
+					world.posts[ post.mainPost ].comments[ post.id ].apiComment = post
+					if( needToRefresh ){
+						view.updatePostComment( post )
+					}
+
+				}else{
+
+					world.posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ] = post
+					if( needToRefresh ){
+						view.updatePostReply( post )
+					}
+
+				}
+
+			}else{
+
+				world.posts[ post.id ].apiPost = post
+				world.posts[ post.id ].loadPostFsnodes( function( modelPost ){
+
+					if( needToRefresh ){
+						view.updatePost( modelPost.post )
+						view.updatePostFSNodes( modelPost )
+					}
+
+				})
+
+
+			}
+
+		}
+
+		updatePostFSNodes( post ){
 
 			var world = this.worlds[ post.apiPost.worldId ]
 

@@ -27,7 +27,7 @@ var controller = ( function( model, view ){
     		var category = $(this).parent()
 			  category.toggleClass( 'closed' )
 
-			  if ( category.hasClass( 'closed' ) ) {
+			  if( category.hasClass( 'closed' ) ){
 
 			    category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) )
 			    category.find( '.world-list' ).transition({
@@ -316,7 +316,7 @@ var controller = ( function( model, view ){
 
       })
 
-      .on( 'click' , '.card-options-section .delete' , function(){
+      this.dom.on( 'click' , '.card-options-section .delete' , function(){
 
         var post = $(this).closest( '.card' ).data( 'post' )
         var confirmText = lang.comfirmDeletePost
@@ -389,9 +389,12 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click', '.card-options-section .edit', function(){
 
+        if( $('.card.editing').length != 0 ){
+          return alert( lang.editingOne )   
+        }
         $( this ).closest( '.card' ).addClass( 'editing' )
         $( this ).closest( '.card' ).find( '.popup' ).removeClass( 'popup' )
-        //editPostAsync( $( this ).closest( '.card' ) )
+        view.editPost( $( this ).closest( '.card' ) )
 
       })
 
@@ -408,6 +411,164 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
         $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' )
+      })
+
+      this.dom.on( 'click' , '.cancel-attachment' , function(){
+        $(this).closest('.attachment').remove()
+      })
+
+      this.dom.on( 'click' , '.save-new-card' , function(){
+
+        if( $(this).closest('.card').hasClass('uploading') ){
+          return
+        }
+
+        var card = $( this ).closest( '.card' )
+        var post = card.data( 'post' )
+
+        var prevTitle = card.find( '.title-input' ).data( 'prev' )
+        var newTitle = card.find( '.title-input' ).val()
+
+        var prevContent = card.find( '.content-input' ).data( 'prev' )
+        var newContent = card.find( '.content-input' ).val()
+
+        var prevFsnode = card.find( '.attach-list' ).data( 'prev' )
+        var newAttachments = card.find( '.attachment:not(.wz-prototype)' )
+        var newFsnodeIds = []
+        var newFsnode    = []
+
+        $.each( newAttachments , function( i , attachment ){
+
+          newFsnodeIds.push( parseInt( $(attachment).data( 'fsnode' ).id ) )
+          newFsnode.push( $(attachment).data( 'fsnode' ) )
+
+        })
+
+        var newMetadata = model.checkMetadata( newContent , newFsnode )
+
+        if ( api.tool.arrayDifference( prevFsnode, newFsnodeIds ).length || api.tool.arrayDifference( newFsnodeIds, prevFsnode ).length ){
+
+          post.modify({
+            content : newContent,
+            title : newTitle,
+            metadata : newMetadata,
+            fsnode : newFsnodeIds
+          }, function( error, post ){
+
+            if( error ){
+              return console.error( error )
+            }
+
+          })
+
+          /*post.setFSNode( newFsnodeIds , function(){
+
+            post.setMetadata( newMetadata , function(){
+
+              post.setTitle( newTitle , function(){
+
+                post.setContent( newContent , function( e , post ){
+                  setPost( post )
+                })
+
+              })
+
+            })
+
+          })*/
+
+        }else if ( model.isYoutubePost( newContent ) ) {
+
+          newMetadata.linkType = 'youtube'
+
+          post.modify({
+            content : newContent,
+            title : newTitle,
+            metadata : newMetadata
+          }, function( error, post ){
+
+            if( error ){
+              return console.error( error )
+            }
+
+          })
+          /*post.setMetadata( newMetadata , function(){
+
+            post.setTitle( newTitle , function(){
+
+              post.setContent( newContent , function( e , post ){
+                setPost( post )
+              })
+
+            })
+
+          });*/
+
+        }else if( prevTitle != newTitle || prevContent != newContent ){
+
+          post.modify({
+            content : newContent,
+            title : newTitle
+          }, function( error, post ){
+
+            if( error ){
+              return console.error( error )
+            }
+
+          })
+
+          /*post.setTitle( newTitle , function(){
+
+            post.setContent( newContent , function( e , post ){
+              setPost( post )
+            })
+
+          })*/
+
+        }
+
+        $( this ).closest( '.card' ).removeClass( 'editing' )
+        $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' )
+
+      })
+
+      this.dom.on( 'click' , '.card-content.edit-mode .attachments, .card-content.edit-mode .attachments i, .card-content.edit-mode .attachments div' , function(){
+        
+        /*if (isMobile()) {
+          attachFromInevio();
+        }else{*/
+          $(this).closest( '.card' ).find( '.attach-select' ).addClass( 'popup' );
+        //}
+
+      })
+
+      this.dom.on( 'click' , '.attach-select .inevio' , function(){
+
+        var card = $(this).closest( '.card' )
+        api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( error , s ){
+
+          if( error ){
+            return console.error( error )
+          }
+
+          $( '.attach-select' ).removeClass( 'popup' )
+
+          s.forEach(function( attach ){
+
+            api.fs( attach , function( error , fsnode ){
+
+              if( error ){
+                console.error( error )
+              }else{
+                view.appendAttachment( { fsnode: fsnode , uploaded: true , card: card } )
+              }
+
+            });
+
+          });
+
+        })
+
       })
 
       /* Mouse enter */
@@ -587,6 +748,7 @@ var controller = ( function( model, view ){
       api.cosmos.on( 'postModified', function( post ){
 
         console.log( 'postModified', post )
+        model.updatePost( post )
 
       })
 
