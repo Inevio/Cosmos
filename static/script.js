@@ -18,6 +18,7 @@ var commentsNotifications = [];
 
 //Albeniz
 var worldsScrollPageCount = 1
+var loadingWorlds = false
 
 
 var URL_REGEX = /^http(s)?:\/\//i;
@@ -1939,46 +1940,78 @@ var getMyWorldsAsync = function (options) {
 
 
 //Albeniz****************************************
-
 $('.tend-list').on('scroll', function () {
+    // checkScrollDistance()
 
-    console.log('Scrolling!')
-    extendWorldListScroll()
+    //Checks if worlds are being loaded
+    // var loadingMoreWorlds = false
+
+    //Total height of the scroll
+    var totalHeight = $('.tend-list')[0].scrollHeight
+    // console.log('Total Height: ' + totalHeight)
+
+    //Distance scrolled from the top
+    var distanceScrolled = $('.tend-list').scrollTop()
+    // console.log('Distance Scrolled: ' + distanceScrolled)
+
+    //Distance left to end of the scroll
+    var remainingDistance = totalHeight - distanceScrolled
+    // console.log('Distance remaining to the end: ' + remainingDistance)
+
+    //Distance scrolled independently from the total height of the scroll
+    // var totalDistance = distanceScrolled + remainingDistance
+
+    console.log('LOADING WORLDS IS ' + loadingWorlds)
+
+    if((remainingDistance < 520) && (loadingWorlds === false)){
+        console.log('Displaying LOADING IMG')
+        $('.loading-img').css('display', 'block')
+        extendWorldListScroll()
+    }
+
+    if(loadingWorlds === true){
+        console.log('IM LOADING WORLDS! WAIT.....')
+    }
 
 })
 
 
+
+
 var extendWorldListScroll = function () {
 
-    //Comparar la distancia del scroll top vs scroll height
-    var totalHeight = $('.tend-list')[0].scrollHeight
-    var currentPosition = $('.tend-list').scrollTop()
-    var realPosition = totalHeight - currentPosition
+    //Im loading worlds, dont load more worlds yet
+    loadingWorlds = true
 
-    console.log('Scroll Heigh is equal to ' + totalHeight)
-    console.log('Scroll Top is equal to ' + currentPosition)
-    console.log('real position is equal to ' + realPosition)
+    //Hide loading image
+    $('.loading-img').css('display', 'none')
 
-    if ((realPosition / totalHeight) < 0.3) {
+    //Next world page
+    worldsScrollPageCount++
+    console.log('page count is ' + worldsScrollPageCount)
 
-        worldsScrollPageCount++
-        console.log('Load more worlds')
-        getPublicWorldsAsync({
-            page: worldsScrollPageCount,
-            withAnimation: true
-        })
-    }
+    //Load 20 more worlds
+    console.log('Load more worlds')
+    getPublicWorldsAsync({
+        page: worldsScrollPageCount,
+        withAnimation: true
+    })
+
+
+    console.log('Worlds have loaded')
 }
+
 //Albeniz****************************************
 
 var getPublicWorldsAsync = function (options) {
+
 
     var interval = {
         from: (options.page - 1) * paginationLimit,
         to: options.page * paginationLimit
     }
 
-    wz.cosmos.list(filterActive, null, {'from': interval.from, 'to': interval.to}, function (err, worlds, nResults) {
+    api.cosmos.list(filterActive, null, {'from': interval.from, 'to': interval.to}, function (err, worlds, nResults) {
 
         console.log('Mundos!: ', worlds)
         if (err) {
@@ -2007,7 +2040,10 @@ var getPublicWorldsAsync = function (options) {
             exploreAnimationIn();
         }
 
+        loadingWorlds = false
+
     });
+
 
 };
 
