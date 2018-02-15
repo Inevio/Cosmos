@@ -35,4 +35,6 @@ var isMobile = function(){
   return app.hasClass( 'wz-mobile-view' );
 }
 
+//start()
+
 $( '.onboarding-arrow.arrow-cosmos' , window.document ).remove();
