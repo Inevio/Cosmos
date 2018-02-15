@@ -16,9 +16,10 @@ var worldNotifications = [];
 var postsNotifications = [];
 var commentsNotifications = [];
 
-//Albeniz
+//Albeniz*******************
 var worldsScrollPageCount = 1
 var loadingWorlds = false
+//**************************
 
 
 var URL_REGEX = /^http(s)?:\/\//i;
@@ -1963,19 +1964,17 @@ $('.tend-list').on('scroll', function () {
 
     console.log('LOADING WORLDS IS ' + loadingWorlds)
 
-    if((remainingDistance < 520) && (loadingWorlds === false)){
+    if ((remainingDistance < 520) && (loadingWorlds === false)) {
         console.log('Displaying LOADING IMG')
         $('.loading-img').css('display', 'block')
         extendWorldListScroll()
     }
 
-    if(loadingWorlds === true){
+    if (loadingWorlds === true) {
         console.log('IM LOADING WORLDS! WAIT.....')
     }
 
 })
-
-
 
 
 var extendWorldListScroll = function () {
@@ -2036,7 +2035,7 @@ var getPublicWorldsAsync = function (options) {
             appendWorldCard(world);
         });*/
 
-        appendWorldCards( worlds )
+        appendWorldCards(worlds)
 
         if (options.withAnimation) {
             exploreAnimationIn();
@@ -2130,47 +2129,52 @@ var appendWorldInOrder = function (category, world, worldApi) {
     }
 }
 
-var appendWorldCard = function (worldApi) {
+//NOT IN USE ANYMORE
+// var appendWorldCard = function (worldApi) {
+//
+//     var world = worldCardPrototype.clone();
+//     world.removeClass('wz-prototype').addClass('world-card-' + worldApi.id).addClass('world-card-dom');
+//     var worldTitle = worldApi.name;
+//     if (worldTitle.length > 32) {
+//         worldTitle = worldTitle.substr(0, 29) + '...';
+//     }
+//     world.find('.world-title-min').text(worldTitle);
+//     world.find('.world-avatar-min').css('background-image', 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')');
+//
+//     if (worldApi.users) {
+//         world.find('.world-followers').text(worldApi.users + ' ' + lang.followers);
+//     }
+//
+//     if (myWorlds.indexOf(worldApi.id) != -1) {
+//
+//         world.addClass('followed').removeClass('unfollowed');
+//         world.find('.follow-button span').text(lang.following);
+//
+//     }
+//
+//     $('.world-card.wz-prototype').after(world);
+//
+//     world.data('world', worldApi);
+//
+// }
 
-    var world = worldCardPrototype.clone();
-    world.removeClass('wz-prototype').addClass('world-card-' + worldApi.id).addClass('world-card-dom');
-    var worldTitle = worldApi.name;
-    if (worldTitle.length > 32) {
-        worldTitle = worldTitle.substr(0, 29) + '...';
-    }
-    world.find('.world-title-min').text(worldTitle);
-    world.find('.world-avatar-min').css('background-image', 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')');
-
-    if (worldApi.users) {
-        world.find('.world-followers').text(worldApi.users + ' ' + lang.followers);
-    }
-
-    if (myWorlds.indexOf(worldApi.id) != -1) {
-
-        world.addClass('followed').removeClass('unfollowed');
-        world.find('.follow-button span').text(lang.following);
-
-    }
-
-    $('.world-card.wz-prototype').after(world);
-
-    world.data('world', worldApi);
-
-}
-
-var appendWorldCards = function(worlds){
+//ALBENIZ*****************************************************
+//Instead of appending worlds into the HTML list one by one, gets all the new worlds, puts them in a list
+//and appends the list into the HTML list at once.
+var appendWorldCards = function (worlds) {
 
     var listToAppend = []
 
-    if( !worlds ){
+    if (!worlds) {
         return
     }
 
-    worlds.forEach( function( worldApi, index ){
+    worlds.forEach(function (worldApi, index) {
 
         var world = worldCardPrototype.clone();
         world.removeClass('wz-prototype').addClass('world-card-' + worldApi.id).addClass('world-card-dom');
         var worldTitle = worldApi.name;
+
         if (worldTitle.length > 32) {
             worldTitle = worldTitle.substr(0, 29) + '...';
         }
@@ -2185,26 +2189,19 @@ var appendWorldCards = function(worlds){
 
             world.addClass('followed').removeClass('unfollowed');
             world.find('.follow-button span').text(lang.following);
-
         }
 
         world.data('world', worldApi);
 
-        listToAppend.push( world )
+        listToAppend.push(world)
 
-        if( index == worlds.length - 1 ){
+        if (index === worlds.length - 1) {
             $('.mobile-explore .tend-grid').append(listToAppend)
         }
-
     })
-
-
-
-    //$('.world-card.wz-prototype').after(world);
-
-
-
 }
+//ALBENIZ**********************************************************
+
 
 var createWorldAsync = function () {
 
