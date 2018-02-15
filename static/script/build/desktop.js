@@ -634,6 +634,40 @@ var view = ( function(){
 
 		}
 
+		appendAttachment( info , useItem ){
+
+		  var attachment = useItem || $( '.editing .attachment.wz-prototype' ).clone();
+
+		  attachment.removeClass('wz-prototype')
+		  attachment.find('.attachment-title').text( info.fsnode.name )
+
+		  if( typeof info.fsnode.id !== 'undefined' ){
+		    attachment.addClass( 'attachment-' + info.fsnode.id )
+		  }
+
+		  if( info.fsnode && info.fsnode.id ){
+		    attachment.addClass( 'attachment-fsnode-' + info.fsnode.id )
+		  }
+
+		  if( !info.uploaded ){
+
+		    attachment.addClass('from-pc uploading')
+		    attachment.find('.aux-title').show().text( lang.uploading )
+		    $('.editing').addClass('uploading')
+
+		  }else{
+		    attachment.find('.icon').css( 'background-image', 'url(' + info.fsnode.icons.micro + ')' );
+		  }
+
+		  $('.editing').find( '.attachment.wz-prototype' ).after( attachment );
+		  attachment.data( 'fsnode', info.fsnode );
+
+		  if ( info.fsnode.pending ) {
+		    attachment.data( 'mime', info.fsnode.type );
+		  }
+		  
+		}
+
 		appendPostList( list, loadingMorePosts ){
 
 			var domList = []
@@ -1066,6 +1100,38 @@ var view = ( function(){
 		  }.bind(this))
 
   		$( '.new-world-container' ).removeClass( 'editing' )
+
+		}
+
+		editPost( card ){
+
+		  var post = card.data( 'post' )
+		  console.log(post)
+		  card.find( '.title-input' ).val( post.title )
+		  card.find( '.title-input' ).data( 'prev' , post.title )
+		  card.find( '.content-input' ).val( post.content )
+		  card.find( '.content-input' ).data( 'prev' , post.content )
+		  card.find( '.card-options' ).addClass( 'hide' )
+		  card.find( '.attachment:not(.wz-prototype)' ).remove()
+
+		  card.find( '.attach-list' ).data( 'prev' , post.fsnode )
+
+		  if ( post.fsnode.length != 0 ) {
+
+		    post.fsnode.forEach(function( fsnodeId ){
+
+		      var fsnode
+		      if ( post.fsnode.length === 1 ) {
+		        fsnode = card.find( '.doc-preview' ).data( 'fsnode' )
+		      }else{
+		        fsnode = card.find( '.attachment-' + fsnodeId ).data( 'fsnode' )
+		      }
+
+		      this.appendAttachment( { fsnode: fsnode , uploaded: true , card: card  } )
+
+		    }.bind(this))
+
+		  }
 
 		}
 
@@ -2004,8 +2070,34 @@ var view = ( function(){
 			
 			var card = $( '.post-' + post.apiPost.id )
 			if( card.length ){
-				this.appendComments( card, post, function(){} )				
+				this.appendComments( card, post, function(){
+					card.find('.comments-list').scrollTop(99999999)
+				})				
 			}
+
+		}
+
+		updatePostComment( comment ){
+
+			var commentDom = $( '.comment-' + comment.id )
+			commentDom.find( '.comment-text' ).text( comment.content )
+
+		}
+
+		updatePostReply( reply ){
+
+			var replyDom = $( '.reply-' + reply.id )
+			replyDom.find( '.reply-text' ).text( reply.content )
+
+		}
+
+		updatePost( post ){
+
+			var postDom = $( '.post-' + post.id )
+
+			postDom.find( '.title' ).text( post.title )
+			postDom.find( '.desc' ).text( post.content )
+			//this.updatePostFSNodes
 
 		}
 
@@ -2259,7 +2351,7 @@ var model = ( function( view ){
 		    })
 
 		    updateBadges()
-		    wz.app.setBadge( notifications.length )
+		    api.app.setBadge( notifications.length )
 		    console.log( 'WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications)*/
 		    if( error ){
 		    	return console.error( error )
@@ -2544,6 +2636,25 @@ var model = ( function( view ){
 
 		}
 
+		checkMetadata( content, fsnode ){
+
+			var newMetadata;
+
+		  if ( fsnode.length > 0 ) {
+		    if ( fsnode.length === 1 ) {
+		      newMetadata = { fileType: checkTypePost( fsnode[0] ) }
+		    }else{
+		      newMetadata = { fileType: 'generic' }
+		    }
+		  }else if( content.indexOf( 'www.youtube' ) != -1 ){
+		    newMetadata = { linkType: 'youtube' }
+		  }else{
+		    newMetadata = null
+		  }
+		  return newMetadata
+
+		}
+
 		createWorld( worldName ){
 
 		  if ( !worldName ) {
@@ -2666,7 +2777,7 @@ var model = ( function( view ){
 			if( !post.readyToInsert ){
 
 				post.loadPostFsnodes( function( updatedPost ){
-					this.updatePost(updatedPost)
+					this.updatePostFSNodes(updatedPost)
 				}.bind(this))
 
 			}
@@ -2697,6 +2808,20 @@ var model = ( function( view ){
 
 		}
 
+		isYoutubePost( text ){
+
+		  var isYoutube = false
+		  text.split(' ').forEach( function( word ){
+		    word.split('\n').forEach( function( word ){
+		      if ( word.startsWith( 'www.youtu' ) || word.startsWith( 'youtu' ) || word.startsWith( 'https://www.youtu' ) || word.startsWith( 'https://youtu' ) || word.startsWith( 'http://www.youtu' ) || word.startsWith( 'http://youtu' )) {
+		        isYoutube = true
+		      }
+		    })
+		  })
+		  return isYoutube
+
+		}
+
 		lazyLoadFSNodes(){
 
 			//console.log( this.postsToLoad )
@@ -2706,14 +2831,14 @@ var model = ( function( view ){
 				var post = this.postsToLoad.pop()
 
 				if( post.readyToInsert ){
-					this.updatePost(post)
+					this.updatePostFSNodes(post)
 					this.lazyLoadFSNodes()
 					return
 				}
 
 				post.loadPostFsnodes( function( updatedPost ){
 
-					this.updatePost(updatedPost)
+					this.updatePostFSNodes(updatedPost)
 
 					setTimeout( function(){
 						this.lazyLoadFSNodes()
@@ -3282,6 +3407,54 @@ var model = ( function( view ){
 
 		updatePost( post ){
 
+			var world = this.worlds[ post.worldId ]
+			var needToRefresh = false
+
+			if( !world ){
+				return
+			}
+			
+			if( this.openedWorld && this.openedWorld.apiWorld.id === post.worldId ){
+				needToRefresh = true
+			}
+
+			if( post.isReply ){
+
+				if( post.parent === post.mainPost ){
+
+					world.posts[ post.mainPost ].comments[ post.id ].apiComment = post
+					if( needToRefresh ){
+						view.updatePostComment( post )
+					}
+
+				}else{
+
+					world.posts[ post.mainPost ].comments[ post.parent ].replies[ post.id ] = post
+					if( needToRefresh ){
+						view.updatePostReply( post )
+					}
+
+				}
+
+			}else{
+
+				world.posts[ post.id ].apiPost = post
+				world.posts[ post.id ].loadPostFsnodes( function( modelPost ){
+
+					if( needToRefresh ){
+						view.updatePost( modelPost.post )
+						view.updatePostFSNodes( modelPost )
+					}
+
+				})
+
+
+			}
+
+		}
+
+		updatePostFSNodes( post ){
+
 			var world = this.worlds[ post.apiPost.worldId ]
 
 			if( !world && !world.posts[ post.apiPost.id ] ){
@@ -3641,7 +3814,7 @@ var controller = ( function( model, view ){
     		var category = $(this).parent()
 			  category.toggleClass( 'closed' )
 
-			  if ( category.hasClass( 'closed' ) ) {
+			  if( category.hasClass( 'closed' ) ){
 
 			    category.find( '.world-list' ).css( 'height' , category.find( '.world-list' ).css( 'height' ) )
 			    category.find( '.world-list' ).transition({
@@ -3930,7 +4103,7 @@ var controller = ( function( model, view ){
 
       })
 
-      .on( 'click' , '.card-options-section .delete' , function(){
+      this.dom.on( 'click' , '.card-options-section .delete' , function(){
 
         var post = $(this).closest( '.card' ).data( 'post' )
         var confirmText = lang.comfirmDeletePost
@@ -4003,9 +4176,12 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click', '.card-options-section .edit', function(){
 
+        if( $('.card.editing').length != 0 ){
+          return alert( lang.editingOne )   
+        }
         $( this ).closest( '.card' ).addClass( 'editing' )
         $( this ).closest( '.card' ).find( '.popup' ).removeClass( 'popup' )
-        //editPostAsync( $( this ).closest( '.card' ) )
+        view.editPost( $( this ).closest( '.card' ) )
 
       })
 
@@ -4022,6 +4198,164 @@ var controller = ( function( model, view ){
 
       this.dom.on( 'click' , '.you-card .activate-preview, .you-card .triangle-down' , function(){
         $(this).parent().find( '.video-preview' ).toggleClass( 'hidden' )
+      })
+
+      this.dom.on( 'click' , '.cancel-attachment' , function(){
+        $(this).closest('.attachment').remove()
+      })
+
+      this.dom.on( 'click' , '.save-new-card' , function(){
+
+        if( $(this).closest('.card').hasClass('uploading') ){
+          return
+        }
+
+        var card = $( this ).closest( '.card' )
+        var post = card.data( 'post' )
+
+        var prevTitle = card.find( '.title-input' ).data( 'prev' )
+        var newTitle = card.find( '.title-input' ).val()
+
+        var prevContent = card.find( '.content-input' ).data( 'prev' )
+        var newContent = card.find( '.content-input' ).val()
+
+        var prevFsnode = card.find( '.attach-list' ).data( 'prev' )
+        var newAttachments = card.find( '.attachment:not(.wz-prototype)' )
+        var newFsnodeIds = []
+        var newFsnode    = []
+
+        $.each( newAttachments , function( i , attachment ){
+
+          newFsnodeIds.push( parseInt( $(attachment).data( 'fsnode' ).id ) )
+          newFsnode.push( $(attachment).data( 'fsnode' ) )
+
+        })
+
+        var newMetadata = model.checkMetadata( newContent , newFsnode )
+
+        if ( api.tool.arrayDifference( prevFsnode, newFsnodeIds ).length || api.tool.arrayDifference( newFsnodeIds, prevFsnode ).length ){
+
+          post.modify({
+            content : newContent,
+            title : newTitle,
+            metadata : newMetadata,
+            fsnode : newFsnodeIds
+          }, function( error, post ){
+
+            if( error ){
+              return console.error( error )
+            }
+
+          })
+
+          /*post.setFSNode( newFsnodeIds , function(){
+
+            post.setMetadata( newMetadata , function(){
+
+              post.setTitle( newTitle , function(){
+
+                post.setContent( newContent , function( e , post ){
+                  setPost( post )
+                })
+
+              })
+
+            })
+
+          })*/
+
+        }else if ( model.isYoutubePost( newContent ) ) {
+
+          newMetadata.linkType = 'youtube'
+
+          post.modify({
+            content : newContent,
+            title : newTitle,
+            metadata : newMetadata
+          }, function( error, post ){
+
+            if( error ){
+              return console.error( error )
+            }
+
+          })
+          /*post.setMetadata( newMetadata , function(){
+
+            post.setTitle( newTitle , function(){
+
+              post.setContent( newContent , function( e , post ){
+                setPost( post )
+              })
+
+            })
+
+          });*/
+
+        }else if( prevTitle != newTitle || prevContent != newContent ){
+
+          post.modify({
+            content : newContent,
+            title : newTitle
+          }, function( error, post ){
+
+            if( error ){
+              return console.error( error )
+            }
+
+          })
+
+          /*post.setTitle( newTitle , function(){
+
+            post.setContent( newContent , function( e , post ){
+              setPost( post )
+            })
+
+          })*/
+
+        }
+
+        $( this ).closest( '.card' ).removeClass( 'editing' )
+        $( this ).closest( '.card' ).find( '.card-options' ).removeClass( 'hide' )
+
+      })
+
+      this.dom.on( 'click' , '.card-content.edit-mode .attachments, .card-content.edit-mode .attachments i, .card-content.edit-mode .attachments div' , function(){
+        
+        /*if (isMobile()) {
+          attachFromInevio();
+        }else{*/
+          $(this).closest( '.card' ).find( '.attach-select' ).addClass( 'popup' );
+        //}
+
+      })
+
+      this.dom.on( 'click' , '.attach-select .inevio' , function(){
+
+        var card = $(this).closest( '.card' )
+        api.fs.selectSource( { 'title' : lang.selectFile , 'mode' : 'file' , 'multiple': true } , function( error , s ){
+
+          if( error ){
+            return console.error( error )
+          }
+
+          $( '.attach-select' ).removeClass( 'popup' )
+
+          s.forEach(function( attach ){
+
+            api.fs( attach , function( error , fsnode ){
+
+              if( error ){
+                console.error( error )
+              }else{
+                view.appendAttachment( { fsnode: fsnode , uploaded: true , card: card } )
+              }
+
+            });
+
+          });
+
+        })
+
       })
 
       /* Mouse enter */
@@ -4201,6 +4535,7 @@ var controller = ( function( model, view ){
       api.cosmos.on( 'postModified', function( post ){
 
         console.log( 'postModified', post )
+        model.updatePost( post )
 
       })
 
