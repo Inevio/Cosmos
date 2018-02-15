@@ -7,7 +7,7 @@ if( !api.app.storage('ignoreRemoveEvent') ){
   api.app.storage( 'ignoreRemoveEvent', [] )
 }
 
-api.cosmos.on( 'postAdded', function( post ){
+/*api.cosmos.on( 'postAdded', function( post ){
 
   if ( post.author === myContactID ) {
     return;
@@ -93,7 +93,7 @@ api.cosmos.on( 'postAdded', function( post ){
 
   });
 
-});
+});*/
 
 api.notification.on( 'new', function( notification ){
   checkNotifications();
@@ -114,8 +114,8 @@ var sendBanner = function( info ){
 
 var checkNotifications = function(){
 
-  api.notification.list( 'cosmos' , function( e , notifications ){
-    wz.app.setBadge( notifications.length );
+  api.notification.count( 'cosmos' , function( e , count ){
+    api.app.setBadge( count );
   });
 
 }
@@ -169,7 +169,7 @@ var addArrow = function( appName, text, position ){
 
 
 console.log('cosmos',typeof cordova == 'undefined')
-if( typeof cordova == 'undefined' ){
+/*if( typeof cordova == 'undefined' ){
 
   wql.isFirstOpen( [ api.system.user().id ] , function( e , o ){
 
@@ -181,6 +181,6 @@ if( typeof cordova == 'undefined' ){
 
   });
 
-}
+}*/
 
 checkNotifications();
