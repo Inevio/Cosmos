@@ -8,7 +8,7 @@ if( api.app.storage('ignoreRemoveEvent').indexOf( params.fsnode.id ) !== -1 ){
 }
 
 var win = $( this );
-var others = api.app.getViews().not( win )
+var others = api.app.getViews().not( win ).filter('.wz-app-360-view-newPost')
 
 if( !others.length ){
   return start()
