@@ -2032,9 +2032,11 @@ var getPublicWorldsAsync = function (options) {
 
         showingWorlds = {'from': interval.from, 'to': interval.to}
 
-        worlds.reverse().forEach(function (world) {
+        /*worlds.reverse().forEach(function (world) {
             appendWorldCard(world);
-        });
+        });*/
+
+        appendWorldCards( worlds )
 
         if (options.withAnimation) {
             exploreAnimationIn();
@@ -2153,6 +2155,54 @@ var appendWorldCard = function (worldApi) {
     $('.world-card.wz-prototype').after(world);
 
     world.data('world', worldApi);
+
+}
+
+var appendWorldCards = function(worlds){
+
+    var listToAppend = []
+
+    if( !worlds ){
+        return
+    }
+
+    worlds.forEach( function( worldApi, index ){
+
+        var world = worldCardPrototype.clone();
+        world.removeClass('wz-prototype').addClass('world-card-' + worldApi.id).addClass('world-card-dom');
+        var worldTitle = worldApi.name;
+        if (worldTitle.length > 32) {
+            worldTitle = worldTitle.substr(0, 29) + '...';
+        }
+        world.find('.world-title-min').text(worldTitle);
+        world.find('.world-avatar-min').css('background-image', 'url(' + worldApi.icons.normal + '?token=' + Date.now() + ')');
+
+        if (worldApi.users) {
+            world.find('.world-followers').text(worldApi.users + ' ' + lang.followers);
+        }
+
+        if (myWorlds.indexOf(worldApi.id) != -1) {
+
+            world.addClass('followed').removeClass('unfollowed');
+            world.find('.follow-button span').text(lang.following);
+
+        }
+
+        world.data('world', worldApi);
+
+        listToAppend.push( world )
+
+        if( index == worlds.length - 1 ){
+            $('.mobile-explore .tend-grid').append(listToAppend)
+        }
+
+    })
+
+
+
+    //$('.world-card.wz-prototype').after(world);
+
+
 
 }
 
