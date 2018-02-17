@@ -4358,6 +4358,10 @@ var controller = ( function( model, view ){
 
       })
 
+      this.dom.on( 'click', '.start-button-no-worlds', function(){
+        view.hideNoWorlds()
+      })
+
       /* Mouse enter */
 
 
