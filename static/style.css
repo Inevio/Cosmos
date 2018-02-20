@@ -4426,18 +4426,31 @@ to {background-position: -200% 0;}
   }
 
   .notification.isPost .notification-time{
-
     bottom: 6px;
-
   }
 
   .notification.isPost .notification-time i{
 
     float: left;
-    width: 20px;
-    height: 17px;
+    width: 18px;
+    height: 15px;
     background-image: url('@static/images/new-post-icon.png');
-    background-size: 20px 17px;
+    background-size: 18px 15px;
+    margin-right: 3px;
+
+  }
+
+  .notification.isAdded .notification-time{
+    bottom: 6px;
+  }
+
+  .notification.isAdded .notification-time i{
+
+    float: left;
+    width: 16px;
+    height: 12px;
+    background-image: url('@static/images/added-to-world.png');
+    background-size: 16px 12px;
     margin-right: 3px;
 
   }

@@ -1845,9 +1845,7 @@ var view = ( function(){
 			this.appendPostList( [post] )
 			$( '.world-title' ).trigger( 'click' )
 			if( notificationData.type == "reply" ){
-
 				$( '.post-' + post.apiPost.id + ' ' + '.comments-opener' ).trigger( 'click' )
-
 			}
 			
 		}
@@ -2022,10 +2020,17 @@ var view = ( function(){
         }
 
         if( notification.data.type == "post" ){
+
         	notificationDom.addClass( 'isPost' )
         	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.postCreated + ' ' + lang.in + ' ' + notification.apiWorld.name )
-        }else{
+
+        }else if( notification.data.type == "reply" ){
         	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
+        }else if( notification.data.type == "addedToWorld" ){
+
+        	notificationDom.addClass( 'isAdded' )
+        	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.addedToWorld + ' ' + notification.apiWorld.name )
+
         }
         
         /*if( post.author === this.myContactID ){
@@ -2293,6 +2298,7 @@ var model = ( function( view ){
 
 		  //this.changeMainAreaMode( MAINAREA_NULL )
   		this.fullLoad()
+  		this.updateNotificationIcon()
 
   	}
 
@@ -2362,7 +2368,11 @@ var model = ( function( view ){
 
   		    async.each( notifications, function( notification, checkEnd ){
 
-  		    	if( !this.worlds[ notification.data.world ] || notification.data.type === 'addedToWorld' ){
+  		    	if( !notification.attended ){
+  		    		console.log( notification )
+  		    	}
+
+  		    	if( !this.worlds[ notification.data.world ] ){
   		    		return checkEnd()
   		    	}
 
@@ -2944,28 +2954,38 @@ var model = ( function( view ){
 				return
 			}
 
-			var mainPostId = null
-
-			if( notificationData.mainPost != notificationData.parent ){
-
-				//Es una respuesta
-				mainPostId = notificationData.mainPost
+			if( notificationData.type === "addedToWorld" ){
+				
+				this.notificationAttendedBack( notification.id )
+				return this.openWorld( notificationData.world )
 
 			}else{
 
-				if( notificationData.parent ){
+				var mainPostId = null
+				if( notificationData.mainPost != notificationData.parent ){
 
-					//Es un comentario
-					mainPostId = notificationData.parent
+					//Es una respuesta
+					mainPostId = notificationData.mainPost
 
 				}else{
 
-					//Es un post
-					mainPostId = notificationData.post
+					if( notificationData.parent ){
+
+						//Es un comentario
+						mainPostId = notificationData.parent
+
+					}else{
+
+						//Es un post
+						mainPostId = notificationData.post
+
+					}
 
 				}
 
 			}
+
+
 
 			if( this.worlds[ notificationData.world ].posts[ mainPostId ] ){
 
@@ -4155,9 +4175,9 @@ var controller = ( function( model, view ){
       this.dom.on( 'click', '.notification', function(){
 
         console.log( $(this).data( 'notification' ) )
-        if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
+        /*if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
           return alert( 'Notificacion pendiente de migrar' )
-        }
+        }*/
         model.notificationOpen( $(this).data( 'notification' ) )
 
       })
