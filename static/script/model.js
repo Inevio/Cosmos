@@ -32,6 +32,7 @@ var model = ( function( view ){
 
 		  //this.changeMainAreaMode( MAINAREA_NULL )
   		this.fullLoad()
+  		this.updateNotificationIcon()
 
   	}
 
@@ -101,7 +102,11 @@ var model = ( function( view ){
 
   		    async.each( notifications, function( notification, checkEnd ){
 
-  		    	if( !this.worlds[ notification.data.world ] || notification.data.type === 'addedToWorld' ){
+  		    	if( !notification.attended ){
+  		    		console.log( notification )
+  		    	}
+
+  		    	if( !this.worlds[ notification.data.world ] ){
   		    		return checkEnd()
   		    	}
 
@@ -683,28 +688,38 @@ var model = ( function( view ){
 				return
 			}
 
-			var mainPostId = null
-
-			if( notificationData.mainPost != notificationData.parent ){
-
-				//Es una respuesta
-				mainPostId = notificationData.mainPost
+			if( notificationData.type === "addedToWorld" ){
+				
+				this.notificationAttendedBack( notification.id )
+				return this.openWorld( notificationData.world )
 
 			}else{
 
-				if( notificationData.parent ){
+				var mainPostId = null
+				if( notificationData.mainPost != notificationData.parent ){
 
-					//Es un comentario
-					mainPostId = notificationData.parent
+					//Es una respuesta
+					mainPostId = notificationData.mainPost
 
 				}else{
 
-					//Es un post
-					mainPostId = notificationData.post
+					if( notificationData.parent ){
+
+						//Es un comentario
+						mainPostId = notificationData.parent
+
+					}else{
+
+						//Es un post
+						mainPostId = notificationData.post
+
+					}
 
 				}
 
 			}
+
+
 
 			if( this.worlds[ notificationData.world ].posts[ mainPostId ] ){
 

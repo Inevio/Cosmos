@@ -1,4 +1,11 @@
-
 .DS_Store
+
+\.idea/Cosmos\.iml
+
+\.idea/modules\.xml
+
+\.idea/vcs\.xml
+
+\.idea/workspace\.xml
 
 node_modules/
