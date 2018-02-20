@@ -271,6 +271,7 @@ var view = ( function(){
 
 		  //Notifications
 		  $( '.mark-as-attended' ).text( lang.markAsRead )
+		  $( '.go-back-button .text' ).text( lang.backToTimeline )
 
 		}
 
