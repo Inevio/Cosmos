@@ -367,9 +367,9 @@ var controller = ( function( model, view ){
       this.dom.on( 'click', '.notification', function(){
 
         console.log( $(this).data( 'notification' ) )
-        if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
+        /*if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
           return alert( 'Notificacion pendiente de migrar' )
-        }
+        }*/
         model.notificationOpen( $(this).data( 'notification' ) )
 
       })
@@ -569,6 +569,10 @@ var controller = ( function( model, view ){
 
         })
 
+      })
+
+      this.dom.on( 'click', '.start-button-no-worlds', function(){
+        view.hideNoWorlds()
       })
 
       /* Mouse enter */

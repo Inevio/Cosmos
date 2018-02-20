@@ -407,9 +407,9 @@ app
   }
 
 })
-.on( 'focus' , '.new-card-input,.new-card-textarea' , function(){
-  $('.mobile-new-post .attachments, .mobile-new-post .attach-list, .post-new-card').addClass('hide');
-})
-.on( 'blur' , '.new-card-input,.new-card-textarea' , function(){
-  $('.mobile-new-post .attachments, .mobile-new-post .attach-list, .post-new-card').removeClass('hide');
-})
+// .on( 'focus' , '.new-card-input,.new-card-textarea' , function(){
+//   $('.mobile-new-post .attachments, .mobile-new-post .attach-list, .post-new-card').addClass('hide');
+// })
+// .on( 'blur' , '.new-card-input,.new-card-textarea' , function(){
+//   $('.mobile-new-post .attachments, .mobile-new-post .attach-list, .post-new-card').removeClass('hide');
+// })

@@ -271,6 +271,7 @@ var view = ( function(){
 
 		  //Notifications
 		  $( '.mark-as-attended' ).text( lang.markAsRead )
+		  $( '.go-back-button .text' ).text( lang.backToTimeline )
 
 		}
 
@@ -1844,9 +1845,7 @@ var view = ( function(){
 			this.appendPostList( [post] )
 			$( '.world-title' ).trigger( 'click' )
 			if( notificationData.type == "reply" ){
-
 				$( '.post-' + post.apiPost.id + ' ' + '.comments-opener' ).trigger( 'click' )
-
 			}
 			
 		}
@@ -2021,10 +2020,17 @@ var view = ( function(){
         }
 
         if( notification.data.type == "post" ){
+
         	notificationDom.addClass( 'isPost' )
         	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.postCreated + ' ' + lang.in + ' ' + notification.apiWorld.name )
-        }else{
+
+        }else if( notification.data.type == "reply" ){
         	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
+        }else if( notification.data.type == "addedToWorld" ){
+
+        	notificationDom.addClass( 'isAdded' )
+        	notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.addedToWorld + ' ' + notification.apiWorld.name )
+
         }
         
         /*if( post.author === this.myContactID ){

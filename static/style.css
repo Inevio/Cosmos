@@ -627,8 +627,8 @@ to {background-position: -200% 0;}
   .category .opener{
 
     float: right;
-    width: 10px;
-    height: 6px;
+    width: 20px;
+    height: 12px;
     margin-right: 9px;
     margin-top: 5px;
     margin-bottom: 3px;
@@ -1073,7 +1073,7 @@ to {background-position: -200% 0;}
   width: 100%;
   height: 58px;
   top: 0px;
-  z-index: 3;
+  z-index: 2;
   background-color: #fff;
   box-shadow: 0 1px #eee;
   border-top-right-radius: 6px;
@@ -1264,8 +1264,8 @@ to {background-position: -200% 0;}
 
   .my-avatar{
     float: left;
-    width: 40px;
-    height: 40px;
+    width: 37px;
+    height: 37px;
     background-size: cover;
     border-radius: 50%;
     margin-left: 17px;
@@ -3275,6 +3275,28 @@ to {background-position: -200% 0;}
 
   }
 
+/*Albeniz*************************/
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+  .loading-img{
+
+    margin-top: 40px;
+    background-image: url('@static/loading.svg');
+    width: 100px;
+    height: 100px;
+    floar: left;
+    display: none;
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+
+
+  }
+/*Albeniz*************************/
+
   .pages{
 
     position: absolute;
@@ -4404,18 +4426,31 @@ to {background-position: -200% 0;}
   }
 
   .notification.isPost .notification-time{
-
     bottom: 6px;
-
   }
 
   .notification.isPost .notification-time i{
 
     float: left;
-    width: 20px;
-    height: 17px;
+    width: 18px;
+    height: 15px;
     background-image: url('@static/images/new-post-icon.png');
-    background-size: 20px 17px;
+    background-size: 18px 15px;
+    margin-right: 3px;
+
+  }
+
+  .notification.isAdded .notification-time{
+    bottom: 6px;
+  }
+
+  .notification.isAdded .notification-time i{
+
+    float: left;
+    width: 16px;
+    height: 12px;
+    background-image: url('@static/images/added-to-world.png');
+    background-size: 16px 12px;
     margin-right: 3px;
 
   }
@@ -5142,7 +5177,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 15px;
       height: 15px;
-      z-index: 8;
+      z-index: 2;
       padding: 20px;
       margin-top: 1px;
 
@@ -5167,7 +5202,8 @@ to {background-position: -200% 0;}
     .world-title{
       position: absolute;
       margin: 0px;
-      left: 105px;
+      left: 16vmax;
+      max-width: 32vmax;
       top: 17px;
     }
 
@@ -5175,7 +5211,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 19px;
       height: 19px;
-      z-index: 8;
+      z-index: 2;
       padding: 17px;
       right: 0;
       margin-top: 3px;
@@ -5267,7 +5303,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 15px;
       height: 15px;
-      z-index: 8;
+      z-index: 2;
       padding: 20px;
       margin-top: 4px;
 
@@ -5284,7 +5320,7 @@ to {background-position: -200% 0;}
       position: absolute;
       width: 19px;
       height: 19px;
-      z-index: 8;
+      z-index: 2;
       padding: 17px;
       right: 0;
       margin-top: 5px;
@@ -5317,8 +5353,9 @@ to {background-position: -200% 0;}
       font-weight: 900;
       position: absolute;
       top: 116px;
+      max-width: 50vmax;
+      margin-left: 5vmax;
       width: 100%;
-      margin: 0px;
       text-align: center;
     }
 
@@ -5327,7 +5364,7 @@ to {background-position: -200% 0;}
       width: 100%;
       text-align: center;
       margin: 0px;
-      top: 155px;
+      top: 175px;
     }
 
     .open-chat-button{
@@ -5962,7 +5999,7 @@ to {background-position: -200% 0;}
     position: absolute;
     width: 15px;
     height: 15px;
-    z-index: 8;
+    z-index: 2;
     padding: 20px;
     margin-top: 22px
   }
@@ -6022,13 +6059,20 @@ to {background-position: -200% 0;}
     color: #545f65;
     font-weight: bold;
     margin-right: 4px;
+    float: left;
+
+  }
+
+  .new-card-title span{
+
+    float: left;
 
   }
 
   .new-card-title figure{
     color: @redHorbito;
     font-weight: bold;
-    display: inline-block;
+    float: left;
     margin-left: 4px;
     max-width: 170px;
   }
@@ -6048,7 +6092,7 @@ to {background-position: -200% 0;}
     float: left;
     margin: 25px 25px 10px 25px;
     width: ~'calc(100% - 50px)';
-    height: 100px;
+    height: 50vmax;
     color: #545f65;
     font-size: 15px;
     line-height: 25px;
