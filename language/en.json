@@ -181,6 +181,7 @@
     "previous"  : "Previous",
 
     "loading" : "Loading",
-    "delete"  : "Delete"
+    "delete"  : "Delete",
+    "backToTimeline" : "Volver al muro"
 
 }
