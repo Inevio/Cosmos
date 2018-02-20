@@ -182,7 +182,7 @@
 
     "loading" : "Cargando",
     "delete"  : "Borrar",
-    "backToTimeline" : "Volver al muro"
-
+    "backToTimeline" : "Volver al muro",
+    "addedToWorld" : "te ha añadido al mundo"
 
   }
