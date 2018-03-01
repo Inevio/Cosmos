@@ -98,7 +98,7 @@ var attachFromInevio = function () {
   hideAttachSelect()
 
   // To Do -> Translate
-  api.fs.selectSource({ 'title': lang.selectFile, 'mode': 'file', 'multiple': true }, function (err, list) {
+  api.fs.selectSource({ 'title': lang.selectFile, 'mode': 'both', 'multiple': true }, function (err, list) {
     if (err) {
       return console.error(err)
     }
@@ -139,9 +139,9 @@ var postNewCardAsync = function () {
       params.world.addPost({ content: text, title: title, metadata: metadata, notification: {} }, function (e, o) {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
-        updateLastPostRead(o, function () {
+        //updateLastPostRead(o, function () {
           wz.app.removeView(app)
-        })
+        //})
       })
     } else if (o.fileType) {
       metadata.fileType = o.fileType
@@ -149,17 +149,17 @@ var postNewCardAsync = function () {
       params.world.addPost({ content: text, title: title, fsnode: attachment, metadata: metadata, notification: {} }, function (e, o) {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
-        updateLastPostRead(o, function () {
+        //updateLastPostRead(o, function () {
           wz.app.removeView(app)
-        })
+        //})
       })
     } else {
       params.world.addPost({ content: text, title: title, notification: {} }, function (e, o) {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
-        updateLastPostRead(o, function () {
+        //updateLastPostRead(o, function () {
           wz.app.removeView(app)
-        })
+        //})
       })
     }
   }
@@ -275,7 +275,7 @@ var updateAttachmentCounter = function () {
   }
 }
 
-var updateLastPostRead = function (post, callback) {
+/*var updateLastPostRead = function (post, callback) {
   var post = post[0]
   wql.upsertLastRead([ post.worldId, myContactID, post.id, post.id ], function (e, o) {
     if (e) {
@@ -284,7 +284,7 @@ var updateLastPostRead = function (post, callback) {
       callback()
     }
   })
-}
+}*/
 
 var setTexts = function () {
   if (params.operation) {
