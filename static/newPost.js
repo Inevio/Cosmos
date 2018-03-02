@@ -139,9 +139,7 @@ var postNewCardAsync = function () {
       params.world.addPost({ content: text, title: title, metadata: metadata, notification: {} }, function (e, o) {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
-        //updateLastPostRead(o, function () {
-          api.app.removeView(app)
-        //})
+        api.app.removeView(app)
       })
     } else if (o.fileType) {
       metadata.fileType = o.fileType
@@ -149,17 +147,13 @@ var postNewCardAsync = function () {
       params.world.addPost({ content: text, title: title, fsnode: attachment, metadata: metadata, notification: {} }, function (e, o) {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
-        //updateLastPostRead(o, function () {
-          api.app.removeView(app)
-        //})
+        api.app.removeView(app)
       })
     } else {
       params.world.addPost({ content: text, title: title, notification: {} }, function (e, o) {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
-        //updateLastPostRead(o, function () {
-          api.app.removeView(app)
-        //})
+        api.app.removeView(app)
       })
     }
   }
@@ -274,17 +268,6 @@ var updateAttachmentCounter = function () {
     attachNewPostButton.closest('.new-card-section').removeClass('with-attach')
   }
 }
-
-/*var updateLastPostRead = function (post, callback) {
-  var post = post[0]
-  wql.upsertLastRead([ post.worldId, myContactID, post.id, post.id ], function (e, o) {
-    if (e) {
-      console.log(e)
-    } else {
-      callback()
-    }
-  })
-}*/
 
 var setTexts = function () {
   if (params.operation) {
