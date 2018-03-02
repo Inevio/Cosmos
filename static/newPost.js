@@ -140,7 +140,7 @@ var postNewCardAsync = function () {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
         //updateLastPostRead(o, function () {
-          wz.app.removeView(app)
+          api.app.removeView(app)
         //})
       })
     } else if (o.fileType) {
@@ -150,7 +150,7 @@ var postNewCardAsync = function () {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
         //updateLastPostRead(o, function () {
-          wz.app.removeView(app)
+          api.app.removeView(app)
         //})
       })
     } else {
@@ -158,7 +158,7 @@ var postNewCardAsync = function () {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
         //updateLastPostRead(o, function () {
-          wz.app.removeView(app)
+          api.app.removeView(app)
         //})
       })
     }
@@ -343,7 +343,7 @@ api.upload.on('fsnodeEnd', function (fsnode, fileId) {
 closeNewCard.add(cancelNewCard).on('click', function () {
   if (!app.hasClass('uploading')) {
     removeAttachment({ selection: 'all' })
-    wz.app.removeView(app)
+    api.app.removeView(app)
   }
 })
 
