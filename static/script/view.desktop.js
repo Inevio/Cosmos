@@ -118,7 +118,7 @@ var view = (function () {
       this.isMobile = this.dom.hasClass('wz-mobile-view')
 
       this.myContactID 							= api.system.user().id
-      this._domWorldsPrivateList 		= $('.private-list')
+      this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
       this._domPostContainer 				= $('.cards-list')
       this._worldPrototype = $('.sidebar .world.wz-prototype')
@@ -1042,6 +1042,10 @@ var view = (function () {
 	    })
     }
 
+    hideWorldDot (worldId) {
+    	$('.world-' + worldId).removeClass('with-notification')
+    }
+
     leaveWorldDialog (worldId) {
       var dialog = api.dialog()
 
@@ -1552,9 +1556,10 @@ var view = (function () {
       $('.clean').remove()
 		  $('.category-list .world').removeClass('active')
 		  $('.world-' + world.apiWorld.id).addClass('active')
+		  $('.world-' + world.apiWorld.id).removeClass('with-notification')
 		  $('.search-post input, .mobile-world-content .search-bar input').val('')
 		  $('.world-title').text(world.apiWorld.name)
-		  if (world.apiWorld.users == 1) {
+		  if (world.apiWorld.users === 1) {
         $('.world-members-button').text(world.apiWorld.users + ' ' + lang.worldHeader.member)
 		  } else {
         $('.world-members-button').text(world.apiWorld.users + ' ' + lang.worldHeader.members)
@@ -1615,6 +1620,10 @@ var view = (function () {
       if (notificationData.type == 'reply') {
         $('.post-' + post.apiPost.id + ' ' + '.comments-opener').trigger('click')
       }
+    }
+
+    showWorldDot (worldId) {
+    	$('.world-' + worldId).addClass('with-notification')
     }
 
     startsWith (wordToCompare) {
@@ -1706,8 +1715,8 @@ var view = (function () {
       card.removeClass('loading')
 
       post.fsnodes.forEach(function (fsnode) {
-	      if (fsnode.mime.indexOf('image') === 0 || fsnode.mime === 'application/pdf') {
-	        card.find('.doc-preview img').attr('src', fsnode.thumbnails['1024'])
+	    if (fsnode.mime.indexOf('image') === 0 || fsnode.mime === 'application/pdf') {
+	       card.find('.doc-preview img').attr('src', fsnode.thumbnails['1024'])
 	        card.find('.doc-preview-bar').hide()
 	      } else {
 	        // To Do -> Is this really neccesary? background with a micro thumb is added a few lines after this
@@ -1755,6 +1764,9 @@ var view = (function () {
         }
 
         if (notification.data.type == 'post') {
+        	if (!notification.attended) {
+        		this.showWorldDot(notification.apiWorld.id)
+        	}
         	notificationDom.addClass('isPost')
         	notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.postCreated + ' ' + lang.in + ' ' + notification.apiWorld.name)
         } else if (notification.data.type == 'reply') {
