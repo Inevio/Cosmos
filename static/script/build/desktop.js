@@ -3463,7 +3463,7 @@ var model = ( function( view ){
 				world.posts[ post.id ].loadPostFsnodes( function( modelPost ){
 
 					if( needToRefresh ){
-						view.updatePost( modelPost.post )
+						view.updatePost( modelPost.apiPost )
 						view.updatePostFSNodes( modelPost )
 					}
 
