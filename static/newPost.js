@@ -98,7 +98,7 @@ var attachFromInevio = function () {
   hideAttachSelect()
 
   // To Do -> Translate
-  api.fs.selectSource({ 'title': lang.selectFile, 'mode': 'both', 'multiple': true }, function (err, list) {
+  api.fs.selectSource({ 'title': lang.selectFile, 'mode': 'file', 'multiple': true }, function (err, list) {
     if (err) {
       return console.error(err)
     }
