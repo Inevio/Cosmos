@@ -1567,6 +1567,12 @@ newPostMobile()
       $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
       this.toggleSelectWorld(false)
 
+      if(world.apiWorld.isPrivate){
+        $('.world-header .invite-user-button').show()
+      }else{
+        $('.world-header .invite-user-button').hide()
+      }
+
       if (!updatingHeader) {
         $('.cardDom').remove()
       }
