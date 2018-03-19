@@ -42,13 +42,24 @@ var addMail = function(){
 
 var share = function(){
   if (shareButton.hasClass('valid')) {
-    api.cosmos.inviteByMail( params, validMails, function(){ console.log( arguments )} );
-    api.banner()
-      .setTitle( lang.invitationSentTitle )
-      .setText( lang.invitationSentSubtitle )
-      .setIcon( 'https://static.horbito.com/app/360/icon.png' )
-      .render();
-    wz.app.removeView( app );
+    console.log('Vamos a enviar la invitacion...')
+    api.cosmos.inviteByMail( params, validMails, function(err, res){
+      if(err){
+        console.log('No se ha podido enviar la invitacion a los mails', validMails)
+        console.error(err)
+      }
+      else{
+        console.log('Se ha enviado la invitacion a los mails', validMails, res)
+        api.banner()
+        .setTitle( lang.invitationSentTitle )
+        .setText( lang.invitationSentSubtitle )
+        .setIcon( 'https://static.horbito.com/app/360/icon.png' )
+        .render();  
+      }
+      // Parte comun, quitamos la vista de inserccion de emails
+      wz.app.removeView( app );
+    });
+    
   }
 }
 
