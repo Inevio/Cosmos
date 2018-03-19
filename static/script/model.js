@@ -290,7 +290,7 @@ var model = (function (view) {
 
       if (fsnode.length > 0) {
         if (fsnode.length === 1) {
-          newMetadata = { fileType: checkTypePost(fsnode[0]) }
+          newMetadata = { fileType: this.checkTypePost(fsnode[0]) }
         } else {
           newMetadata = { fileType: 'generic' }
         }
@@ -300,6 +300,15 @@ var model = (function (view) {
         newMetadata = null
       }
       return newMetadata
+    }
+
+    checkTypePost (fsnode) {
+      var fileType = 'generic';
+      if (fsnode.mime) {
+          fileType = this.guessType(fsnode.mime);
+      }
+
+      return fileType;
     }
 
     createWorld (worldName) {
@@ -396,6 +405,10 @@ var model = (function (view) {
           this.updatePostFSNodes(updatedPost)
         }.bind(this))
       }
+    }
+
+    guessType (mime) {
+      return TYPES[mime] || 'generic';
     }
 
     inviteUsers (users) {
@@ -907,10 +920,11 @@ var model = (function (view) {
           }
         }
       } else {
+
         world.posts[ post.id ].apiPost = post
         world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
           if (needToRefresh) {
-            view.updatePost(modelPost.post)
+            view.updatePost(modelPost.apiPost)
             view.updatePostFSNodes(modelPost)
           }
         })

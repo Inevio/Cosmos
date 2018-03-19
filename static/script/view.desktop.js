@@ -10,6 +10,53 @@ const GROUP_NULL = 0
 const GROUP_CREATE = 1
 const GROUP_EDIT = 2
 
+const TYPES = {
+
+    "application/pdf": 'document',
+    "application/zip": 'generic',
+    "application/x-rar": 'generic',
+    "application/x-gzip": 'generic',
+    "text/x-c": 'document',
+    "text/x-c++": 'document',
+    "text/x-php": 'document',
+    "text/x-python": 'document',
+    "application/json": 'document',
+    "application/javascript": 'document',
+    "application/inevio-texts": 'generic',
+    "application/msword": 'generic',
+    "application/vnd.oasis.opendocument.text": 'generic',
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": 'generic',
+    "application/inevio-grids": 'generic',
+    "application/vnd.ms-excel": 'generic',
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": 'generic',
+    "application/vnd.ms-powerpoint": 'generic',
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": 'generic',
+    "audio/mp4": 'music',
+    "audio/mpeg": 'music',
+    "audio/flac": 'music',
+    "audio/x-vorbis+ogg": 'music',
+    "audio/x-wav": 'music',
+    "image/gif": 'image',
+    "image/jpeg": 'image',
+    "image/png": 'image',
+    "image/tiff": 'image',
+    "image/vnd.adobe.photoshop": 'generic',
+    "text/html": 'generic',
+    "text/plain": 'generic',
+    "text/rtf": 'generic',
+    "video/3gpp": 'video',
+    "video/mp4": 'video',
+    "video/quicktime": 'video',
+    "video/webm": 'video',
+    "video/x-flv": 'video',
+    "video/x-matroska": 'video',
+    "video/x-ms-asf": 'video',
+    "video/x-ms-wmv": 'video',
+    "video/x-msvideo": 'video',
+    "video/x-theora+ogg": 'video'
+
+}
+
 const async = {
 
   each: function (list, step, callback) {
@@ -1568,9 +1615,9 @@ newPostMobile()
       this.toggleSelectWorld(false)
 
       if(world.apiWorld.isPrivate){
-        $('.world-header .invite-user-button').show()
+        $('.world-header .invite-user-button').css('opacity', 1)
       }else{
-        $('.world-header .invite-user-button').hide()
+        $('.world-header .invite-user-button').css('opacity', 0)
       }
 
       if (!updatingHeader) {
@@ -1690,16 +1737,25 @@ return
       }
     }
 
-    updateGenericCardFSNodes (post) {
+    updateGenericCardFSNodes (post, edited) {
       var card = $('.post-' + post.apiPost.id)
       card.removeClass('loading')
 
-      post.fsnodes.forEach(function (fsnode) {
-        if (card.find('.attachment-' + fsnode.id).length != 0) {
-          var docPreview = card.find('.attachment-' + fsnode.id)
+      post.fsnodes.forEach(function (fsnode, index) {
+
+        var docPreview = null
+        var needToInsert = false
+        if (card.find('.attachment-' + fsnode.id).length !== 0) {
+          docPreview = card.find('.attachment-' + fsnode.id)
+        }else if( edited ){
+          docPreview = card.find('.doc-preview.wz-prototype').clone().removeClass('wz-prototype').addClass('attachment-' + fsnode.id)
+          needToInsert = true
+        }
+
+        if( docPreview ){
 
           if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-            docPreview.find('.doc-icon img').attr('src', 'https://static.horbito.com/app/360/deleted.png')
+            docPreview.find('.doc-icon img').attr('src', 'https://static.horbito.com/app/360/images/deleted.png')
           } else {
             docPreview.find('.doc-icon img').attr('src', fsnode.icons.big)
           }
@@ -1710,13 +1766,29 @@ return
 
           docPreview.find('.doc-title').text(fsnode.name)
           docPreview.find('.doc-info').text(api.tool.bytesToUnit(fsnode.size))
-          // card.find( '.desc' ).after( docPreview )
           docPreview.data('fsnode', fsnode)
+
+          if(needToInsert){
+            card.find( '.desc' ).after( docPreview )
+          }
+
+          if( edited ){
+            docPreview.addClass('dontDelete')
+
+            if( index === post.fsnodes.length - 1 ){
+              card.find('.doc-preview').not('.dontDelete').remove()
+              card.find('.doc-preview').removeClass('dontDelete')
+            }
+
+          }
+
+
+
         }
       })
     }
 
-    updateDocumentCardFSNodes (post) {
+    updateDocumentCardFSNodes (post, edited) {
       var card = $('.post-' + post.apiPost.id)
       card.removeClass('loading')
 
@@ -1841,32 +1913,32 @@ notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSen
 
       postDom.find('.title').text(post.title)
       postDom.find('.desc').text(post.content)
-      // this.updatePostFSNodes
+      //this.updatePostFSNodes(post)
     }
 
     updatePostFSNodes (post) {
       if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-        this.updateGenericCardFSNodes(post)
+        this.updateGenericCardFSNodes(post, true)
       } else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
         switch (post.apiPost.metadata.fileType) {
           case 'generic':
-            this.updateGenericCardFSNodes(post)
+            this.updateGenericCardFSNodes(post, true)
             break
 
           case 'document':
-            this.updateDocumentCardFSNodes(post)
+            this.updateDocumentCardFSNodes(post, true)
             break
 
           case 'image':
-            this.updateDocumentCardFSNodes(post)
+            this.updateDocumentCardFSNodes(post, true)
             break
 
           case 'video':
-            this.updateGenericCardFSNodes(post)
+            this.updateGenericCardFSNodes(post, true)
             break
 
           case 'music':
-            this.updateGenericCardFSNodes(post)
+            this.updateGenericCardFSNodes(post, true)
             break
         }
       }
