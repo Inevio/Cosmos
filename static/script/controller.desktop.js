@@ -655,6 +655,7 @@ var controller = (function (model, view) {
       })
 
       api.cosmos.on('worldIconSetted', function (world) {
+        console.log('worldIconSetted', world)
         if ($('.world.active').hasClass('world-' + world.id)) {
           $('.wz-groupicon-uploader-start').css('background-image', 'url(' + world.icons.normal + '?token=' + Date.now() + ')')
           $('.world-avatar').css('background-image', 'url(' + world.icons.normal + '?token=' + Date.now() + ')')
@@ -679,9 +680,11 @@ var controller = (function (model, view) {
 
       api.upload.on('worldIconProgress', function (percent) {
         $('.loading-animation-container').show()
+        console.log('uploading avatar ', percent)
       })
 
       api.upload.on('worldIconEnd', function (worldId) {
+        console.log('avatar uploaded')
         $('.loading-animation-container').hide()
         $('.wz-groupicon-uploader-start').removeClass('non-icon')
         $('.wz-groupicon-uploader-start').addClass('custom-icon')
