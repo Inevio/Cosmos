@@ -1751,7 +1751,7 @@ return
     updateNotificationsList (notificationList) {
       $('.notificationDom').remove()
       var notificationDomList = []
-      console.log(notificationList)
+      //console.log(notificationList)
 
       notificationList.forEach(function (notification, index) {
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
