@@ -1751,7 +1751,7 @@ return
     updateNotificationsList (notificationList) {
       $('.notificationDom').remove()
       var notificationDomList = []
-      console.log(notificationList)
+      //console.log(notificationList)
 
       notificationList.forEach(function (notification, index) {
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
@@ -2030,24 +2030,7 @@ var model = (function (view) {
 
     _loadFullNotificationList (callback) {
       api.notification.list('cosmos', { 'includeUnattended': true }, function (error, notifications) {
-        /* worldNotifications = []
-        postsNotifications = []
-        commentsNotifications = []
-        notifications.forEach(function( notification ){
 
-          if (notification.data.type === 'addedToWorld' ) {
-            worldNotifications.push(notification)
-          }else if (notification.data.type === 'post' ) {
-            postsNotifications.push(notification)
-          }else if (notification.data.type === 'reply' ) {
-            commentsNotifications.push(notification)
-          }
-
-        })
-
-        updateBadges()
-        api.app.setBadge( notifications.length )
-        console.log( 'WorldNot:', worldNotifications, ' PostsNot:', postsNotifications, ' CommNot:', commentsNotifications) */
         if (error) {
           return console.error(error)
         }
@@ -2055,7 +2038,7 @@ var model = (function (view) {
         if (notifications.length) {
           async.each(notifications, function (notification, checkEnd) {
             if (!notification.attended) {
-              console.log(notification)
+              //console.log(notification)
             }
 
             if (!this.worlds[ notification.data.world ]) {
@@ -2092,7 +2075,6 @@ var model = (function (view) {
       callback = api.tool.secureCallback(callback)
 
       api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000}, function (error, worlds) {
-        // To Do -> Error
         if (error) {
           return this.view.launchAlert(error)
         }
@@ -2301,7 +2283,7 @@ var model = (function (view) {
 
       api.cosmos.create(worldName, null, true, null, function (error, world) {
         if (error) {
-          return console.log(error)
+          return console.error(error)
         }
 
         // this.addWorld( world )
@@ -2323,7 +2305,6 @@ var model = (function (view) {
         if (error) {
           return error
         }
-
         console.log(editedWorld)
       })
     }
@@ -2365,12 +2346,12 @@ var model = (function (view) {
           if (notifications) {
             var notificationList = Object.values(this.notifications).reverse()
             this.view.updateNotificationsList(notificationList)
-            console.log(this.notifications)
+            //console.log(this.notifications)
             this.updateNotificationIcon()
           }
         }.bind(this))
 
-        console.log(this.worlds)
+        //console.log(this.worlds)
         // this.loadFSNodes()
       }.bind(this))
 
@@ -3112,7 +3093,7 @@ var model = (function (view) {
       async.map(this.apiPost.fsnode, function (fsnodeId, cb) {
         api.fs(fsnodeId, function (error, fsnode) {
           if (error) {
-            console.log(fsnodeId, error)
+            //console.log(fsnodeId, error)
             return cb(error, null)
           }
 
@@ -3816,6 +3797,7 @@ var controller = (function (model, view) {
       })
 
       api.cosmos.on('worldIconSetted', function (world) {
+        console.log('worldIconSetted', world)
         if ($('.world.active').hasClass('world-' + world.id)) {
           $('.wz-groupicon-uploader-start').css('background-image', 'url(' + world.icons.normal + '?token=' + Date.now() + ')')
           $('.world-avatar').css('background-image', 'url(' + world.icons.normal + '?token=' + Date.now() + ')')
@@ -3840,9 +3822,11 @@ var controller = (function (model, view) {
 
       api.upload.on('worldIconProgress', function (percent) {
         $('.loading-animation-container').show()
+        console.log('uploading avatar ', percent)
       })
 
       api.upload.on('worldIconEnd', function (worldId) {
+        console.log('avatar uploaded')
         $('.loading-animation-container').hide()
         $('.wz-groupicon-uploader-start').removeClass('non-icon')
         $('.wz-groupicon-uploader-start').addClass('custom-icon')
