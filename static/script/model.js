@@ -921,6 +921,10 @@ var model = (function (view) {
         }
       } else {
 
+        if( world.posts[ post.id ].apiPost.type !== post.type ){
+          //Cambiar tipo de post en el DOM
+        }
+
         world.posts[ post.id ].apiPost = post
         world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
           if (needToRefresh) {
