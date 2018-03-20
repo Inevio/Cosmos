@@ -381,6 +381,7 @@ var controller = (function (model, view) {
         var newMetadata = model.checkMetadata(newContent, newFsnode)
 
         if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
+          
           post.modify({
             content: newContent,
             title: newTitle,

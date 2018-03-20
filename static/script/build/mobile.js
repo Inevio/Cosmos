@@ -295,7 +295,7 @@ var model = (function (view) {
         } else {
           newMetadata = { fileType: 'generic' }
         }
-      } else if (content.indexOf('www.youtube') != -1) {
+      } else if (content.indexOf('www.youtube') !== -1) {
         newMetadata = { linkType: 'youtube' }
       } else {
         newMetadata = null
@@ -922,11 +922,14 @@ var model = (function (view) {
         }
       } else {
 
+        console.log(world.posts[ post.id ].apiPost.metadata.fileType,post.metadata.fileType)
+        var changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+
         world.posts[ post.id ].apiPost = post
         world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
           if (needToRefresh) {
-            view.updatePost(modelPost.apiPost)
-            view.updatePostFSNodes(modelPost)
+            view.updatePost(modelPost, changePostType)
+            //view.updatePostFSNodes(modelPost,changePostType)
           }
         })
       }

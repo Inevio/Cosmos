@@ -1021,6 +1021,7 @@ card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
             fsnode = card.find('.attachment-' + fsnodeId).data('fsnode')
           }
 
+          console.log(fsnode)
           this.appendAttachment({ fsnode: fsnode, uploaded: true, card: card })
         }.bind(this))
       }
@@ -1908,18 +1909,31 @@ notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSen
       replyDom.find('.reply-text').text(reply.content)
     }
 
-    updatePost (post) {
-      var postDom = $('.post-' + post.id)
+    updatePost (post, changePostType) {
+      var postDom = $('.post-' + post.apiPost.id)
 
-      postDom.find('.title').text(post.title)
-      postDom.find('.desc').text(post.content)
-      //this.updatePostFSNodes(post)
+      postDom.find('.title').text(post.apiPost.title)
+      postDom.find('.desc').text(post.apiPost.content)
+      this.updatePostFSNodes(post, changePostType)
     }
 
-    updatePostFSNodes (post) {
+    updatePostFSNodes (post, changePostType) {
       if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
         this.updateGenericCardFSNodes(post, true)
-      } else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
+      }else if( changePostType ){
+
+        this.appendPost( post, null, function( postDom ){
+          if (post.apiPost.author === this.myContactID) {
+            postDom.addClass('mine')
+          }
+          postDom.data('post', post.apiPost)
+          var oldPost = $('.post-' + post.apiPost.id)
+          oldPost.after( postDom )
+          oldPost.remove()
+          //this.updatePostFSNodes(post, false)
+        }.bind(this))
+
+      }else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
         switch (post.apiPost.metadata.fileType) {
           case 'generic':
             this.updateGenericCardFSNodes(post, true)
@@ -2334,7 +2348,7 @@ var model = (function (view) {
         } else {
           newMetadata = { fileType: 'generic' }
         }
-      } else if (content.indexOf('www.youtube') != -1) {
+      } else if (content.indexOf('www.youtube') !== -1) {
         newMetadata = { linkType: 'youtube' }
       } else {
         newMetadata = null
@@ -2961,11 +2975,14 @@ var model = (function (view) {
         }
       } else {
 
+        console.log(world.posts[ post.id ].apiPost.metadata.fileType,post.metadata.fileType)
+        var changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+
         world.posts[ post.id ].apiPost = post
         world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
           if (needToRefresh) {
-            view.updatePost(modelPost.apiPost)
-            view.updatePostFSNodes(modelPost)
+            view.updatePost(modelPost, changePostType)
+            //view.updatePostFSNodes(modelPost,changePostType)
           }
         })
       }
@@ -3609,6 +3626,7 @@ var controller = (function (model, view) {
         var newMetadata = model.checkMetadata(newContent, newFsnode)
 
         if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
+          
           post.modify({
             content: newContent,
             title: newTitle,
