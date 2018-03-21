@@ -690,6 +690,35 @@ var controller = (function (model, view) {
         $('.wz-groupicon-uploader-start').removeClass('non-icon')
         $('.wz-groupicon-uploader-start').addClass('custom-icon')
       })
+
+      api.upload.on('fsnodeProgress', function (fsnode, percent) {
+        var attachment = $('.attachment-fsnode-' + fsnode)
+        attachment.find('.aux-title').text(lang.uploading + (percent.toFixed(2) * 100).toFixed() + ' %')
+      })
+
+      api.upload.on('fsnodeEnd', function (fsnode, fileId) {
+        var attachment = $('.editing .attachment-' + fileId + ',.editing .attachment-fsnode-' + fsnode.id)
+
+        if (attachment.length) {
+          attachment.find('.attachment-title').text(fsnode.name)
+          attachment.find('.icon').css('background-image', 'url(' + fsnode.icons.micro + ')')
+          attachment.find('.aux-title').hide()
+          attachment.addClass('from-pc').addClass('attachment-' + fileId).addClass('attachment-fsnode-' + fsnode.id)
+          attachment.data('fsnode', fsnode)
+
+          if ($('.attachment.uploading').length) {
+            $('.uploading').removeClass('uploading')
+          }
+        }
+      })
+
+      this.dom.on('upload-prepared', function (e, uploader) {
+        
+        uploader(this.model.openedWorld.apiWorld.volume, function (e, uploadQueueItem) {
+          view.appendAttachment({fsnode: uploadQueueItem, uploaded: false, card: $('.card.editing')});
+        })
+      }.bind(this))
+
     }
   }
 
