@@ -380,6 +380,8 @@ var controller = (function (model, view) {
 
         var newMetadata = model.checkMetadata(newContent, newFsnode)
 
+        if( newMetadata == null ) newMetadata = {}
+
         if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
           
           post.modify({
@@ -643,7 +645,10 @@ var controller = (function (model, view) {
       api.cosmos.on('worldCreated', function (world) {
         console.log('worldCreated', world)
         model.addWorld(world, true)
-        $('.new-world-container').data('world', world)
+        $('.new-world-container').data( 'world', world )
+        $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
+        $( '.new-world-name input' ).val( '' )
+        $( '.new-world-container' ).data( 'world' , world )
         /* $( '.new-world-name input' ).val( '' )
         $( '.new-world-container' ).data( 'world' , world )
         $( '.wz-groupicon-uploader-start' ).attr( 'data-groupid' , world.id )
