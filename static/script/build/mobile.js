@@ -291,16 +291,25 @@ var model = (function (view) {
 
       if (fsnode.length > 0) {
         if (fsnode.length === 1) {
-          newMetadata = { fileType: checkTypePost(fsnode[0]) }
+          newMetadata = { fileType: this.checkTypePost(fsnode[0]) }
         } else {
           newMetadata = { fileType: 'generic' }
         }
-      } else if (content.indexOf('www.youtube') != -1) {
+      } else if (content.indexOf('www.youtube') !== -1) {
         newMetadata = { linkType: 'youtube' }
       } else {
         newMetadata = null
       }
       return newMetadata
+    }
+
+    checkTypePost (fsnode) {
+      var fileType = 'generic';
+      if (fsnode.mime) {
+          fileType = this.guessType(fsnode.mime);
+      }
+
+      return fileType;
     }
 
     createWorld (worldName) {
@@ -397,6 +406,10 @@ var model = (function (view) {
           this.updatePostFSNodes(updatedPost)
         }.bind(this))
       }
+    }
+
+    guessType (mime) {
+      return TYPES[mime] || 'generic';
     }
 
     inviteUsers (users) {
@@ -908,11 +921,15 @@ var model = (function (view) {
           }
         }
       } else {
+
+        console.log(world.posts[ post.id ].apiPost.metadata.fileType,post.metadata.fileType)
+        var changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+
         world.posts[ post.id ].apiPost = post
         world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
           if (needToRefresh) {
-            view.updatePost(modelPost.post)
-            view.updatePostFSNodes(modelPost)
+            view.updatePost(modelPost, changePostType)
+            //view.updatePostFSNodes(modelPost,changePostType)
           }
         })
       }
