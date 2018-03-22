@@ -10,6 +10,53 @@ const GROUP_NULL = 0
 const GROUP_CREATE = 1
 const GROUP_EDIT = 2
 
+const TYPES = {
+
+    "application/pdf": 'document',
+    "application/zip": 'generic',
+    "application/x-rar": 'generic',
+    "application/x-gzip": 'generic',
+    "text/x-c": 'document',
+    "text/x-c++": 'document',
+    "text/x-php": 'document',
+    "text/x-python": 'document',
+    "application/json": 'document',
+    "application/javascript": 'document',
+    "application/inevio-texts": 'generic',
+    "application/msword": 'generic',
+    "application/vnd.oasis.opendocument.text": 'generic',
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": 'generic',
+    "application/inevio-grids": 'generic',
+    "application/vnd.ms-excel": 'generic',
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": 'generic',
+    "application/vnd.ms-powerpoint": 'generic',
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": 'generic',
+    "audio/mp4": 'music',
+    "audio/mpeg": 'music',
+    "audio/flac": 'music',
+    "audio/x-vorbis+ogg": 'music',
+    "audio/x-wav": 'music',
+    "image/gif": 'image',
+    "image/jpeg": 'image',
+    "image/png": 'image',
+    "image/tiff": 'image',
+    "image/vnd.adobe.photoshop": 'generic',
+    "text/html": 'generic',
+    "text/plain": 'generic',
+    "text/rtf": 'generic',
+    "video/3gpp": 'video',
+    "video/mp4": 'video',
+    "video/quicktime": 'video',
+    "video/webm": 'video',
+    "video/x-flv": 'video',
+    "video/x-matroska": 'video',
+    "video/x-ms-asf": 'video',
+    "video/x-ms-wmv": 'video',
+    "video/x-msvideo": 'video',
+    "video/x-theora+ogg": 'video'
+
+}
+
 const async = {
 
   each: function (list, step, callback) {
@@ -349,13 +396,6 @@ var view = (function () {
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
 
-      /* if (!this.isMobile) {
-setRepliesAsync( card , post.apiPost )
-}else{
-setRepliesAsyncWithoutAppendMobile( card , post.apiPost )
-}
-appendCard( card , post.apiPost ) */
-
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
       })
@@ -435,12 +475,6 @@ appendCard( card , post.apiPost ) */
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
       card.data('time', post.apiPost.created)
 
-      /* if (!this.isMobile) {
-setRepliesAsync( card , post )
-}else{
-setRepliesAsyncWithoutAppendMobile( card , post )
-}
-appendCard( card , post ) */
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
       })
@@ -477,13 +511,6 @@ appendCard( card , post ) */
 
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
 
-      /* if (!this.isMobile) {
-setRepliesAsync( card , post.apiPost )
-}else{
-setRepliesAsyncWithoutAppendMobile( card , post.apiPost )
-}
-appendCard( card , post.apiPost ) */
-
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
       })
@@ -495,12 +522,7 @@ appendCard( card , post.apiPost ) */
       var user = post.apiPost.authorObject
 
       var youtubeCode = this._getYoutubeCode(post.apiPost.content)
-
-      /* if (this.isMobile) {
-card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + youtubeCode )
-}else{ */
       card.find('.video-preview').attr('src', 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0')
-      // }
 
       card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
       card.find('.card-user-name').text(user.fullName)
@@ -514,13 +536,6 @@ card.find( '.video-preview' ).attr( 'src' , 'https://www.youtube.com/embed/' + y
           $(this).attr('href', 'http://' + $(this).attr('href'))
         }
       })
-
-      /* if (!this.isMobile) {
-setRepliesAsync( card , post.apiPost )
-}else{
-setRepliesAsyncWithoutAppendMobile( card , post.apiPost )
-}
-appendCard( card , post.apiPost ) */
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -579,7 +594,7 @@ appendCard( card , post.apiPost ) */
       $('.editing').find('.attachment.wz-prototype').after(attachment)
       attachment.data('fsnode', info.fsnode)
 
-      if (info.fsnode.pending) {
+      if (info.fsnode && info.fsnode.pending) {
         attachment.data('mime', info.fsnode.type)
       }
     }
@@ -718,22 +733,14 @@ appendCard( card , post.apiPost ) */
     appendComment (comment, callback, appending) {
       var commentDom = $('.comment.wz-prototype').eq(0).clone()
       commentDom.removeClass('wz-prototype').addClass('commentDom comment-' + comment.apiComment.id)
-      /* if (this.isMobile) {
-commentDom.find( '.reply-button' ).text( '-   ' + lang.reply )
-}else{ */
+
       commentDom.find('.reply-button').text(lang.reply)
-      // }
       commentDom.find('.edit-button').text(lang.edit)
 
       if (comment.apiComment.author === this.myContactID) {
         commentDom.addClass('mine')
       }
 
-      /* if( !comment.apiComment.authorObject ){
-console.log( 'mal', comment )
-}else{
-console.log( 'bien', comment )
-} */
       commentDom.find('.avatar').css('background-image', 'url( ' + comment.apiComment.authorObject.avatar.tiny + ' )')
       commentDom.find('.name').text(comment.apiComment.authorObject.fullName)
       commentDom.find('.time').text(this._timeElapsed(new Date(comment.apiComment.created)))
@@ -744,13 +751,6 @@ console.log( 'bien', comment )
           $(this).attr('href', 'http://' + $(this).attr('href'))
         }
       })
-
-      /* var container
-if (this.isMobile) {
-container = mobileWorldComments
-}else{
-container = card
-} */
 
       commentDom.data('reply', comment.apiComment)
       commentDom.data('name', comment.apiComment.authorObject.name.split(' ')[0])
@@ -799,11 +799,6 @@ container = card
           $(this).attr('href', 'http://' + $(this).attr('href'))
         }
       })
-
-      // comment.find( '.reply-list' ).append( reply )
-      /* if (!this.isMobile) {
-card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
-} */
 
       reply.data('reply', response)
       if (appending) {
@@ -974,6 +969,7 @@ card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
             fsnode = card.find('.attachment-' + fsnodeId).data('fsnode')
           }
 
+          console.log(fsnode)
           this.appendAttachment({ fsnode: fsnode, uploaded: true, card: card })
         }.bind(this))
       }
@@ -1333,9 +1329,6 @@ card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
 
     newWorldStep () {
       this.newWorldAnimationB()
-      /* if(uiContent.hasClass( 'compressed' )){
-decompressCover( { instant : true , world : $( '.world.active' ) } )
-} */
     }
 
     openEditWorld (world) {
@@ -1482,11 +1475,7 @@ decompressCover( { instant : true , world : $( '.world.active' ) } )
     }
 
     openNewPost (world) {
-      /* if( this.isMobile ){
-newPostMobile()
-}else{ */
       api.app.createView({ type: 'manual', world: world }, 'newPost')
-      // }
     }
 
     openNewWorld () {
@@ -1568,9 +1557,9 @@ newPostMobile()
       this.toggleSelectWorld(false)
 
       if(world.apiWorld.isPrivate){
-        $('.world-header .invite-user-button').show()
+        $('.world-header .invite-user-button').css('opacity', 1)
       }else{
-        $('.world-header .invite-user-button').hide()
+        $('.world-header .invite-user-button').css('opacity', 0)
       }
 
       if (!updatingHeader) {
@@ -1657,10 +1646,6 @@ newPostMobile()
       var height = parseInt(card.find('.comments-list').css('height')) + 50
       var commentsSection = card.find('.comments-section')
 
-      /* if (this.isMobile) {
-return
-} */
-
       if (commentsSection.hasClass('opened')) {
         commentsSection.css('height', height)
         card.removeClass('comments-open')
@@ -1690,16 +1675,24 @@ return
       }
     }
 
-    updateGenericCardFSNodes (post) {
+    updateGenericCardFSNodes (post, edited) {
       var card = $('.post-' + post.apiPost.id)
       card.removeClass('loading')
 
-      post.fsnodes.forEach(function (fsnode) {
-        if (card.find('.attachment-' + fsnode.id).length != 0) {
-          var docPreview = card.find('.attachment-' + fsnode.id)
+      post.fsnodes.forEach(function (fsnode, index) {
+        var docPreview = null
+        var needToInsert = false
+        if (card.find('.attachment-' + fsnode.id).length !== 0) {
+          docPreview = card.find('.attachment-' + fsnode.id)
+        }else if( edited ){
+          docPreview = card.find('.doc-preview.wz-prototype').clone().removeClass('wz-prototype').addClass('attachment-' + fsnode.id)
+          needToInsert = true
+        }
+
+        if( docPreview ){
 
           if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-            docPreview.find('.doc-icon img').attr('src', 'https://static.horbito.com/app/360/deleted.png')
+            docPreview.find('.doc-icon img').attr('src', 'https://static.horbito.com/app/360/images/deleted.png')
           } else {
             docPreview.find('.doc-icon img').attr('src', fsnode.icons.big)
           }
@@ -1710,13 +1703,26 @@ return
 
           docPreview.find('.doc-title').text(fsnode.name)
           docPreview.find('.doc-info').text(api.tool.bytesToUnit(fsnode.size))
-          // card.find( '.desc' ).after( docPreview )
           docPreview.data('fsnode', fsnode)
+
+          if(needToInsert){
+            card.find( '.desc' ).after( docPreview )
+          }
+
+          if( edited ){
+            docPreview.addClass('dontDelete')
+
+            if( index === post.fsnodes.length - 1 ){
+              card.find('.doc-preview').not('.dontDelete').not('.wz-prototype').remove()
+              card.find('.doc-preview').removeClass('dontDelete')
+            }
+
+          }
         }
       })
     }
 
-    updateDocumentCardFSNodes (post) {
+    updateDocumentCardFSNodes (post, edited) {
       var card = $('.post-' + post.apiPost.id)
       card.removeClass('loading')
 
@@ -1737,7 +1743,6 @@ return
     }
 
     updateNotification (notification) {
-
     }
 
     updateNotificationIcon (showIcon) {
@@ -1782,24 +1787,6 @@ return
           notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.addedToWorld + ' ' + notification.apiWorld.name)
         }
 
-        /* if( post.author === this.myContactID ){
-
-if ( !post.isReply ) {
-notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment )
-}else{
-notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment3 )
-}
-
-}else{
-notificationDom.find( '.notification-action' ).html( '<i>' + user.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
-} */
-
-        /* if( notification.data.type == "reply" ){
-notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment3 )
-}else{
-notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name )
-} */
-
         notificationDom.find('.notification-time').html('<i></i>' + this._timeElapsed(new Date(notification.time)))
         notificationDomList.push(notificationDom)
 
@@ -1836,37 +1823,49 @@ notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSen
       replyDom.find('.reply-text').text(reply.content)
     }
 
-    updatePost (post) {
-      var postDom = $('.post-' + post.id)
-
-      postDom.find('.title').text(post.title)
-      postDom.find('.desc').text(post.content)
-      // this.updatePostFSNodes
+    updatePost (post, changePostType) {
+      var postDom = $('.post-' + post.apiPost.id)
+      postDom.find('.title').text(post.apiPost.title)
+      postDom.find('.desc').text(post.apiPost.content)
+      postDom.data('post', post.apiPost)
+      this.updatePostFSNodes(post, changePostType)
     }
 
-    updatePostFSNodes (post) {
+    updatePostFSNodes (post, changePostType) {
       if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
-        this.updateGenericCardFSNodes(post)
-      } else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
+        this.updateGenericCardFSNodes(post, true)
+      }else if( changePostType ){
+
+        this.appendPost( post, null, function( postDom ){
+          if (post.apiPost.author === this.myContactID) {
+            postDom.addClass('mine')
+          }
+          postDom.data('post', post.apiPost)
+          var oldPost = $('.post-' + post.apiPost.id)
+          oldPost.after( postDom )
+          oldPost.remove()
+        }.bind(this))
+
+      }else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
         switch (post.apiPost.metadata.fileType) {
           case 'generic':
-            this.updateGenericCardFSNodes(post)
+            this.updateGenericCardFSNodes(post, true)
             break
 
           case 'document':
-            this.updateDocumentCardFSNodes(post)
+            this.updateDocumentCardFSNodes(post, true)
             break
 
           case 'image':
-            this.updateDocumentCardFSNodes(post)
+            this.updateDocumentCardFSNodes(post, true)
             break
 
           case 'video':
-            this.updateGenericCardFSNodes(post)
+            this.updateGenericCardFSNodes(post, true)
             break
 
           case 'music':
-            this.updateGenericCardFSNodes(post)
+            this.updateGenericCardFSNodes(post, true)
             break
         }
       }
@@ -1938,9 +1937,6 @@ notificationDom.find( '.notification-action' ).html( '<i>' + notification.apiSen
           $('.search-button').click()
         } else {
           worldDom.trigger('click')
-          /* selectWorld( worldDom , function(){
-$( '.search-button' ).click()
-}) */
         }
       })
 
