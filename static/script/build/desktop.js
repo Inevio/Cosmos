@@ -1815,7 +1815,7 @@ var view = (function () {
 
     updatePostComment (comment) {
       var commentDom = $('.comment-' + comment.id)
-      commentDom.find('.comment-text').text(comment.content)
+      commentDom.find('.comment-text').html(comment.content.replace(/\n/g, '<br />'))
     }
 
     updatePostReply (reply) {
