@@ -3332,6 +3332,15 @@ var controller = (function (model, view) {
         view.closeInviteMembers()
       })
 
+      this.dom.on('click', '.invite-user-container .friendDom', function () {
+        $(this).find('.ui-checkbox').toggleClass('active')
+      })
+
+      this.dom.on('click', '.invite-user-container .friendDom .ui-checkbox', function (event) {
+        $(this).toggleClass('active')
+        event.stopPropagation()
+      })
+
       this.dom.on('click', '.invite-user-container .invite-user', function () {
         var users = $('.friend .ui-checkbox.active').parent()
         model.inviteUsers($.makeArray(users))
