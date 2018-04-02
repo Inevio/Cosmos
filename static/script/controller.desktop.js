@@ -683,7 +683,9 @@ var controller = (function (model, view) {
 
       api.notification.on('new', function (notification) {
         console.log('notificationNew', notification)
-        model.notificationNew(notification)
+        if(notification.protocol === 'cosmos'){
+          model.notificationNew(notification)
+        }
       })
 
       api.notification.on('attended', function (list) {
