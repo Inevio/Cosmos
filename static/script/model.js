@@ -134,7 +134,8 @@ var model = (function (view) {
       } else {
         this.worlds[post.worldId].posts[ post.id ] = new Post(this, post)
         if (this.openedWorld && this.openedWorld.apiWorld.id === post.worldId) {
-          this.showPosts(post.worldId, 0)
+          //this.showPosts(post.worldId, 0)
+          this.view.prependPost(this.worlds[post.worldId].posts[ post.id ])
         }
       }
     }

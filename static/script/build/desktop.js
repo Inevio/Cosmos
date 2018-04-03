@@ -1579,6 +1579,12 @@ var view = (function () {
       $('.reply-' + reply.id).remove()
     }
 
+    prependPost (post) {
+      this.appendPost( post, null, function(postDom){
+        $('.you-card.wz-prototype').after(postDom)
+      })
+    }
+
     prepareReplyComment (post, name, input) {
       input.attr('placeholder', '@' + name + ' ')
       input.focus()
@@ -2098,7 +2104,8 @@ var model = (function (view) {
       } else {
         this.worlds[post.worldId].posts[ post.id ] = new Post(this, post)
         if (this.openedWorld && this.openedWorld.apiWorld.id === post.worldId) {
-          this.showPosts(post.worldId, 0)
+          //this.showPosts(post.worldId, 0)
+          this.view.prependPost(this.worlds[post.worldId].posts[ post.id ])
         }
       }
     }
