@@ -115,6 +115,7 @@ var sendBanner = function( info ){
 var checkNotifications = function(){
 
   api.notification.count( 'cosmos' , function( e , count ){
+    console.log('Cosmos badge actualizado, tienes: ' + count + ' notificationes')
     api.app.setBadge( count );
   });
 
