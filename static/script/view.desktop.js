@@ -1579,6 +1579,12 @@ var view = (function () {
       $('.reply-' + reply.id).remove()
     }
 
+    prependPost (post) {
+      this.appendPost( post, null, function(postDom){
+        $('.you-card.wz-prototype').after(postDom)
+      })
+    }
+
     prepareReplyComment (post, name, input) {
       input.attr('placeholder', '@' + name + ' ')
       input.focus()
