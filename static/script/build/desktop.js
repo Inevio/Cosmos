@@ -2107,6 +2107,9 @@ var model = (function (view) {
           //this.showPosts(post.worldId, 0)
           this.view.prependPost(this.worlds[post.worldId].posts[ post.id ])
         }
+        this.worlds[post.worldId].posts[ post.id ].loadPostFsnodes( function(updatedPost){
+          this.updatePostFSNodes(updatedPost)
+        }.bind(this))
       }
     }
 
