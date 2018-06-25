@@ -3,7 +3,7 @@ var model = (function (view) {
     constructor (view) {
       this.view = view
       this.openedWorld
-      this.myContactID = api.system.user().id
+      this.myContactID = api.system.workspace().idWorkspace
 
       this.contacts = {}
       this.worlds = {}
@@ -355,7 +355,7 @@ var model = (function (view) {
     }
 
     followWorld (world) {
-      if (api.system.user().user.indexOf('demo') === 0 && !world.isPrivate) {
+      if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds)
         return
       }

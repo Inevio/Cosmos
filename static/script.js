@@ -1,7 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
-var me = api.system.user();
+var me = api.system.workspace();
 var nNotifications = 0;
 var loadingPost = false;
 var searchWorldQuery = 0;
@@ -10,7 +10,7 @@ var animationEffect = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds = [];
 var app = $(this);
 var desktop = $(this).parent().parent();
-var myContactID = api.system.user().id;
+var myContactID = api.system.workspace().idWorkspace;
 var mobileView = 'worldSidebar'
 var worldNotifications = [];
 var postsNotifications = [];
@@ -2233,7 +2233,7 @@ var editWorldAsync = function () {
 
     var worldApi = $('.new-world-container').data('world');
     var isPrivate;
-    if (api.system.user().user.indexOf('demo') === 0) {
+    if (api.system.workspace().username.indexOf('demo') === 0) {
         isPrivate = true;
     } else {
         isPrivate = $('.private-option').hasClass('active');
@@ -2421,7 +2421,7 @@ var followWorldAsync = function (worldCard) {
         return;
     }
 
-    if (api.system.user().user.indexOf('demo') === 0 && !world.isPrivate) {
+    if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds);
         return;
     }

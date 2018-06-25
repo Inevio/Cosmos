@@ -164,7 +164,7 @@ var view = (function () {
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
 
-      this.myContactID 							= api.system.user().id
+      this.myContactID 							= api.system.workspace().idWorkspace
       this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
       this._domPostContainer 				= $('.cards-list')
@@ -236,7 +236,7 @@ var view = (function () {
       }
 
       // Posts
-      $('.new-post-button .my-avatar').css('background-image', 'url( ' + api.system.user().avatar.tiny + ' )')
+      $('.new-post-button .my-avatar').css('background-image', 'url( ' + api.system.workspace().avatar.tiny + ' )')
       $('.new-post-button .something-to-say').text(lang.cardsList.somethingToSay)
       $('.no-posts .no-post-to-show').text(lang.cardsList.noPostToShow)
       $('.no-posts .left-side span').text(lang.noPosts)
@@ -1914,7 +1914,7 @@ var view = (function () {
         world.removeClass('wz-prototype').addClass('world-' + item.apiWorld.id).addClass('worldDom')
         world.find('.world-name').text(item.apiWorld.name)
 
-        if (item.apiWorld.owner === api.system.user().id) {
+        if (item.apiWorld.owner === api.system.workspace().idWorkspace) {
           world.addClass('editable')
         }
 
@@ -1936,7 +1936,7 @@ var view = (function () {
 
     worldContextMenu (worldDom, world) {
       var menu = api.menu()
-      var isMine = world.owner === api.system.user().id
+      var isMine = world.owner === api.system.workspace().idWorkspace
 
       menu.addOption(lang.searchPost, function () {
         if (worldDom.hasClass('active')) {
@@ -1973,7 +1973,7 @@ var model = (function (view) {
     constructor (view) {
       this.view = view
       this.openedWorld
-      this.myContactID = api.system.user().id
+      this.myContactID = api.system.workspace().idWorkspace
 
       this.contacts = {}
       this.worlds = {}
@@ -2325,7 +2325,7 @@ var model = (function (view) {
     }
 
     followWorld (world) {
-      if (api.system.user().user.indexOf('demo') === 0 && !world.isPrivate) {
+      if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds)
         return
       }
@@ -3278,7 +3278,7 @@ var controller = (function (model, view) {
         var worldApi = $('.new-world-container').data('world')
         var isPrivate
 
-        if (api.system.user().user.indexOf('demo') === 0) {
+        if (api.system.workspace().username.indexOf('demo') === 0) {
           isPrivate = true
         } else {
           isPrivate = $('.private-option').hasClass('active')
@@ -3557,7 +3557,7 @@ var controller = (function (model, view) {
         if( newMetadata == null ) newMetadata = {}
 
         if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
-          
+
           post.modify({
             content: newContent,
             title: newTitle,
@@ -3894,7 +3894,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('upload-prepared', function (e, uploader) {
-        
+
         uploader(this.model.openedWorld.apiWorld.volume, function (e, uploadQueueItem) {
           view.appendAttachment({fsnode: uploadQueueItem, uploaded: false, card: $('.card.editing')});
         })
