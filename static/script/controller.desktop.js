@@ -113,7 +113,7 @@ var controller = (function (model, view) {
         var worldApi = $('.new-world-container').data('world')
         var isPrivate
 
-        if (api.system.user().user.indexOf('demo') === 0) {
+        if (api.system.workspace().username.indexOf('demo') === 0) {
           isPrivate = true
         } else {
           isPrivate = $('.private-option').hasClass('active')
@@ -392,7 +392,7 @@ var controller = (function (model, view) {
         if( newMetadata == null ) newMetadata = {}
 
         if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
-          
+
           post.modify({
             content: newContent,
             title: newTitle,
@@ -729,7 +729,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('upload-prepared', function (e, uploader) {
-        
+
         uploader(this.model.openedWorld.apiWorld.volume, function (e, uploadQueueItem) {
           view.appendAttachment({fsnode: uploadQueueItem, uploaded: false, card: $('.card.editing')});
         })
