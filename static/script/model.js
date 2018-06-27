@@ -120,11 +120,11 @@ var model = (function (view) {
     }
 
     addContact (user) {
-      if (this.contacts[ user.id ]) {
+      if (this.contacts[ user.idWorkspace ]) {
         return this
       }
 
-      this.contacts[ user.id ] = user
+      this.contacts[ user.idWorkspace ] = user
       return this
     }
 
@@ -191,12 +191,12 @@ var model = (function (view) {
     }
 
     addToRestOfUsers (user) {
-      if (this.restOfUsers[ user.id ]) {
-        return this.restOfUsers[ user.id ]
+      if (this.restOfUsers[ user.idWorkspace ]) {
+        return this.restOfUsers[ user.idWorkspace ]
       }
 
-      this.restOfUsers[ user.id ] = user
-      return this.restOfUsers[ user.id ]
+      this.restOfUsers[ user.idWorkspace ] = user
+      return this.restOfUsers[ user.idWorkspace ]
     }
 
     addUserFront (userId, world) {
@@ -425,7 +425,7 @@ var model = (function (view) {
       users.forEach(function (userDom, index) {
         var user = $(userDom).data('user')
 
-        this.openedWorld.apiWorld.addUser(user.id, function (error, o) {
+        this.openedWorld.apiWorld.addUser(user.idWorkspace, function (error, o) {
           if (error) {
             console.error(error)
           }

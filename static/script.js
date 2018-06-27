@@ -2316,11 +2316,11 @@ var selectWorld = function (world, callback) {
 var appendUserCircle = function (i, user, inviteIndex) {
 
     var userCircle = userCirclePrototype.clone();
-    userCircle.removeClass('wz-prototype').addClass('user-' + user.id).addClass('clean');
+    userCircle.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('clean');
     userCircle.css('background-image', 'url(' + user.avatar.tiny + ')');
     userCircle.data('user', user);
 
-    if ($('.user-circle.user-' + user.id).length === 0) {
+    if ($('.user-circle.user-' + user.idWorkspace).length === 0) {
         $('.user-circles-section').append(userCircle);
     }
 
@@ -2328,7 +2328,7 @@ var appendUserCircle = function (i, user, inviteIndex) {
         return;
     }
 
-    if (user.id === myContactID) {
+    if (user.idWorkspace === myContactID) {
         user.name = lang.me;
     }
 
@@ -2510,7 +2510,7 @@ var getMembersAsync = function () {
 var appendFriend = function (user) {
 
     var friend = friendPrototype.clone();
-    friend.removeClass('wz-prototype').addClass('user-' + user.id).addClass('friendDom');
+    friend.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('friendDom');
 
     friend.find('span').text(user.fullName);
     friend.find('.avatar').css('background-image', 'url(' + user.avatar.normal + ')');
@@ -2518,7 +2518,7 @@ var appendFriend = function (user) {
     var invited = false;
     $.each(worldSelectedUsrs, function (i, usr) {
 
-        if (usr.userId == user.id) {
+        if (usr.userId == user.idWorkspace) {
 
             invited = true;
 
@@ -2539,7 +2539,7 @@ var appendFriend = function (user) {
 var appendMember = function (user) {
 
     var member = memberPrototype.clone();
-    member.removeClass('wz-prototype').addClass('user-' + user.id).addClass('memberDom');
+    member.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('memberDom');
 
     if (user.isAdmin) {
         member.addClass('isAdmin');
@@ -2561,7 +2561,7 @@ var inviteUsers = function () {
 
         var user = $(usr).data('user');
 
-        worldSelected.addUser(user.id, function (e, o) {
+        worldSelected.addUser(user.idWorkspace, function (e, o) {
 
             checkEnd();
 
