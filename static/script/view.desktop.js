@@ -395,6 +395,7 @@ var view = (function () {
       card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -474,6 +475,7 @@ var view = (function () {
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
       card.data('time', post.apiPost.created)
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -510,6 +512,7 @@ var view = (function () {
       }
 
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -530,6 +533,7 @@ var view = (function () {
       card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
       card.find('.title').text(post.apiPost.title)
       card.find('.activate-preview').text(lang.preview)
+      card.data('post', post.apiPost)
 
       card.find('.desc').find('a').each(function () {
         if (!URL_REGEX.test($(this).attr('href'))) {
@@ -1456,9 +1460,9 @@ var view = (function () {
 
       world.members.forEach(function (user, index) {
         var member = $('.member.wz-prototype').clone()
-        member.removeClass('wz-prototype').addClass('user-' + user.id).addClass('memberDom')
+        member.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('memberDom')
 
-        if (user.id === world.apiWorld.owner) {
+        if (user.idWorkspace === world.apiWorld.owner) {
           member.addClass('isAdmin')
         }
 
