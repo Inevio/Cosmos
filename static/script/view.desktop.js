@@ -258,6 +258,11 @@ var view = (function () {
       $('.cancel-invite-user span').text(lang.cancel)
       $('.invite-user span').text(lang.invite)
       $('.invite-by-mail span').text(lang.inviteByMail)
+      if(api.system.fullMode()){
+        $('.invite-by-mail span').text(lang.inviteByMail);
+      }else{
+        $('.invite-by-mail').remove()
+      }
       $('.kick-out-button span').text(lang.worldUsers.kickOut)
 
       // Explore
