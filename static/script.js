@@ -644,9 +644,9 @@ api.cosmos.on('postAdded', function (post) {
 
 });
 
-api.cosmos.on('userAdded', function (userId, world) {
+api.cosmos.on('userAdded', function (idWorkspace, world) {
 
-    if (userId === myContactID) {
+    if (idWorkspace === myContactID) {
 
         myWorlds.push(world.id);
         appendWorld(world);
@@ -694,14 +694,14 @@ api.cosmos.on('userAdded', function (userId, world) {
 
 });
 
-api.cosmos.on('userRemoved', function (userId, world) {
+api.cosmos.on('userRemoved', function (idWorkspace, world) {
 
-    if (userId != myContactID && world.id === worldSelected.id) {
+    if (idWorkspace != myContactID && world.id === worldSelected.id) {
 
         $('.user-circle').remove();
         getWorldUsersAsync(worldSelected);
 
-    } else if (userId === myContactID) {
+    } else if (idWorkspace === myContactID) {
 
         if (isMobile() && worldSelected.id === world.id) {
             changeMobileView('worldSidebar');
@@ -2476,7 +2476,7 @@ var getMembersAsync = function () {
 
         asyncEach(members, function (member, finish) {
 
-            api.user(member.userId, function (err, user) {
+            api.user(member.idWorkspace, function (err, user) {
 
                 if (member.isAdmin) {
                     user.isAdmin = true;
@@ -2518,7 +2518,7 @@ var appendFriend = function (user) {
     var invited = false;
     $.each(worldSelectedUsrs, function (i, usr) {
 
-        if (usr.userId == user.idWorkspace) {
+        if (usr.idWorkspace == user.idWorkspace) {
 
             invited = true;
 
