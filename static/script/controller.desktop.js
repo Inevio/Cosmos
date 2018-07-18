@@ -621,14 +621,14 @@ var controller = (function (model, view) {
 
       // COSMOS EVENTS
 
-      api.cosmos.on('userAdded', function (userId, world) {
-        console.log('userAdded', userId, world)
-        model.addUserFront(userId, world)
+      api.cosmos.on('userAdded', function (idWorkspace, world) {
+        console.log('userAdded', idWorkspace, world)
+        model.addUserFront(idWorkspace, world)
       })
 
-      api.cosmos.on('userRemoved', function (userId, world) {
-        console.log('userRemoved', userId, world)
-        model.removeUserFront(userId, world)
+      api.cosmos.on('userRemoved', function (idWorkspace, world) {
+        console.log('userRemoved', idWorkspace, world)
+        model.removeUserFront(idWorkspace, world)
       })
 
       api.cosmos.on('postAdded', function (post) {
