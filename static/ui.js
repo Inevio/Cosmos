@@ -7,7 +7,7 @@ var state           = 1;
 var titleLength     = 0;
 var worldRecortedName;
 var worldCompleteName;
-var myContactID     = api.system.user().id;
+var myContactID     = api.system.workspace().idWorkspace;
 var app             = $( this );
 var cover           = $( '.cover' );
 var worldTitle      = $( '.world-title' );

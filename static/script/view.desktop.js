@@ -164,7 +164,7 @@ var view = (function () {
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
 
-      this.myContactID 							= api.system.user().id
+      this.myContactID 							= api.system.workspace().idWorkspace
       this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
       this._domPostContainer 				= $('.cards-list')
@@ -236,7 +236,7 @@ var view = (function () {
       }
 
       // Posts
-      $('.new-post-button .my-avatar').css('background-image', 'url( ' + api.system.user().avatar.tiny + ' )')
+      $('.new-post-button .my-avatar').css('background-image', 'url( ' + api.system.workspace().avatar.tiny + ' )')
       $('.new-post-button .something-to-say').text(lang.cardsList.somethingToSay)
       $('.no-posts .no-post-to-show').text(lang.cardsList.noPostToShow)
       $('.no-posts .left-side span').text(lang.noPosts)
@@ -400,6 +400,7 @@ var view = (function () {
       card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -479,6 +480,7 @@ var view = (function () {
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
       card.data('time', post.apiPost.created)
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -515,6 +517,7 @@ var view = (function () {
       }
 
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -535,6 +538,7 @@ var view = (function () {
       card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
       card.find('.title').text(post.apiPost.title)
       card.find('.activate-preview').text(lang.preview)
+      card.data('post', post.apiPost)
 
       card.find('.desc').find('a').each(function () {
         if (!URL_REGEX.test($(this).attr('href'))) {
@@ -1461,9 +1465,9 @@ var view = (function () {
 
       world.members.forEach(function (user, index) {
         var member = $('.member.wz-prototype').clone()
-        member.removeClass('wz-prototype').addClass('user-' + user.id).addClass('memberDom')
+        member.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('memberDom')
 
-        if (user.id === world.apiWorld.owner) {
+        if (user.idWorkspace === world.apiWorld.owner) {
           member.addClass('isAdmin')
         }
 
@@ -1919,7 +1923,7 @@ var view = (function () {
         world.removeClass('wz-prototype').addClass('world-' + item.apiWorld.id).addClass('worldDom')
         world.find('.world-name').text(item.apiWorld.name)
 
-        if (item.apiWorld.owner === api.system.user().id) {
+        if (item.apiWorld.owner === api.system.workspace().idWorkspace) {
           world.addClass('editable')
         }
 
@@ -1941,7 +1945,7 @@ var view = (function () {
 
     worldContextMenu (worldDom, world) {
       var menu = api.menu()
-      var isMine = world.owner === api.system.user().id
+      var isMine = world.owner === api.system.workspace().idWorkspace
 
       menu.addOption(lang.searchPost, function () {
         if (worldDom.hasClass('active')) {

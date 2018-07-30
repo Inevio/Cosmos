@@ -37,7 +37,7 @@ var attachNewPostButton = $('.new-card-section .attachments')
 var cancelNewCard = $('.cancel-new-card')
 var postNewCardButton = $('.post-new-card')
 var attachmentPrototype = $('.attachment.wz-prototype')
-var myContactID = api.system.user().id
+var myContactID = api.system.workspace().idWorkspace
 
 // Functions
 var addAttachment = function (attach, useItem) {
@@ -231,7 +231,7 @@ var start = function () {
   automaticPopupQueue = params.queue
 
   // Set popup texts and info
-  $('.new-card-avatar').css('background-image', 'url(' + api.system.user().avatar.tiny + ')')
+  $('.new-card-avatar').css('background-image', 'url(' + api.system.workspace().avatar.tiny + ')')
   setTexts()
   translateUI()
 
