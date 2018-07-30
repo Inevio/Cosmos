@@ -170,6 +170,7 @@ var model = (function (view) {
         })
       }
     }
+    
 
     addReplyFront (post) {
       var needToAppend = false
