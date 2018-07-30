@@ -141,7 +141,7 @@
                     "template" : "mainMobile.html",
 
                     "css"    : [ "style.css" ],
-                    "script" : [ "script.js" , "autoResize.js" , "newPostMobile.js"],
+                    "script" : [ "script/build/mobile.js" , "autoResize.js" , "newPostMobile.js"],
                     "start"  : [ "start.js" ]
 
 

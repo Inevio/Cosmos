@@ -107,6 +107,8 @@ var model = (function (view) {
       callback = api.tool.secureCallback(callback)
 
       api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000}, function (error, worlds) {
+
+        console.log('getUserWorlds', worlds)
         if (error) {
           return this.view.launchAlert(error)
         }
