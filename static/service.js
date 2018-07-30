@@ -1,4 +1,4 @@
-var myContactID    = api.system.user().id;
+var myContactID    = api.system.workspace().idWorkspace;
 var nNotifications = 0;
 var window = $(this)[0];
 var mobile = $(this).hasClass('wz-mobile-view');
@@ -172,7 +172,7 @@ var addArrow = function( appName, text, position ){
 console.log('cosmos',typeof cordova == 'undefined')
 /*if( typeof cordova == 'undefined' ){
 
-  wql.isFirstOpen( [ api.system.user().id ] , function( e , o ){
+  wql.isFirstOpen( [ api.system.workspace().idWorkspace ] , function( e , o ){
 
     if ( o.length === 0 ){
 

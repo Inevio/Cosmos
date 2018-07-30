@@ -1,5 +1,5 @@
 var app             = $( this );
-var myContactID     = api.system.user().id;
+var myContactID     = api.system.workspace().idWorkspace;
 var noWorlds        = $( '.no-worlds' );
 var parameters;
 var window          = app.parents().slice( -1 )[ 0 ].parentNode.defaultView;

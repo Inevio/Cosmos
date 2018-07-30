@@ -295,7 +295,7 @@ var model = (function (view) {
     constructor (view) {
       this.view = view
       this.openedWorld
-      this.myContactID = api.system.user().id
+      this.myContactID = api.system.workspace().idWorkspace
 
       this.contacts = {}
       this.worlds = {}
@@ -412,11 +412,11 @@ var model = (function (view) {
     }
 
     addContact (user) {
-      if (this.contacts[ user.id ]) {
+      if (this.contacts[ user.idWorkspace ]) {
         return this
       }
 
-      this.contacts[ user.id ] = user
+      this.contacts[ user.idWorkspace ] = user
       return this
     }
 
@@ -483,16 +483,16 @@ var model = (function (view) {
     }
 
     addToRestOfUsers (user) {
-      if (this.restOfUsers[ user.id ]) {
-        return this.restOfUsers[ user.id ]
+      if (this.restOfUsers[ user.idWorkspace ]) {
+        return this.restOfUsers[ user.idWorkspace ]
       }
 
-      this.restOfUsers[ user.id ] = user
-      return this.restOfUsers[ user.id ]
+      this.restOfUsers[ user.idWorkspace ] = user
+      return this.restOfUsers[ user.idWorkspace ]
     }
 
-    addUserFront (userId, world) {
-      if (userId === this.myContactID) {
+    addUserFront (idWorkspace, world) {
+      if (idWorkspace === this.myContactID) {
         /* if( this.openedWorld.apiWorld.id == world.id ){
           view.toggleSelectWorld()
         } */
@@ -500,7 +500,7 @@ var model = (function (view) {
         this.addWorld(world)
       } else {
         this.worlds[ world.id ].apiWorld = world
-        this.worlds[ world.id ].addMember(userId)
+        this.worlds[ world.id ].addMember(idWorkspace)
         this.view.closeInviteMembers()
 
         if (this.openedWorld && this.openedWorld.apiWorld.id === world.id) {
@@ -647,7 +647,7 @@ var model = (function (view) {
     }
 
     followWorld (world) {
-      if (api.system.user().user.indexOf('demo') === 0 && !world.isPrivate) {
+      if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds)
         return
       }
@@ -717,7 +717,7 @@ var model = (function (view) {
       users.forEach(function (userDom, index) {
         var user = $(userDom).data('user')
 
-        this.openedWorld.apiWorld.addUser(user.id, function (error, o) {
+        this.openedWorld.apiWorld.addUser(user.idWorkspace, function (error, o) {
           if (error) {
             console.error(error)
           }
@@ -1067,20 +1067,20 @@ var model = (function (view) {
       this.updateWorldsListUI()
     }
 
-    removeUserBack (userId) {
+    removeUserBack (idWorkspace) {
       if (!this.openedWorld) {
         return
       }
 
-      this.openedWorld.apiWorld.removeUser(userId, function (err) {
+      this.openedWorld.apiWorld.removeUser(idWorkspace, function (err) {
         if (err) {
           console.error(err)
         }
       })
     }
 
-    removeUserFront (userId, world) {
-      if (userId === this.myContactID) {
+    removeUserFront (idWorkspace, world) {
+      if (idWorkspace === this.myContactID) {
         if (this.openedWorld.apiWorld.id == world.id) {
           view.toggleSelectWorld(true)
           view.newWorldAnimationOut()
@@ -1089,7 +1089,7 @@ var model = (function (view) {
         this.removeWorldFront(world.id)
       } else {
         this.worlds[ world.id ].apiWorld = world
-        this.worlds[ world.id ].removeMember(userId)
+        this.worlds[ world.id ].removeMember(idWorkspace)
         this.view.closeMembers()
 
         if (this.openedWorld && this.openedWorld.apiWorld.id === world.id) {
@@ -1344,14 +1344,14 @@ var model = (function (view) {
         }
 
         members.forEach(function (member) {
-          if (this.app.contacts[ member.userId ]) {
-            this._addMember(this.app.contacts[ member.userId ])
+          if (this.app.contacts[ member.idWorkspace ]) {
+            this._addMember(this.app.contacts[ member.idWorkspace ])
           } else {
-            api.user(member.userId, function (err, user) {
+            api.user(member.idWorkspace, function (err, user) {
               if (error) {
                 return console.error(error)
               }
-              this._addMember(user, member.userId)
+              this._addMember(user, member.idWorkspace)
             }.bind(this))
           }
         }.bind(this))
@@ -1366,8 +1366,8 @@ var model = (function (view) {
       })
     }
 
-    addMember (userId) {
-      api.user(userId, function (error, user) {
+    addMember (idWorkspace) {
+      api.user(idWorkspace, function (error, user) {
         if (error) {
           return console.error(error)
         }
