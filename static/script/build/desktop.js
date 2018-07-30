@@ -164,7 +164,7 @@ var view = (function () {
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
 
-      this.myContactID 							= api.system.user().id
+      this.myContactID 							= api.system.workspace().idWorkspace
       this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
       this._domPostContainer 				= $('.cards-list')
@@ -236,7 +236,7 @@ var view = (function () {
       }
 
       // Posts
-      $('.new-post-button .my-avatar').css('background-image', 'url( ' + api.system.user().avatar.tiny + ' )')
+      $('.new-post-button .my-avatar').css('background-image', 'url( ' + api.system.workspace().avatar.tiny + ' )')
       $('.new-post-button .something-to-say').text(lang.cardsList.somethingToSay)
       $('.no-posts .no-post-to-show').text(lang.cardsList.noPostToShow)
       $('.no-posts .left-side span').text(lang.noPosts)
@@ -400,6 +400,7 @@ var view = (function () {
       card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -479,6 +480,7 @@ var view = (function () {
       card.find('.card-user-name').text(user.fullName)
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
       card.data('time', post.apiPost.created)
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -515,6 +517,7 @@ var view = (function () {
       }
 
       card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
 
       this.appendComments(card, post, function (cardToInsert) {
         return callback(cardToInsert)
@@ -535,6 +538,7 @@ var view = (function () {
       card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
       card.find('.title').text(post.apiPost.title)
       card.find('.activate-preview').text(lang.preview)
+      card.data('post', post.apiPost)
 
       card.find('.desc').find('a').each(function () {
         if (!URL_REGEX.test($(this).attr('href'))) {
@@ -1461,9 +1465,9 @@ var view = (function () {
 
       world.members.forEach(function (user, index) {
         var member = $('.member.wz-prototype').clone()
-        member.removeClass('wz-prototype').addClass('user-' + user.id).addClass('memberDom')
+        member.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('memberDom')
 
-        if (user.id === world.apiWorld.owner) {
+        if (user.idWorkspace === world.apiWorld.owner) {
           member.addClass('isAdmin')
         }
 
@@ -1919,7 +1923,7 @@ var view = (function () {
         world.removeClass('wz-prototype').addClass('world-' + item.apiWorld.id).addClass('worldDom')
         world.find('.world-name').text(item.apiWorld.name)
 
-        if (item.apiWorld.owner === api.system.user().id) {
+        if (item.apiWorld.owner === api.system.workspace().idWorkspace) {
           world.addClass('editable')
         }
 
@@ -1941,7 +1945,7 @@ var view = (function () {
 
     worldContextMenu (worldDom, world) {
       var menu = api.menu()
-      var isMine = world.owner === api.system.user().id
+      var isMine = world.owner === api.system.workspace().idWorkspace
 
       menu.addOption(lang.searchPost, function () {
         if (worldDom.hasClass('active')) {
@@ -1978,7 +1982,7 @@ var model = (function (view) {
     constructor (view) {
       this.view = view
       this.openedWorld
-      this.myContactID = api.system.user().id
+      this.myContactID = api.system.workspace().idWorkspace
 
       this.contacts = {}
       this.worlds = {}
@@ -2095,11 +2099,11 @@ var model = (function (view) {
     }
 
     addContact (user) {
-      if (this.contacts[ user.id ]) {
+      if (this.contacts[ user.idWorkspace ]) {
         return this
       }
 
-      this.contacts[ user.id ] = user
+      this.contacts[ user.idWorkspace ] = user
       return this
     }
 
@@ -2166,16 +2170,16 @@ var model = (function (view) {
     }
 
     addToRestOfUsers (user) {
-      if (this.restOfUsers[ user.id ]) {
-        return this.restOfUsers[ user.id ]
+      if (this.restOfUsers[ user.idWorkspace ]) {
+        return this.restOfUsers[ user.idWorkspace ]
       }
 
-      this.restOfUsers[ user.id ] = user
-      return this.restOfUsers[ user.id ]
+      this.restOfUsers[ user.idWorkspace ] = user
+      return this.restOfUsers[ user.idWorkspace ]
     }
 
-    addUserFront (userId, world) {
-      if (userId === this.myContactID) {
+    addUserFront (idWorkspace, world) {
+      if (idWorkspace === this.myContactID) {
         /* if( this.openedWorld.apiWorld.id == world.id ){
           view.toggleSelectWorld()
         } */
@@ -2183,7 +2187,7 @@ var model = (function (view) {
         this.addWorld(world)
       } else {
         this.worlds[ world.id ].apiWorld = world
-        this.worlds[ world.id ].addMember(userId)
+        this.worlds[ world.id ].addMember(idWorkspace)
         this.view.closeInviteMembers()
 
         if (this.openedWorld && this.openedWorld.apiWorld.id === world.id) {
@@ -2330,7 +2334,7 @@ var model = (function (view) {
     }
 
     followWorld (world) {
-      if (api.system.user().user.indexOf('demo') === 0 && !world.isPrivate) {
+      if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds)
         return
       }
@@ -2400,7 +2404,7 @@ var model = (function (view) {
       users.forEach(function (userDom, index) {
         var user = $(userDom).data('user')
 
-        this.openedWorld.apiWorld.addUser(user.id, function (error, o) {
+        this.openedWorld.apiWorld.addUser(user.idWorkspace, function (error, o) {
           if (error) {
             console.error(error)
           }
@@ -2750,20 +2754,20 @@ var model = (function (view) {
       this.updateWorldsListUI()
     }
 
-    removeUserBack (userId) {
+    removeUserBack (idWorkspace) {
       if (!this.openedWorld) {
         return
       }
 
-      this.openedWorld.apiWorld.removeUser(userId, function (err) {
+      this.openedWorld.apiWorld.removeUser(idWorkspace, function (err) {
         if (err) {
           console.error(err)
         }
       })
     }
 
-    removeUserFront (userId, world) {
-      if (userId === this.myContactID) {
+    removeUserFront (idWorkspace, world) {
+      if (idWorkspace === this.myContactID) {
         if (this.openedWorld.apiWorld.id == world.id) {
           view.toggleSelectWorld(true)
           view.newWorldAnimationOut()
@@ -2772,7 +2776,7 @@ var model = (function (view) {
         this.removeWorldFront(world.id)
       } else {
         this.worlds[ world.id ].apiWorld = world
-        this.worlds[ world.id ].removeMember(userId)
+        this.worlds[ world.id ].removeMember(idWorkspace)
         this.view.closeMembers()
 
         if (this.openedWorld && this.openedWorld.apiWorld.id === world.id) {
@@ -3027,14 +3031,14 @@ var model = (function (view) {
         }
 
         members.forEach(function (member) {
-          if (this.app.contacts[ member.userId ]) {
-            this._addMember(this.app.contacts[ member.userId ])
+          if (this.app.contacts[ member.idWorkspace ]) {
+            this._addMember(this.app.contacts[ member.idWorkspace ])
           } else {
-            api.user(member.userId, function (err, user) {
+            api.user(member.idWorkspace, function (err, user) {
               if (error) {
                 return console.error(error)
               }
-              this._addMember(user, member.userId)
+              this._addMember(user, member.idWorkspace)
             }.bind(this))
           }
         }.bind(this))
@@ -3049,8 +3053,8 @@ var model = (function (view) {
       })
     }
 
-    addMember (userId) {
-      api.user(userId, function (error, user) {
+    addMember (idWorkspace) {
+      api.user(idWorkspace, function (error, user) {
         if (error) {
           return console.error(error)
         }
@@ -3283,7 +3287,7 @@ var controller = (function (model, view) {
         var worldApi = $('.new-world-container').data('world')
         var isPrivate
 
-        if (api.system.user().user.indexOf('demo') === 0) {
+        if (api.system.workspace().username.indexOf('demo') === 0) {
           isPrivate = true
         } else {
           isPrivate = $('.private-option').hasClass('active')
@@ -3562,7 +3566,7 @@ var controller = (function (model, view) {
         if( newMetadata == null ) newMetadata = {}
 
         if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
-          
+
           post.modify({
             content: newContent,
             title: newTitle,
@@ -3791,14 +3795,14 @@ var controller = (function (model, view) {
 
       // COSMOS EVENTS
 
-      api.cosmos.on('userAdded', function (userId, world) {
-        console.log('userAdded', userId, world)
-        model.addUserFront(userId, world)
+      api.cosmos.on('userAdded', function (idWorkspace, world) {
+        console.log('userAdded', idWorkspace, world)
+        model.addUserFront(idWorkspace, world)
       })
 
-      api.cosmos.on('userRemoved', function (userId, world) {
-        console.log('userRemoved', userId, world)
-        model.removeUserFront(userId, world)
+      api.cosmos.on('userRemoved', function (idWorkspace, world) {
+        console.log('userRemoved', idWorkspace, world)
+        model.removeUserFront(idWorkspace, world)
       })
 
       api.cosmos.on('postAdded', function (post) {
@@ -3899,7 +3903,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('upload-prepared', function (e, uploader) {
-        
+
         uploader(this.model.openedWorld.apiWorld.volume, function (e, uploadQueueItem) {
           view.appendAttachment({fsnode: uploadQueueItem, uploaded: false, card: $('.card.editing')});
         })
