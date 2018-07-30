@@ -286,6 +286,22 @@ var view = (function () {
       $('.go-back-button .text').text(lang.backToTimeline)
     }
 
+    hideNoWorlds () {
+      /*$('.no-worlds').transition({
+        'opacity': 0
+      }, 200, this.animationEffect, function () {
+        $('.no-worlds').hide()
+      })*/
+    }
+
+    updateNotificationIcon (showIcon) {
+      /*if (showIcon) {
+        $('.sidebar .notifications').addClass('with-notification')
+      } else {
+        $('.sidebar .notifications').removeClass('with-notification')
+      }*/
+    }
+
   }
 
   return new View()
