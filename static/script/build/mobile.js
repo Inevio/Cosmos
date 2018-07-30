@@ -286,6 +286,22 @@ var view = (function () {
       $('.go-back-button .text').text(lang.backToTimeline)
     }
 
+    hideNoWorlds () {
+      /*$('.no-worlds').transition({
+        'opacity': 0
+      }, 200, this.animationEffect, function () {
+        $('.no-worlds').hide()
+      })*/
+    }
+
+    updateNotificationIcon (showIcon) {
+      /*if (showIcon) {
+        $('.sidebar .notifications').addClass('with-notification')
+      } else {
+        $('.sidebar .notifications').removeClass('with-notification')
+      }*/
+    }
+
   }
 
   return new View()
@@ -399,6 +415,8 @@ var model = (function (view) {
       callback = api.tool.secureCallback(callback)
 
       api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000}, function (error, worlds) {
+
+        console.log('getUserWorlds', worlds)
         if (error) {
           return this.view.launchAlert(error)
         }
@@ -462,6 +480,7 @@ var model = (function (view) {
         })
       }
     }
+    
 
     addReplyFront (post) {
       var needToAppend = false
