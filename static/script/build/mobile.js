@@ -154,6 +154,8 @@ const async = {
 
 }
 
+const colors = [ '#4fb0c6', '#d09e88', '#b44b9f', '#1664a5', '#e13d35', '#ebab10', '#128a54', '#6742aa', '#fc913a', '#58c9b9' ]
+
 var view = (function () {
 
   class View {
@@ -300,6 +302,55 @@ var view = (function () {
       } else {
         $('.sidebar .notifications').removeClass('with-notification')
       }*/
+    }
+
+    updateWorldsListUI (worldList) {
+
+      if (worldList.length === 0) {
+        return this.toggleNoWorlds(true)
+      }
+
+      worldList = worldList.sort(function (a, b) {
+        return a.apiWorld.name.localeCompare(b.apiWorld.name)
+      })
+
+      var publicWorlds = []
+
+      function isPrivate (world) {
+        if (!world.apiWorld.isPrivate) {
+          publicWorlds.push(world)
+        }
+
+        return world.apiWorld.isPrivate
+      }
+
+      worldList = worldList.filter(isPrivate)
+
+      // console.log( publicWorlds, worldList )
+      function worldSidebarDom (item) {
+        var world = $('.sidebar .world.wz-prototype').clone()
+        world.removeClass('wz-prototype').addClass('world-' + item.apiWorld.id).addClass('worldDom')
+        world.find('.world-name').text(item.apiWorld.name)
+
+        if (item.apiWorld.owner === api.system.workspace().idWorkspace) {
+          world.addClass('editable')
+        }
+
+        world.find('.world-icon').css('border-color', colors[ item.apiWorld.id % colors.length ])
+        world.data('world', item.apiWorld)
+        world.attr('data-id', item.apiWorld.id)
+
+        return world
+      }
+
+      this._domWorldsPrivateList.empty().append(worldList.map(function (item) {
+        return worldSidebarDom(item)
+      }))
+
+      this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
+        return worldSidebarDom(item)
+      }))
+
     }
 
   }
