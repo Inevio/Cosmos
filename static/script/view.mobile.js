@@ -169,12 +169,12 @@ var view = (function () {
       this._domWorldsPrivateList    = $('.private-list')
       this._domWorldsPublicList     = $('.public-list')
       this._domPostContainer        = $('.cards-list')
-      this._worldPrototype = $('.sidebar .world.wz-prototype')
+      this._worldPrototype          = $('.sidebar .world.wz-prototype')
       this._noPosts                 = $('.cards-list .no-posts')
 
       this._genericCardPrototype    = $('.gen-card.wz-prototype')
       this._documentCardPrototype   = $('.doc-card.wz-prototype')
-      this._youtubeCardPrototype = $('.you-card.wz-prototype')
+      this._youtubeCardPrototype    = $('.you-card.wz-prototype')
 
       this.animationEffect          = 'cubic-bezier(.4,0,.2,1)'
 
