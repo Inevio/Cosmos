@@ -4967,10 +4967,9 @@ to {background-position: -200% 0;}
   padding-top: 0px;
 
   .sidebar-header{
-    float: left;
-    height: 49px;
-    background-color: #272c34;
     width: 100%;
+    height: 80px;
+    background-color: white;
   }
 
   .world-context-menu{
@@ -5031,7 +5030,7 @@ to {background-position: -200% 0;}
   }
 
   .new-world-button-mini{
-    float: left;
+    float: right;
     padding-left: 18px;
     padding-right: 18px;
     width: 24px;
@@ -5040,11 +5039,10 @@ to {background-position: -200% 0;}
     margin: 0px;
     padding-top: 20px;
     padding-bottom: 8px;
-    position: fixed;
   }
 
   .new-world-button-mini i{
-    float: left;
+    float: right;
     width: 24px;
     height: 20px;
     background-image: url('@static/images/sprite@2x.png');
@@ -5053,12 +5051,12 @@ to {background-position: -200% 0;}
   }
 
   .app-title{
-    width: ~'calc(100% - 115px)';
-    text-align: center;
-    font-size: 20px;
+    text-align: left;
+    font-size: 27px;
     font-weight: bold;
-    color: #fff;
-    margin-top: 18px;
+    color: black;
+    margin-top: 28px;
+    margin-left: 27px;
   }
 
   .explore-button{
@@ -5086,7 +5084,7 @@ to {background-position: -200% 0;}
     background-size: 18px 24px;
   }
 
-  .category-list{
+  /*.category-list{
     overflow: scroll;
     margin-top: 15px;
     height: ~'calc(100% - 64px)';
@@ -5109,8 +5107,16 @@ to {background-position: -200% 0;}
   .category .opener{
     background-image: url('@static/images/flecha-sidebar@2x.png');
     margin-top: 25px;
-  }
+  }*/
 
+  .world-list-title{
+    margin: 24px 0 12px 20px;
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 17px;
+    color: #252525;
+    display: inline-block;
+  }
 
   .world-list{
     margin-top: 0px;
@@ -5127,12 +5133,13 @@ to {background-position: -200% 0;}
 
   .world{
     height: 55px;
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 0px;
     position: relative;
+    background-color: white;
   }
 
   .world:hover{
-    background-color: transparent;
+    background-color: white;
   }
 
   .world:hover .world-name{
