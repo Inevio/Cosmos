@@ -169,18 +169,72 @@ var view = (function () {
       this._domWorldsPrivateList    = $('.private-list')
       this._domWorldsPublicList     = $('.public-list')
       this._domPostContainer        = $('.cards-list')
-      this._worldPrototype = $('.sidebar .world.wz-prototype')
+      this._worldPrototype          = $('.sidebar .world.wz-prototype')
       this._noPosts                 = $('.cards-list .no-posts')
 
       this._genericCardPrototype    = $('.gen-card.wz-prototype')
       this._documentCardPrototype   = $('.doc-card.wz-prototype')
-      this._youtubeCardPrototype = $('.you-card.wz-prototype')
+      this._youtubeCardPrototype    = $('.you-card.wz-prototype')
 
       this.animationEffect          = 'cubic-bezier(.4,0,.2,1)'
 
       this.noWorlds = $('.no-worlds')
 
       this._translateInterface()
+    }
+
+    _getStringHour (date) {
+      var now = new Date()
+
+      var hh = date.getHours()
+      var mm = date.getMinutes()
+
+      if (hh < 10) {
+        hh = '0' + hh
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm
+      }
+
+      return hh + ':' + mm
+    }
+
+    _timeElapsed (lastTime) {
+
+      var now = new Date()
+      var last = new Date(lastTime)
+      var message
+      var calculated = false
+
+      if (now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth()) {
+        if (now.getDate() === last.getDate()) {
+          message = this._getStringHour(lastTime)
+          calculated = true
+        } else if (new Date(now.setDate(now.getDate() - 1)).getDate() === last.getDate()) {
+          message = lang.lastDay + ' ' + lang.at + ' ' + this._getStringHour(lastTime)
+          calculated = true
+        }
+      }
+
+      if (!calculated) {
+        var day = last.getDate()
+        var month = last.getMonth() + 1
+
+        if (day < 10) {
+          day = '0' + day
+        }
+
+        if (month < 10) {
+          month = '0' + month
+        }
+
+        message = day + '/' + month + '/' + last.getFullYear().toString().substring(2, 4) + ' ' + lang.at + ' ' + this._getStringHour(lastTime)
+        calculated = true
+      }
+
+      return message
+
     }
 
     _translateInterface () {
@@ -296,12 +350,89 @@ var view = (function () {
       })*/
     }
 
+    openWorld (world, updatingHeader) {
+
+      $('.clean').remove()
+      $('.world').removeClass('active')
+      $('.world-' + world.apiWorld.id).addClass('active')
+      $('.world-' + world.apiWorld.id).removeClass('with-notification')
+      $('.search-post input, .mobile-world-content .search-bar input').val('')
+      $('.world-title').text(world.apiWorld.name)
+      if (world.apiWorld.users === 1) {
+        $('.world-members-button').text(world.apiWorld.users + ' ' + lang.worldHeader.member)
+      } else {
+        $('.world-members-button').text(world.apiWorld.users + ' ' + lang.worldHeader.members)
+      }
+      $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
+      this.toggleSelectWorld(false)
+
+      if(world.apiWorld.isPrivate){
+        $('.world-header .invite-user-button').css('opacity', 1)
+      }else{
+        $('.world-header .invite-user-button').css('opacity', 0)
+      }
+
+      if (!updatingHeader) {
+        $('.cardDom').remove()
+      }
+
+    }
+
+    showWorldDot (worldId) {
+      $('.world-' + worldId).addClass('with-notification')
+    }
+
     updateNotificationIcon (showIcon) {
       /*if (showIcon) {
         $('.sidebar .notifications').addClass('with-notification')
       } else {
         $('.sidebar .notifications').removeClass('with-notification')
       }*/
+    }
+
+    updateNotificationsList (notificationList) {
+      $('.notificationDom').remove()
+      var notificationDomList = []
+      //console.log(notificationList)
+
+      notificationList.forEach(function (notification, index) {
+
+        var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
+
+        notificationDom.addClass('notification-' + notification.id)
+        notificationDom.addClass('notificationDom')
+        if (!notification.attended) {
+          notificationDom.addClass('unattended')
+        }
+
+        notificationDom.data('notification', notification)
+
+        notificationDom.find('.notification-avatar').css('background-image', 'url( ' + notification.apiSender.avatar.tiny + ' )')
+        if (notification.apiWorld) {
+          notificationDom.find('.notification-world-avatar').css('background-image', 'url( ' + notification.apiWorld.icons.tiny + ' )')
+        }
+
+        if (notification.data.type == 'post') {
+          if (!notification.attended) {
+            this.showWorldDot(notification.apiWorld.id)
+          }
+          notificationDom.addClass('isPost')
+          notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.postCreated + ' ' + lang.in + ' ' + notification.apiWorld.name)
+        } else if (notification.data.type == 'reply') {
+          notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name)
+        } else if (notification.data.type == 'addedToWorld') {
+          notificationDom.addClass('isAdded')
+          notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.addedToWorld + ' ' + notification.apiWorld.name)
+        }
+
+        notificationDom.find('.notification-time').html('<i></i>' + this._timeElapsed(new Date(notification.time)))
+        notificationDomList.push(notificationDom)
+
+        if (index === notificationList.length - 1) {
+          $('.notifications-list').append(notificationDomList)
+        }
+
+      }.bind(this))
     }
 
     updateWorldsListUI (worldList) {
@@ -352,6 +483,8 @@ var view = (function () {
       }))
 
     }
+
+
 
   }
 
@@ -1566,7 +1699,6 @@ var controller = (function (model, view) {
       this._domMessageOtherPrototype = $( '.message-other.wz-prototype', this._domMessageContainer)
       this._domCurrentConversation */
 
-      this._domWorldCategory = $('.category .opener, .category .category-name', this.dom)
 
       this.model = model
       this.view = view
@@ -1574,485 +1706,9 @@ var controller = (function (model, view) {
     }
 
     _bindEvents () {
-      this._domWorldCategory.on('click', function () {
-        var category = $(this).parent()
-        category.toggleClass('closed')
 
-        if (category.hasClass('closed')) {
-          category.find('.world-list').css('height', category.find('.world-list').css('height'))
-          category.find('.world-list').transition({
-            'height': '0px'
-          }, 200)
-        } else {
-          var height = category.find('.world').length * $('.world.wz-prototype').outerHeight()
-          category.find('.world-list').transition({
-            'height': height
-          }, 200, function () {
-            $(this).css('height', 'initial')
-          })
-        }
-      })
-
-      this.dom.on('click', function (event) {
-        if (!$(event.target).hasClass('popup') && !$(event.target).hasClass('popup-launcher')) {
-          $('.popup').removeClass('popup')
-          $(this).parent().find('.comments-footer .attach-select').hide()
-        }
-      })
-
-      this.dom.on('click', '.category-list .world', function () {
+      this.dom.on('click', '.worldDom', function(){
         model.openWorld(parseInt($(this).attr('data-id')), false)
-      })
-
-      this.dom.on('click', '.open-folder-button', function () {
-        model.openFolder()
-      })
-
-      this.dom.on('click', '.cardDom:not(.loading) .doc-preview', function () {
-        var attachment = $(this)
-        var fsnode = $(this).data('fsnode')
-        var fsnodeList = []
-        $.each(attachment.closest('.card').find('.doc-preview:not(.wz-prototype)'), function (i, attachment) {
-          fsnodeList.push($(attachment).data('fsnode'))
-        })
-
-        fsnode.open(fsnodeList.filter(function (item) { return item.type === fsnode.type }).map(function (item) { return item.id }), function (error) {
-          if (error) {
-            fsnode.openLocal()
-          }
-        })
-      })
-
-      this.dom.on('click', '.comments-opener', function () {
-        var card = $(this).parent().parent()
-        view.toggleReplies(card)
-      })
-
-      this.dom.on('click', '.world-members-button', function () {
-        model.openMembers()
-      })
-
-      /* World explore */
-
-      this.dom.on('click', '.explore-button', function () {
-        model.openExploreWorlds()
-      })
-
-      this.dom.on('click', '.close-explore', function () {
-        view.closeExploreWorlds()
-      })
-
-      /* enf od world explore */
-
-      this.dom.on('click', '.world-card.unfollowed .follow-button', function () {
-        model.followWorld($(this).parent().data('world'))
-      })
-
-      this.dom.on('click', '.new-post-button, .no-post-new-post-button', function () {
-        model.openNewPost()
-      })
-
-      this.dom.on('click', '.new-world-button, .new-world-button-mini', function () {
-        view.openNewWorld()
-      })
-
-      this.dom.on('click', '.close-new-world', function () {
-        view.closeNewWorld()
-      })
-
-      this.dom.on('click', '.create-world-button.step-a', function () {
-        if ($('.new-world-name input').val()) {
-          model.createWorld($('.new-world-name input').val())
-        }
-      })
-
-      this.dom.on('click', '.create-world-button.step-b', function () {
-        var worldApi = $('.new-world-container').data('world')
-        var isPrivate
-
-        if (api.system.user().user.indexOf('demo') === 0) {
-          isPrivate = true
-        } else {
-          isPrivate = $('.private-option').hasClass('active')
-        }
-
-        var editing = $('.new-world-container').hasClass('editing')
-        var name = worldApi.name
-        $('.wz-groupicon-uploader-start').attr('data-groupid', worldApi.id)
-
-        if (editing) {
-          name = $('.new-world-name input').val()
-        }
-        var description = $('.new-world-desc textarea').val()
-
-        model.editWorld(worldApi, isPrivate, name, description)
-        view.newWorldAnimationOut()
-      })
-
-      this.dom.on('click', '.delete-world-button', function () {
-        var dialog = api.dialog()
-
-        dialog.setTitle(lang.unfollowWorld)
-        dialog.setText(lang.confirmExit)
-
-        dialog.setButton(0, wzLang.core.dialogCancel, 'black')
-        dialog.setButton(1, wzLang.core.dialogAccept, 'red')
-
-        dialog.render(function (ok) {
-          if (!ok) {
-            return
-          }
-
-          model.removeWorldBack()
-          $('.new-world-container').removeClass('editing')
-          // view.newWorldAnimationOut()
-
-          /* if (isMobile()) {
-            changeMobileView( 'worldSidebar' )
-            mobileNewWorld.stop().clearQueue().transition({
-              'transform' : 'translateY(-100%)'
-            }, 300, function(){
-              mobileNewWorld.addClass( 'hide' )
-            })
-          } */
-        })
-      })
-
-      this.dom.on('click', '.close-kick-user', function () {
-        view.closeMembers()
-      })
-
-      this.dom.on('click', '.kick-out-button', function () {
-        model.removeUserBack($(this).parent().data('user').id)
-      })
-
-      this.dom.on('click', '.invite-user-button', function () {
-        model.openInviteMembers()
-      })
-
-      this.dom.on('click', '.cancel-invite-user, .close-invite-user', function () {
-        view.closeInviteMembers()
-      })
-
-      this.dom.on('click', '.invite-user-container .friendDom', function () {
-        $(this).find('.ui-checkbox').toggleClass('active')
-      })
-
-      this.dom.on('click', '.invite-user-container .friendDom .ui-checkbox', function (event) {
-        $(this).toggleClass('active')
-        event.stopPropagation()
-      })
-
-      this.dom.on('click', '.invite-user-container .invite-user', function () {
-        var users = $('.friend .ui-checkbox.active').parent()
-        model.inviteUsers($.makeArray(users))
-      })
-
-      this.dom.on('click', '.world-card-dom.followed', function () {
-        $('.close-explore').click()
-        model.openWorld($(this).data('world').id)
-      })
-
-      this.dom.on('click', '.open-chat-button', function () {
-        model.openWorldChat()
-      })
-
-      this.dom.on('click', '.privacy-options .option', function () {
-        $('.privacy-options .option').removeClass('active')
-        $(this).addClass('active')
-      })
-
-      this.dom.on('click', '.comments-footer .send-button', function () {
-        var post = $(this).parent().parent().parent().data('post')
-        var input = $(this).parent().parent().parent().find('.comments-footer .comment-input')
-        var message = $(this).parent().parent().parent().find('.comments-footer .comment-input').val()
-
-        if (input.attr('placeholder')[0] === '@') {
-          post = input.data('reply')
-          $('.comments-footer .comment-input').attr('placeholder', lang.writeComment)
-        }
-
-        model.addReplyBack(post, message)
-        $(this).parent().parent().parent().find('.comments-footer .comment-input').val('')
-      })
-
-      this.dom.on('click', '.card-options', function () {
-        var post = $(this).closest('.card').data('post')
-
-        $(this).parent().find('.card-options-section').addClass('popup')
-        $(this).parent().find('.card-options-section *').addClass('popup')
-      })
-
-      this.dom.on('click', '.delete-comment.parent', function () {
-        var post = $(this).closest('.comment').data('reply')
-        var confirmText = lang.comfirmDeletePost
-
-        if (post.isReply) {
-          confirmText = lang.comfirmDeleteComment
-        }
-
-        var dialog = api.dialog()
-
-        dialog.setTitle(lang.deletePost)
-        dialog.setText(confirmText)
-
-        dialog.setButton(0, wzLang.core.dialogCancel, 'black')
-        dialog.setButton(1, lang.delete, 'red')
-
-        dialog.render(function (ok) {
-          if (!ok) {
-            return
-          }
-
-          model.removePostBack(post)
-        })
-      })
-
-      this.dom.on('click', '.delete-comment.child', function () {
-        var post = $(this).closest('.replyDom').data('reply')
-        var confirmText = lang.comfirmDeletePost
-
-        if (post.isReply) {
-          confirmText = lang.comfirmDeleteComment
-        }
-
-        var dialog = api.dialog()
-
-        dialog.setTitle(lang.deletePost)
-        dialog.setText(confirmText)
-
-        dialog.setButton(0, wzLang.core.dialogCancel, 'black')
-        dialog.setButton(1, lang.delete, 'red')
-
-        dialog.render(function (ok) {
-          if (!ok) {
-            return
-          }
-
-          model.removePostBack(post)
-        })
-      })
-
-      this.dom.on('click', '.card-options-section .delete', function () {
-        var post = $(this).closest('.card').data('post')
-        var confirmText = lang.comfirmDeletePost
-
-        if (post.isReply) {
-          confirmText = lang.comfirmDeleteComment
-        }
-
-        var dialog = api.dialog()
-
-        dialog.setTitle(lang.deletePost)
-        dialog.setText(confirmText)
-
-        dialog.setButton(0, wzLang.core.dialogCancel, 'black')
-        dialog.setButton(1, lang.delete, 'red')
-
-        dialog.render(function (ok) {
-          if (!ok) {
-            return
-          }
-
-          model.removePostBack(post)
-        })
-      })
-
-      this.dom.on('click', '.invite-by-mail', function () {
-        model.openInviteByMail()
-      })
-
-      this.dom.on('click', '.reply-button', function () {
-        var comment = $(this).parent()
-        var post = comment.data('reply')
-        var name = comment.data('name')
-        var input = comment.parent().parent().find('.comments-footer .comment-input')
-
-        view.prepareReplyComment(post, name, input)
-      })
-
-      this.dom.on('click', '.notifications', function () {
-        view.openNotificationPopup()
-      })
-
-      this.dom.on('click', '.notification', function () {
-        console.log($(this).data('notification'))
-        /* if( typeof $(this).data( 'notification' ).data.mainPost == 'undefined' ){
-          return alert( 'Notificacion pendiente de migrar' )
-        } */
-        model.notificationOpen($(this).data('notification'))
-      })
-
-      this.dom.on('click', '.notification .notification-blue-dot', function (event) {
-        model.notificationAttendedBack($(this).parents('.notification').data('notification').id)
-        event.stopPropagation()
-        /* console.log( $(this).data( 'notification-data' ) )
-        model.notificationOpen( $(this).data( 'notification-data' ) ) */
-      })
-
-      this.dom.on('click', '.go-back-button', function () {
-        model.openWorld()
-      })
-
-      this.dom.on('click', '.card-options-section .edit', function () {
-        if ($('.card.editing').length != 0) {
-          return alert(lang.editingOne)
-        }
-        $(this).closest('.card').addClass('editing')
-        $(this).closest('.card').find('.popup').removeClass('popup')
-        view.editPost($(this).closest('.card'))
-      })
-
-      this.dom.on('click', '.cancel-new-card', function () {
-        $(this).closest('.card').removeClass('editing')
-        $(this).closest('.card').find('.card-options').removeClass('hide')
-      })
-
-      this.dom.on('click', '.notifications-header .mark-as-attended', function () {
-        model.notificationMarkAllAsAttended()
-      })
-
-      this.dom.on('click', '.you-card .activate-preview, .you-card .triangle-down', function () {
-        $(this).parent().find('.video-preview').toggleClass('hidden')
-      })
-
-      this.dom.on('click', '.cancel-attachment', function () {
-        $(this).closest('.attachment').remove()
-      })
-
-      this.dom.on('click', '.save-new-card', function () {
-        if ($(this).closest('.card').hasClass('uploading')) {
-          return
-        }
-
-        var card = $(this).closest('.card')
-        var post = card.data('post')
-
-        var prevTitle = card.find('.title-input').data('prev')
-        var newTitle = card.find('.title-input').val()
-
-        var prevContent = card.find('.content-input').data('prev')
-        var newContent = card.find('.content-input').val()
-
-        var prevFsnode = card.find('.attach-list').data('prev')
-        var newAttachments = card.find('.attachment:not(.wz-prototype)')
-        var newFsnodeIds = []
-        var newFsnode = []
-
-        $.each(newAttachments, function (i, attachment) {
-          newFsnodeIds.push(parseInt($(attachment).data('fsnode').id))
-          newFsnode.push($(attachment).data('fsnode'))
-        })
-
-        var newMetadata = model.checkMetadata(newContent, newFsnode)
-
-        if( newMetadata == null ) newMetadata = {}
-
-        if (api.tool.arrayDifference(prevFsnode, newFsnodeIds).length || api.tool.arrayDifference(newFsnodeIds, prevFsnode).length) {
-          
-          post.modify({
-            content: newContent,
-            title: newTitle,
-            metadata: newMetadata,
-            fsnode: newFsnodeIds
-          }, function (error, post) {
-            if (error) {
-              return console.error(error)
-            }
-          })
-
-          /* post.setFSNode( newFsnodeIds , function(){
-
-            post.setMetadata( newMetadata , function(){
-
-              post.setTitle( newTitle , function(){
-
-                post.setContent( newContent , function( e , post ){
-                  setPost( post )
-                })
-
-              })
-
-            })
-
-          }) */
-        } else if (model.isYoutubePost(newContent)) {
-          newMetadata.linkType = 'youtube'
-
-          post.modify({
-            content: newContent,
-            title: newTitle,
-            metadata: newMetadata
-          }, function (error, post) {
-            if (error) {
-              return console.error(error)
-            }
-          })
-          /* post.setMetadata( newMetadata , function(){
-
-            post.setTitle( newTitle , function(){
-
-              post.setContent( newContent , function( e , post ){
-                setPost( post )
-              })
-
-            })
-
-          }); */
-        } else if (prevTitle != newTitle || prevContent != newContent) {
-          post.modify({
-            content: newContent,
-            title: newTitle
-          }, function (error, post) {
-            if (error) {
-              return console.error(error)
-            }
-          })
-
-          /* post.setTitle( newTitle , function(){
-
-            post.setContent( newContent , function( e , post ){
-              setPost( post )
-            })
-
-          }) */
-        }
-
-        $(this).closest('.card').removeClass('editing')
-        $(this).closest('.card').find('.card-options').removeClass('hide')
-      })
-
-      this.dom.on('click', '.card-content.edit-mode .attachments, .card-content.edit-mode .attachments i, .card-content.edit-mode .attachments div', function () {
-        /* if (isMobile()) {
-          attachFromInevio();
-        }else{ */
-        $(this).closest('.card').find('.attach-select').addClass('popup')
-        // }
-      })
-
-      this.dom.on('click', '.attach-select .inevio', function () {
-        var card = $(this).closest('.card')
-        api.fs.selectSource({ 'title': lang.selectFile, 'mode': 'file', 'multiple': true }, function (error, s) {
-          if (error) {
-            return console.error(error)
-          }
-
-          $('.attach-select').removeClass('popup')
-
-          s.forEach(function (attach) {
-            api.fs(attach, function (error, fsnode) {
-              if (error) {
-                console.error(error)
-              } else {
-                view.appendAttachment({ fsnode: fsnode, uploaded: true, card: card })
-              }
-            })
-          })
-        })
-      })
-
-      this.dom.on('click', '.start-button-no-worlds', function () {
-        view.hideNoWorlds()
       })
 
       /* Mouse enter */

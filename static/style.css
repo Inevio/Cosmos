@@ -5033,21 +5033,21 @@ to {background-position: -200% 0;}
     float: right;
     padding-left: 18px;
     padding-right: 18px;
-    width: 24px;
-    height: 20px;
+    width: 26px;
+    height: 21px;
     background-image: none;
     margin: 0px;
-    padding-top: 20px;
+    padding-top: 33px;
     padding-bottom: 8px;
   }
 
   .new-world-button-mini i{
     float: right;
-    width: 24px;
-    height: 20px;
-    background-image: url('@static/images/sprite@2x.png');
-    background-size: 321px 27px;
-    background-position: 346px 0;
+    width: 26px;
+    height: 21px;
+    background-image: url('@static/images/createWorld@2x.png');
+    background-size: 26px 21px;
+    background-position: 0 0;
   }
 
   .app-title{
@@ -5082,6 +5082,44 @@ to {background-position: -200% 0;}
     height: 24px;
     background-image: url('@static/images/rocket-normal@2x.png');
     background-size: 18px 24px;
+  }
+
+  .notification-opener{
+    float: right;
+    padding-left: 18px;
+    padding-right: 19px;
+    width: 17px;
+    height: 20px;
+    background-image: none;
+    background-color: transparent;
+    box-shadow: none;
+    padding-bottom: 8px;
+    padding-top: 33px;
+  }
+
+  .notification-opener i{
+    float: right;
+    width: 17px;
+    height: 20px;
+    background-image: url('@static/images/bell@2x.png');
+    background-size: 17px 20px;
+    position: relative;
+  }
+
+  .notification-opener .red-dot{
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 6px;
+    height: 6px;
+    background-color: red;
+    border-radius: 50%;
+    display: none;
+  }
+
+
+  .notification-opener.with-notification .red-dot{
+    display: block;
   }
 
   /*.category-list{
