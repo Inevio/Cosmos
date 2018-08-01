@@ -183,6 +183,60 @@ var view = (function () {
       this._translateInterface()
     }
 
+    _getStringHour (date) {
+      var now = new Date()
+
+      var hh = date.getHours()
+      var mm = date.getMinutes()
+
+      if (hh < 10) {
+        hh = '0' + hh
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm
+      }
+
+      return hh + ':' + mm
+    }
+
+    _timeElapsed (lastTime) {
+
+      var now = new Date()
+      var last = new Date(lastTime)
+      var message
+      var calculated = false
+
+      if (now.getFullYear() === last.getFullYear() && now.getMonth() === last.getMonth()) {
+        if (now.getDate() === last.getDate()) {
+          message = this._getStringHour(lastTime)
+          calculated = true
+        } else if (new Date(now.setDate(now.getDate() - 1)).getDate() === last.getDate()) {
+          message = lang.lastDay + ' ' + lang.at + ' ' + this._getStringHour(lastTime)
+          calculated = true
+        }
+      }
+
+      if (!calculated) {
+        var day = last.getDate()
+        var month = last.getMonth() + 1
+
+        if (day < 10) {
+          day = '0' + day
+        }
+
+        if (month < 10) {
+          month = '0' + month
+        }
+
+        message = day + '/' + month + '/' + last.getFullYear().toString().substring(2, 4) + ' ' + lang.at + ' ' + this._getStringHour(lastTime)
+        calculated = true
+      }
+
+      return message
+
+    }
+
     _translateInterface () {
       // Start
       $('.no-worlds .title').text(lang.welcome)
@@ -296,12 +350,89 @@ var view = (function () {
       })*/
     }
 
+    openWorld (world, updatingHeader) {
+
+      $('.clean').remove()
+      $('.world').removeClass('active')
+      $('.world-' + world.apiWorld.id).addClass('active')
+      $('.world-' + world.apiWorld.id).removeClass('with-notification')
+      $('.search-post input, .mobile-world-content .search-bar input').val('')
+      $('.world-title').text(world.apiWorld.name)
+      if (world.apiWorld.users === 1) {
+        $('.world-members-button').text(world.apiWorld.users + ' ' + lang.worldHeader.member)
+      } else {
+        $('.world-members-button').text(world.apiWorld.users + ' ' + lang.worldHeader.members)
+      }
+      $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
+      this.toggleSelectWorld(false)
+
+      if(world.apiWorld.isPrivate){
+        $('.world-header .invite-user-button').css('opacity', 1)
+      }else{
+        $('.world-header .invite-user-button').css('opacity', 0)
+      }
+
+      if (!updatingHeader) {
+        $('.cardDom').remove()
+      }
+
+    }
+
+    showWorldDot (worldId) {
+      $('.world-' + worldId).addClass('with-notification')
+    }
+
     updateNotificationIcon (showIcon) {
       /*if (showIcon) {
         $('.sidebar .notifications').addClass('with-notification')
       } else {
         $('.sidebar .notifications').removeClass('with-notification')
       }*/
+    }
+
+    updateNotificationsList (notificationList) {
+      $('.notificationDom').remove()
+      var notificationDomList = []
+      //console.log(notificationList)
+
+      notificationList.forEach(function (notification, index) {
+
+        var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
+
+        notificationDom.addClass('notification-' + notification.id)
+        notificationDom.addClass('notificationDom')
+        if (!notification.attended) {
+          notificationDom.addClass('unattended')
+        }
+
+        notificationDom.data('notification', notification)
+
+        notificationDom.find('.notification-avatar').css('background-image', 'url( ' + notification.apiSender.avatar.tiny + ' )')
+        if (notification.apiWorld) {
+          notificationDom.find('.notification-world-avatar').css('background-image', 'url( ' + notification.apiWorld.icons.tiny + ' )')
+        }
+
+        if (notification.data.type == 'post') {
+          if (!notification.attended) {
+            this.showWorldDot(notification.apiWorld.id)
+          }
+          notificationDom.addClass('isPost')
+          notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.postCreated + ' ' + lang.in + ' ' + notification.apiWorld.name)
+        } else if (notification.data.type == 'reply') {
+          notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.hasComment2 + ' ' + notification.apiWorld.name)
+        } else if (notification.data.type == 'addedToWorld') {
+          notificationDom.addClass('isAdded')
+          notificationDom.find('.notification-action').html('<i>' + notification.apiSender.fullName + '</i>' + lang.addedToWorld + ' ' + notification.apiWorld.name)
+        }
+
+        notificationDom.find('.notification-time').html('<i></i>' + this._timeElapsed(new Date(notification.time)))
+        notificationDomList.push(notificationDom)
+
+        if (index === notificationList.length - 1) {
+          $('.notifications-list').append(notificationDomList)
+        }
+
+      }.bind(this))
     }
 
     updateWorldsListUI (worldList) {
@@ -352,6 +483,8 @@ var view = (function () {
       }))
 
     }
+
+
 
   }
 
