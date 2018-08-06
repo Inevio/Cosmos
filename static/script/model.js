@@ -20,8 +20,8 @@ var model = (function (view) {
       this.showingWorlds
       this.loadingPublicWorlds = false
 
-      this._mainAreaMode
-      this._prevMainAreaMode = MAINAREA_NULL
+      /*this._mainAreaMode
+      this._prevMainAreaMode = MAINAREA_NULL*/
 
       this.apiFsCalls = 0
 
@@ -391,12 +391,15 @@ var model = (function (view) {
         }
 
         this._loadFullNotificationList(function (error, notifications) {
+
+          console.log('load full notifications', notifications)
           if (notifications) {
             var notificationList = Object.values(this.notifications).reverse()
             this.view.updateNotificationsList(notificationList)
             //console.log(this.notifications)
             this.updateNotificationIcon()
           }
+
         }.bind(this))
 
         //console.log(this.worlds)

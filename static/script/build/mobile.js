@@ -1,14 +1,4 @@
 var win = $(document.body)
-// Static values
-const MAINAREA_NULL = 0
-const MAINAREA_CONVERSATION = 1
-const MAINAREA_GROUPMODE = 2
-const SIDEBAR_NULL = 0
-const SIDEBAR_CONVERSATIONS = 1
-const SIDEBAR_CONTACTS = 2
-const GROUP_NULL = 0
-const GROUP_CREATE = 1
-const GROUP_EDIT = 2
 
 const TYPES = {
 
@@ -342,6 +332,16 @@ var view = (function () {
       $('.go-back-button .text').text(lang.backToTimeline)
     }
 
+    closeNotificationCenter(){
+      
+      $('.notifications-container-mobile').transition({
+        'x' : '100%'
+      }, 1000, function(){
+        $('.notifications-container-mobile').show()
+      })
+
+    }
+
     hideNoWorlds () {
       /*$('.no-worlds').transition({
         'opacity': 0
@@ -378,16 +378,23 @@ var view = (function () {
 
     }
 
+    openNotificationCenter(){
+      $('.notifications-container-mobile').show()
+      $('.notifications-container-mobile').transition({
+        'x' : 0
+      }, 1000)
+    }
+
     showWorldDot (worldId) {
       $('.world-' + worldId).addClass('with-notification')
     }
 
     updateNotificationIcon (showIcon) {
-      /*if (showIcon) {
-        $('.sidebar .notifications').addClass('with-notification')
+      if (showIcon) {
+        $('.notification-opener').addClass('with-notification')
       } else {
-        $('.sidebar .notifications').removeClass('with-notification')
-      }*/
+        $('.notification-opener').removeClass('with-notification')
+      }
     }
 
     updateNotificationsList (notificationList) {
@@ -397,7 +404,7 @@ var view = (function () {
 
       notificationList.forEach(function (notification, index) {
 
-        var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
+        var notificationDom = $('.notification-mobile.wz-prototype').clone().removeClass('wz-prototype')
 
         notificationDom.addClass('notification-' + notification.id)
         notificationDom.addClass('notificationDom')
@@ -433,6 +440,14 @@ var view = (function () {
         }
 
       }.bind(this))
+    }
+
+    updateNotificationStatus(notificationId, attended) {
+      if (attended) {
+        $('.notification-' + notificationId).removeClass('unattended')
+      } else {
+        $('.notification-' + notificationId).addClass('unattended')
+      }
     }
 
     updateWorldsListUI (worldList) {
@@ -484,8 +499,6 @@ var view = (function () {
 
     }
 
-
-
   }
 
   return new View()
@@ -512,8 +525,8 @@ var model = (function (view) {
       this.showingWorlds
       this.loadingPublicWorlds = false
 
-      this._mainAreaMode
-      this._prevMainAreaMode = MAINAREA_NULL
+      /*this._mainAreaMode
+      this._prevMainAreaMode = MAINAREA_NULL*/
 
       this.apiFsCalls = 0
 
@@ -883,12 +896,15 @@ var model = (function (view) {
         }
 
         this._loadFullNotificationList(function (error, notifications) {
+
+          console.log('load full notifications', notifications)
           if (notifications) {
             var notificationList = Object.values(this.notifications).reverse()
             this.view.updateNotificationsList(notificationList)
             //console.log(this.notifications)
             this.updateNotificationIcon()
           }
+
         }.bind(this))
 
         //console.log(this.worlds)
@@ -1709,6 +1725,18 @@ var controller = (function (model, view) {
 
       this.dom.on('click', '.worldDom', function(){
         model.openWorld(parseInt($(this).attr('data-id')), false)
+      })
+
+      this.dom.on('click', '.notification-opener', function(){
+        view.openNotificationCenter()
+      })
+
+      this.dom.on('click', '.notifications-container-mobile .notification-header .notification-back', function(){
+        view.closeNotificationCenter()
+      })
+
+      this.dom.on('click', '.notifications-container-mobile .notification-mark-all-as-read', function () {
+        model.notificationMarkAllAsAttended()
       })
 
       /* Mouse enter */
