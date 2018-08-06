@@ -21,6 +21,18 @@ var controller = (function (model, view) {
         model.openWorld(parseInt($(this).attr('data-id')), false)
       })
 
+      this.dom.on('click', '.notification-opener', function(){
+        view.openNotificationCenter()
+      })
+
+      this.dom.on('click', '.notifications-container-mobile .notification-header .notification-back', function(){
+        view.closeNotificationCenter()
+      })
+
+      this.dom.on('click', '.notifications-container-mobile .notification-mark-all-as-read', function () {
+        model.notificationMarkAllAsAttended()
+      })
+
       /* Mouse enter */
 
       this.dom.on('mouseenter', '.privacy-options .option i', function () {
