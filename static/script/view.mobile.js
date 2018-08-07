@@ -332,6 +332,204 @@ var view = (function () {
       $('.go-back-button .text').text(lang.backToTimeline)
     }
 
+    /* Type of cards */
+
+    appendDocumentCard (post, reason, callback) {
+      var card = this._documentCardPrototype.clone()
+      var user = post.apiPost.authorObject
+      card.removeClass('wz-prototype').addClass('post-' + post.apiPost.id).addClass('cardDom')
+
+      if (post.fsnodes.length) {
+        var fsnode = post.fsnodes[0]
+
+        if (fsnode.mime.indexOf('image') === 0 || fsnode.mime === 'application/pdf') {
+          card.find('.doc-preview img').attr('src', fsnode.thumbnails['1024'])
+          card.find('.doc-preview-bar').hide()
+        } else {
+          // To Do -> Is this really neccesary? background with a micro thumb is added a few lines after this
+          card.find('.doc-preview img').attr('src', fsnode.thumbnails.big)
+        }
+
+        card.find('.preview-title').text(fsnode.name)
+        card.find('.preview-info').text(api.tool.bytesToUnit(fsnode.size, 1))
+        card.find('.doc-preview').addClass('attachment-' + fsnode.id).data('fsnode', fsnode)
+        card.find('.doc-preview-bar i').css('background-image', 'url( ' + fsnode.icons.micro + ' )')
+      } else {
+        card.addClass('loading')
+      }
+
+      if (post.apiPost.title === '') {
+        card.find('.title').hide()
+      } else {
+        card.find('.title').text(post.apiPost.title)
+      }
+
+      if (post.apiPost.content === '') {
+        card.find('.desc').hide()
+      } else {
+        card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
+
+      card.find('.desc').find('a').each(function () {
+        if (!URL_REGEX.test($(this).attr('href'))) {
+          $(this).attr('href', 'http://' + $(this).attr('href'))
+        }
+      })
+
+      card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
+      card.find('.card-user-name').text(user.fullName)
+      card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
+
+      this.appendComments(card, post, function (cardToInsert) {
+        return callback(cardToInsert)
+      })
+    }
+
+    appendGenericCard (post, reason, callback) {
+      var card = this._genericCardPrototype.clone()
+      var user = post.apiPost.authorObject
+      card.removeClass('wz-prototype').addClass('post-' + post.apiPost.id).addClass('cardDom')
+
+      if (post.fsnodes.length) {
+        for (var i = 0; i < post.fsnodes.length; i++) {
+          var fsnode = post.fsnodes[i]
+
+          if (!fsnode) {
+            break
+          }
+
+          if (card.find('.attachment-' + fsnode.id).length === 0) {
+            var docPreview = card.find('.doc-preview.wz-prototype').clone()
+            docPreview.removeClass('wz-prototype').addClass('attachment-' + fsnode.id)
+
+            if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+              docPreview.find('.doc-icon img').attr('src', 'https://static.horbito.com/app/360/deleted.png')
+            } else {
+              docPreview.find('.doc-icon img').attr('src', fsnode.icons.big)
+            }
+
+            if (fsnode.mime && fsnode.mime.indexOf('office') > -1) {
+              docPreview.find('.doc-icon').addClass('office')
+            }
+
+            docPreview.find('.doc-title').text(fsnode.name)
+            docPreview.find('.doc-info').text(api.tool.bytesToUnit(fsnode.size))
+            card.find('.desc').after(docPreview)
+            docPreview.data('fsnode', fsnode)
+          }
+        }
+      } else {
+        card.addClass('loading')
+
+        for (var i = 0; i < post.apiPost.fsnode.length; i++) {
+          var fsnode = post.apiPost.fsnode[i]
+
+          if (!fsnode) {
+            break
+          }
+
+          if (card.find('.attachment-' + fsnode.id).length === 0) {
+            var docPreview = card.find('.doc-preview.wz-prototype').clone()
+            docPreview.removeClass('wz-prototype').addClass('attachment-' + fsnode)
+            card.find('.desc').after(docPreview)
+          }
+        }
+      }
+
+      if (post.apiPost.title === '') {
+        card.find('.title').hide()
+      } else {
+        card.find('.title').text(post.apiPost.title)
+      }
+
+      if (post.apiPost.content === '') {
+        card.find('.desc').hide()
+      } else {
+        card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
+
+      card.find('.desc').find('a').each(function () {
+        if (!URL_REGEX.test($(this).attr('href'))) {
+          $(this).attr('href', 'http://' + $(this).attr('href'))
+        }
+      })
+
+      card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
+      card.find('.card-user-name').text(user.fullName)
+      card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('time', post.apiPost.created)
+      card.data('post', post.apiPost)
+
+      this.appendComments(card, post, function (cardToInsert) {
+        return callback(cardToInsert)
+      })
+    }
+
+    appendNoFileCard (post, reason, callback) {
+      var card = this._genericCardPrototype.clone()
+      var user = post.apiPost.authorObject
+      card.removeClass('wz-prototype').addClass('post-' + post.apiPost.id).addClass('cardDom')
+      card.find('.doc-preview').hide()
+
+      if (post.apiPost.title === '') {
+        card.find('.title').hide()
+      } else {
+        card.find('.title').text(post.apiPost.title)
+      }
+
+      if (post.apiPost.content === '') {
+        card.find('.desc').hide()
+      } else {
+        card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
+
+      card.find('.desc').find('a').each(function () {
+        if (!URL_REGEX.test($(this).attr('href'))) {
+          $(this).attr('href', 'http://' + $(this).attr('href'))
+        }
+      })
+
+      if (user) {
+        card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
+        card.find('.card-user-name').text(user.fullName)
+      }
+
+      card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.data('post', post.apiPost)
+
+      this.appendComments(card, post, function (cardToInsert) {
+        return callback(cardToInsert)
+      })
+    }
+
+    appendYoutubeCard (post, reason, callback) {
+      var card = this._youtubeCardPrototype.clone()
+      card.removeClass('wz-prototype').addClass('post-' + post.apiPost.id).addClass('cardDom')
+      var user = post.apiPost.authorObject
+
+      var youtubeCode = this._getYoutubeCode(post.apiPost.content)
+      card.find('.video-preview').attr('src', 'https://www.youtube.com/embed/' + youtubeCode + '?autoplay=0&html5=1&rel=0')
+
+      card.find('.card-user-avatar').css('background-image', 'url( ' + user.avatar.normal + ' )')
+      card.find('.card-user-name').text(user.fullName)
+      card.find('.time-text').text(this._timeElapsed(new Date(post.apiPost.created)))
+      card.find('.desc').html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      card.find('.title').text(post.apiPost.title)
+      card.find('.activate-preview').text(lang.preview)
+      card.data('post', post.apiPost)
+
+      card.find('.desc').find('a').each(function () {
+        if (!URL_REGEX.test($(this).attr('href'))) {
+          $(this).attr('href', 'http://' + $(this).attr('href'))
+        }
+      })
+
+      this.appendComments(card, post, function (cardToInsert) {
+        return callback(cardToInsert)
+      })
+    }
+
     closeNotificationCenter(){
       
       $('.notifications-container-mobile').transition({
@@ -349,6 +547,8 @@ var view = (function () {
         $('.no-worlds').hide()
       })*/
     }
+
+    openExploreWorlds(){}
 
     openWorld (world, updatingHeader) {
 
@@ -384,6 +584,8 @@ var view = (function () {
         'x' : 0
       }, 1000)
     }
+
+    showNoWorlds(){}
 
     showWorldDot (worldId) {
       $('.world-' + worldId).addClass('with-notification')
@@ -497,6 +699,36 @@ var view = (function () {
         return worldSidebarDom(item)
       }))
 
+    }
+
+    worldContextMenu (worldDom, world) {
+      var menu = api.menu()
+      var isMine = world.owner === api.system.workspace().idWorkspace
+
+      menu.addOption(lang.searchPost, function () {
+        if (worldDom.hasClass('active')) {
+          $('.search-button').click()
+        } else {
+          worldDom.trigger('click')
+        }
+      })
+
+      if (isMine) {
+        menu.addOption(lang.editWorld, function () {
+          if (worldDom.hasClass('active')) {
+            $('.new-world-container').data('world', world)
+          } else {
+            worldDom.trigger('click')
+          }
+          this.openEditWorld(world)
+        }.bind(this))
+      } else {
+        menu.addOption(lang.abandonWorld, function () {
+          this.leaveWorldDialog(world.id)
+        }.bind(this), 'warning')
+      }
+
+      menu.render()
     }
 
   }
