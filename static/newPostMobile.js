@@ -36,7 +36,7 @@ var closeNewCard        = $('.mobile-new-post .close-new-card');
 var attachNewPostButton = $('.mobile-new-post .attachments');
 var cancelNewCard       = $('.mobile-new-post .cancel-new-card');
 var attachmentPrototype = $('.mobile-new-post .attachment.wz-prototype');
-var myContactID         = api.system.user().id;
+var myContactID         = api.system.workspace().idWorkspace;
 
 // Functions
 var addAttachment = function( attach, useItem ){
