@@ -21,6 +21,10 @@ var controller = (function (model, view) {
         model.openWorld(parseInt($(this).attr('data-id')), false)
       })
 
+      this.dom.on('click', '.mobile-world-content .go-back', function(){
+        view.closeWorld()
+      })
+
       this.dom.on('click', '.notification-opener', function(){
         view.openNotificationCenter()
       })
