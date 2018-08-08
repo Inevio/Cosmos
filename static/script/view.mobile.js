@@ -530,6 +530,224 @@ var view = (function () {
       })
     }
 
+    /* End of type of cards */
+
+    appendPostList (list, loadingMorePosts){
+      var domList = []
+      var postPromises = []
+
+      if (list.length == 0 && !loadingMorePosts) {
+        this._noPosts.css('opacity', '1')
+        this._noPosts.show()
+      }
+
+      if (!loadingMorePosts) {
+        $('.cardDom').remove()
+      }
+
+      list.forEach(function (post) {
+        var promise = $.Deferred()
+        postPromises.push(promise)
+
+        this.appendPost(post, promise, function (postDom) {
+          if (post.apiPost.author === this.myContactID) {
+            postDom.addClass('mine')
+          }
+          postDom.data('post', post.apiPost)
+          domList.push(postDom)
+          promise.resolve()
+        }.bind(this))
+      }.bind(this))
+
+      $.when.apply(null, postPromises).done(function () {
+        if (domList.length) {
+          if (!loadingMorePosts) {
+            this._domPostContainer.scrollTop(0)
+          }
+          this._noPosts.css('opacity', '0')
+          this._noPosts.hide()
+          this._domPostContainer.append(domList)
+          // this._domPostContainer.scrollTop( this._domPostContainer[ 0 ].scrollHeight )
+        }
+      }.bind(this))
+    }
+
+    appendPost (post, promise, callback) {
+      if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+        this.appendGenericCard(post, lang.postCreated, function (postDom) {
+          return callback(postDom, promise)
+        })
+      } else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
+        switch (post.apiPost.metadata.fileType) {
+          case 'generic':
+            this.appendGenericCard(post, lang.postCreated, function (postDom) {
+              return callback(postDom, promise)
+            })
+            break
+
+          case 'document':
+            this.appendDocumentCard(post, lang.postCreated, function (postDom) {
+              return callback(postDom, promise)
+            })
+            break
+
+          case 'image':
+            this.appendDocumentCard(post, lang.postCreated, function (postDom) {
+              return callback(postDom, promise)
+            })
+            break
+
+          case 'video':
+            this.appendGenericCard(post, lang.postCreated, function (postDom) {
+              return callback(postDom, promise)
+            })
+            break
+
+          case 'music':
+            this.appendGenericCard(post, lang.postCreated, function (postDom) {
+              return callback(postDom, promise)
+            })
+            break
+        }
+      } else if (post.apiPost.metadata && post.apiPost.metadata.linkType) {
+        switch (post.apiPost.metadata.linkType) {
+          case 'youtube':
+            this.appendYoutubeCard(post, lang.postCreated, function (postDom) {
+              return callback(postDom, promise)
+            })
+            break
+        }
+      } else {
+        this.appendNoFileCard(post, lang.postCreated, function (postDom) {
+          return callback(postDom, promise)
+        })
+      }
+    }
+
+
+
+
+
+    /* Comments */
+
+    appendComments (card, post, callback) {
+      if (!post.commentsLoaded) {
+        card.find('.comments-text').text(lang.loading + ' ' + lang.comments)
+        return callback(card)
+      }
+
+      card.find('.commentDom').remove()
+
+      var comments = post.comments
+
+      if (Object.keys(comments).length === 0 && comments.constructor === Object) {
+        card.find('.comments-text').text('0 ' + lang.comments)
+        return callback(card)
+      }
+
+      comments = Object.values(comments)
+      card.find('.comments-text').text(comments.length + ' ' + lang.comments)
+
+      if (comments.length === 1) {
+        card.find('.comments-text').text(comments.length + ' ' + lang.comment)
+      } else {
+        card.find('.comments-text').text(comments.length + ' ' + lang.comments)
+      }
+      card.find('.comments-text').data('num', comments.length)
+
+      var listToAppend = []
+
+      async.each(comments, function (comment, checkEnd) {
+        this.appendComment(comment, function (commentDom) {
+          listToAppend.push(commentDom)
+          checkEnd()
+        })
+      }.bind(this), function () {
+        card.find('.comments-list').append(listToAppend)
+        card.find('.comments-list').scrollTop(999999999999999)
+        return callback(card)
+      })
+    }
+
+    appendComment (comment, callback, appending) {
+      var commentDom = $('.comment.wz-prototype').eq(0).clone()
+      commentDom.removeClass('wz-prototype').addClass('commentDom comment-' + comment.apiComment.id)
+
+      commentDom.find('.reply-button').text(lang.reply)
+      commentDom.find('.edit-button').text(lang.edit)
+
+      if (comment.apiComment.author === this.myContactID) {
+        commentDom.addClass('mine')
+      }
+
+      commentDom.find('.avatar').css('background-image', 'url( ' + comment.apiComment.authorObject.avatar.tiny + ' )')
+      commentDom.find('.name').text(comment.apiComment.authorObject.fullName)
+      commentDom.find('.time').text(this._timeElapsed(new Date(comment.apiComment.created)))
+      commentDom.find('.comment-text').html(comment.apiComment.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+
+      commentDom.find('.comment-text').find('a').each(function () {
+        if (!URL_REGEX.test($(this).attr('href'))) {
+          $(this).attr('href', 'http://' + $(this).attr('href'))
+        }
+      })
+
+      commentDom.data('reply', comment.apiComment)
+      commentDom.data('name', comment.apiComment.authorObject.name.split(' ')[0])
+
+      if (Object.keys(comment.replies).length === 0 && comment.replies.constructor === Object) {
+        if (appending) {
+          $('.post-' + comment.parent).find('.comments-list').append(comment)
+        }
+        return callback(commentDom)
+      }
+
+      var repliesDom = []
+      commentDom.find('.reply-list').show()
+
+      var replies = Object.values(comment.replies)
+      replies.forEach(function (reply, index) {
+        var replyDom = this.appendReplyComment(reply, commentDom)
+
+        repliesDom.push(replyDom)
+        if (index === replies.length - 1) {
+          commentDom.find('.reply-list').append(repliesDom)
+          // card.find( '.comments-list' ).scrollTop( reply[0].offsetTop )
+          return callback(commentDom)
+        }
+      }.bind(this))
+    }
+
+    appendReplyComment (response, comment, appending) {
+      if (!comment) {
+        comment = $('.comment-' + response.parent)
+      }
+      var reply = comment.find('.reply.wz-prototype').clone()
+      reply.removeClass('wz-prototype').addClass('replyDom reply-' + response.id)
+
+      if (response.author === this.myContactID) {
+        reply.addClass('mine')
+      }
+
+      reply.find('.avatar').css('background-image', 'url( ' + response.authorObject.avatar.tiny + ' )')
+      reply.find('.name').text(response.authorObject.fullName)
+      reply.find('.time').text(this._timeElapsed(new Date(response.created)))
+      reply.find('.reply-text').html(response.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+
+      reply.find('.reply-text').find('a').each(function () {
+        if (!URL_REGEX.test($(this).attr('href'))) {
+          $(this).attr('href', 'http://' + $(this).attr('href'))
+        }
+      })
+
+      reply.data('reply', response)
+      if (appending) {
+        comment.find('.reply-list').show()
+        comment.find('.reply-list').append(reply)
+      }
+
+      return reply
+    }
+
     closeNotificationCenter(){
       
       $('.notifications-container-mobile').transition({
@@ -538,6 +756,27 @@ var view = (function () {
         $('.notifications-container-mobile').show()
       })
 
+    }
+
+    closeWorld(){
+
+      $('.mobile-world-content').transition({
+        'x' : 0
+      }, 1000, function(){
+        $(this).addClass('hide')
+      })
+
+    }
+
+    /* End of comments */
+
+    /*hideGoBackButton () {
+      $('.cards-list .go-back-button').hide()
+    }*/
+
+    hideNotificationMode () {
+      /*this.hideGoBackButton()
+      this.showNewPostButton()*/
     }
 
     hideNoWorlds () {
@@ -552,6 +791,7 @@ var view = (function () {
 
     openWorld (world, updatingHeader) {
 
+      console.log(world)
       $('.clean').remove()
       $('.world').removeClass('active')
       $('.world-' + world.apiWorld.id).addClass('active')
@@ -576,6 +816,10 @@ var view = (function () {
         $('.cardDom').remove()
       }
 
+      $('.mobile-world-content').removeClass('hide').transition({
+        'x' : 0
+      }, 1000)
+
     }
 
     openNotificationCenter(){
@@ -585,11 +829,17 @@ var view = (function () {
       }, 1000)
     }
 
+    /*showNewPostButton () {
+      $('.new-post-button').show()
+    }*/
+
     showNoWorlds(){}
 
     showWorldDot (worldId) {
       $('.world-' + worldId).addClass('with-notification')
     }
+
+    toggleSelectWorld (show){}
 
     updateNotificationIcon (showIcon) {
       if (showIcon) {
