@@ -1,7 +1,7 @@
 // Variables
 var worldSelected;
 var worldSelectedUsrs;
-var me = api.system.user();
+var me = api.system.workspace();
 var nNotifications = 0;
 var loadingPost = false;
 var searchWorldQuery = 0;
@@ -10,7 +10,7 @@ var animationEffect = 'cubic-bezier(.4,0,.2,1)';
 var myWorlds = [];
 var app = $(this);
 var desktop = $(this).parent().parent();
-var myContactID = api.system.user().id;
+var myContactID = api.system.workspace().idWorkspace;
 var mobileView = 'worldSidebar'
 var worldNotifications = [];
 var postsNotifications = [];
@@ -644,9 +644,9 @@ api.cosmos.on('postAdded', function (post) {
 
 });
 
-api.cosmos.on('userAdded', function (userId, world) {
+api.cosmos.on('userAdded', function (idWorkspace, world) {
 
-    if (userId === myContactID) {
+    if (idWorkspace === myContactID) {
 
         myWorlds.push(world.id);
         appendWorld(world);
@@ -694,14 +694,14 @@ api.cosmos.on('userAdded', function (userId, world) {
 
 });
 
-api.cosmos.on('userRemoved', function (userId, world) {
+api.cosmos.on('userRemoved', function (idWorkspace, world) {
 
-    if (userId != myContactID && world.id === worldSelected.id) {
+    if (idWorkspace != myContactID && world.id === worldSelected.id) {
 
         $('.user-circle').remove();
         getWorldUsersAsync(worldSelected);
 
-    } else if (userId === myContactID) {
+    } else if (idWorkspace === myContactID) {
 
         if (isMobile() && worldSelected.id === world.id) {
             changeMobileView('worldSidebar');
@@ -2233,7 +2233,7 @@ var editWorldAsync = function () {
 
     var worldApi = $('.new-world-container').data('world');
     var isPrivate;
-    if (api.system.user().user.indexOf('demo') === 0) {
+    if (api.system.workspace().username.indexOf('demo') === 0) {
         isPrivate = true;
     } else {
         isPrivate = $('.private-option').hasClass('active');
@@ -2316,11 +2316,11 @@ var selectWorld = function (world, callback) {
 var appendUserCircle = function (i, user, inviteIndex) {
 
     var userCircle = userCirclePrototype.clone();
-    userCircle.removeClass('wz-prototype').addClass('user-' + user.id).addClass('clean');
+    userCircle.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('clean');
     userCircle.css('background-image', 'url(' + user.avatar.tiny + ')');
     userCircle.data('user', user);
 
-    if ($('.user-circle.user-' + user.id).length === 0) {
+    if ($('.user-circle.user-' + user.idWorkspace).length === 0) {
         $('.user-circles-section').append(userCircle);
     }
 
@@ -2328,7 +2328,7 @@ var appendUserCircle = function (i, user, inviteIndex) {
         return;
     }
 
-    if (user.id === myContactID) {
+    if (user.idWorkspace === myContactID) {
         user.name = lang.me;
     }
 
@@ -2421,7 +2421,7 @@ var followWorldAsync = function (worldCard) {
         return;
     }
 
-    if (api.system.user().user.indexOf('demo') === 0 && !world.isPrivate) {
+    if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds);
         return;
     }
@@ -2476,7 +2476,7 @@ var getMembersAsync = function () {
 
         asyncEach(members, function (member, finish) {
 
-            api.user(member.userId, function (err, user) {
+            api.user(member.idWorkspace, function (err, user) {
 
                 if (member.isAdmin) {
                     user.isAdmin = true;
@@ -2510,7 +2510,7 @@ var getMembersAsync = function () {
 var appendFriend = function (user) {
 
     var friend = friendPrototype.clone();
-    friend.removeClass('wz-prototype').addClass('user-' + user.id).addClass('friendDom');
+    friend.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('friendDom');
 
     friend.find('span').text(user.fullName);
     friend.find('.avatar').css('background-image', 'url(' + user.avatar.normal + ')');
@@ -2518,7 +2518,7 @@ var appendFriend = function (user) {
     var invited = false;
     $.each(worldSelectedUsrs, function (i, usr) {
 
-        if (usr.userId == user.id) {
+        if (usr.idWorkspace == user.idWorkspace) {
 
             invited = true;
 
@@ -2539,7 +2539,7 @@ var appendFriend = function (user) {
 var appendMember = function (user) {
 
     var member = memberPrototype.clone();
-    member.removeClass('wz-prototype').addClass('user-' + user.id).addClass('memberDom');
+    member.removeClass('wz-prototype').addClass('user-' + user.idWorkspace).addClass('memberDom');
 
     if (user.isAdmin) {
         member.addClass('isAdmin');
@@ -2561,7 +2561,7 @@ var inviteUsers = function () {
 
         var user = $(usr).data('user');
 
-        worldSelected.addUser(user.id, function (e, o) {
+        worldSelected.addUser(user.idWorkspace, function (e, o) {
 
             checkEnd();
 
