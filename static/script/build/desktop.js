@@ -2297,6 +2297,12 @@ var model = (function (view) {
       return fileType;
     }
 
+
+    closeWorld(){
+      this.openedWorld = null
+      this.view.closeWorld()
+    }
+
     createWorld (worldName) {
       if (!worldName) {
         var dialog = api.dialog()
@@ -2666,6 +2672,8 @@ var model = (function (view) {
     }
 
     openWorld (worldId, notificationOpen) {
+
+      console.log(worldId, this.openedWorld)
       // app.addClass( 'selectingWorld' )
       if (!worldId && this.openedWorld) {
         worldId = this.openedWorld.apiWorld.id

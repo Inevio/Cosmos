@@ -37,6 +37,11 @@ var controller = (function (model, view) {
         model.notificationMarkAllAsAttended()
       })
 
+      this.dom.on('click', '.comments-opener', function () {
+        var card = $(this).parent().parent()
+        view.toggleReplies(card)
+      })
+
       /* Mouse enter */
 
       this.dom.on('mouseenter', '.privacy-options .option i', function () {

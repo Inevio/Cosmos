@@ -631,6 +631,8 @@ var view = (function () {
     /* Comments */
 
     appendComments (card, post, callback) {
+      
+      console.log(card, post)
       if (!post.commentsLoaded) {
         card.find('.comments-text').text(lang.loading + ' ' + lang.comments)
         return callback(card)
@@ -667,6 +669,7 @@ var view = (function () {
         card.find('.comments-list').scrollTop(999999999999999)
         return callback(card)
       })
+
     }
 
     appendComment (comment, callback, appending) {
@@ -760,6 +763,7 @@ var view = (function () {
 
     closeWorld(){
 
+      $('.world').removeClass('active')
       $('.mobile-world-content').transition({
         'x' : 0
       }, 1000, function(){
@@ -839,6 +843,42 @@ var view = (function () {
       $('.world-' + worldId).addClass('with-notification')
     }
 
+    toggleReplies(card){
+
+      console.log(card)
+      var height = parseInt(card.find('.comments-list').css('height')) + 50
+      var commentsSection = card.find('.comments-section')
+
+      if (commentsSection.hasClass('opened')) {
+
+        commentsSection.css('height', height)
+        card.removeClass('comments-open')
+        commentsSection.transition({
+          'height': 0
+        }, 200, function () {
+          commentsSection.removeClass('opened')
+        });
+
+      } else {
+
+        card.addClass('comments-open')
+        commentsSection.find('.comments-list').scrollTop(9999999)
+        commentsSection.transition({
+
+            'height': height
+
+        }, 200, function () {
+
+            commentsSection.addClass('opened')
+            commentsSection.css('height', 'auto')
+            commentsSection.find('textarea').focus()
+
+        });
+
+      }
+
+    }
+
     toggleSelectWorld (show){}
 
     updateNotificationIcon (showIcon) {
@@ -899,6 +939,73 @@ var view = (function () {
         $('.notification-' + notificationId).removeClass('unattended')
       } else {
         $('.notification-' + notificationId).addClass('unattended')
+      }
+    }
+
+    updatePostComments (post) {
+      var card = $('.post-' + post.apiPost.id)
+      if (card.length) {
+        this.appendComments(card, post, function () {
+          card.find('.comments-list').scrollTop(99999999)
+        })
+      }
+    }
+
+    updatePostComment (comment) {
+      var commentDom = $('.comment-' + comment.id)
+      commentDom.find('.comment-text').html(comment.content.replace(/\n/g, '<br />'))
+    }
+
+    updatePostReply (reply) {
+      var replyDom = $('.reply-' + reply.id)
+      replyDom.find('.reply-text').text(reply.content)
+    }
+
+    updatePost (post, changePostType) {
+      var postDom = $('.post-' + post.apiPost.id)
+      postDom.find('.title').text(post.apiPost.title)
+      postDom.find('.desc').text(post.apiPost.content)
+      postDom.data('post', post.apiPost)
+      this.updatePostFSNodes(post, changePostType)
+    }
+
+    updatePostFSNodes (post, changePostType) {
+      if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+        this.updateGenericCardFSNodes(post, true)
+      }else if( changePostType ){
+
+        this.appendPost( post, null, function( postDom ){
+          if (post.apiPost.author === this.myContactID) {
+            postDom.addClass('mine')
+          }
+          postDom.data('post', post.apiPost)
+          var oldPost = $('.post-' + post.apiPost.id)
+          oldPost.after( postDom )
+          oldPost.remove()
+        }.bind(this))
+
+      }else if (post.apiPost.metadata && post.apiPost.metadata.fileType) {
+        switch (post.apiPost.metadata.fileType) {
+          case 'generic':
+            this.updateGenericCardFSNodes(post, true)
+            break
+
+          case 'document':
+            this.updateDocumentCardFSNodes(post, true)
+            break
+
+          case 'image':
+            this.updateDocumentCardFSNodes(post, true)
+            break
+
+          case 'video':
+            this.updateGenericCardFSNodes(post, true)
+            break
+
+          case 'music':
+            this.updateGenericCardFSNodes(post, true)
+            break
+        }
       }
     }
 
