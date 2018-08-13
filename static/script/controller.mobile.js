@@ -22,7 +22,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.mobile-world-content .go-back', function(){
-        view.closeWorld()
+        model.closeWorld()
       })
 
       this.dom.on('click', '.notification-opener', function(){
@@ -36,6 +36,14 @@ var controller = (function (model, view) {
       this.dom.on('click', '.notifications-container-mobile .notification-mark-all-as-read', function () {
         model.notificationMarkAllAsAttended()
       })
+
+      /* New world */
+
+      this.dom.on('click', '.sidebar-header .new-world-button-mini', function(){
+        view.showNewWorldContainer()
+      })
+
+      /* End of new world */
 
       this.dom.on('click', '.comments-opener', function () {
         var card = $(this).parent().parent()

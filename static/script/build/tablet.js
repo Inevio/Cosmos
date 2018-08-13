@@ -765,7 +765,7 @@ var view = (function () {
 
       $('.world').removeClass('active')
       $('.mobile-world-content').transition({
-        'x' : 0
+        'x' : '100%'
       }, 1000, function(){
         $(this).addClass('hide')
       })
@@ -1041,7 +1041,7 @@ var view = (function () {
           world.addClass('editable')
         }
 
-        world.find('.world-icon').css('border-color', colors[ item.apiWorld.id % colors.length ])
+        world.find('.world-icon').css('background-image', 'url(' + item.apiWorld.icons.small + '?token=' + Date.now() + ')')
         world.data('world', item.apiWorld)
         world.attr('data-id', item.apiWorld.id)
 
@@ -2325,7 +2325,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.mobile-world-content .go-back', function(){
-        view.closeWorld()
+        model.closeWorld()
       })
 
       this.dom.on('click', '.notification-opener', function(){
