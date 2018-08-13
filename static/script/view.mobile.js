@@ -765,7 +765,7 @@ var view = (function () {
 
       $('.world').removeClass('active')
       $('.mobile-world-content').transition({
-        'x' : 0
+        'x' : '100%'
       }, 1000, function(){
         $(this).addClass('hide')
       })
@@ -836,6 +836,54 @@ var view = (function () {
     /*showNewPostButton () {
       $('.new-post-button').show()
     }*/
+
+    showNewWorldContainer(){
+
+      var newWorldContainer = $('.new-world-container-wrap');
+
+      $('.new-world-name input').val('')
+
+      newWorldContainer.css('display', 'block')
+
+      // Fade in White background (animation)
+      newWorldContainer.stop().clearQueue().transition({
+        'opacity': 1
+      }, 300)
+
+      // Fade in and goes up title (animation)
+      $('.new-world-title').stop().clearQueue().transition({
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      // Fade in and goes up esc (animation)
+      $('.close-new-world').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      // Fade in and goes up name (animation)
+      $('.new-world-name').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      // Fade in and goes up button (animation)
+      $('.create-world-button').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      $('.delete-world-button').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 0.5,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+    }
 
     showNoWorlds(){}
 
@@ -1041,7 +1089,7 @@ var view = (function () {
           world.addClass('editable')
         }
 
-        world.find('.world-icon').css('border-color', colors[ item.apiWorld.id % colors.length ])
+        world.find('.world-icon').css('background-image', 'url(' + item.apiWorld.icons.small + '?token=' + Date.now() + ')')
         world.data('world', item.apiWorld)
         world.attr('data-id', item.apiWorld.id)
 
