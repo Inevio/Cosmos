@@ -151,6 +151,7 @@ var view = (function () {
   class View {
 
     constructor () {
+
       this.dom = win
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
@@ -171,9 +172,11 @@ var view = (function () {
       this.noWorlds = $('.no-worlds')
 
       this._translateInterface()
+
     }
 
     _getStringHour (date) {
+
       var now = new Date()
 
       var hh = date.getHours()
@@ -188,6 +191,7 @@ var view = (function () {
       }
 
       return hh + ':' + mm
+
     }
 
     _timeElapsed (lastTime) {
@@ -761,6 +765,69 @@ var view = (function () {
 
     }
 
+    /* End of comments */
+
+    closeNewWorld(){
+
+      var newWorldContainer = $('.new-world-container-wrap')
+      $('.new-world-container').css('height', '100%')
+
+      // Fade out White background
+      newWorldContainer.stop().clearQueue().transition({
+        'opacity': 0
+      }, 200, function(){
+
+          newWorldContainer.css('display', 'none')
+          $('.new-world-avatar').hide()
+          $('.new-world-desc').hide()
+          $('.new-world-privacy').hide()
+          $('.new-world-title').removeClass('second')
+          $('.create-world-button').removeClass('step-b')
+          $('.create-world-button').addClass('step-a')
+          $('.new-world-title .step-b').removeClass('hide')
+          $('.new-world-title .title').text(lang.worldCreation)
+          $('.delete-world-button').addClass('hide')
+
+
+          $('.new-world-title, .new-world-name, .create-world-button, .new-world-avatar, .new-world-desc, .new-world-privacy, .delete-world-button').css({
+              'transform': 'translateY(20px)',
+              'opacity': 0
+          })
+
+          $('.close-new-world').css({
+              'transform': 'translateY(10px)',
+              'opacity': 0
+          })
+
+          /*if ($('.worldDom').length === 0) {
+
+              noWorlds.show();
+              noWorlds.transition({
+
+                  'opacity': 1
+
+              }, 200, this.animationEffect);
+
+          } else {
+
+              noWorlds.transition({
+
+                  'opacity': 0
+
+              }, 200, this.animationEffect, function () {
+
+                  noWorlds.hide();
+
+              });
+
+          }*/
+
+      })
+
+      $('.new-world-container').removeClass('editing')
+
+    }
+
     closeWorld(){
 
       $('.world').removeClass('active')
@@ -771,8 +838,6 @@ var view = (function () {
       })
 
     }
-
-    /* End of comments */
 
     /*hideGoBackButton () {
       $('.cards-list .go-back-button').hide()
@@ -789,6 +854,70 @@ var view = (function () {
       }, 200, this.animationEffect, function () {
         $('.no-worlds').hide()
       })*/
+    }
+
+    newWorldStep(){
+
+      $('.new-world-avatar').show()
+      $('.new-world-desc').show()
+      $('.new-world-privacy').show()
+      $('.new-world-title').addClass('second')
+      $('.create-world-button').addClass('step-b')
+      $('.create-world-button').removeClass('step-a')
+      $('.option.private-option').addClass('active')
+      $('.option.public').removeClass('active')
+
+      $('.new-world-desc textarea').val('')
+
+      $('.wz-groupicon-uploader-start').css('background-image', 'none')
+
+      // Fade in and goes up title (animation)
+      var translate = '0px'
+
+      $('.new-world-title').stop().clearQueue().transition({
+        'transform': 'translateY(' + translate + ')'
+      }, 1000, this.animationEffect)
+
+      // Fade in and goes up name (animation)
+      $('.new-world-name').stop().clearQueue().transition({
+        'opacity': 0,
+        'transform': 'translateX(-200px)'
+      }, 1000, this.animationEffect)
+
+      // Fade in and goes up avatar (animation)
+      $('.new-world-avatar').stop().clearQueue().transition({
+        delay: 500,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 1000)
+
+      // Fade in and goes up desc (animation)
+      $('.new-world-desc').stop().clearQueue().transition({
+        delay: 650,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 1000)
+
+      // Fade in and goes up privacy (animation)
+      $('.new-world-privacy').stop().clearQueue().transition({
+        delay: 800,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 1000)
+
+      // Fade in and goes up privacy (animation)
+      $('.create-world-button').transition({
+          delay: 950,
+          'opacity': 1,
+          'transform': 'translateY(0px)'
+      }, 1000)
+
+      $('.delete-world-button').transition({
+        delay: 950,
+        'opacity': 0.5,
+        'transform': 'translateY(0px)'
+      }, 1000)
+
     }
 
     openExploreWorlds(){}
@@ -836,6 +965,55 @@ var view = (function () {
     /*showNewPostButton () {
       $('.new-post-button').show()
     }*/
+
+    showNewWorldContainer(){
+
+      var mobileNewWorld = $('.mobile-new-world')
+
+      $('.new-world-name input').val('')
+
+      mobileNewWorld.css('display', 'block').removeClass('hide')
+
+      // Fade in White background (animation)
+      mobileNewWorld.stop().clearQueue().transition({
+        'opacity': 1,
+        'transform': 'translateY(0%)'
+      }, 300)
+
+      // Fade in and goes up title (animation)
+      $('.new-world-title').stop().clearQueue().transition({
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      // Fade in and goes up esc (animation)
+      $('.close-new-world').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      // Fade in and goes up name (animation)
+      $('.new-world-name').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      // Fade in and goes up button (animation)
+      $('.create-world-button').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+      $('.delete-world-button').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 0.5,
+        'transform': 'translateY(0px)'
+      }, 300)
+
+    }
 
     showNoWorlds(){}
 
@@ -1011,6 +1189,7 @@ var view = (function () {
 
     updateWorldsListUI (worldList) {
 
+      console.log(worldList)
       if (worldList.length === 0) {
         return this.toggleNoWorlds(true)
       }
@@ -1052,9 +1231,9 @@ var view = (function () {
         return worldSidebarDom(item)
       }))
 
-      this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
+      /*this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
         return worldSidebarDom(item)
-      }))
+      }))*/
 
     }
 
@@ -2100,7 +2279,10 @@ var model = (function (view) {
       this.loadingPosts = false
 
       if (world) {
-        this.icon = world.icons.big
+        console.log(world)
+        if(world.icons){
+          this.icon = world.icons.big
+        }
         this.apiWorld = world
       }
 
@@ -2339,6 +2521,26 @@ var controller = (function (model, view) {
       this.dom.on('click', '.notifications-container-mobile .notification-mark-all-as-read', function () {
         model.notificationMarkAllAsAttended()
       })
+
+      /* New world */
+
+      this.dom.on('click', '.sidebar-header .new-world-button-mini', function(){
+        view.showNewWorldContainer()
+      })
+
+      this.dom.on('click', '.close-new-world', function(){
+        view.closeNewWorld()
+      })
+
+      this.dom.on('click', '.create-world-button.step-a', function(){
+
+        if($('.new-world-name input').val()){
+          model.createWorld($('.new-world-name input').val())
+        }
+
+      })
+
+      /* End of new world */
 
       this.dom.on('click', '.comments-opener', function () {
         var card = $(this).parent().parent()
