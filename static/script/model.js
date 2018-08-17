@@ -1006,7 +1006,10 @@ var model = (function (view) {
       this.loadingPosts = false
 
       if (world) {
-        this.icon = world.icons.big
+        console.log(world)
+        if(world.icons){
+          this.icon = world.icons.big
+        }
         this.apiWorld = world
       }
 

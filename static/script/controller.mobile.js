@@ -43,6 +43,18 @@ var controller = (function (model, view) {
         view.showNewWorldContainer()
       })
 
+      this.dom.on('click', '.close-new-world', function(){
+        view.closeNewWorld()
+      })
+
+      this.dom.on('click', '.create-world-button.step-a', function(){
+
+        if($('.new-world-name input').val()){
+          model.createWorld($('.new-world-name input').val())
+        }
+
+      })
+
       /* End of new world */
 
       this.dom.on('click', '.comments-opener', function () {
