@@ -58,8 +58,19 @@ var controller = (function (model, view) {
       /* End of new world */
 
       this.dom.on('click', '.comments-opener', function () {
-        var card = $(this).parent().parent()
-        view.toggleReplies(card)
+
+        /*changeMobileView('worldComments')
+        var card = $(this).closest('.card')
+        var post = card.data('post')
+        setRepliesAsyncOnlyAppendMobile(card, post)
+        mobileWorldComments.data('post', post)
+        attendCommentNotification($(this).parent().parent().data('post'))*/
+        model.openComments($(this).closest('.card').data('post').id)
+
+      })
+
+      this.dom.on('click', '.close-comments', function () {
+        view.closeCommentsView()
       })
 
       /* Mouse enter */
