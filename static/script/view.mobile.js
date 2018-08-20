@@ -302,6 +302,8 @@ var view = (function () {
         $('.invite-by-mail').remove()
       }*/
 
+      $('.mobile-world-comments .comments-title').text(lang.comments)
+
       $('.kick-out-button span').text(lang.worldUsers.kickOut)
 
       // Explore
@@ -628,10 +630,6 @@ var view = (function () {
       }
     }
 
-
-
-
-
     /* Comments */
 
     appendComments (card, post, callback) {
@@ -761,6 +759,110 @@ var view = (function () {
         'x' : '100%'
       }, 1000, function(){
         $('.notifications-container-mobile').show()
+      })
+
+    }
+
+    insertComments(comments){
+
+      $('.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove()
+      //$('.mobile-world-comments').data('card', card )
+
+      var commentList = []
+      console.log(comments)
+
+      comments.forEach( function(commentModel, index){
+
+        var comment = $('.mobile-world-comments .comment.wz-prototype').clone()
+        comment.removeClass('wz-prototype').addClass('commentDom comment-' + commentModel.apiComment.id)
+        comment.find('.reply-button').text('-   ' + lang.reply)
+        if (commentModel.apiComment.authorObject === this.myContactID) {
+          comment.addClass('mine')
+        }
+
+        comment.find('.avatar').css('background-image', 'url(' + commentModel.apiComment.authorObject.avatar.tiny + ')')
+        comment.find('.name').text(commentModel.apiComment.authorObject.fullName)
+        comment.find('.time').text(this._timeElapsed(new Date(commentModel.apiComment.created)))
+        comment.find('.comment-text').html(commentModel.apiComment.content.replace(/\n/g, "<br />").replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>'));
+
+        comment.find('.comment-text').find('a').each(function () {
+
+          if (!URL_REGEX.test($(this).attr('href'))) {
+            $(this).attr('href', 'http://' + $(this).attr('href'))
+          }
+
+        })
+
+        comment.data('reply', commentModel.apiComment)
+        comment.data('name', commentModel.apiComment.authorObject.name.split(' ')[0])
+
+        var replies = Object.values(commentModel.replies)
+        console.log(replies)
+
+        if( replies.length ){
+
+          var repliesList = []
+          comment.find('.reply-list').show()
+
+          replies.forEach( function( response, index ){
+
+            var reply = comment.find('.reply.wz-prototype').clone()
+            reply.removeClass('wz-prototype').addClass('replyDom reply-' + response.id)
+            if (response.author === this.myContactID) {
+              reply.addClass('mine')
+            }
+
+            reply.find('.avatar').css('background-image', 'url(' + response.authorObject.avatar.tiny + ')')
+            reply.find('.name').text(response.authorObject.fullName)
+            reply.find('.time').text(this._timeElapsed(new Date(response.created)))
+            reply.find('.reply-text').html(response.content.replace(/\n/g, "<br />").replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/, '<a href="$1" target="_blank">$1</a>'))
+
+            reply.find('.reply-text').find('a').each(function () {
+
+              if (!URL_REGEX.test($(this).attr('href'))) {
+                $(this).attr('href', 'http://' + $(this).attr('href'))
+              }
+
+            })
+
+            repliesList.push(reply)
+
+            if( index === replies.length - 1 ){
+              comment.find('.reply-list').append(repliesList)
+            }
+
+          }.bind(this))
+
+        }
+
+        commentList.push(comment)
+
+        if( index === comments.length - 1 ){
+          $('.mobile-world-comments .comments-list').append(commentList)
+          this.openCommentsView()
+        }
+
+      }.bind(this))
+
+    }
+
+    openCommentsView(){
+
+      $('.mobile-world-comments').show().stop().clearQueue().transition({
+        'transform': 'translateY(0)'
+      }, 300, function () {
+        $('.mobile-world-content').hide()
+      })
+
+    }
+
+    closeCommentsView(){
+
+      $('.mobile-world-content').show()
+      $('.mobile-world-comments').stop().clearQueue().transition({
+        'transform': 'translateY(100%)'
+      }, 300, function () {
+        $(this).hide();
       })
 
     }

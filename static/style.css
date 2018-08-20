@@ -5857,6 +5857,7 @@ to {background-position: -200% 0;}
   z-index: 2;
   transform: translateY(100%);
   background-color: #fff;
+  display: none;
 
   .comments-header{
     float: left;
