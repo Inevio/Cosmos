@@ -3664,6 +3664,7 @@ to {background-position: -200% 0;}
     color: #889399;
     width: 100%;
     text-align: center;
+    display: none;
 
   }
 
@@ -3759,7 +3760,7 @@ to {background-position: -200% 0;}
     height: 92px;
     border-radius: 50%;
     background-color: #fff;
-    margin-top: 44px;
+    margin-top: 15px;
     cursor: pointer;
     background-size: cover;
     border: 2px solid #dbdbde;
@@ -6057,7 +6058,7 @@ to {background-position: -200% 0;}
   .new-world-avatar{
     margin: 0 18px;
     width: ~'calc(100% - 36px)';
-    top: 242px;
+    top: 312px;
     figure i{
       background-image: url('@static/images/sprite-camara@2x.png');
     }
@@ -6580,4 +6581,3 @@ to {background-position: -200% 0;}
   }
 
 }
-

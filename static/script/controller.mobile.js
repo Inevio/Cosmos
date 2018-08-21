@@ -57,6 +57,8 @@ var controller = (function (model, view) {
 
       /* End of new world */
 
+      /* Comments */
+
       this.dom.on('click', '.comments-opener', function () {
 
         /*changeMobileView('worldComments')
@@ -72,6 +74,12 @@ var controller = (function (model, view) {
       this.dom.on('click', '.close-comments', function () {
         view.closeCommentsView()
       })
+
+      this.dom.on('click', '.replay-button', function () {
+        view.prepareReplayComment($(this).parent())
+      })
+
+      /* End of comments */
 
       /* Mouse enter */
 
