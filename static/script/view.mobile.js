@@ -960,7 +960,7 @@ var view = (function () {
 
     newWorldStep(){
 
-      $('.new-world-avatar').show()
+      /*$('.new-world-avatar').show()
       $('.new-world-desc').show()
       $('.new-world-privacy').show()
       $('.new-world-title').addClass('second')
@@ -1018,7 +1018,7 @@ var view = (function () {
         delay: 950,
         'opacity': 0.5,
         'transform': 'translateY(0px)'
-      }, 1000)
+      }, 1000)*/
 
     }
 
@@ -1064,6 +1064,18 @@ var view = (function () {
       }, 1000)
     }
 
+    prepareReplayComment(comment) {
+
+        var post = comment.data('reply')
+        var name = comment.data('name')
+        var input = comment.parent().parent().find('.comments-footer .comment-input')
+
+        input.attr('placeholder', '@' + name + ' ')
+        input.focus()
+        input.data('reply', post)
+
+    }
+
     /*showNewPostButton () {
       $('.new-post-button').show()
     }*/
@@ -1075,6 +1087,8 @@ var view = (function () {
       $('.new-world-name input').val('')
 
       mobileNewWorld.css('display', 'block').removeClass('hide')
+      $('.new-world-avatar').show()
+      $('.wz-groupicon-uploader-start').css('background-image', 'none')
 
       // Fade in White background (animation)
       mobileNewWorld.stop().clearQueue().transition({
@@ -1101,6 +1115,12 @@ var view = (function () {
         'opacity': 1,
         'transform': 'translateY(0px)'
       }, 300)
+
+      $('.new-world-avatar').stop().clearQueue().transition({
+        delay: 250,
+        'opacity': 1,
+        'transform': 'translateY(0px)'
+      }, 1000)
 
       // Fade in and goes up button (animation)
       $('.create-world-button').stop().clearQueue().transition({
