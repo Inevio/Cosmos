@@ -2149,6 +2149,7 @@ var model = (function (view) {
         })
       }
     }
+    
 
     addReplyFront (post) {
       var needToAppend = false
@@ -2794,8 +2795,8 @@ var model = (function (view) {
       var listToShow = JSON.parse(JSON.stringify(this.contacts))
 
       for (var j = 0; j < members.length; j++) {
-        if (this.contacts[ members[j].id ]) {
-          delete listToShow[ members[j].id ]
+        if (this.contacts[ members[j].idWorkspace ]) {
+          delete listToShow[ members[j].idWorkspace ]
         }
 
         if (j === members.length - 1) {
