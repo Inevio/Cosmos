@@ -763,10 +763,10 @@ var view = (function () {
 
     }
 
-    insertComments(comments){
+    insertComments(comments, post){
 
       $('.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove()
-      //$('.mobile-world-comments').data('card', card )
+      $('.mobile-world-comments').data('post', post )
 
       var commentList = []
       console.log(comments)

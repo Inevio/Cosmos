@@ -763,10 +763,10 @@ var view = (function () {
 
     }
 
-    insertComments(comments){
+    insertComments(comments, post){
 
       $('.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove()
-      //$('.mobile-world-comments').data('card', card )
+      $('.mobile-world-comments').data('post', post )
 
       var commentList = []
       console.log(comments)
@@ -2035,7 +2035,7 @@ var model = (function (view) {
 
       console.log()
       if( !this.openedWorld || !this.openedWorld.posts[postId] || !this.openedWorld.posts[postId].comments ) return
-      view.insertComments(Object.values(this.openedWorld.posts[postId].comments))
+      view.insertComments(Object.values(this.openedWorld.posts[postId].comments), this.openedWorld.posts[postId])
 
     }
 
@@ -2694,8 +2694,22 @@ var controller = (function (model, view) {
         view.closeCommentsView()
       })
 
-      this.dom.on('click', '.replay-button', function () {
+      this.dom.on('click', '.reply-button', function () {
         view.prepareReplayComment($(this).parent())
+      })
+
+      this.dom.on('click', '.comments-footer .send-button', function () {
+        var post = $(this).parent().parent().data('post')
+        var input = $(this).parent().parent().find('.comments-footer .comment-input')
+        var message = $(this).parent().parent().find('.comments-footer .comment-input').val()
+
+        if (input.attr('placeholder')[0] === '@') {
+          post = input.data('reply')
+          $('.comments-footer .comment-input').attr('placeholder', lang.writeComment)
+        }
+
+        model.addReplyBack(post, message)
+        $(this).parent().parent().find('.comments-footer .comment-input').val('')
       })
 
       /* End of comments */
