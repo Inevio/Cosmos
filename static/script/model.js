@@ -636,7 +636,7 @@ var model = (function (view) {
 
       console.log()
       if( !this.openedWorld || !this.openedWorld.posts[postId] || !this.openedWorld.posts[postId].comments ) return
-      view.insertComments(Object.values(this.openedWorld.posts[postId].comments))
+      view.insertComments(Object.values(this.openedWorld.posts[postId].comments), this.openedWorld.posts[postId])
 
     }
 
