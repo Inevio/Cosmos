@@ -76,7 +76,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.reply-button', function () {
-        view.prepareReplayComment($(this).parent())
+        view.prepareReplyComment($(this).parent())
       })
 
       this.dom.on('click', '.comments-footer .send-button', function () {
