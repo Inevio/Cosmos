@@ -4982,6 +4982,7 @@ to {background-position: -200% 0;}
     position: relative;
     top: 0px;
     left: 0px;
+    display: none;
 
     i{
       width: 4px;
@@ -5096,6 +5097,7 @@ to {background-position: -200% 0;}
     box-shadow: none;
     padding-bottom: 8px;
     padding-top: 33px;
+    display: none;
   }
 
   .notification-opener i{
@@ -6059,6 +6061,7 @@ to {background-position: -200% 0;}
     margin: 0 18px;
     width: ~'calc(100% - 36px)';
     top: 312px;
+    display: none !important;
     figure i{
       background-image: url('@static/images/sprite-camara@2x.png');
     }
