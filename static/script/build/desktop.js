@@ -2085,19 +2085,20 @@ var model = (function (view) {
     _loadFullWorldsList (callback) {
       callback = api.tool.secureCallback(callback)
 
-      api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000}, function (error, worlds) {
-
+      api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000})
+      .then( worlds => {
         console.log('getUserWorlds', worlds)
-        if (error) {
-          return this.view.launchAlert(error)
-        }
 
         worlds.forEach(function (world, index) {
           this.addWorld(world)
         }.bind(this))
 
         callback(null, worlds)
-      }.bind(this))
+      })
+      .catch( error => {
+        this.view.launchAlert(error)
+      })
+
     }
 
     addContact (user) {
@@ -2233,18 +2234,8 @@ var model = (function (view) {
         this.showingWorlds = { 'from': this.showingWorlds.to + 1, 'to': this.showingWorlds.to + 21 }
       }
 
-      api.cosmos.list(null, null, this.showingWorlds, function (error, worlds, nResults) {
-        if (error) {
-          return console.error(error)
-        }
-
-        /* if( options.page === 1 ){
-
-          this.totalPages = Math.ceil( nResults / 20 )
-          this.actualPageInterval = 1
-          //addPages()
-
-        } */
+      api.cosmos.list(null, null, this.showingWorlds)
+      .then( (worlds,nResults) => {
 
         if (!worlds.length) {
           this.allPublicWorldsLoaded = true
@@ -2267,8 +2258,13 @@ var model = (function (view) {
               this.view.animateCards()
             }
           }
-        }.bind(this))
-      }.bind(this))
+        })
+
+      })
+      .catch( error => {
+        return console.error(error)
+      })
+
     }
 
     checkMetadata (content, fsnode) {
@@ -2304,6 +2300,7 @@ var model = (function (view) {
     }
 
     createWorld (worldName) {
+
       if (!worldName) {
         var dialog = api.dialog()
 
@@ -2314,15 +2311,14 @@ var model = (function (view) {
         return
       }
 
-      api.cosmos.create(worldName, null, true, null, function (error, world) {
-        if (error) {
-          return console.error(error)
-        }
-
-        // this.addWorld( world )
+      api.cosmos.create(worldName, null, true, null)
+      .then( world => {
         this.view.newWorldStep()
-        // createChat( o )
-      }.bind(this))
+      })
+      .catch( error => {
+        return console.error(error)
+      })
+
     }
 
     editWorld (world, isPrivate, name, description) {

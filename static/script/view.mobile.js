@@ -958,6 +958,10 @@ var view = (function () {
       })*/
     }
 
+    launchAlert( error ){
+      return alert(error)
+    }
+
     newWorldStep(){
 
       /*$('.new-world-avatar').show()
@@ -1064,15 +1068,15 @@ var view = (function () {
       }, 1000)
     }
 
-    prepareReplayComment(comment) {
+    prepareReplyComment(comment) {
 
-        var post = comment.data('reply')
-        var name = comment.data('name')
-        var input = comment.parent().parent().find('.comments-footer .comment-input')
+      var post = comment.data('reply')
+      var name = comment.data('name')
+      var input = comment.parent().parent().find('.comments-footer .comment-input')
 
-        input.attr('placeholder', '@' + name + ' ')
-        input.focus()
-        input.data('reply', post)
+      input.attr('placeholder', '@' + name + ' ')
+      input.focus()
+      input.data('reply', post)
 
     }
 
@@ -1344,7 +1348,10 @@ var view = (function () {
           world.addClass('editable')
         }
 
-        world.find('.world-icon').css('background-image', 'url(' + item.apiWorld.icons.small + '?token=' + Date.now() + ')')
+        if( item.apiWorld.icons ){
+          world.find('.world-icon').css('background-image', 'url(' + item.apiWorld.icons.small + '?token=' + Date.now() + ')')
+        }
+        
         world.data('world', item.apiWorld)
         world.attr('data-id', item.apiWorld.id)
 
