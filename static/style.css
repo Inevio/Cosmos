@@ -5726,6 +5726,7 @@ to {background-position: -200% 0;}
   .cards-list{
     top: 247px;
     height: auto;
+    display: inline-block;
   }
 
   .cards-grid{
@@ -5738,6 +5739,7 @@ to {background-position: -200% 0;}
     height: auto;
     margin-top: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .05);
+    display: inline-block;
 
     .top-card{
       padding: 13px 0 13px 55px;
