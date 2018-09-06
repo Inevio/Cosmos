@@ -5404,7 +5404,7 @@ to {background-position: -200% 0;}
     height: 56px;
 
     .go-back{
-      position: absolute;
+      float: left;
       width: 15px;
       height: 15px;
       z-index: 2;
@@ -5421,31 +5421,32 @@ to {background-position: -200% 0;}
     }
 
     .world-avatar{
-      position: absolute;
+      float: left;
       width: 40px;
       height: 40px;
-      margin: 0px;
-      left: 51px;
-      top: 6px;
+      margin-top: 8px;
+      margin-left: 0px;
     }
 
     .world-title{
-      position: absolute;
-      margin: 0px;
-      left: 16vmax;
-      max-width: 32vmax;
-      top: 17px;
+      float: left;
+      margin: 0;
+      /* left: 16vmax; */
+      /* max-width: 32vmax; */
+      /* top: 17px; */
+      margin-top: 18px;
+      margin-left: 15px;
+      max-width: ~'calc(100% - 164px)';
     }
 
     .activate-search-bar{
-      position: absolute;
+      float: right;
       width: 19px;
       height: 19px;
       z-index: 2;
       padding: 17px;
       right: 0;
       margin-top: 3px;
-      margin-right: 10px;
 
       i{
         position: absolute;
