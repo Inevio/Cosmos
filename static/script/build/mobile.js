@@ -964,6 +964,8 @@ var view = (function () {
 
     newWorldStep(){
 
+      this.closeNewWorld()
+
       /*$('.new-world-avatar').show()
       $('.new-world-desc').show()
       $('.new-world-privacy').show()
