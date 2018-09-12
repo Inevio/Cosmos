@@ -47,9 +47,9 @@ var controller = (function (model, view) {
         model.openWorld(parseInt($(this).attr('data-id')), false)
       })
 
-      this.dom.on('click', '.open-folder-button', function () {
+      /*this.dom.on('click', '.open-folder-button', function () {
         model.openFolder()
-      })
+      })*/
 
       this.dom.on('click', '.cardDom:not(.loading) .doc-preview', function () {
         var attachment = $(this)

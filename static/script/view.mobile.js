@@ -1187,6 +1187,53 @@ var view = (function () {
 
     toggleSelectWorld (show){}
 
+    updateGenericCardFSNodes (post, edited) {
+      var card = $('.post-' + post.apiPost.id)
+      card.removeClass('loading')
+
+      post.fsnodes.forEach(function (fsnode, index) {
+        var docPreview = null
+        var needToInsert = false
+        if (card.find('.attachment-' + fsnode.id).length !== 0) {
+          docPreview = card.find('.attachment-' + fsnode.id)
+        }else if( edited ){
+          docPreview = card.find('.doc-preview.wz-prototype').clone().removeClass('wz-prototype').addClass('attachment-' + fsnode.id)
+          needToInsert = true
+        }
+
+        if( docPreview ){
+
+          if (post.apiPost.metadata && post.apiPost.metadata.operation === 'remove') {
+            docPreview.find('.doc-icon img').attr('src', 'https://static.horbito.com/app/360/images/deleted.png')
+          } else {
+            docPreview.find('.doc-icon img').attr('src', fsnode.icons.big)
+          }
+
+          if (fsnode.mime && fsnode.mime.indexOf('office') > -1) {
+            docPreview.find('.doc-icon').addClass('office')
+          }
+
+          docPreview.find('.doc-title').text(fsnode.name)
+          docPreview.find('.doc-info').text(api.tool.bytesToUnit(fsnode.size))
+          docPreview.data('fsnode', fsnode)
+
+          if(needToInsert){
+            card.find( '.desc' ).after( docPreview )
+          }
+
+          if( edited ){
+            docPreview.addClass('dontDelete')
+
+            if( index === post.fsnodes.length - 1 ){
+              card.find('.doc-preview').not('.dontDelete').not('.wz-prototype').remove()
+              card.find('.doc-preview').removeClass('dontDelete')
+            }
+
+          }
+        }
+      })
+    }
+
     updateNotificationIcon (showIcon) {
       if (showIcon) {
         $('.notification-opener').addClass('with-notification')

@@ -649,6 +649,7 @@ var model = (function (view) {
         return
       }
 
+      console.log(fsnode)
       fsnode.open()
     }
 
