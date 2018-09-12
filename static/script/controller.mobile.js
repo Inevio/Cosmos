@@ -17,6 +17,7 @@ var controller = (function (model, view) {
 
     _bindEvents () {
 
+
       this.dom.on('click', '.worldDom', function(){
         model.openWorld(parseInt($(this).attr('data-id')), false)
       })
@@ -94,6 +95,25 @@ var controller = (function (model, view) {
       })
 
       /* End of comments */
+
+      this.dom.on('click', '.cardDom:not(.loading) .doc-preview', function () {
+        var attachment = $(this)
+        var fsnode = $(this).data('fsnode')
+        var fsnodeList = []
+        $.each(attachment.closest('.card').find('.doc-preview:not(.wz-prototype)'), function (i, attachment) {
+          fsnodeList.push($(attachment).data('fsnode'))
+        })
+
+        fsnode.open(fsnodeList.filter(function (item) { return item.type === fsnode.type }).map(function (item) { return item.id }), function (error) {
+          if (error) {
+            fsnode.openLocal()
+          }
+        })
+      })
+
+      this.dom.on('click', '.open-folder-button', function () {
+        model.openFolder()
+      })
 
       /* Mouse enter */
 
