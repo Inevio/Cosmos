@@ -111,9 +111,9 @@ var controller = (function (model, view) {
         })
       })
 
-      /*this.dom.on('click', '.open-folder-button', function () {
+      this.dom.on('click', '.open-folder-button', function () {
         model.openFolder()
-      })*/
+      })
 
       /* Mouse enter */
 
