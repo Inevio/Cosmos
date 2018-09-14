@@ -757,7 +757,7 @@ var view = (function () {
       
       $('.notifications-container-mobile').transition({
         'x' : '100%'
-      }, 1000, function(){
+      }, 500, function(){
         $('.notifications-container-mobile').show()
       })
 
@@ -767,6 +767,8 @@ var view = (function () {
 
       $('.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove()
       $('.mobile-world-comments').data('post', post )
+
+      if(!comments || !comments.length) return this.openCommentsView()
 
       var commentList = []
       console.log(comments)
@@ -869,6 +871,18 @@ var view = (function () {
 
     /* End of comments */
 
+    closeNewPost(){
+
+      $('.attachment:not(.wz-prototype)').remove()
+      $('.mobile-world-content').removeClass('hide')
+      $('.mobile-new-post').stop().clearQueue().transition({
+        'transform': 'translateY(-100%)'
+      }, 300, function () {
+        $(this).addClass('hide');
+      })
+
+    }
+
     closeNewWorld(){
 
       var newWorldContainer = $('.new-world-container-wrap')
@@ -930,12 +944,16 @@ var view = (function () {
 
     }
 
+    closeSearchBar(){
+      $('.world-search-bar').removeClass('active')
+    }
+
     closeWorld(){
 
       $('.world').removeClass('active')
       $('.mobile-world-content').transition({
         'x' : '100%'
-      }, 1000, function(){
+      }, 500, function(){
         $(this).addClass('hide')
       })
 
@@ -960,6 +978,23 @@ var view = (function () {
 
     launchAlert( error ){
       return alert(error)
+    }
+
+    newPostMobile(worldName){
+
+      $('.mobile-new-post').removeClass('hide')
+      $('.mobile-new-post').stop().clearQueue().transition({
+          'transform': 'translateY(0%)'
+      }, 300, function () {
+          $('.mobile-world-content').addClass('hide')
+      })
+      $('.mobile-new-post .new-card-title').html('<i class="wz-dragger">' + lang.newPost + '</i>' + '<span>' + lang.for + '</span>' + '<figure class="wz-dragger ellipsis">' + worldName + '</figure>')
+      $('.mobile-new-post .post-new-card span').text(lang.publishPost)
+      $('.mobile-new-post .new-card-input').attr('placeholder', lang.title)
+      $('.mobile-new-post .new-card-textarea').attr('placeholder', lang.description)
+      $('.mobile-new-post .new-card-input').val('')
+      $('.mobile-new-post .new-card-textarea').val('')
+
     }
 
     newWorldStep(){
@@ -1030,6 +1065,11 @@ var view = (function () {
 
     openExploreWorlds(){}
 
+    openSearchBar(){
+      $('.world-search-bar').addClass('active')
+      $('.world-search-bar input').focus()
+    }
+
     openWorld (world, updatingHeader) {
 
       console.log(world)
@@ -1089,9 +1129,7 @@ var view = (function () {
     showNewWorldContainer(){
 
       var mobileNewWorld = $('.mobile-new-world')
-
       $('.new-world-name input').val('')
-
       mobileNewWorld.css('display', 'block').removeClass('hide')
       $('.new-world-avatar').show()
       $('.wz-groupicon-uploader-start').css('background-image', 'none')
