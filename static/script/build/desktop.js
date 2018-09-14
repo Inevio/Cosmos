@@ -2610,7 +2610,7 @@ var model = (function (view) {
     openComments( postId ){
 
       console.log()
-      if( !this.openedWorld || !this.openedWorld.posts[postId] || !this.openedWorld.posts[postId].comments ) return
+      if( !this.openedWorld || !this.openedWorld.posts[postId] ) return
       view.insertComments(Object.values(this.openedWorld.posts[postId].comments), this.openedWorld.posts[postId])
 
     }

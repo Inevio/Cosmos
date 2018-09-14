@@ -115,6 +115,29 @@ var controller = (function (model, view) {
         model.openFolder()
       })
 
+      this.dom.on('click', '.new-post-button', function(){
+        view.newPostMobile($('.world-title').text())
+      })
+
+      this.dom.on('click', '.close-new-post', function(){
+        view.closeNewPost('worldContent')
+      })
+
+      this.dom.on('click', '.activate-search-bar', function(){
+        view.openSearchBar()
+      })
+
+      $('.activate-search-bar input').on('blur', function(){
+        console.log('blur')
+        view.closeSearchBar()
+      })
+
+      this.dom.on('click', '.cancel-search', function(){
+        console.log('click')
+        view.closeSearchBar()
+      })
+
+
       /* Mouse enter */
 
       this.dom.on('mouseenter', '.privacy-options .option i', function () {
