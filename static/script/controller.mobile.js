@@ -120,14 +120,14 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.close-new-post', function(){
-        view.closeNewPost('worldContent')
+        view.closeNewPost()
       })
 
       this.dom.on('click', '.activate-search-bar', function(){
         view.openSearchBar()
       })
 
-      $('.activate-search-bar input').on('blur', function(){
+      this.dom.on('blur', '.world-search-bar input', function(){
         console.log('blur')
         view.closeSearchBar()
       })
@@ -135,6 +135,11 @@ var controller = (function (model, view) {
       this.dom.on('click', '.cancel-search', function(){
         console.log('click')
         view.closeSearchBar()
+      })
+
+      this.dom.on('click', '.world-search-bar .delete-content', function (e) {
+        console.log('delete-content')
+        model.searchLocalPost(null)
       })
 
 
@@ -162,7 +167,7 @@ var controller = (function (model, view) {
       /* Keypress */
 
       this.dom.on('keypress', '.comments-footer .comment-input', function (e) {
-        if (e.keyCode == 13) {
+        //if (e.keyCode == 13) {
           if (!e.shiftKey) {
             var post = $(this).parent().parent().parent().data('post')
             var input = $(this).parent().parent().parent().find('.comments-footer .comment-input')
@@ -177,7 +182,7 @@ var controller = (function (model, view) {
             input.val('')
             e.preventDefault()
           }
-        }
+        //}
       })
 
       /* Context menu */
@@ -194,9 +199,9 @@ var controller = (function (model, view) {
 
       // Input events
 
-      this.dom.on('input', '.world-header .search-post', function (e) {
+      this.dom.on('input', '.world-search-bar input', function (e) {
         // if (e.keyCode == 13) {
-        model.searchLocalPost($(this).find('input').val())
+        model.searchLocalPost($(this).val())
         // }
       })
 
@@ -275,6 +280,11 @@ var controller = (function (model, view) {
         console.log('postAdded', post)
         model.addPost(post)
       })
+
+      /*api.cosmos.on('postReplied', function (post, world) {
+        console.log('postReplied', post, world)
+        model.addPost(post)
+      })*/
 
       api.cosmos.on('postRemoved', function (post, world) {
         console.log('postRemoved', post, world)

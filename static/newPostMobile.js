@@ -27,7 +27,7 @@ var TYPES = {
 }
 
 // Variables
-var app = $(this);
+var app = $(document.body);
 var automaticPopupQueue = null
 var lastOperationSample = Date.now()
 
@@ -99,7 +99,7 @@ var attachFromInevio = function(){
   hideAttachSelect()
   $( '.attachment:not(.wz-prototype)').remove();
 
-  wz.app.openApp( 1 , [ 'select-source' , function( o ){
+  api.app.openApp( 1 , [ 'select-source' , function( o ){
 
     $( '.attach-select-new-post' ).removeClass( 'popup' );
 
@@ -144,8 +144,7 @@ var postNewCardAsync = function(){
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.attachment:not(.wz-prototype)').remove();
-        updateLastPostRead( o , function(){
-        });
+        closeNewPost()
 
       });
 
@@ -158,8 +157,7 @@ var postNewCardAsync = function(){
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.attachment:not(.wz-prototype)').remove();
-        updateLastPostRead( o , function(){
-        });
+        closeNewPost()
 
       });
 
@@ -170,8 +168,7 @@ var postNewCardAsync = function(){
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.attachment:not(.wz-prototype)').remove();
-        updateLastPostRead( o , function(){
-        });
+        closeNewPost()
 
       });
 
@@ -267,16 +264,15 @@ var updateAttachmentCounter = function(){
 
 }
 
-var updateLastPostRead = function( post , callback ){
+var closeNewPost = function(){
 
-  var post = post[0];
-  wql.upsertLastRead( [ post.worldId , myContactID , post.id , post.id ] , function( e , o ){
-    if (e) {
-      console.log(e);
-    }else{
-      callback();
-    }
-  });
+  $('.attachment:not(.wz-prototype)').remove()
+  $('.mobile-world-content').removeClass('hide')
+  $('.mobile-new-post').stop().clearQueue().transition({
+    'transform': 'translateY(-100%)'
+  }, 300, function () {
+    $(this).addClass('hide');
+  })
 
 }
 
