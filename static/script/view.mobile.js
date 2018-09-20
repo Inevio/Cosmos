@@ -171,6 +171,8 @@ var view = (function () {
 
       this.noWorlds = $('.no-worlds')
 
+      this.openedPostComments
+
       this._translateInterface()
 
     }
@@ -659,7 +661,13 @@ var view = (function () {
       }
       card.find('.comments-text').data('num', comments.length)
 
-      var listToAppend = []
+      if( post.apiPost.id === this.openedPostComments ){
+        this.insertComments(post)
+      }
+
+      return callback(card)
+
+      /*var listToAppend = []
 
       async.each(comments, function (comment, checkEnd) {
         this.appendComment(comment, function (commentDom) {
@@ -670,7 +678,7 @@ var view = (function () {
         card.find('.comments-list').append(listToAppend)
         card.find('.comments-list').scrollTop(999999999999999)
         return callback(card)
-      })
+      })*/
 
     }
 
@@ -763,12 +771,28 @@ var view = (function () {
 
     }
 
-    insertComments(comments, post){
+    filterPosts (list) {
+      if (list) {
+        $('.cardDom').removeClass('filtered')
+        list.forEach(function (id) {
+          $('.post-' + id).addClass('filtered')
+        })
+
+        $('.cardDom:not(.filtered)').hide()
+        $('.cardDom.filtered').show()
+      } else {
+        $('.cardDom').removeClass('filtered').show()
+      }
+    }
+
+    insertComments(post){
+
+      let comments = Object.values(post.comments)
 
       $('.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove()
-      $('.mobile-world-comments').data('post', post )
+      $('.mobile-world-comments').data('post', post.apiPost )
 
-      if(!comments || !comments.length) return this.openCommentsView()
+      if(!comments || !comments.length) return this.openCommentsView(post.apiPost.id)
 
       var commentList = []
       console.log(comments)
@@ -841,20 +865,22 @@ var view = (function () {
 
         if( index === comments.length - 1 ){
           $('.mobile-world-comments .comments-list').append(commentList)
-          this.openCommentsView()
+          $('.mobile-world-comments .comments-list').scrollTop(999999999)
+          this.openCommentsView(post.apiPost.id)
         }
 
       }.bind(this))
 
     }
 
-    openCommentsView(){
+    openCommentsView(postId){
 
       $('.mobile-world-comments').show().stop().clearQueue().transition({
         'transform': 'translateY(0)'
       }, 300, function () {
         $('.mobile-world-content').hide()
-      })
+        this.openedPostComments = postId
+      }.bind(this))
 
     }
 
@@ -1075,6 +1101,7 @@ var view = (function () {
       console.log(world)
       $('.clean').remove()
       $('.world').removeClass('active')
+      this.dom.data('worldSelected', world.apiWorld)
       $('.world-' + world.apiWorld.id).addClass('active')
       $('.world-' + world.apiWorld.id).removeClass('with-notification')
       $('.search-post input, .mobile-world-content .search-bar input').val('')
@@ -1120,6 +1147,12 @@ var view = (function () {
       input.focus()
       input.data('reply', post)
 
+    }
+
+    prependPost (post) {
+      this.appendPost( post, null, function(postDom){
+        $('.you-card.wz-prototype').after(postDom)
+      })
     }
 
     /*showNewPostButton () {

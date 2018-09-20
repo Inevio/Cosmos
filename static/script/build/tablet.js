@@ -171,6 +171,8 @@ var view = (function () {
 
       this.noWorlds = $('.no-worlds')
 
+      this.openedPostComments
+
       this._translateInterface()
 
     }
@@ -659,7 +661,13 @@ var view = (function () {
       }
       card.find('.comments-text').data('num', comments.length)
 
-      var listToAppend = []
+      if( post.apiPost.id === this.openedPostComments ){
+        this.insertComments(post)
+      }
+
+      return callback(card)
+
+      /*var listToAppend = []
 
       async.each(comments, function (comment, checkEnd) {
         this.appendComment(comment, function (commentDom) {
@@ -670,7 +678,7 @@ var view = (function () {
         card.find('.comments-list').append(listToAppend)
         card.find('.comments-list').scrollTop(999999999999999)
         return callback(card)
-      })
+      })*/
 
     }
 
@@ -763,12 +771,28 @@ var view = (function () {
 
     }
 
-    insertComments(comments, post){
+    filterPosts (list) {
+      if (list) {
+        $('.cardDom').removeClass('filtered')
+        list.forEach(function (id) {
+          $('.post-' + id).addClass('filtered')
+        })
+
+        $('.cardDom:not(.filtered)').hide()
+        $('.cardDom.filtered').show()
+      } else {
+        $('.cardDom').removeClass('filtered').show()
+      }
+    }
+
+    insertComments(post){
+
+      let comments = Object.values(post.comments)
 
       $('.mobile-world-comments .commentDom, .mobile-world-comments .replyDom ').remove()
-      $('.mobile-world-comments').data('post', post )
+      $('.mobile-world-comments').data('post', post.apiPost )
 
-      if(!comments || !comments.length) return this.openCommentsView()
+      if(!comments || !comments.length) return this.openCommentsView(post.apiPost.id)
 
       var commentList = []
       console.log(comments)
@@ -841,20 +865,22 @@ var view = (function () {
 
         if( index === comments.length - 1 ){
           $('.mobile-world-comments .comments-list').append(commentList)
-          this.openCommentsView()
+          $('.mobile-world-comments .comments-list').scrollTop(999999999)
+          this.openCommentsView(post.apiPost.id)
         }
 
       }.bind(this))
 
     }
 
-    openCommentsView(){
+    openCommentsView(postId){
 
       $('.mobile-world-comments').show().stop().clearQueue().transition({
         'transform': 'translateY(0)'
       }, 300, function () {
         $('.mobile-world-content').hide()
-      })
+        this.openedPostComments = postId
+      }.bind(this))
 
     }
 
@@ -1075,6 +1101,7 @@ var view = (function () {
       console.log(world)
       $('.clean').remove()
       $('.world').removeClass('active')
+      this.dom.data('worldSelected', world.apiWorld)
       $('.world-' + world.apiWorld.id).addClass('active')
       $('.world-' + world.apiWorld.id).removeClass('with-notification')
       $('.search-post input, .mobile-world-content .search-bar input').val('')
@@ -1120,6 +1147,12 @@ var view = (function () {
       input.focus()
       input.data('reply', post)
 
+    }
+
+    prependPost (post) {
+      this.appendPost( post, null, function(postDom){
+        $('.you-card.wz-prototype').after(postDom)
+      })
     }
 
     /*showNewPostButton () {
@@ -1526,7 +1559,7 @@ var model = (function (view) {
     }
 
     _compareTitle (query, title) {
-      return (title.toLowerCase().indexOf(query) !== -1)
+      return (title.toLowerCase().indexOf(query.toLowerCase()) !== -1)
     }
 
     _loadFullContactList (callback) {
@@ -1640,6 +1673,8 @@ var model = (function (view) {
     }
 
     addReplyBack (post, message) {
+
+      console.log('addReplyBack', post, message)
       if (!this.openedWorld) {
         return
       }
@@ -1688,6 +1723,7 @@ var model = (function (view) {
     }
 
     addToRestOfUsers (user) {
+
       if (this.restOfUsers[ user.idWorkspace ]) {
         return this.restOfUsers[ user.idWorkspace ]
       }
@@ -2104,12 +2140,17 @@ var model = (function (view) {
       }
 
       if (this.contacts[ notification.sender ]) {
+
         notification.apiSender = this.contacts[ notification.sender ]
         this.notificationAdd(notification)
+
       } else if (this.restOfUsers[ notification.sender ]) {
+
         notification.apiSender = this.restOfUsers[ notification.sender ]
         this.notificationAdd(notification)
+
       } else {
+
         api.user(notification.sender, function (error, user) {
           if (error) {
             return console.error(error)
@@ -2118,14 +2159,14 @@ var model = (function (view) {
           notification.apiSender = this.addToRestOfUsers(user)
           this.notificationAdd(notification)
         }.bind(this))
+
       }
     }
 
     openComments( postId ){
 
-      console.log()
       if( !this.openedWorld || !this.openedWorld.posts[postId] ) return
-      view.insertComments(Object.values(this.openedWorld.posts[postId].comments), this.openedWorld.posts[postId])
+      view.insertComments(this.openedWorld.posts[postId])
 
     }
 
@@ -2563,18 +2604,31 @@ var model = (function (view) {
 
       this.apiWorld.getUsers(function (error, members) {
         if (error) {
+          console.log('error get users', error)
           // return this.app.view.launchAlert( error )
         }
 
         members.forEach(function (member) {
+          
+          if(!member){
+            console.log('undefined member in world', this.apiWorld)
+          }
+
           if (this.app.contacts[ member.idWorkspace ]) {
             this._addMember(this.app.contacts[ member.idWorkspace ])
-          } else {
+          }else if(this.app.restOfUsers[ member.idWorkspace ]){
+            this._addMember(this.app.restOfUsers[ member.idWorkspace ])
+          }else {
             api.user(member.idWorkspace, function (err, user) {
               if (error) {
                 return console.error(error)
               }
-              this._addMember(user, member.idWorkspace)
+              if(!user){
+                console.log('undefined user in world', member.idWorkspace)
+                return
+              }
+
+              this._addMember(this.app.addToRestOfUsers(user))
             }.bind(this))
           }
         }.bind(this))
@@ -2590,13 +2644,21 @@ var model = (function (view) {
     }
 
     addMember (idWorkspace) {
-      api.user(idWorkspace, function (error, user) {
-        if (error) {
-          return console.error(error)
-        }
 
-        this.members.push(user)
-      }.bind(this))
+      if (this.app.contacts[ member.idWorkspace ]) {
+        this.members.push(this.app.contacts[ member.idWorkspace ])
+      }else if(this.app.restOfUsers[ member.idWorkspace ]){
+        this.members.push(this.app.restOfUsers[ member.idWorkspace ])
+      }else {
+        api.user(idWorkspace, function (error, user) {
+          if (error) {
+            return console.error(error)
+          }
+
+          this.members.push(this.app.addToRestOfUsers(user))
+        }.bind(this))
+      }
+
     }
 
     removeMember (memberId) {
@@ -2830,14 +2892,14 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.close-new-post', function(){
-        view.closeNewPost('worldContent')
+        view.closeNewPost()
       })
 
       this.dom.on('click', '.activate-search-bar', function(){
         view.openSearchBar()
       })
 
-      $('.activate-search-bar input').on('blur', function(){
+      this.dom.on('blur', '.world-search-bar input', function(){
         console.log('blur')
         view.closeSearchBar()
       })
@@ -2845,6 +2907,11 @@ var controller = (function (model, view) {
       this.dom.on('click', '.cancel-search', function(){
         console.log('click')
         view.closeSearchBar()
+      })
+
+      this.dom.on('click', '.world-search-bar .delete-content', function (e) {
+        console.log('delete-content')
+        model.searchLocalPost(null)
       })
 
 
@@ -2872,7 +2939,7 @@ var controller = (function (model, view) {
       /* Keypress */
 
       this.dom.on('keypress', '.comments-footer .comment-input', function (e) {
-        if (e.keyCode == 13) {
+        //if (e.keyCode == 13) {
           if (!e.shiftKey) {
             var post = $(this).parent().parent().parent().data('post')
             var input = $(this).parent().parent().parent().find('.comments-footer .comment-input')
@@ -2887,7 +2954,7 @@ var controller = (function (model, view) {
             input.val('')
             e.preventDefault()
           }
-        }
+        //}
       })
 
       /* Context menu */
@@ -2904,9 +2971,9 @@ var controller = (function (model, view) {
 
       // Input events
 
-      this.dom.on('input', '.world-header .search-post', function (e) {
+      this.dom.on('input', '.world-search-bar input', function (e) {
         // if (e.keyCode == 13) {
-        model.searchLocalPost($(this).find('input').val())
+        model.searchLocalPost($(this).val())
         // }
       })
 
@@ -2985,6 +3052,11 @@ var controller = (function (model, view) {
         console.log('postAdded', post)
         model.addPost(post)
       })
+
+      /*api.cosmos.on('postReplied', function (post, world) {
+        console.log('postReplied', post, world)
+        model.addPost(post)
+      })*/
 
       api.cosmos.on('postRemoved', function (post, world) {
         console.log('postRemoved', post, world)

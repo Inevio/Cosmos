@@ -2012,7 +2012,7 @@ var model = (function (view) {
     }
 
     _compareTitle (query, title) {
-      return (title.toLowerCase().indexOf(query) !== -1)
+      return (title.toLowerCase().indexOf(query.toLowerCase()) !== -1)
     }
 
     _loadFullContactList (callback) {
@@ -2126,6 +2126,8 @@ var model = (function (view) {
     }
 
     addReplyBack (post, message) {
+
+      console.log('addReplyBack', post, message)
       if (!this.openedWorld) {
         return
       }
@@ -2174,6 +2176,7 @@ var model = (function (view) {
     }
 
     addToRestOfUsers (user) {
+
       if (this.restOfUsers[ user.idWorkspace ]) {
         return this.restOfUsers[ user.idWorkspace ]
       }
@@ -2590,12 +2593,17 @@ var model = (function (view) {
       }
 
       if (this.contacts[ notification.sender ]) {
+
         notification.apiSender = this.contacts[ notification.sender ]
         this.notificationAdd(notification)
+
       } else if (this.restOfUsers[ notification.sender ]) {
+
         notification.apiSender = this.restOfUsers[ notification.sender ]
         this.notificationAdd(notification)
+
       } else {
+
         api.user(notification.sender, function (error, user) {
           if (error) {
             return console.error(error)
@@ -2604,14 +2612,14 @@ var model = (function (view) {
           notification.apiSender = this.addToRestOfUsers(user)
           this.notificationAdd(notification)
         }.bind(this))
+
       }
     }
 
     openComments( postId ){
 
-      console.log()
       if( !this.openedWorld || !this.openedWorld.posts[postId] ) return
-      view.insertComments(Object.values(this.openedWorld.posts[postId].comments), this.openedWorld.posts[postId])
+      view.insertComments(this.openedWorld.posts[postId])
 
     }
 
@@ -3049,18 +3057,31 @@ var model = (function (view) {
 
       this.apiWorld.getUsers(function (error, members) {
         if (error) {
+          console.log('error get users', error)
           // return this.app.view.launchAlert( error )
         }
 
         members.forEach(function (member) {
+          
+          if(!member){
+            console.log('undefined member in world', this.apiWorld)
+          }
+
           if (this.app.contacts[ member.idWorkspace ]) {
             this._addMember(this.app.contacts[ member.idWorkspace ])
-          } else {
+          }else if(this.app.restOfUsers[ member.idWorkspace ]){
+            this._addMember(this.app.restOfUsers[ member.idWorkspace ])
+          }else {
             api.user(member.idWorkspace, function (err, user) {
               if (error) {
                 return console.error(error)
               }
-              this._addMember(user, member.idWorkspace)
+              if(!user){
+                console.log('undefined user in world', member.idWorkspace)
+                return
+              }
+
+              this._addMember(this.app.addToRestOfUsers(user))
             }.bind(this))
           }
         }.bind(this))
@@ -3076,13 +3097,21 @@ var model = (function (view) {
     }
 
     addMember (idWorkspace) {
-      api.user(idWorkspace, function (error, user) {
-        if (error) {
-          return console.error(error)
-        }
 
-        this.members.push(user)
-      }.bind(this))
+      if (this.app.contacts[ member.idWorkspace ]) {
+        this.members.push(this.app.contacts[ member.idWorkspace ])
+      }else if(this.app.restOfUsers[ member.idWorkspace ]){
+        this.members.push(this.app.restOfUsers[ member.idWorkspace ])
+      }else {
+        api.user(idWorkspace, function (error, user) {
+          if (error) {
+            return console.error(error)
+          }
+
+          this.members.push(this.app.addToRestOfUsers(user))
+        }.bind(this))
+      }
+
     }
 
     removeMember (memberId) {
