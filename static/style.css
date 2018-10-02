@@ -506,17 +506,15 @@ to {background-position: -200% 0;}
 
 /* SIDEBAR */
 .sidebar{
-
   position: absolute;
   width: 270px;
-	height: ~'calc(100% - 20px)';
+	height: ~'calc(100% - 17px)';
 	-webkit-border-radius: 6px 0 0 6px;
 	-moz-border-radius: 6px 0 0 6px;
 	border-radius: 6px 0 0 6px;
 	background-color: #272c34;
   padding-top: 17px;
   z-index: 3;
-
 }
 
 .sidebar{
@@ -614,7 +612,7 @@ to {background-position: -200% 0;}
 
     float: left;
     width: 100%;
-    margin-top: 19px;
+    /*margin-top: 19px;*/
 
   }
 
@@ -636,6 +634,7 @@ to {background-position: -200% 0;}
     -webkit-transition: all 0.2s;
     transition: all 0.2s;
     cursor: pointer;
+    display: none;
 
     i{
       float: left;
@@ -664,16 +663,21 @@ to {background-position: -200% 0;}
     padding-left: 14px;
     letter-spacing: 0.02em;
     cursor: pointer;
+    display: none;
 
   }
 
   .world-list{
 
     float: left;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
     width: 100%;
     overflow: hidden;
 
+  }
+
+  .private-list{
+    margin-top: 20px;
   }
 
   .world{
@@ -797,6 +801,7 @@ to {background-position: -200% 0;}
   	-moz-box-shadow: 0 -1px rgba(0,0,0,.05), inset 0 1px rgba(255,255,255,.05);
   	box-shadow: 0 -1px rgba(0,0,0,.05), inset 0 1px rgba(255,255,255,.05);
     cursor: pointer;
+    display: none;
 
   }
 
@@ -3896,7 +3901,7 @@ to {background-position: -200% 0;}
     transform: translateY(20px);
     position: absolute;
     top: 460px;
-    display: none;
+    display: none !important;
 
   }
 
