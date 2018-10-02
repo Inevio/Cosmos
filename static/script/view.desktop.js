@@ -163,7 +163,6 @@ var view = (function () {
       this.dom = win
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
-
       this.myContactID 							= api.system.workspace().idWorkspace
       this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
@@ -1118,7 +1117,7 @@ var view = (function () {
       }, 800, this.animationEffect, function () {
         $(this).css({
 
-          'top': '640px',
+          'top': '450px',
           'transform': 'translateY(20px)',
           'right': '0',
           'left': 'calc(50% - 472px/2 + 150px)'
@@ -1200,7 +1199,7 @@ var view = (function () {
       $('.delete-world-button').css('left', 'calc((50% - 135px) + 142px)').find('span').text(text)
       $('.create-world-button , .delete-world-button').css({
 
-        'top': '640px',
+        'top': '450px',
         'transform': 'translateY(20px)',
         'right': '0',
         'opacity': '0'
@@ -1274,7 +1273,7 @@ var view = (function () {
       }, 1000)
 
       // Fade in and goes up privacy (animation)
-      var translate = this.isMobile ? '80px' : '120px'
+      var translate = this.isMobile ? '80px' : '70px'
       $('.create-world-button, .delete-world-button').css('transform', 'translateY(158px)')
       $('.create-world-button').transition({
 
@@ -1290,6 +1289,7 @@ var view = (function () {
         'transform': 'translateY( ' + translate + ' )'
 
       }, 1000)
+
     }
 
     newWorldAnimationOut () {
@@ -1905,7 +1905,7 @@ var view = (function () {
         return a.apiWorld.name.localeCompare(b.apiWorld.name)
       })
 
-      var publicWorlds = []
+      /*var publicWorlds = []
 
       function isPrivate (world) {
         if (!world.apiWorld.isPrivate) {
@@ -1915,7 +1915,7 @@ var view = (function () {
         return world.apiWorld.isPrivate
       }
 
-      worldList = worldList.filter(isPrivate)
+      worldList = worldList.filter(isPrivate)*/
 
       // console.log( publicWorlds, worldList )
       function worldSidebarDom (item) {
@@ -1938,9 +1938,9 @@ var view = (function () {
         return worldSidebarDom(item)
       }))
 
-      this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
+      /*this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
         return worldSidebarDom(item)
-      }))
+      }))*/
     }
 
     worldContextMenu (worldDom, world) {
