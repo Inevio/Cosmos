@@ -765,7 +765,7 @@ var view = (function () {
       
       $('.notifications-container-mobile').transition({
         'x' : '100%'
-      }, 500, function(){
+      }, 300, function(){
         $('.notifications-container-mobile').show()
       })
 
@@ -979,7 +979,7 @@ var view = (function () {
       $('.world').removeClass('active')
       $('.mobile-world-content').transition({
         'x' : '100%'
-      }, 500, function(){
+      }, 300, function(){
         $(this).addClass('hide')
       })
 
@@ -1011,7 +1011,7 @@ var view = (function () {
       $('.mobile-new-post').removeClass('hide')
       $('.mobile-new-post').stop().clearQueue().transition({
           'transform': 'translateY(0%)'
-      }, 300, function () {
+      }, 200, function () {
           $('.mobile-world-content').addClass('hide')
       })
       $('.mobile-new-post .new-card-title').html('<i class="wz-dragger">' + lang.newPost + '</i>' + '<span>' + lang.for + '</span>' + '<figure class="wz-dragger ellipsis">' + worldName + '</figure>')
@@ -1126,7 +1126,7 @@ var view = (function () {
 
       $('.mobile-world-content').removeClass('hide').transition({
         'x' : 0
-      }, 1000)
+      }, 300)
 
     }
 
@@ -1134,7 +1134,7 @@ var view = (function () {
       $('.notifications-container-mobile').show()
       $('.notifications-container-mobile').transition({
         'x' : 0
-      }, 1000)
+      }, 300)
     }
 
     prepareReplyComment(comment) {
