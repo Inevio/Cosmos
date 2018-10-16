@@ -6287,6 +6287,7 @@ to {background-position: -200% 0;}
   .new-card-header{
     float: left;
     margin-top: 18px;
+    max-width: ~'calc(100% - 52px)';
   }
 
   .new-card-title{

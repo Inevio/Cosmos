@@ -116,7 +116,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.new-post-button', function(){
-        view.newPostMobile($('.world-title').text())
+        view.newPostMobile($('.world-header-min .world-title').text())
       })
 
       this.dom.on('click', '.close-new-post', function(){
