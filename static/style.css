@@ -5162,6 +5162,7 @@ to {background-position: -200% 0;}
   .world-list{
     margin-top: 0px;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     height: ~'calc(100% - 133px)';
   }
 
