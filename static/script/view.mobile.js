@@ -174,6 +174,7 @@ var view = (function () {
       this.openedPostComments
 
       this._translateInterface()
+      this._textareaAutoSize()
 
     }
 
@@ -230,6 +231,19 @@ var view = (function () {
       }
 
       return message
+
+    }
+
+    _textareaAutoSize(){
+
+      var interval = setInterval(function(){
+
+        if( typeof $().textareaAutoSize == 'function' ){
+          $( '.comments-footer textarea' ).textareaAutoSize();
+          clearInterval(interval)
+        }
+
+      }, 500);
 
     }
 
