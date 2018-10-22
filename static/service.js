@@ -170,7 +170,7 @@ var addArrow = function( appName, text, position ){
 
 
 console.log('cosmos',typeof cordova == 'undefined')
-/*if( typeof cordova == 'undefined' ){
+if( typeof cordova == 'undefined' ){
 
   wql.isFirstOpen( [ api.system.workspace().idWorkspace ] , function( e , o ){
 
@@ -182,6 +182,6 @@ console.log('cosmos',typeof cordova == 'undefined')
 
   });
 
-}*/
+}
 
 checkNotifications();

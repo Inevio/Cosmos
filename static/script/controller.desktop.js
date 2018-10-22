@@ -166,7 +166,7 @@ var controller = (function (model, view) {
       })
 
       this.dom.on('click', '.kick-out-button', function () {
-        model.removeUserBack($(this).parent().data('user').id)
+        model.removeUserBack($(this).parent().data('user').idWorkspace)
       })
 
       this.dom.on('click', '.invite-user-button', function () {
