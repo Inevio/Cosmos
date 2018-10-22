@@ -139,38 +139,41 @@ var postNewCardAsync = function(){
     if ( o.linkType ) {
 
       metadata.linkType = o.linkType;
-      worldSelected.addPost( { content: text, title: title, metadata: metadata }, function( e, o ){
+      worldSelected.addPost( { content: text, title: title, metadata: metadata })
+      .then( object => {
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.attachment:not(.wz-prototype)').remove();
         closeNewPost()
 
-      });
+      })
 
     }else if( o.fileType ){
 
       metadata.fileType = o.fileType;
       metadata.fsnode = attachment;
-      worldSelected.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata }, function( e, o ){
+      worldSelected.addPost( { content: text, title: title, fsnode: attachment, metadata: metadata })
+      .then( object => {
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.attachment:not(.wz-prototype)').remove();
         closeNewPost()
 
-      });
+      })
 
     }else{
 
-      worldSelected.addPost( { content: text, title: title }, function( e, o ){
+      worldSelected.addPost({ content: text, title: title })
+      .then( object => {
 
         $( '.new-card-input' ).val('');
         $( '.new-card-textarea' ).val('');
         $( '.attachment:not(.wz-prototype)').remove();
         closeNewPost()
 
-      });
+      })
 
     }
 

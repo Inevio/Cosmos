@@ -1695,25 +1695,23 @@ var model = (function (view) {
       }
 
       if (post.isReply) {
+
         if (!this.openedWorld.posts[ post.parent ] || !this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment) {
           return
         }
 
-        this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply({ content: message, notification: {} }, function (error, object) {
-          if (error) {
-            return console.error(error)
-          }
-        })
+        this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply({ content: message, notification: {} })
+        .catch( error => console.error(error))
+
       } else {
+
         if (!this.openedWorld.posts[ post.id ] || !this.openedWorld.posts[ post.id ].apiPost) {
           return
         }
 
-        this.openedWorld.posts[ post.id ].apiPost.reply({ content: message, notification: {} }, function (error, object) {
-          if (error) {
-            return console.error(error)
-          }
-        })
+        this.openedWorld.posts[ post.id ].apiPost.reply({ content: message, notification: {} })
+        .catch( error => console.error(error))
+
       }
     }
     
@@ -1904,19 +1902,19 @@ var model = (function (view) {
     }
 
     followWorld (world) {
+
       if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds)
         return
       }
 
-      world.addUser(this.myContactID, function (error, o) {
-        if (error) {
-          return console.error(error)
-        }
-
+      world.addUser(this.myContactID)
+      .then( user => {
         this.addWorld(world)
         this.view.updateWorldCard(world.id, true)
-      }.bind(this))
+      })
+      .catch( error => console.error(error) )
+
     }
 
     fullLoad () {
@@ -1977,11 +1975,9 @@ var model = (function (view) {
       users.forEach(function (userDom, index) {
         var user = $(userDom).data('user')
 
-        this.openedWorld.apiWorld.addUser(user.idWorkspace, function (error, o) {
-          if (error) {
-            console.error(error)
-          }
-        })
+        this.openedWorld.apiWorld.addUser(user.idWorkspace)
+        .catch( error => console.error(error) )
+
       }.bind(this))
     }
 
@@ -2024,21 +2020,9 @@ var model = (function (view) {
         return
       }
 
-      this.worlds[worldId].apiWorld.removeUser(this.myContactID, function (error, o) {
-        if (error) {
-          console.error(error)
-        } else {
+      this.worlds[worldId].apiWorld.removeUser(this.myContactID)
+      .catch( error => console.error(error) )
 
-          // this.removeWorldFront( worldId )
-
-          /* wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
-            if (err) {
-              console.error(err)
-            }
-          }) */
-
-        }
-      })
     }
 
     loadMorePosts () {
@@ -2118,16 +2102,19 @@ var model = (function (view) {
         this.fastLoadFSNodes(this.worlds[ notificationData.world ].posts[ mainPostId ])
         this.notificationAttendedBack(notification.id)
       } else {
-        this.worlds[ notificationData.world ].apiWorld.getPost(mainPostId, { withFullUsers: true }, function (error, post) {
-          if (error) {
-            return console.error(error)
-          }
+
+        this.worlds[ notificationData.world ].apiWorld.getPost(mainPostId, { withFullUsers: true })
+        .then( post => {
+
           var postToShow = new Post(this, post)
           this.openWorld(notificationData.world, true)
           this.view.showNotificationPost(postToShow, notificationData)
           this.fastLoadFSNodes(postToShow)
           this.notificationAttendedBack(notification.id)
-        }.bind(this))
+
+        })
+        .catch( error => console.error(error) )
+
       }
     }
 
@@ -2290,11 +2277,9 @@ var model = (function (view) {
         return
       }
 
-      this.openedWorld.apiWorld.removePost(post.id, function (error, ok) {
-        if (error) {
-          return console.error(error)
-        }
-      })
+      this.openedWorld.apiWorld.removePost(post.id)
+      .catch( error => console.error(error) )
+
     }
 
     removePostFront (post, world) {
@@ -2348,11 +2333,9 @@ var model = (function (view) {
         return
       }
 
-      this.openedWorld.apiWorld.removeUser(idWorkspace, function (err) {
-        if (err) {
-          console.error(err)
-        }
-      })
+      this.openedWorld.apiWorld.removeUser(idWorkspace)
+      .catch( error => console.error(error) )
+
     }
 
     removeUserFront (idWorkspace, world) {
@@ -2595,10 +2578,8 @@ var model = (function (view) {
       this.lastPostLoaded = init
       this.loadingPosts = true
 
-      this.apiWorld.getPosts({from: init, to: end, withFullUsers: true }, function (error, posts) {
-        if (error) {
-          return console.error(error)
-        }
+      this.apiWorld.getPosts({from: init, to: end, withFullUsers: true })
+      .then( posts => {
 
         this.lastPostLoaded = end
         this.loadingPosts = false
@@ -2609,7 +2590,10 @@ var model = (function (view) {
             this.app.showPosts(this.apiWorld.id, init)
           }
         }.bind(this))
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
 
     _loadMembers () {
@@ -2617,11 +2601,8 @@ var model = (function (view) {
         return
       }
 
-      this.apiWorld.getUsers(function (error, members) {
-        if (error) {
-          console.log('error get users', error)
-          // return this.app.view.launchAlert( error )
-        }
+      this.apiWorld.getUsers()
+      .then( members => {
 
         members.forEach(function (member) {
           
@@ -2647,7 +2628,10 @@ var model = (function (view) {
             }.bind(this))
           }
         }.bind(this))
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
 
     _sortMembers () {
@@ -2717,13 +2701,11 @@ var model = (function (view) {
     }
 
     _loadComments () {
-      this.apiPost.getReplies({ from: 0, to: 1000, withFullUsers: true }, function (error, replies) {
+
+      this.apiPost.getReplies({ from: 0, to: 1000, withFullUsers: true })
+      .then( replies => {
+
         this.commentsLoaded = true
-
-        if (error) {
-          return console.error(error)
-        }
-
         replies.forEach(function (reply) {
           this.comments[ reply.id ] = new Comment(this.app, reply)
         }.bind(this))
@@ -2731,7 +2713,10 @@ var model = (function (view) {
         if (this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId) {
           this.app.view.updatePostComments(this)
         }
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
 
     loadPostFsnodes (callback) {
@@ -2765,20 +2750,20 @@ var model = (function (view) {
     }
 
     _loadReplies () {
-      this.apiComment.getReplies({ from: 0, to: 1000, withFullUsers: true }, function (error, replies) {
+      this.apiComment.getReplies({ from: 0, to: 1000, withFullUsers: true })
+      .then( replies => {
+
         this.repliesLoaded = true
-
-        if (error) {
-          return console.error(error)
-        }
-
         replies.forEach(function (reply) {
           this.replies[ reply.id ] = reply
           if (this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiComment.worldId) {
             this.app.view.appendReplyComment(reply, null, true)
           }
         }.bind(this))
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
   }
 

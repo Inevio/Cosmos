@@ -136,21 +136,25 @@ var postNewCardAsync = function () {
 
     if (o.linkType) {
       metadata.linkType = o.linkType
-      params.world.addPost({ content: text, title: title, metadata: metadata, notification: {} }, function (e, o) {
+      params.world.addPost({ content: text, title: title, metadata: metadata, notification: {} })
+      .then( object => {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
         api.app.removeView(app)
       })
+
     } else if (o.fileType) {
       metadata.fileType = o.fileType
       metadata.fsnode = attachment
-      params.world.addPost({ content: text, title: title, fsnode: attachment, metadata: metadata, notification: {} }, function (e, o) {
+      params.world.addPost({ content: text, title: title, fsnode: attachment, metadata: metadata, notification: {} })
+      .then( object => {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
         api.app.removeView(app)
       })
     } else {
-      params.world.addPost({ content: text, title: title, notification: {} }, function (e, o) {
+      params.world.addPost({ content: text, title: title, notification: {} })
+      .then( object => {
         $('.new-card-input').val('')
         $('.new-card-textarea').val('')
         api.app.removeView(app)
