@@ -1589,6 +1589,8 @@ var view = (function () {
     }
 
     prependPost (post) {
+      this._noPosts.css('opacity', '0')
+      this._noPosts.hide()
       this.appendPost( post, null, function(postDom){
         $('.you-card.wz-prototype').after(postDom)
       })
