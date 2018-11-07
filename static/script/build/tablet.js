@@ -1714,7 +1714,7 @@ var model = (function (view) {
 
       }
     }
-    
+
 
     addReplyFront (post) {
       var needToAppend = false
@@ -2605,7 +2605,7 @@ var model = (function (view) {
       .then( members => {
 
         members.forEach(function (member) {
-          
+
           if(!member){
             console.log('undefined member in world', this.apiWorld)
           }
@@ -2616,7 +2616,7 @@ var model = (function (view) {
             this._addMember(this.app.restOfUsers[ member.idWorkspace ])
           }else {
             api.user(member.idWorkspace, function (err, user) {
-              if (error) {
+              if (err) {
                 return console.error(error)
               }
               if(!user){
