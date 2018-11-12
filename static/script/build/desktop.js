@@ -1592,8 +1592,11 @@ var view = (function () {
       this._noPosts.css('opacity', '0')
       this._noPosts.hide()
       this.appendPost( post, null, function(postDom){
+        if (post.apiPost.author === this.myContactID) {
+          postDom.addClass('mine')
+        }
         $('.you-card.wz-prototype').after(postDom)
-      })
+      }.bind(this))
     }
 
     prepareReplyComment (post, name, input) {
@@ -2916,16 +2919,26 @@ var model = (function (view) {
         }
       } else {
 
-        console.log(world.posts[ post.id ].apiPost.metadata.fileType,post.metadata.fileType)
-        var changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+        let changePostType = false
+        if( world.posts[ post.id ].apiPost.metadata && post.metadata ){
+          changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+        }else if( world.posts[ post.id ].apiPost.metadata || post.metadata ){
+          changePostType = true
+        }
 
         world.posts[ post.id ].apiPost = post
-        world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
-          if (needToRefresh) {
-            view.updatePost(modelPost, changePostType)
-            //view.updatePostFSNodes(modelPost,changePostType)
-          }
-        })
+
+        if(changePostType){
+          world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
+            if (needToRefresh) {
+              view.updatePost(modelPost, changePostType)
+              //view.updatePostFSNodes(modelPost,changePostType)
+            }
+          })
+        }else{
+          view.updatePost(world.posts[ post.id ], changePostType)
+        }
+
       }
     }
 
@@ -3229,6 +3242,7 @@ var controller = (function (model, view) {
     }
 
     _bindEvents () {
+
       this._domWorldCategory.on('click', function () {
         var category = $(this).parent()
         category.toggleClass('closed')
@@ -3857,6 +3871,27 @@ var controller = (function (model, view) {
         console.log('postModified', post)
         model.updatePost(post)
       })
+
+      console.log('bind event')
+      api.cosmos.on('postContentSet', function (post) {
+        console.log('postContentSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postTitleSet', function (post) {
+        console.log('postTitleSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postFSNodeSet', function (post) {
+        console.log('postFSNodeSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postMetadataSet', function (post) {
+        console.log('postMetadataSet', post)
+        model.updatePost(post)
+      })      
 
       api.cosmos.on('worldChanged', function (world) {
         console.log('worldChanged', world)

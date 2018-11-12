@@ -1592,8 +1592,11 @@ var view = (function () {
       this._noPosts.css('opacity', '0')
       this._noPosts.hide()
       this.appendPost( post, null, function(postDom){
+        if (post.apiPost.author === this.myContactID) {
+          postDom.addClass('mine')
+        }
         $('.you-card.wz-prototype').after(postDom)
-      })
+      }.bind(this))
     }
 
     prepareReplyComment (post, name, input) {
