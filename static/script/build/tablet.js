@@ -1647,9 +1647,9 @@ var model = (function (view) {
     _loadFullWorldsList (callback) {
       callback = api.tool.secureCallback(callback)
 
-      api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000})
+      api.cosmos.list({from: 0, to: 1000})
       .then( worlds => {
-        console.log('getUserWorlds', worlds)
+        console.log('list', worlds)
 
         worlds.forEach(function (world, index) {
           this.addWorld(world)
