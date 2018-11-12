@@ -2476,16 +2476,26 @@ var model = (function (view) {
         }
       } else {
 
-        console.log(world.posts[ post.id ].apiPost.metadata.fileType,post.metadata.fileType)
-        var changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+        let changePostType = false
+        if( world.posts[ post.id ].apiPost.metadata && post.metadata ){
+          changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+        }else if( world.posts[ post.id ].apiPost.metadata || post.metadata ){
+          changePostType = true
+        }
 
         world.posts[ post.id ].apiPost = post
-        world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
-          if (needToRefresh) {
-            view.updatePost(modelPost, changePostType)
-            //view.updatePostFSNodes(modelPost,changePostType)
-          }
-        })
+
+        if(changePostType){
+          world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
+            if (needToRefresh) {
+              view.updatePost(modelPost, changePostType)
+              //view.updatePostFSNodes(modelPost,changePostType)
+            }
+          })
+        }else{
+          view.updatePost(world.posts[ post.id ], changePostType)
+        }
+
       }
     }
 
