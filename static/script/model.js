@@ -315,7 +315,6 @@ var model = (function (view) {
       return fileType;
     }
 
-
     closeWorld(){
       this.openedWorld = null
       this.view.closeWorld()
@@ -917,6 +916,18 @@ var model = (function (view) {
         return
       }
 
+      if( !post.authorObject ){
+
+        if( post.author === this.myContactID ){
+          post.authorObject = api.system.user()
+        }else if( this.contacts[post.author] ){
+          post.authorObject = this.contacts[post.author]
+        }else if( this.restOfUsers[post.author] ){
+          post.authorObject = this.restOfUsers[post.author]
+        }
+
+      }
+
       if (this.openedWorld && this.openedWorld.apiWorld.id === post.worldId) {
         needToRefresh = true
       }
@@ -1154,6 +1165,10 @@ var model = (function (view) {
       }
 
       this.commentsLoaded = false
+
+      if( this.apiPost.worldId === 294 ){
+        console.log(this)
+      }
 
       this._loadComments()
       this._addToQueue()

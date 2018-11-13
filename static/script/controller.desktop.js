@@ -399,10 +399,8 @@ var controller = (function (model, view) {
             title: newTitle,
             metadata: newMetadata,
             fsnode: newFsnodeIds
-          }, function (error, post) {
-            if (error) {
-              return console.error(error)
-            }
+          }).catch((error) => {
+            return console.error(error)
           })
 
           /* post.setFSNode( newFsnodeIds , function(){
