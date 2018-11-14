@@ -650,7 +650,7 @@ var view = (function () {
     /* Comments */
 
     appendComments (card, post, callback) {
-      
+
       console.log(card, post)
       if (!post.commentsLoaded) {
         card.find('.comments-text').text(lang.loading + ' ' + lang.comments)
@@ -777,7 +777,7 @@ var view = (function () {
     }
 
     closeNotificationCenter(){
-      
+
       $('.notifications-container-mobile').transition({
         'x' : '100%'
       }, 300, function(){
@@ -1129,11 +1129,11 @@ var view = (function () {
       $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
       this.toggleSelectWorld(false)
 
-      if(world.apiWorld.isPrivate){
+      /*if(world.apiWorld.isPrivate){
         $('.world-header .invite-user-button').css('opacity', 1)
       }else{
         $('.world-header .invite-user-button').css('opacity', 0)
-      }
+      }*/
 
       if (!updatingHeader) {
         $('.cardDom').remove()
@@ -1446,7 +1446,7 @@ var view = (function () {
             this.updateGenericCardFSNodes(post, true)
             break
         }
-        
+
       }
     }
 
@@ -1486,7 +1486,7 @@ var view = (function () {
         if( item.apiWorld.icons ){
           world.find('.world-icon').css('background-image', 'url(' + item.apiWorld.icons.small + '?token=' + Date.now() + ')')
         }
-        
+
         world.data('world', item.apiWorld)
         world.attr('data-id', item.apiWorld.id)
 
@@ -1539,6 +1539,7 @@ var view = (function () {
 
   return new View()
 })()
+
 var model = (function (view) {
   class Model {
     constructor (view) {

@@ -1565,11 +1565,11 @@ var view = (function () {
       $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
       this.toggleSelectWorld(false)
 
-      if(world.apiWorld.isPrivate){
+      /*if(world.apiWorld.isPrivate){
         $('.world-header .invite-user-button').css('opacity', 1)
       }else{
         $('.world-header .invite-user-button').css('opacity', 0)
-      }
+      }*/
 
       if (!updatingHeader) {
         $('.cardDom').remove()
