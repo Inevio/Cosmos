@@ -1122,20 +1122,34 @@ var model = (function (view) {
       })
     }
 
-    addMember (idWorkspace) {
+    addMember (user) {
 
-      if (this.app.contacts[ member.idWorkspace ]) {
-        this.members.push(this.app.contacts[ member.idWorkspace ])
-      }else if(this.app.restOfUsers[ member.idWorkspace ]){
-        this.members.push(this.app.restOfUsers[ member.idWorkspace ])
-      }else {
-        api.user(idWorkspace, function (error, user) {
-          if (error) {
-            return console.error(error)
-          }
+      if(typeof user === 'number'){
 
-          this.members.push(this.app.addToRestOfUsers(user))
-        }.bind(this))
+        if (this.app.contacts[ user ]) {
+          this.members.push(this.app.contacts[ user ])
+        }else if(this.app.restOfUsers[ user ]){
+          this.members.push(this.app.restOfUsers[ user ])
+        }else {
+          api.user(user, function (error, user) {
+            if (error) {
+              return console.error(error)
+            }
+
+            this.members.push(this.app.addToRestOfUsers(user))
+          }.bind(this))
+        }
+
+      }else if(typeof user === 'object'){
+
+        if (this.app.contacts[ user.idWorkspace ]) {
+          this.members.push(this.app.contacts[ user.idWorkspace ])
+        }else if(this.app.restOfUsers[ user.idWorkspace ]){
+          this.members.push(this.app.restOfUsers[ user.idWorkspace ])
+        }else {
+          this.members.push(this.app.addToRestOfUsers(user.idWorkspace))
+        }
+
       }
 
     }
