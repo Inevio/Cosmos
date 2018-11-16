@@ -1846,7 +1846,11 @@ var view = (function () {
     updatePost (post, changePostType) {
       var postDom = $('.post-' + post.apiPost.id)
       postDom.find('.title').text(post.apiPost.title)
-      postDom.find('.desc').text(post.apiPost.content)
+      if (post.apiPost.content === '') {
+        postDom.find('.desc').hide()
+      } else {
+        postDom.find('.desc').show().html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
       postDom.data('post', post.apiPost)
       this.updatePostFSNodes(post, changePostType)
     }
