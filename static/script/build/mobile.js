@@ -1546,6 +1546,7 @@ var model = (function (view) {
       this.view = view
       this.openedWorld
       this.myContactID = api.system.workspace().idWorkspace
+      this.myUserObject
 
       this.contacts = {}
       this.worlds = {}
@@ -1643,6 +1644,19 @@ var model = (function (view) {
           })
         }
       }.bind(this))
+    }
+
+    _loadUserObject (callback) {
+
+      api.user( this.myContactID, (error,user) => {
+
+        if(error) return console.error(error)
+
+        this.myUserObject = user
+        return callback(null, null)
+
+      })
+
     }
 
     _loadFullWorldsList (callback) {
@@ -1921,7 +1935,8 @@ var model = (function (view) {
       async.parallel({
 
         contacts: this._loadFullContactList.bind(this),
-        worlds: this._loadFullWorldsList.bind(this)
+        worlds: this._loadFullWorldsList.bind(this),
+        user: this._loadUserObject.bind(this)
 
       }, function (err, res) {
         if (err) {
@@ -2461,7 +2476,7 @@ var model = (function (view) {
       if( !post.authorObject ){
 
         if( post.author === this.myContactID ){
-          post.authorObject = api.system.user()
+          post.authorObject = this.myUserObject
         }else if( this.contacts[post.author] ){
           post.authorObject = this.contacts[post.author]
         }else if( this.restOfUsers[post.author] ){
@@ -2469,7 +2484,6 @@ var model = (function (view) {
         }
 
       }
-
       if (this.openedWorld && this.openedWorld.apiWorld.id === post.worldId) {
         needToRefresh = true
       }
@@ -2637,8 +2651,8 @@ var model = (function (view) {
           }else if(this.app.restOfUsers[ member.idWorkspace ]){
             this._addMember(this.app.restOfUsers[ member.idWorkspace ])
           }else {
-            api.user(member.idWorkspace, function (err, user) {
-              if (err) {
+            api.user(member.idWorkspace, function (error, user) {
+              if (error) {
                 return console.error(error)
               }
               if(!user){
