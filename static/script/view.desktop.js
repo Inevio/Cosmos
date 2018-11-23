@@ -1779,6 +1779,8 @@ var view = (function () {
       //console.log(notificationList)
 
       notificationList.forEach(function (notification, index) {
+
+        if(!notification.apiSender) return
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
 
         notificationDom.addClass('notification-' + notification.id)
