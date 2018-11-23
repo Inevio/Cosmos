@@ -1632,6 +1632,7 @@ var model = (function (view) {
             } else {
               api.user(notification.sender, function (error, user) {
                 if (error) {
+                  checkEnd()
                   return console.error(error)
                 }
 
