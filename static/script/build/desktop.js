@@ -1779,6 +1779,8 @@ var view = (function () {
       //console.log(notificationList)
 
       notificationList.forEach(function (notification, index) {
+
+        if(!notification.apiSender) return
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
 
         notificationDom.addClass('notification-' + notification.id)
@@ -1846,7 +1848,11 @@ var view = (function () {
     updatePost (post, changePostType) {
       var postDom = $('.post-' + post.apiPost.id)
       postDom.find('.title').text(post.apiPost.title)
-      postDom.find('.desc').text(post.apiPost.content)
+      if (post.apiPost.content === '') {
+        postDom.find('.desc').hide()
+      } else {
+        postDom.find('.desc').show().html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
       postDom.data('post', post.apiPost)
       this.updatePostFSNodes(post, changePostType)
     }
@@ -1988,6 +1994,7 @@ var model = (function (view) {
       this.view = view
       this.openedWorld
       this.myContactID = api.system.workspace().idWorkspace
+      this.myUserObject
 
       this.contacts = {}
       this.worlds = {}
@@ -2073,6 +2080,7 @@ var model = (function (view) {
             } else {
               api.user(notification.sender, function (error, user) {
                 if (error) {
+                  checkEnd()
                   return console.error(error)
                 }
 
@@ -2085,6 +2093,19 @@ var model = (function (view) {
           })
         }
       }.bind(this))
+    }
+
+    _loadUserObject (callback) {
+
+      api.user( this.myContactID, (error,user) => {
+
+        if(error) return console.error(error)
+
+        this.myUserObject = user
+        return callback(null, null)
+
+      })
+
     }
 
     _loadFullWorldsList (callback) {
@@ -2363,7 +2384,8 @@ var model = (function (view) {
       async.parallel({
 
         contacts: this._loadFullContactList.bind(this),
-        worlds: this._loadFullWorldsList.bind(this)
+        worlds: this._loadFullWorldsList.bind(this),
+        user: this._loadUserObject.bind(this)
 
       }, function (err, res) {
         if (err) {
@@ -2903,7 +2925,7 @@ var model = (function (view) {
       if( !post.authorObject ){
 
         if( post.author === this.myContactID ){
-          post.authorObject = api.system.user()
+          post.authorObject = this.myUserObject
         }else if( this.contacts[post.author] ){
           post.authorObject = this.contacts[post.author]
         }else if( this.restOfUsers[post.author] ){
@@ -2911,7 +2933,6 @@ var model = (function (view) {
         }
 
       }
-
       if (this.openedWorld && this.openedWorld.apiWorld.id === post.worldId) {
         needToRefresh = true
       }
@@ -3079,8 +3100,8 @@ var model = (function (view) {
           }else if(this.app.restOfUsers[ member.idWorkspace ]){
             this._addMember(this.app.restOfUsers[ member.idWorkspace ])
           }else {
-            api.user(member.idWorkspace, function (err, user) {
-              if (err) {
+            api.user(member.idWorkspace, function (error, user) {
+              if (error) {
                 return console.error(error)
               }
               if(!user){
