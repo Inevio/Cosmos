@@ -1329,7 +1329,7 @@ var view = (function () {
     }
 
     updateNotificationsList (notificationList) {
-      $('.notificationDom').remove()
+      /*$('.notificationDom').remove()
       var notificationDomList = []
       //console.log(notificationList)
 
@@ -1370,7 +1370,7 @@ var view = (function () {
           $('.notifications-list').append(notificationDomList)
         }
 
-      }.bind(this))
+      }.bind(this))*/
     }
 
     updateNotificationStatus(notificationId, attended) {
@@ -1463,7 +1463,7 @@ var view = (function () {
 
       var publicWorlds = []
 
-      function isPrivate (world) {
+      /*function isPrivate (world) {
         if (!world.apiWorld.isPrivate) {
           publicWorlds.push(world)
         }
@@ -1471,7 +1471,7 @@ var view = (function () {
         return world.apiWorld.isPrivate
       }
 
-      worldList = worldList.filter(isPrivate)
+      worldList = worldList.filter(isPrivate)*/
 
       // console.log( publicWorlds, worldList )
       function worldSidebarDom (item) {
@@ -1493,6 +1493,7 @@ var view = (function () {
         return world
       }
 
+      console.log('actualizo lista de mundos', this._domWorldsPrivateList, worldList)
       this._domWorldsPrivateList.empty().append(worldList.map(function (item) {
         return worldSidebarDom(item)
       }))
@@ -1654,7 +1655,7 @@ var model = (function (view) {
         if(error) return console.error(error)
 
         this.myUserObject = user
-        return callback(null, null)
+        return callback(null, user)
 
       })
 
@@ -1944,6 +1945,7 @@ var model = (function (view) {
           return this.view.launchAlert(err)
         }
 
+        console.log('CARGA COMPLETADA', res)
         if (!res.worlds.length) {
           // Show no worlds
           // this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
@@ -2563,7 +2565,7 @@ var model = (function (view) {
       if (this.openedWorld) {
         id = this.openedWorld.apiWorld.id
       }
-
+      
       this.view.updateWorldsListUI(list, id)
     }
   }
@@ -2580,11 +2582,13 @@ var model = (function (view) {
       this.loadingPosts = false
 
       if (world) {
-        console.log(world)
+        //console.log(world)
         if(world.icons){
           this.icon = world.icons.big
         }
         this.apiWorld = world
+      }else{
+        console.log('mundo sin mundo')
       }
 
       this._loadMembers()
@@ -2615,7 +2619,23 @@ var model = (function (view) {
       this.lastPostLoaded = init
       this.loadingPosts = true
 
-      this.apiWorld.getPosts({from: init, to: end, withFullUsers: true })
+      this.apiWorld.getPosts({from: init, to: end, withFullUsers: true }, (error,posts) => {
+
+        console.log('cargo posts ', error, posts)
+        this.lastPostLoaded = end
+        this.loadingPosts = false
+
+        posts.forEach(function (post, index) {
+          this.posts[ post.id ] = new Post(this.app, post)
+          if (index === posts.length - 1 && init !== 0) {
+            this.app.showPosts(this.apiWorld.id, init)
+          }
+        }.bind(this))
+
+      })
+      //.catch( error => console.error(error) )
+
+      /*this.apiWorld.getPosts({from: init, to: end, withFullUsers: true })
       .then( posts => {
 
         this.lastPostLoaded = end
@@ -2629,7 +2649,7 @@ var model = (function (view) {
         }.bind(this))
 
       })
-      .catch( error => console.error(error) )
+      .catch( error => console.error(error) )*/
 
     }
 
@@ -2638,7 +2658,7 @@ var model = (function (view) {
         return
       }
 
-      this.apiWorld.getUsers()
+      /*this.apiWorld.getUsers()
       .then( members => {
 
         members.forEach(function (member) {
@@ -2667,7 +2687,37 @@ var model = (function (view) {
         }.bind(this))
 
       })
-      .catch( error => console.error(error) )
+      .catch( error => console.error(error) )*/
+
+      this.apiWorld.getUsers( (error,members) => {
+
+        console.log('cargo miembros ', error, members)
+        members.forEach(function (member) {
+
+          if(!member){
+            console.log('undefined member in world', this.apiWorld)
+          }
+
+          if (this.app.contacts[ member.idWorkspace ]) {
+            this._addMember(this.app.contacts[ member.idWorkspace ])
+          }else if(this.app.restOfUsers[ member.idWorkspace ]){
+            this._addMember(this.app.restOfUsers[ member.idWorkspace ])
+          }else {
+            api.user(member.idWorkspace, function (error, user) {
+              if (error) {
+                return console.error(error)
+              }
+              if(!user){
+                console.log('undefined user in world', member.idWorkspace)
+                return
+              }
+
+              this._addMember(this.app.addToRestOfUsers(user))
+            }.bind(this))
+          }
+        }.bind(this))
+
+      })
 
     }
 

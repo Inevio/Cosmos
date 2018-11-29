@@ -6600,3 +6600,7 @@ to {background-position: -200% 0;}
   }
 
 }
+
+.mobile-world-content .open-chat-button, .mobile-world-content .open-folder-button, .mobile-world-content .divider{
+  display: none !important;
+}
