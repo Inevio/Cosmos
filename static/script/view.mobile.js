@@ -1328,7 +1328,7 @@ var view = (function () {
     }
 
     updateNotificationsList (notificationList) {
-      $('.notificationDom').remove()
+      /*$('.notificationDom').remove()
       var notificationDomList = []
       //console.log(notificationList)
 
@@ -1369,7 +1369,7 @@ var view = (function () {
           $('.notifications-list').append(notificationDomList)
         }
 
-      }.bind(this))
+      }.bind(this))*/
     }
 
     updateNotificationStatus(notificationId, attended) {
@@ -1462,7 +1462,7 @@ var view = (function () {
 
       var publicWorlds = []
 
-      function isPrivate (world) {
+      /*function isPrivate (world) {
         if (!world.apiWorld.isPrivate) {
           publicWorlds.push(world)
         }
@@ -1470,7 +1470,7 @@ var view = (function () {
         return world.apiWorld.isPrivate
       }
 
-      worldList = worldList.filter(isPrivate)
+      worldList = worldList.filter(isPrivate)*/
 
       // console.log( publicWorlds, worldList )
       function worldSidebarDom (item) {
@@ -1492,6 +1492,7 @@ var view = (function () {
         return world
       }
 
+      console.log('actualizo lista de mundos', this._domWorldsPrivateList, worldList)
       this._domWorldsPrivateList.empty().append(worldList.map(function (item) {
         return worldSidebarDom(item)
       }))
