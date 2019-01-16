@@ -46,16 +46,16 @@
 
                     "width"  : {
 
-                        "default" : 996,
-                        "min"     : 996,
+                        "default" : 950,
+                        "min"     : 900,
                         "max"     : 0
 
                     },
 
                     "height" : {
 
-                        "default" : 638,
-                        "min"     : 638,
+                        "default" : 600,
+                        "min"     : 550,
                         "max"     : 0
 
                     },
