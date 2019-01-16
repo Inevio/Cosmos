@@ -196,6 +196,8 @@ var view = (function () {
 
     _translateInterface () {
       // Start
+      $('.app-title').text(lang.appTitle)
+
       $('.no-worlds .title').text(lang.welcome)
       $('.no-worlds .subtitle').text(lang.intro)
       $('.no-worlds .subtitle2').text(lang.intro2)
