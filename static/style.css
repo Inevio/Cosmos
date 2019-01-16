@@ -540,6 +540,7 @@ to {background-position: -200% 0;}
     color: #d2dce2;
     margin-bottom: 9px;
     margin-top: 5px;
+    margin-left: 20px;
     width: 145px;
 
   }
@@ -677,7 +678,7 @@ to {background-position: -200% 0;}
   }
 
   .private-list{
-    margin-top: 20px;
+    margin-top: 14px;
   }
 
   .world{
