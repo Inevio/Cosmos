@@ -110,7 +110,6 @@ api.cosmos.on('requestPostCreate', function( fsnode, world, operation ){
 
   api.app.createView(data, 'newPost')
 })
-
 api.notification.on( 'new', function( notification ){
   checkNotifications();
 })
