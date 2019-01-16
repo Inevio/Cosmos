@@ -1,7 +1,7 @@
 
 {
 
-		"appTitle": "Mis mundos",
+	"appTitle": "Mis mundos",
 
     "worldHeader"  : {
         "members"       : "miembros -",
@@ -83,7 +83,7 @@
     "tend"          : "Tendencias",
     "follow"        : "Entrar",
     "stepa"         : "Paso 1 de 2",
-    "stepb"         : "Paso 2 de 2 - (Opcional) Añade alguna información adicional acerca del mundo",
+    "stepb"         : "Paso 2 de 2 - (Opcional) Añade un icono para poder identificar el mundo facilmente",
     "worldName"     : "Nombre del mundo",
     "avatarBack"    : "Avatar",
     "changeBack"    : "Cambiar fondo",
