@@ -4707,6 +4707,7 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 97px)';
     border-bottom: 1px solid #e2e6e8;
     position: relative;
+    display: none;
   }
 
   .invite-by-mail .avatar{
@@ -4778,6 +4779,10 @@ to {background-position: -200% 0;}
     right: 10px;
   }
 
+}
+
+.personal .invite-by-mail{
+  display: block;
 }
 
 .kick-user-section{
