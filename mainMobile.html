@@ -22,25 +22,32 @@
 </section>
 <section class="mobile-world-list sidebar">
 
+  <article class="world wz-prototype">
+    <figure class="world-icon"></figure>
+    <span class="world-name ellipsis"></span>
+    <figure class="world-context-menu"><i></i></figure>
+    <i class="world-notifications"></i>
+    <section class="world-options">
+      <article class="world-option wz-prototype">
+        <span></span>
+      </article>
+    </section>
+  </article>
+
   <section class="sidebar-header">
-    <figure class="new-world-button-mini"><i></i></figure>
     <span class="app-title wz-dragger">Cosmos</span>
-    <figure class="explore-button"><i></i></figure>
+    <figure class="notification-opener">
+      <i><figure class="red-dot"></figure></i>
+    </figure>
+    <figure class="new-world-button-mini"><i></i></figure>
+
   </section>
 
-  <section class="category-list wz-scroll">
+  <span class="world-list-title">#Worlds#</span>
+  <section class="world-list private-list"></section>
 
-    <article class="world wz-prototype">
-      <figure class="world-icon"></figure>
-      <span class="world-name ellipsis"></span>
-      <figure class="world-context-menu"><i></i></figure>
-      <i class="world-notifications"></i>
-      <section class="world-options">
-        <article class="world-option wz-prototype">
-          <span></span>
-        </article>
-      </section>
-    </article>
+
+  <!--<section class="category-list wz-scroll">
 
     <section class="category">
       <figure class="opener"></figure>
@@ -56,8 +63,38 @@
       </section>
     </section>
 
-  </section>
+  </section>-->
+
 </section>
+
+<section class="notifications-container-mobile">
+
+  <section class="notification-header">
+    <figure class="notification-back"></figure>
+    <span class="notification-text">#Activity#</span>
+    <span class="notification-mark-all-as-read">#Mark all as read#</span>
+  </section>
+
+  <section class="notification-mobile wz-prototype">
+    <figure class="notification-avatar"></figure> 
+    <span class="notification-action"><i>Rachel Green</i>ha comentado en tu publicación</span> 
+    <span class="notification-time"><i></i>Ayer a las 17:13</span>
+    <figure class="notification-world-avatar"></figure>
+    <figure class="notification-blue-dot"></figure>
+  </section>
+
+  <section class="notifications-new">
+    <span class="notifications-new-text">#New#</span>
+    <section class="notifications-list"></section>
+  </section>
+
+  <section class="notifications-old">
+    <span class="notifications-old-text">#Older#</span>
+    <section class="notifications-list"></section>
+  </section>
+
+</section>
+
 <section class="mobile-world-content ui-content hide">
 
 
@@ -334,7 +371,7 @@
 
 
 </section>
-<section class="mobile-world-comments comments-section hide">
+<section class="mobile-world-comments comments-section">
   <section class="comments-header">
     <figure class="close-comments"><i></i></figure>
     <span class="comments-title"></span>
@@ -369,6 +406,7 @@
     </section>
   </section>
 </section>
+
 <section class="mobile-new-world new-world-container-wrap hide">
   <section class="close-new-world popup-launcher">
     <figure></figure>
@@ -379,21 +417,22 @@
       <span class="step-a"></span>
       <span class="step-b"></span>
     </section>
-    <section class="new-world-name">
-      <span></span>
-      <input>
-    </section>
 
     <section class="new-world-avatar">
       <span></span>
       <figure class="wz-groupicon-uploader-start"><i></i></figure>
     </section>
 
+    <section class="new-world-name">
+      <span></span>
+      <input>
+    </section>
+
     <section class="new-world-desc hide">
       <span></span>
       <textarea></textarea>
     </section>
-    <section class="new-world-privacy">
+    <!--<section class="new-world-privacy">
       <span></span>
       <section class="privacy-options">
         <section class="option public">
@@ -415,7 +454,7 @@
           <span></span>
         </section>
       </section>
-    </section>
+    </section>-->
     <section class="create-world-button step-a">
       <span></span>
     </section>

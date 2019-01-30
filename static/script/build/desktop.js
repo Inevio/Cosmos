@@ -163,7 +163,6 @@ var view = (function () {
       this.dom = win
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
-
       this.myContactID 							= api.system.workspace().idWorkspace
       this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
@@ -197,6 +196,8 @@ var view = (function () {
 
     _translateInterface () {
       // Start
+      $('.app-title').text(lang.appTitle)
+
       $('.no-worlds .title').text(lang.welcome)
       $('.no-worlds .subtitle').text(lang.intro)
       $('.no-worlds .subtitle2').text(lang.intro2)
@@ -1074,13 +1075,13 @@ var view = (function () {
 
       if (editing) {
         // var height = this.isMobile ? '800px' : '770px'
-        var height = '770px'
-        $('.new-world-container').css('height', height)
+        //var height = '770px'
+        //$('.new-world-container').css('height', height)
         this.newWorldAnimationBEditing()
       } else {
         // var height = this.isMobile ? '720px' : '770px'
-        var height = '770px'
-        $('.new-world-container').css('height', height)
+        //var height = '770px'
+        //$('.new-world-container').css('height', height)
         this.newWorldAnimationBNormal()
       }
     }
@@ -1118,7 +1119,7 @@ var view = (function () {
       }, 800, this.animationEffect, function () {
         $(this).css({
 
-          'top': '640px',
+          //'top': '450px',
           'transform': 'translateY(20px)',
           'right': '0',
           'left': 'calc(50% - 472px/2 + 150px)'
@@ -1200,7 +1201,7 @@ var view = (function () {
       $('.delete-world-button').css('left', 'calc((50% - 135px) + 142px)').find('span').text(text)
       $('.create-world-button , .delete-world-button').css({
 
-        'top': '640px',
+        //'top': '450px',
         'transform': 'translateY(20px)',
         'right': '0',
         'opacity': '0'
@@ -1274,7 +1275,7 @@ var view = (function () {
       }, 1000)
 
       // Fade in and goes up privacy (animation)
-      var translate = this.isMobile ? '80px' : '120px'
+      var translate = this.isMobile ? '80px' : '70px'
       $('.create-world-button, .delete-world-button').css('transform', 'translateY(158px)')
       $('.create-world-button').transition({
 
@@ -1290,6 +1291,7 @@ var view = (function () {
         'transform': 'translateY( ' + translate + ' )'
 
       }, 1000)
+
     }
 
     newWorldAnimationOut () {
@@ -1565,11 +1567,11 @@ var view = (function () {
       $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
       this.toggleSelectWorld(false)
 
-      if(world.apiWorld.isPrivate){
+      /*if(world.apiWorld.isPrivate){
         $('.world-header .invite-user-button').css('opacity', 1)
       }else{
         $('.world-header .invite-user-button').css('opacity', 0)
-      }
+      }*/
 
       if (!updatingHeader) {
         $('.cardDom').remove()
@@ -1592,8 +1594,11 @@ var view = (function () {
       this._noPosts.css('opacity', '0')
       this._noPosts.hide()
       this.appendPost( post, null, function(postDom){
+        if (post.apiPost.author === this.myContactID) {
+          postDom.addClass('mine')
+        }
         $('.you-card.wz-prototype').after(postDom)
-      })
+      }.bind(this))
     }
 
     prepareReplyComment (post, name, input) {
@@ -1776,6 +1781,8 @@ var view = (function () {
       //console.log(notificationList)
 
       notificationList.forEach(function (notification, index) {
+
+        if(!notification.apiSender) return
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
 
         notificationDom.addClass('notification-' + notification.id)
@@ -1843,7 +1850,11 @@ var view = (function () {
     updatePost (post, changePostType) {
       var postDom = $('.post-' + post.apiPost.id)
       postDom.find('.title').text(post.apiPost.title)
-      postDom.find('.desc').text(post.apiPost.content)
+      if (post.apiPost.content === '') {
+        postDom.find('.desc').hide()
+      } else {
+        postDom.find('.desc').show().html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
       postDom.data('post', post.apiPost)
       this.updatePostFSNodes(post, changePostType)
     }
@@ -1907,7 +1918,7 @@ var view = (function () {
         return a.apiWorld.name.localeCompare(b.apiWorld.name)
       })
 
-      var publicWorlds = []
+      /*var publicWorlds = []
 
       function isPrivate (world) {
         if (!world.apiWorld.isPrivate) {
@@ -1917,7 +1928,7 @@ var view = (function () {
         return world.apiWorld.isPrivate
       }
 
-      worldList = worldList.filter(isPrivate)
+      worldList = worldList.filter(isPrivate)*/
 
       // console.log( publicWorlds, worldList )
       function worldSidebarDom (item) {
@@ -1940,9 +1951,9 @@ var view = (function () {
         return worldSidebarDom(item)
       }))
 
-      this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
+      /*this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
         return worldSidebarDom(item)
-      }))
+      }))*/
     }
 
     worldContextMenu (worldDom, world) {
@@ -1985,6 +1996,7 @@ var model = (function (view) {
       this.view = view
       this.openedWorld
       this.myContactID = api.system.workspace().idWorkspace
+      this.myUserObject
 
       this.contacts = {}
       this.worlds = {}
@@ -2001,8 +2013,8 @@ var model = (function (view) {
       this.showingWorlds
       this.loadingPublicWorlds = false
 
-      this._mainAreaMode
-      this._prevMainAreaMode = MAINAREA_NULL
+      /*this._mainAreaMode
+      this._prevMainAreaMode = MAINAREA_NULL*/
 
       this.apiFsCalls = 0
 
@@ -2014,7 +2026,7 @@ var model = (function (view) {
     }
 
     _compareTitle (query, title) {
-      return (title.toLowerCase().indexOf(query) !== -1)
+      return (title.toLowerCase().indexOf(query.toLowerCase()) !== -1)
     }
 
     _loadFullContactList (callback) {
@@ -2070,6 +2082,7 @@ var model = (function (view) {
             } else {
               api.user(notification.sender, function (error, user) {
                 if (error) {
+                  checkEnd()
                   return console.error(error)
                 }
 
@@ -2084,20 +2097,36 @@ var model = (function (view) {
       }.bind(this))
     }
 
+    _loadUserObject (callback) {
+
+      api.user( this.myContactID, (error,user) => {
+
+        if(error) return console.error(error)
+
+        this.myUserObject = user
+        return callback(null, null)
+
+      })
+
+    }
+
     _loadFullWorldsList (callback) {
       callback = api.tool.secureCallback(callback)
 
-      api.cosmos.getUserWorlds(this.myContactID, {from: 0, to: 1000}, function (error, worlds) {
-        if (error) {
-          return this.view.launchAlert(error)
-        }
+      api.cosmos.list({from: 0, to: 1000})
+      .then( worlds => {
+        console.log('list', worlds)
 
         worlds.forEach(function (world, index) {
           this.addWorld(world)
         }.bind(this))
 
         callback(null, worlds)
-      }.bind(this))
+      })
+      .catch( error => {
+        this.view.launchAlert(error)
+      })
+
     }
 
     addContact (user) {
@@ -2125,33 +2154,33 @@ var model = (function (view) {
     }
 
     addReplyBack (post, message) {
+
+      console.log('addReplyBack', post, message)
       if (!this.openedWorld) {
         return
       }
 
       if (post.isReply) {
+
         if (!this.openedWorld.posts[ post.parent ] || !this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment) {
           return
         }
 
-        this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply({ content: message, notification: {} }, function (error, object) {
-          if (error) {
-            return console.error(error)
-          }
-        })
+        this.openedWorld.posts[ post.parent ].comments[ post.id ].apiComment.reply({ content: message, notification: {} })
+        .catch( error => console.error(error))
+
       } else {
+
         if (!this.openedWorld.posts[ post.id ] || !this.openedWorld.posts[ post.id ].apiPost) {
           return
         }
 
-        this.openedWorld.posts[ post.id ].apiPost.reply({ content: message, notification: {} }, function (error, object) {
-          if (error) {
-            return console.error(error)
-          }
-        })
+        this.openedWorld.posts[ post.id ].apiPost.reply({ content: message, notification: {} })
+        .catch( error => console.error(error))
+
       }
     }
-    
+
 
     addReplyFront (post) {
       var needToAppend = false
@@ -2173,6 +2202,7 @@ var model = (function (view) {
     }
 
     addToRestOfUsers (user) {
+
       if (this.restOfUsers[ user.idWorkspace ]) {
         return this.restOfUsers[ user.idWorkspace ]
       }
@@ -2233,18 +2263,8 @@ var model = (function (view) {
         this.showingWorlds = { 'from': this.showingWorlds.to + 1, 'to': this.showingWorlds.to + 21 }
       }
 
-      api.cosmos.list(null, null, this.showingWorlds, function (error, worlds, nResults) {
-        if (error) {
-          return console.error(error)
-        }
-
-        /* if( options.page === 1 ){
-
-          this.totalPages = Math.ceil( nResults / 20 )
-          this.actualPageInterval = 1
-          //addPages()
-
-        } */
+      api.cosmos.list(null, null, this.showingWorlds)
+      .then( (worlds,nResults) => {
 
         if (!worlds.length) {
           this.allPublicWorldsLoaded = true
@@ -2267,8 +2287,13 @@ var model = (function (view) {
               this.view.animateCards()
             }
           }
-        }.bind(this))
-      }.bind(this))
+        })
+
+      })
+      .catch( error => {
+        return console.error(error)
+      })
+
     }
 
     checkMetadata (content, fsnode) {
@@ -2297,7 +2322,13 @@ var model = (function (view) {
       return fileType;
     }
 
+    closeWorld(){
+      this.openedWorld = null
+      this.view.closeWorld()
+    }
+
     createWorld (worldName) {
+
       if (!worldName) {
         var dialog = api.dialog()
 
@@ -2308,15 +2339,14 @@ var model = (function (view) {
         return
       }
 
-      api.cosmos.create(worldName, null, true, null, function (error, world) {
-        if (error) {
-          return console.error(error)
-        }
-
-        // this.addWorld( world )
+      api.cosmos.create(worldName, null, true, null)
+      .then( world => {
         this.view.newWorldStep()
-        // createChat( o )
-      }.bind(this))
+      })
+      .catch( error => {
+        return console.error(error)
+      })
+
     }
 
     editWorld (world, isPrivate, name, description) {
@@ -2337,26 +2367,27 @@ var model = (function (view) {
     }
 
     followWorld (world) {
+
       if (api.system.workspace().username.indexOf('demo') === 0 && !world.isPrivate) {
         alert(lang.noPublicWorlds)
         return
       }
 
-      world.addUser(this.myContactID, function (error, o) {
-        if (error) {
-          return console.error(error)
-        }
-
+      world.addUser(this.myContactID)
+      .then( user => {
         this.addWorld(world)
         this.view.updateWorldCard(world.id, true)
-      }.bind(this))
+      })
+      .catch( error => console.error(error) )
+
     }
 
     fullLoad () {
       async.parallel({
 
         contacts: this._loadFullContactList.bind(this),
-        worlds: this._loadFullWorldsList.bind(this)
+        worlds: this._loadFullWorldsList.bind(this),
+        user: this._loadUserObject.bind(this)
 
       }, function (err, res) {
         if (err) {
@@ -2370,12 +2401,15 @@ var model = (function (view) {
         }
 
         this._loadFullNotificationList(function (error, notifications) {
+
+          console.log('load full notifications', notifications)
           if (notifications) {
             var notificationList = Object.values(this.notifications).reverse()
             this.view.updateNotificationsList(notificationList)
             //console.log(this.notifications)
             this.updateNotificationIcon()
           }
+
         }.bind(this))
 
         //console.log(this.worlds)
@@ -2407,11 +2441,9 @@ var model = (function (view) {
       users.forEach(function (userDom, index) {
         var user = $(userDom).data('user')
 
-        this.openedWorld.apiWorld.addUser(user.idWorkspace, function (error, o) {
-          if (error) {
-            console.error(error)
-          }
-        })
+        this.openedWorld.apiWorld.addUser(user.idWorkspace)
+        .catch( error => console.error(error) )
+
       }.bind(this))
     }
 
@@ -2454,21 +2486,9 @@ var model = (function (view) {
         return
       }
 
-      this.worlds[worldId].apiWorld.removeUser(this.myContactID, function (error, o) {
-        if (error) {
-          console.error(error)
-        } else {
+      this.worlds[worldId].apiWorld.removeUser(this.myContactID)
+      .catch( error => console.error(error) )
 
-          // this.removeWorldFront( worldId )
-
-          /* wql.deleteLastRead( [ world.id , myContactID ] , function( err ){
-            if (err) {
-              console.error(err)
-            }
-          }) */
-
-        }
-      })
     }
 
     loadMorePosts () {
@@ -2548,16 +2568,19 @@ var model = (function (view) {
         this.fastLoadFSNodes(this.worlds[ notificationData.world ].posts[ mainPostId ])
         this.notificationAttendedBack(notification.id)
       } else {
-        this.worlds[ notificationData.world ].apiWorld.getPost(mainPostId, { withFullUsers: true }, function (error, post) {
-          if (error) {
-            return console.error(error)
-          }
+
+        this.worlds[ notificationData.world ].apiWorld.getPost(mainPostId, { withFullUsers: true })
+        .then( post => {
+
           var postToShow = new Post(this, post)
           this.openWorld(notificationData.world, true)
           this.view.showNotificationPost(postToShow, notificationData)
           this.fastLoadFSNodes(postToShow)
           this.notificationAttendedBack(notification.id)
-        }.bind(this))
+
+        })
+        .catch( error => console.error(error) )
+
       }
     }
 
@@ -2585,12 +2608,17 @@ var model = (function (view) {
       }
 
       if (this.contacts[ notification.sender ]) {
+
         notification.apiSender = this.contacts[ notification.sender ]
         this.notificationAdd(notification)
+
       } else if (this.restOfUsers[ notification.sender ]) {
+
         notification.apiSender = this.restOfUsers[ notification.sender ]
         this.notificationAdd(notification)
+
       } else {
+
         api.user(notification.sender, function (error, user) {
           if (error) {
             return console.error(error)
@@ -2599,7 +2627,15 @@ var model = (function (view) {
           notification.apiSender = this.addToRestOfUsers(user)
           this.notificationAdd(notification)
         }.bind(this))
+
       }
+    }
+
+    openComments( postId ){
+
+      if( !this.openedWorld || !this.openedWorld.posts[postId] ) return
+      view.insertComments(this.openedWorld.posts[postId])
+
     }
 
     openExploreWorlds () {
@@ -2615,6 +2651,7 @@ var model = (function (view) {
         return
       }
 
+      console.log(fsnode)
       fsnode.open()
     }
 
@@ -2663,6 +2700,8 @@ var model = (function (view) {
     }
 
     openWorld (worldId, notificationOpen) {
+
+      console.log(worldId, this.openedWorld)
       // app.addClass( 'selectingWorld' )
       if (!worldId && this.openedWorld) {
         worldId = this.openedWorld.apiWorld.id
@@ -2704,11 +2743,9 @@ var model = (function (view) {
         return
       }
 
-      this.openedWorld.apiWorld.removePost(post.id, function (error, ok) {
-        if (error) {
-          return console.error(error)
-        }
-      })
+      this.openedWorld.apiWorld.removePost(post.id)
+      .catch( error => console.error(error) )
+
     }
 
     removePostFront (post, world) {
@@ -2762,11 +2799,9 @@ var model = (function (view) {
         return
       }
 
-      this.openedWorld.apiWorld.removeUser(idWorkspace, function (err) {
-        if (err) {
-          console.error(err)
-        }
-      })
+      this.openedWorld.apiWorld.removeUser(idWorkspace)
+      .catch( error => console.error(error) )
+
     }
 
     removeUserFront (idWorkspace, world) {
@@ -2841,12 +2876,10 @@ var model = (function (view) {
       var postsKeys = Object.keys(this.worlds[ worldId ].posts).reverse()
 
       /* postsKeys.forEach( function( postKey ){
-
         list.push( this.worlds[ worldId ].posts[ postKey ] )
         if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
           this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
         }
-
       }.bind(this)) */
 
       if (start > postsKeys.length) {
@@ -2889,6 +2922,17 @@ var model = (function (view) {
         return
       }
 
+      if( !post.authorObject ){
+
+        if( post.author === this.myContactID ){
+          post.authorObject = this.myUserObject
+        }else if( this.contacts[post.author] ){
+          post.authorObject = this.contacts[post.author]
+        }else if( this.restOfUsers[post.author] ){
+          post.authorObject = this.restOfUsers[post.author]
+        }
+
+      }
       if (this.openedWorld && this.openedWorld.apiWorld.id === post.worldId) {
         needToRefresh = true
       }
@@ -2907,16 +2951,26 @@ var model = (function (view) {
         }
       } else {
 
-        console.log(world.posts[ post.id ].apiPost.metadata.fileType,post.metadata.fileType)
-        var changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+        let changePostType = false
+        if( world.posts[ post.id ].apiPost.metadata && post.metadata ){
+          changePostType = world.posts[ post.id ].apiPost.metadata.fileType !== post.metadata.fileType
+        }else if( world.posts[ post.id ].apiPost.metadata || post.metadata ){
+          changePostType = true
+        }
 
         world.posts[ post.id ].apiPost = post
-        world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
-          if (needToRefresh) {
-            view.updatePost(modelPost, changePostType)
-            //view.updatePostFSNodes(modelPost,changePostType)
-          }
-        })
+
+        if(changePostType){
+          world.posts[ post.id ].loadPostFsnodes(function (modelPost) {
+            if (needToRefresh) {
+              view.updatePost(modelPost, changePostType)
+              //view.updatePostFSNodes(modelPost,changePostType)
+            }
+          })
+        }else{
+          view.updatePost(world.posts[ post.id ], changePostType)
+        }
+
       }
     }
 
@@ -2974,7 +3028,10 @@ var model = (function (view) {
       this.loadingPosts = false
 
       if (world) {
-        this.icon = world.icons.big
+        console.log(world)
+        if(world.icons){
+          this.icon = world.icons.big
+        }
         this.apiWorld = world
       }
 
@@ -3006,10 +3063,8 @@ var model = (function (view) {
       this.lastPostLoaded = init
       this.loadingPosts = true
 
-      this.apiWorld.getPosts({from: init, to: end, withFullUsers: true }, function (error, posts) {
-        if (error) {
-          return console.error(error)
-        }
+      this.apiWorld.getPosts({from: init, to: end, withFullUsers: true })
+      .then( posts => {
 
         this.lastPostLoaded = end
         this.loadingPosts = false
@@ -3020,7 +3075,10 @@ var model = (function (view) {
             this.app.showPosts(this.apiWorld.id, init)
           }
         }.bind(this))
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
 
     _loadMembers () {
@@ -3028,24 +3086,37 @@ var model = (function (view) {
         return
       }
 
-      this.apiWorld.getUsers(function (error, members) {
-        if (error) {
-          // return this.app.view.launchAlert( error )
-        }
+      this.apiWorld.getUsers()
+      .then( members => {
 
         members.forEach(function (member) {
+
+          if(!member){
+            console.log('undefined member in world', this.apiWorld)
+          }
+
           if (this.app.contacts[ member.idWorkspace ]) {
             this._addMember(this.app.contacts[ member.idWorkspace ])
-          } else {
-            api.user(member.idWorkspace, function (err, user) {
+          }else if(this.app.restOfUsers[ member.idWorkspace ]){
+            this._addMember(this.app.restOfUsers[ member.idWorkspace ])
+          }else {
+            api.user(member.idWorkspace, function (error, user) {
               if (error) {
                 return console.error(error)
               }
-              this._addMember(user, member.idWorkspace)
+              if(!user){
+                console.log('undefined user in world', member.idWorkspace)
+                return
+              }
+
+              this._addMember(this.app.addToRestOfUsers(user))
             }.bind(this))
           }
         }.bind(this))
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
 
     _sortMembers () {
@@ -3056,14 +3127,36 @@ var model = (function (view) {
       })
     }
 
-    addMember (idWorkspace) {
-      api.user(idWorkspace, function (error, user) {
-        if (error) {
-          return console.error(error)
+    addMember (user) {
+
+      if(typeof user === 'number'){
+
+        if (this.app.contacts[ user ]) {
+          this.members.push(this.app.contacts[ user ])
+        }else if(this.app.restOfUsers[ user ]){
+          this.members.push(this.app.restOfUsers[ user ])
+        }else {
+          api.user(user, function (error, user) {
+            if (error) {
+              return console.error(error)
+            }
+
+            this.members.push(this.app.addToRestOfUsers(user))
+          }.bind(this))
         }
 
-        this.members.push(user)
-      }.bind(this))
+      }else if(typeof user === 'object'){
+
+        if (this.app.contacts[ user.idWorkspace ]) {
+          this.members.push(this.app.contacts[ user.idWorkspace ])
+        }else if(this.app.restOfUsers[ user.idWorkspace ]){
+          this.members.push(this.app.restOfUsers[ user.idWorkspace ])
+        }else {
+          this.members.push(this.app.addToRestOfUsers(user.idWorkspace))
+        }
+
+      }
+
     }
 
     removeMember (memberId) {
@@ -3092,6 +3185,10 @@ var model = (function (view) {
 
       this.commentsLoaded = false
 
+      if( this.apiPost.worldId === 294 ){
+        console.log(this)
+      }
+
       this._loadComments()
       this._addToQueue()
       // this._loadFsnodes()
@@ -3107,13 +3204,11 @@ var model = (function (view) {
     }
 
     _loadComments () {
-      this.apiPost.getReplies({ from: 0, to: 1000, withFullUsers: true }, function (error, replies) {
+
+      this.apiPost.getReplies({ from: 0, to: 1000, withFullUsers: true })
+      .then( replies => {
+
         this.commentsLoaded = true
-
-        if (error) {
-          return console.error(error)
-        }
-
         replies.forEach(function (reply) {
           this.comments[ reply.id ] = new Comment(this.app, reply)
         }.bind(this))
@@ -3121,7 +3216,10 @@ var model = (function (view) {
         if (this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiPost.worldId) {
           this.app.view.updatePostComments(this)
         }
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
 
     loadPostFsnodes (callback) {
@@ -3155,26 +3253,25 @@ var model = (function (view) {
     }
 
     _loadReplies () {
-      this.apiComment.getReplies({ from: 0, to: 1000, withFullUsers: true }, function (error, replies) {
+      this.apiComment.getReplies({ from: 0, to: 1000, withFullUsers: true })
+      .then( replies => {
+
         this.repliesLoaded = true
-
-        if (error) {
-          return console.error(error)
-        }
-
         replies.forEach(function (reply) {
           this.replies[ reply.id ] = reply
           if (this.app.openedWorld && this.app.openedWorld.apiWorld.id == this.apiComment.worldId) {
             this.app.view.appendReplyComment(reply, null, true)
           }
         }.bind(this))
-      }.bind(this))
+
+      })
+      .catch( error => console.error(error) )
+
     }
   }
 
   return new Model(view)
 })(view)
-
 var controller = (function (model, view) {
   class Controller {
     constructor (model, view) {
@@ -3194,6 +3291,7 @@ var controller = (function (model, view) {
     }
 
     _bindEvents () {
+
       this._domWorldCategory.on('click', function () {
         var category = $(this).parent()
         category.toggleClass('closed')
@@ -3575,10 +3673,8 @@ var controller = (function (model, view) {
             title: newTitle,
             metadata: newMetadata,
             fsnode: newFsnodeIds
-          }, function (error, post) {
-            if (error) {
-              return console.error(error)
-            }
+          }).catch((error) => {
+            return console.error(error)
           })
 
           /* post.setFSNode( newFsnodeIds , function(){
@@ -3822,6 +3918,27 @@ var controller = (function (model, view) {
         console.log('postModified', post)
         model.updatePost(post)
       })
+
+      console.log('bind event')
+      api.cosmos.on('postContentSet', function (post) {
+        console.log('postContentSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postTitleSet', function (post) {
+        console.log('postTitleSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postFSNodeSet', function (post) {
+        console.log('postFSNodeSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postMetadataSet', function (post) {
+        console.log('postMetadataSet', post)
+        model.updatePost(post)
+      })      
 
       api.cosmos.on('worldChanged', function (world) {
         console.log('worldChanged', world)
