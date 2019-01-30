@@ -17,6 +17,7 @@ var controller = (function (model, view) {
     }
 
     _bindEvents () {
+
       this._domWorldCategory.on('click', function () {
         var category = $(this).parent()
         category.toggleClass('closed')
@@ -398,10 +399,8 @@ var controller = (function (model, view) {
             title: newTitle,
             metadata: newMetadata,
             fsnode: newFsnodeIds
-          }, function (error, post) {
-            if (error) {
-              return console.error(error)
-            }
+          }).catch((error) => {
+            return console.error(error)
           })
 
           /* post.setFSNode( newFsnodeIds , function(){
@@ -645,6 +644,27 @@ var controller = (function (model, view) {
         console.log('postModified', post)
         model.updatePost(post)
       })
+
+      console.log('bind event')
+      api.cosmos.on('postContentSet', function (post) {
+        console.log('postContentSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postTitleSet', function (post) {
+        console.log('postTitleSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postFSNodeSet', function (post) {
+        console.log('postFSNodeSet', post)
+        model.updatePost(post)
+      })
+
+      api.cosmos.on('postMetadataSet', function (post) {
+        console.log('postMetadataSet', post)
+        model.updatePost(post)
+      })      
 
       api.cosmos.on('worldChanged', function (world) {
         console.log('worldChanged', world)

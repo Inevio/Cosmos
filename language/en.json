@@ -1,6 +1,8 @@
 
 {   
 
+	"appTitle": "My worlds",
+
     "worldHeader"  : {
         "members"       : "members -",
         "member"        : "member -",
@@ -81,7 +83,7 @@
     "tend"          : "Trending",
     "follow"        : "Enter",
     "stepa"         : "Step 1 of 2",
-    "stepb"         : "Step 2 of 2 - (Optional) Add some additional info about the world",
+    "stepb"         : "Step 2 of 2 - (Optional) Add an icon so you can find the world easily",
     "worldName"     : "World's name",
     "avatarBack"    : "Avatar",
     "changeBack"    : "Change background",

@@ -163,7 +163,6 @@ var view = (function () {
       this.dom = win
 
       this.isMobile = this.dom.hasClass('wz-mobile-view')
-
       this.myContactID 							= api.system.workspace().idWorkspace
       this._domWorldsPrivateList		= $('.private-list')
       this._domWorldsPublicList 		= $('.public-list')
@@ -197,6 +196,8 @@ var view = (function () {
 
     _translateInterface () {
       // Start
+      $('.app-title').text(lang.appTitle)
+
       $('.no-worlds .title').text(lang.welcome)
       $('.no-worlds .subtitle').text(lang.intro)
       $('.no-worlds .subtitle2').text(lang.intro2)
@@ -1074,13 +1075,13 @@ var view = (function () {
 
       if (editing) {
         // var height = this.isMobile ? '800px' : '770px'
-        var height = '770px'
-        $('.new-world-container').css('height', height)
+        //var height = '770px'
+        //$('.new-world-container').css('height', height)
         this.newWorldAnimationBEditing()
       } else {
         // var height = this.isMobile ? '720px' : '770px'
-        var height = '770px'
-        $('.new-world-container').css('height', height)
+        //var height = '770px'
+        //$('.new-world-container').css('height', height)
         this.newWorldAnimationBNormal()
       }
     }
@@ -1118,7 +1119,7 @@ var view = (function () {
       }, 800, this.animationEffect, function () {
         $(this).css({
 
-          'top': '640px',
+          //'top': '450px',
           'transform': 'translateY(20px)',
           'right': '0',
           'left': 'calc(50% - 472px/2 + 150px)'
@@ -1200,7 +1201,7 @@ var view = (function () {
       $('.delete-world-button').css('left', 'calc((50% - 135px) + 142px)').find('span').text(text)
       $('.create-world-button , .delete-world-button').css({
 
-        'top': '640px',
+        //'top': '450px',
         'transform': 'translateY(20px)',
         'right': '0',
         'opacity': '0'
@@ -1274,7 +1275,7 @@ var view = (function () {
       }, 1000)
 
       // Fade in and goes up privacy (animation)
-      var translate = this.isMobile ? '80px' : '120px'
+      var translate = this.isMobile ? '80px' : '70px'
       $('.create-world-button, .delete-world-button').css('transform', 'translateY(158px)')
       $('.create-world-button').transition({
 
@@ -1290,6 +1291,7 @@ var view = (function () {
         'transform': 'translateY( ' + translate + ' )'
 
       }, 1000)
+
     }
 
     newWorldAnimationOut () {
@@ -1565,11 +1567,11 @@ var view = (function () {
       $('.world-avatar').css('background-image', 'url( ' + world.apiWorld.icons.normal + '?token=' + Date.now() + ' )')
       this.toggleSelectWorld(false)
 
-      if(world.apiWorld.isPrivate){
+      /*if(world.apiWorld.isPrivate){
         $('.world-header .invite-user-button').css('opacity', 1)
       }else{
         $('.world-header .invite-user-button').css('opacity', 0)
-      }
+      }*/
 
       if (!updatingHeader) {
         $('.cardDom').remove()
@@ -1592,8 +1594,11 @@ var view = (function () {
       this._noPosts.css('opacity', '0')
       this._noPosts.hide()
       this.appendPost( post, null, function(postDom){
+        if (post.apiPost.author === this.myContactID) {
+          postDom.addClass('mine')
+        }
         $('.you-card.wz-prototype').after(postDom)
-      })
+      }.bind(this))
     }
 
     prepareReplyComment (post, name, input) {
@@ -1776,6 +1781,8 @@ var view = (function () {
       //console.log(notificationList)
 
       notificationList.forEach(function (notification, index) {
+
+        if(!notification.apiSender) return
         var notificationDom = $('.notification.wz-prototype').clone().removeClass('wz-prototype')
 
         notificationDom.addClass('notification-' + notification.id)
@@ -1843,7 +1850,11 @@ var view = (function () {
     updatePost (post, changePostType) {
       var postDom = $('.post-' + post.apiPost.id)
       postDom.find('.title').text(post.apiPost.title)
-      postDom.find('.desc').text(post.apiPost.content)
+      if (post.apiPost.content === '') {
+        postDom.find('.desc').hide()
+      } else {
+        postDom.find('.desc').show().html(post.apiPost.content.replace(/\n/g, '<br />').replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi, '<a href="$1" target="_blank">$1</a>'))
+      }
       postDom.data('post', post.apiPost)
       this.updatePostFSNodes(post, changePostType)
     }
@@ -1907,7 +1918,7 @@ var view = (function () {
         return a.apiWorld.name.localeCompare(b.apiWorld.name)
       })
 
-      var publicWorlds = []
+      /*var publicWorlds = []
 
       function isPrivate (world) {
         if (!world.apiWorld.isPrivate) {
@@ -1917,7 +1928,7 @@ var view = (function () {
         return world.apiWorld.isPrivate
       }
 
-      worldList = worldList.filter(isPrivate)
+      worldList = worldList.filter(isPrivate)*/
 
       // console.log( publicWorlds, worldList )
       function worldSidebarDom (item) {
@@ -1940,9 +1951,9 @@ var view = (function () {
         return worldSidebarDom(item)
       }))
 
-      this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
+      /*this._domWorldsPublicList.empty().append(publicWorlds.map(function (item) {
         return worldSidebarDom(item)
-      }))
+      }))*/
     }
 
     worldContextMenu (worldDom, world) {

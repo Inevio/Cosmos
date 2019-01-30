@@ -95,6 +95,21 @@ if( !api.app.storage('ignoreRemoveEvent') ){
 
 });*/
 
+api.cosmos.on('requestPostCreate', function( fsnode, world, operation ){
+  var data = {
+    type : 'popup',
+    fsnode : fsnode,
+    world : world,
+    operation : operation
+  }
+
+  if( operation === 'enqueue' ){
+    if( !api.upload.getQueue().fsnode[ parseInt(fsnode.id) ] ) return
+    data.queue = api.upload.getQueue()
+  }
+
+  api.app.createView(data, 'newPost')
+})
 api.notification.on( 'new', function( notification ){
   checkNotifications();
 })
@@ -168,9 +183,7 @@ var addArrow = function( appName, text, position ){
 
 }
 
-
-console.log('cosmos',typeof cordova == 'undefined')
-if( typeof cordova == 'undefined' ){
+/*if( typeof cordova == 'undefined' ){
 
   wql.isFirstOpen( [ api.system.workspace().idWorkspace ] , function( e , o ){
 
@@ -182,6 +195,6 @@ if( typeof cordova == 'undefined' ){
 
   });
 
-}
+}*/
 
 checkNotifications();
