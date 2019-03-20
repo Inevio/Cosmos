@@ -1813,7 +1813,11 @@ var initCosmos = function () {
 
 var initTexts = function () {
 
+    console.log( 'CHECK IF PERSONAL' )
+    console.log( api.system.workplace().type )
     if( api.system.workplace().type == 'personal' ){
+        console.log( 'AÑADO LA CLASE A LA APP' )
+        console.log( app )
         app.addClass( 'personal' )
       }
 

@@ -195,6 +195,16 @@ var view = (function () {
     }
 
     _translateInterface () {
+
+      // Check is Workspace is personal
+      console.log( '1 - Check if workspace is personal' )
+      console.log( api.system.workplace().type )
+      if( api.system.workplace().type == 'personal' ){
+        console.log( '2 - Add class personal to app' )
+        console.log( win )
+        win.addClass( 'personal' )
+      }
+
       // Start
       $('.app-title').text(lang.appTitle)
 
