@@ -69,9 +69,9 @@
     "selectWorld"   : "Select a world",
     "hasComment"    : "has commented a",
     "noPosts"       : "No posts to show",
-    "welcome"       : "Welcome to Cosmos",
-    "intro"         : "Cosmos is the perfect app to interact with all your worlds (your coworkers, your friends, your family...)",
-    "introMobile"   : "Cosmos is the perfect app to interact with all your worlds<br>(your coworkers, your friends, your family...)",
+    "welcome"       : "Welcome to your worlds",
+    "intro"         : "Using this app you can interact with all your worlds (your coworkers, your friends, your family...)",
+    "introMobile"   : "Using this app you can interact with all your worlds<br>(your coworkers, your friends, your family...)",
     "intro2"        : "Create a world and invite your contacts. Each world will have:",
     "feature1"      : "A group <i>chat</i> to talk with all members",
     "feature2"      : "A <i>folder</i> where you can share all the files",
@@ -138,7 +138,7 @@
     "hadModifiedFile"     : "You've modified a file from",
     "hadRemovedFile"      : "You've removed a file from",
     "hadRemovedFiles"     : "You've removed several files from",
-    "wantToPublish"       : "Do you want to publish it in Cosmos?",
+    "wantToPublish"       : "Do you want to publish it in a world?",
 
     "notWorking"          : "This functionality is currently under development, it will be available soon ;)",
 
