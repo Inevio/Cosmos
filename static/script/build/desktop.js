@@ -197,11 +197,7 @@ var view = (function () {
     _translateInterface () {
 
       // Check is Workspace is personal
-      console.log( '1 - Check if workspace is personal' )
-      console.log( api.system.workplace().type )
       if( api.system.workplace().type == 'personal' ){
-        console.log( '2 - Add class personal to app' )
-        console.log( win )
         win.addClass( 'personal' )
       }
 
@@ -2404,11 +2400,22 @@ var model = (function (view) {
           return this.view.launchAlert(err)
         }
 
-        if (!res.worlds.length) {
-          // Show no worlds
-          // this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
-          this.view.showNoWorlds()
-        }
+        wql.isFirstOpen([this.myContactID], function (e, o) {
+
+          if (!res.worlds.length || !o.length) {
+            // Show no worlds
+            // this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
+            this.view.showNoWorlds()
+
+            if( !o.length ){
+              wql.firstOpenDone([this.myContactID], function (err, o) {
+                if (err) console.error(err)
+              })
+            }
+            
+          }
+
+        }.bind(this))
 
         this._loadFullNotificationList(function (error, notifications) {
 
@@ -3779,6 +3786,7 @@ var controller = (function (model, view) {
 
       this.dom.on('click', '.start-button-no-worlds', function () {
         view.hideNoWorlds()
+        view.openNewWorld()
       })
 
       /* Mouse enter */
