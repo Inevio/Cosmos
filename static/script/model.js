@@ -1092,9 +1092,7 @@ var model = (function (view) {
     }
 
     _loadMembers () {
-      if (!this.apiWorld) {
-        return
-      }
+      if (!this.apiWorld) return
 
       this.apiWorld.getUsers()
       .then( members => {
