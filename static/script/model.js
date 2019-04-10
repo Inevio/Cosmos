@@ -884,12 +884,10 @@ var model = (function (view) {
       var postsKeys = Object.keys(this.worlds[ worldId ].posts).reverse()
 
       /* postsKeys.forEach( function( postKey ){
-
         list.push( this.worlds[ worldId ].posts[ postKey ] )
         if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
           this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
         }
-
       }.bind(this)) */
 
       if (start > postsKeys.length) {

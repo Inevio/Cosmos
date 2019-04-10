@@ -196,6 +196,8 @@ var view = (function () {
 
     _translateInterface () {
       // Start
+      $('.app-title').text(lang.appTitle)
+
       $('.no-worlds .title').text(lang.welcome)
       $('.no-worlds .subtitle').text(lang.intro)
       $('.no-worlds .subtitle2').text(lang.intro2)
@@ -1073,13 +1075,13 @@ var view = (function () {
 
       if (editing) {
         // var height = this.isMobile ? '800px' : '770px'
-        var height = '770px'
-        $('.new-world-container').css('height', height)
+        //var height = '770px'
+        //$('.new-world-container').css('height', height)
         this.newWorldAnimationBEditing()
       } else {
         // var height = this.isMobile ? '720px' : '770px'
-        var height = '770px'
-        $('.new-world-container').css('height', height)
+        //var height = '770px'
+        //$('.new-world-container').css('height', height)
         this.newWorldAnimationBNormal()
       }
     }
@@ -1117,7 +1119,7 @@ var view = (function () {
       }, 800, this.animationEffect, function () {
         $(this).css({
 
-          'top': '450px',
+          //'top': '450px',
           'transform': 'translateY(20px)',
           'right': '0',
           'left': 'calc(50% - 472px/2 + 150px)'
@@ -1199,7 +1201,7 @@ var view = (function () {
       $('.delete-world-button').css('left', 'calc((50% - 135px) + 142px)').find('span').text(text)
       $('.create-world-button , .delete-world-button').css({
 
-        'top': '450px',
+        //'top': '450px',
         'transform': 'translateY(20px)',
         'right': '0',
         'opacity': '0'
@@ -2874,12 +2876,10 @@ var model = (function (view) {
       var postsKeys = Object.keys(this.worlds[ worldId ].posts).reverse()
 
       /* postsKeys.forEach( function( postKey ){
-
         list.push( this.worlds[ worldId ].posts[ postKey ] )
         if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
           this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
         }
-
       }.bind(this)) */
 
       if (start > postsKeys.length) {
@@ -3270,7 +3270,6 @@ var model = (function (view) {
 
   return new Model(view)
 })(view)
-
 var controller = (function (model, view) {
   class Controller {
     constructor (model, view) {
