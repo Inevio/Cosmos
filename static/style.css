@@ -540,6 +540,7 @@ to {background-position: -200% 0;}
     color: #d2dce2;
     margin-bottom: 9px;
     margin-top: 5px;
+    margin-left: 20px;
     width: 145px;
 
   }
@@ -677,7 +678,7 @@ to {background-position: -200% 0;}
   }
 
   .private-list{
-    margin-top: 20px;
+    margin-top: 14px;
   }
 
   .world{
@@ -956,13 +957,12 @@ to {background-position: -200% 0;}
     color: @darkHorbito;
     margin-left: 16px;
     margin-top: 20px;
-    width: 532px;
+    width: ~'calc(100% - 26px - 40px - 16px - 16px - 112px)';
     margin-bottom: 3px;
   }
 
   .ui-header-buttons{
     float: right;
-    margin-left: ~'calc(100% - 726px)';
     margin-top: 4px;
     margin-bottom: 7px;
   }
@@ -1059,7 +1059,8 @@ to {background-position: -200% 0;}
 
   .search-post{
     float: right;
-    width: 265px;
+    width: ~'calc( 100% - 19px - 144px - 38px - 166px - 38px )';
+    max-width: 320px;
     margin-top: 24px;
     margin-right: 12px;
 
@@ -3718,9 +3719,9 @@ to {background-position: -200% 0;}
   .new-world-name input{
 
     float: left;
-    width: ~'calc(100% - 26px)';
+    width: 100%;
     height: 46px;
-    padding-left: 22px;
+    padding: 0 22px;
     font-size: 19px;
     transition: all 0.2s ease;
     border-radius: 6px;
@@ -3728,11 +3729,12 @@ to {background-position: -200% 0;}
     color: #252525;
     font-weight: bold;
     border: solid 2px transparent;
+    box-sizing: border-box;
 
   }
 
   .new-world-name input:focus{
-    border: solid 2px @redHorbito;
+    border: solid 2px #252525;
   }
 
   .new-world-avatar{
@@ -4091,13 +4093,11 @@ to {background-position: -200% 0;}
   .create-world-button{
     position: absolute;
     left: ~'calc((50% - 236px) + 307px)';
-    top: 400px;
+    top: 413px;
     width: 174px;
   	height: 47px;
   	border-radius: 6px;
   	background-color: @redHorbito;
-    margin-top: 30px;
-    margin-bottom: 50px;
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.2s ease;
@@ -4707,6 +4707,7 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 97px)';
     border-bottom: 1px solid #e2e6e8;
     position: relative;
+    display: none;
   }
 
   .invite-by-mail .avatar{
@@ -4778,6 +4779,10 @@ to {background-position: -200% 0;}
     right: 10px;
   }
 
+}
+
+.personal .invite-by-mail{
+  display: block;
 }
 
 .kick-user-section{
@@ -6599,4 +6604,8 @@ to {background-position: -200% 0;}
     top: 8px;
   }
 
+}
+
+.mobile-world-content .open-chat-button, .mobile-world-content .open-folder-button, .mobile-world-content .divider{
+  display: none !important;
 }

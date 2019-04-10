@@ -1813,6 +1813,10 @@ var initCosmos = function () {
 
 var initTexts = function () {
 
+    if( api.system.workplace().type == 'personal' ){
+        app.addClass( 'personal' )
+      }
+
     //Start
     $('.no-worlds .title').text(lang.welcome);
     $('.no-worlds .subtitle').text(lang.intro);

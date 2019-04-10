@@ -1329,7 +1329,7 @@ var view = (function () {
     }
 
     updateNotificationsList (notificationList) {
-      $('.notificationDom').remove()
+      /*$('.notificationDom').remove()
       var notificationDomList = []
       //console.log(notificationList)
 
@@ -1370,7 +1370,7 @@ var view = (function () {
           $('.notifications-list').append(notificationDomList)
         }
 
-      }.bind(this))
+      }.bind(this))*/
     }
 
     updateNotificationStatus(notificationId, attended) {
@@ -1463,7 +1463,7 @@ var view = (function () {
 
       var publicWorlds = []
 
-      function isPrivate (world) {
+      /*function isPrivate (world) {
         if (!world.apiWorld.isPrivate) {
           publicWorlds.push(world)
         }
@@ -1471,7 +1471,7 @@ var view = (function () {
         return world.apiWorld.isPrivate
       }
 
-      worldList = worldList.filter(isPrivate)
+      worldList = worldList.filter(isPrivate)*/
 
       // console.log( publicWorlds, worldList )
       function worldSidebarDom (item) {
@@ -1493,6 +1493,7 @@ var view = (function () {
         return world
       }
 
+      console.log('actualizo lista de mundos', this._domWorldsPrivateList, worldList)
       this._domWorldsPrivateList.empty().append(worldList.map(function (item) {
         return worldSidebarDom(item)
       }))
@@ -2426,12 +2427,10 @@ var model = (function (view) {
       var postsKeys = Object.keys(this.worlds[ worldId ].posts).reverse()
 
       /* postsKeys.forEach( function( postKey ){
-
         list.push( this.worlds[ worldId ].posts[ postKey ] )
         if( this.worlds[ worldId ].posts[ postKey ].readyToInsert == false ){
           this.fastLoadFSNodes( this.worlds[ worldId ].posts[ postKey ] )
         }
-
       }.bind(this)) */
 
       if (start > postsKeys.length) {
@@ -2822,7 +2821,6 @@ var model = (function (view) {
 
   return new Model(view)
 })(view)
-
 var controller = (function (model, view) {
   class Controller {
     constructor (model, view) {
