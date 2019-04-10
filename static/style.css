@@ -406,7 +406,7 @@ to {background-position: -200% 0;}
     border: 3px solid #8c9197;
     background-color: transparent;
     position: absolute;
-    bottom: 20px; 
+    bottom: 20px;
   }
 }
 
@@ -598,7 +598,7 @@ to {background-position: -200% 0;}
     position: absolute;
     border-radius: 50%;
     bottom: -1px;
-    right: -3px;  
+    right: -3px;
   }
 
   .category-list{
@@ -2982,7 +2982,7 @@ to {background-position: -200% 0;}
   opacity: 0;
   display: none;
   background-color: #f9f9fb;
-  overflow: hidden;                  
+  overflow: hidden;
 }
 
 
@@ -3102,7 +3102,7 @@ to {background-position: -200% 0;}
 
     background-color: rgba(0, 0, 0, 0.05);
 
-  }  
+  }
 
   .new-world-button figure{
 
@@ -4707,7 +4707,6 @@ to {background-position: -200% 0;}
     width: ~'calc(100% - 97px)';
     border-bottom: 1px solid #e2e6e8;
     position: relative;
-    display: none;
   }
 
   .invite-by-mail .avatar{
@@ -4779,10 +4778,6 @@ to {background-position: -200% 0;}
     right: 10px;
   }
 
-}
-
-.personal .invite-by-mail{
-  display: block;
 }
 
 .kick-user-section{
@@ -5231,7 +5226,7 @@ to {background-position: -200% 0;}
     height: 80px;
     background-color: white;
 
-    
+
     .notification-back{
       width: 19px;
       height: 16px;
