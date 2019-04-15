@@ -69,9 +69,9 @@
     "selectWorld"   : "Selecciona un mundo",
     "hasComment"    : "ha comentado un",
     "noPosts"       : "No hay eventos que mostrar",
-    "welcome"       : "Bienvenido a Cosmos",
-    "intro"         : "Cosmos es la aplicación perfecta para relacionarte con todos tus mundos (tus compañeros, tus amigos, tu familia...)",
-    "introMobile"   : "Cosmos es la aplicación perfecta para relacionarte con todos tus mundos<br>(tus compañeros, tus amigos, tu familia...)",
+    "welcome"       : "Bienvenido a tus mundos",
+    "intro"         : "A través de esta aplicación puedes relacionarte con todos tus mundos (tus compañeros, tus amigos, tu familia...)",
+    "introMobile"   : "A través de esta aplicación puedes relacionarte con todos tus mundos<br>(tus compañeros, tus amigos, tu familia...)",
     "intro2"        : "Crea un mundo e invita a tus contactos. Cada mundo tendrá:",
     "feature1"      : "Un <i>chat</i> grupal para hablar entre vosotros",
     "feature2"      : "Una <i>carpeta</i> donde compartir los archivos",
@@ -138,7 +138,7 @@
     "hadModifiedFile"     : "Has modificado un archivo de",
     "hadRemovedFile"      : "Has eliminado un archivo de",
     "hadRemovedFiles"     : "Has eliminado varios archivos de",
-    "wantToPublish"       : "¿Quieres publicarlo en Cosmos?",
+    "wantToPublish"       : "¿Quieres publicarlo en un mundo?",
 
     "notWorking"          : "Esta funcionalidad actualmente está en desarrollo, en breves estará disponible ;)",
 

@@ -402,11 +402,22 @@ var model = (function (view) {
           return this.view.launchAlert(err)
         }
 
-        if (!res.worlds.length) {
-          // Show no worlds
-          // this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
-          this.view.showNoWorlds()
-        }
+        wql.isFirstOpen([this.myContactID], function (e, o) {
+
+          if (!res.worlds.length || !o.length) {
+            // Show no worlds
+            // this.changeSidebarMode( SIDEBAR_CONVERSATIONS )
+            this.view.showNoWorlds()
+
+            if( !o.length ){
+              wql.firstOpenDone([this.myContactID], function (err, o) {
+                if (err) console.error(err)
+              })
+            }
+            
+          }
+
+        }.bind(this))
 
         this._loadFullNotificationList(function (error, notifications) {
 
