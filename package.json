@@ -1,6 +1,6 @@
 {
   "name": "inevio-cosmos",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "![Cosmos for Inevio](https://cloud.githubusercontent.com/assets/1794673/5495359/376ca560-86fd-11e4-91f9-db75e7e6a4d2.png) ====",
   "main": "gulpfile.js",
   "scripts": {
